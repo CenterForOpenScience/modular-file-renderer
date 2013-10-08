@@ -9,8 +9,8 @@ class PdfRenderer(FileRenderer):
         return '''
 
             <!-- Include PDF.JS -->
-            <script type="text/javascript src="/static/js/pdf.js"></script>
-            <script type="text/javascript src="/static/js/???"></script>
+            <script type="text/javascript src="/static/pdf/js/pdf.js"></script>
+            <script type="text/javascript src="/static/pdf/js/???"></script>
 
             <script type="text/javascript">
                 var pdf = PDFJS.getDocument('{url}');

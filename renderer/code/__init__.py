@@ -5,7 +5,6 @@ import pygments.lexers
 import pygments.formatters
 
 formatter = pygments.formatters.HtmlFormatter()
-style = '<style>\n{}\n</style>'.format(formatter.get_style_defs('.highlight'))
 
 class CodeRenderer(FileRenderer):
 
@@ -23,4 +22,4 @@ class CodeRenderer(FileRenderer):
             pygments.lexers.guess_lexer_for_filename(fp.name, content),
             formatter
         )
-        return style + '\n' + highlight
+        return '<link rel="stylesheet" href="/static/code/css/style.css" />' + '\n' + highlight

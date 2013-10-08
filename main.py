@@ -21,9 +21,10 @@ config = {
 }
 
 # Module static files should live in renderer/<module/static
-@app.route('/static/<module>/<filename>/')
-def send_module_file(module, filename):
-    module_static_dir = os.path.join('renderer', module, 'static')
+@app.route('/static/<module>/<path:filepath>')
+def send_module_file(module, filepath):
+    path, filename = os.path.split(filepath)
+    module_static_dir = os.path.join('renderer', module, 'static', path)
     return send_from_directory(module_static_dir, filename)
 
 @app.route('/')

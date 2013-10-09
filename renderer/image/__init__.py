@@ -1,4 +1,6 @@
 from .. import FileRenderer
+from cStringIO import StringIO
+import Image
 
 class ImageRenderer(FileRenderer):
 
@@ -19,3 +21,15 @@ class ImageRenderer(FileRenderer):
         else:
             style = ''
         return '<img src="{}"{} />'.format(path, style)
+
+    def export_gif(self, fp):
+        im = Image.open(fp)
+        sio = StringIO()
+        im.save(sio, format='gif')
+        return sio.getvalue(), '.gif'
+
+    def export_tiff(self, fp):
+        im = Image.open(fp)
+        sio = StringIO()
+        im.save(sio, format='tiff')
+        return sio.getvalue(), '.tiff'

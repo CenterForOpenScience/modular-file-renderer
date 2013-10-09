@@ -1,4 +1,5 @@
-from flask import Flask, send_from_directory
+from flask import Flask, request, send_file, send_from_directory
+from cStringIO import StringIO
 import importlib
 import os
 
@@ -27,6 +28,32 @@ def send_module_file(module, filepath):
     module_static_dir = os.path.join('renderer', module, 'static', path)
     return send_from_directory(module_static_dir, filename)
 
+@app.route('/export/<renderer>/<filename>/', methods=['POST'])
+def export(renderer, filename):
+    exporter = request.form.get('exporter')
+    renderer_class = FileRenderer.registry.get(renderer)
+    if renderer_class is None:
+        return 'Renderer not found.'
+    renderer_object = renderer_class(**config.get(renderer, {}))
+    renderer_method = getattr(
+        renderer_object, 
+        'export_{}'.format(exporter), 
+        None
+    )
+    if renderer_method is None:
+        return 'Renderer exporter not found.'
+    filepath = os.path.join('examples', filename)
+    rendered, extension = renderer_method(open(filepath))
+
+    name, ext = os.path.splitext(filename)
+    export_name = name + extension
+
+    return send_file(
+        StringIO(rendered),
+        as_attachment=True,
+        attachment_filename=export_name,
+    )
+
 @app.route('/')
 def index():
     html = ''
@@ -41,7 +68,7 @@ def render(filename):
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
         if renderer.detect(fp):
-            return renderer.render(fp, '/examples/{}'.format(filename))
+            return renderer._render(fp, '/examples/{}'.format(filename))
     return filename
 
 if __name__ == '__main__':

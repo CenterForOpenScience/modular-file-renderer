@@ -12,3 +12,9 @@ class TextRenderer(FileRenderer):
     def render(self, fp, path):
         fname = fp.name
         return '<pre>{}</pre>'.format(fp.read())
+
+    def export_text(self, fp):
+        return fp.read(), '.txt'
+
+    def export_blah(self, fp):
+        return fp.read(), '.bla'

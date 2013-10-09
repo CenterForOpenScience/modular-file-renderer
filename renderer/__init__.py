@@ -5,14 +5,17 @@ import inspect
 class FileMeta(abc.ABCMeta):
     
     def __init__(cls, name, bases, dct):
-
+        
+        # Call super-metaclass __init__
         super(FileMeta, cls).__init__(name, bases, dct)
-
+        
+        # Initialize class registry and add self
         if not hasattr(cls, 'registry'):
             cls.registry = {}
         if name != 'FileRenderer':
             cls.registry[name] = cls
         
+        # Get export methods
         cls.exporters = [
             name.replace('export_', '')
             for name, value in dct.iteritems()
@@ -32,7 +35,10 @@ class FileRenderer(object):
         return exporters + '\n' + rendered
 
     def render_exporters(self, filename):
-        """
+        """Render exporters to an HTML form.
+
+        :param filename: Name of file to export
+        :return: HTML form with dropdown widget
 
         """
         if not self.exporters:
@@ -59,8 +65,8 @@ class FileRenderer(object):
 
     @abc.abstractmethod
     def detect(self, fp):
-        """Detects whether a given file pointer
-        can be rendered by this renderer.
+        """Detects whether a given file pointer can be rendered by 
+        this renderer.
 
         :param fp: File pointer
         :return: Can file be rendered? (bool)

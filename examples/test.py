@@ -1,0 +1,2 @@
+import this
+foo = 'lol'

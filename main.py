@@ -12,7 +12,7 @@ for dirpath, dirnames, filenames in os.walk('renderer'):
     for filename in filenames:
         if filename.endswith('.py'):
             modulename = os.path.join(dirpath, filename)\
-                .replace('/', '.')\
+                .replace(os.path.sep, '.')\
                 .replace('.py', '')
             importlib.import_module(modulename)
 
@@ -43,8 +43,7 @@ def export(renderer, filename):
     if renderer_method is None:
         return 'Renderer exporter not found.'
     filepath = os.path.join('examples', filename)
-    rendered, extension = renderer_method(open(filepath))
-
+    rendered, extension = renderer_method(open(filepath))		
     name, ext = os.path.splitext(filename)
     export_name = name + extension
 
@@ -67,8 +66,10 @@ def render(filename):
     fp = open(os.path.join('examples', filename))
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
-        if renderer.detect(fp):
-            return renderer._render(fp, '/examples/{}'.format(filename))
+	fileType = renderer.detect(fp) 
+        if fileType:
+            return renderer._render(fp, '/examples/{}'.format(filename), fileType)
+       
     return filename
 
 if __name__ == '__main__':

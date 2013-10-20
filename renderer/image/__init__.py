@@ -1,6 +1,6 @@
 from .. import FileRenderer
 from cStringIO import StringIO
-import Image
+from PIL import Image
 
 class ImageRenderer(FileRenderer):
 
@@ -9,13 +9,12 @@ class ImageRenderer(FileRenderer):
 
     def detect(self, fp):
         fname = fp.name
-        for ext in ['jpg', 'png', 'tif']:
+        for ext in ['jpg', 'gif', 'tiff', 'png']:
             if fname.endswith(ext):
-                return True
-        return False
+                return ext
+     	return ''
 
     def render(self, fp, path):
-        fname = fp.name
         if self.max_width:
             style = ' style="max-width: {}"'.format(self.max_width)
         else:
@@ -33,3 +32,15 @@ class ImageRenderer(FileRenderer):
         sio = StringIO()
         im.save(sio, format='tiff')
         return sio.getvalue(), '.tiff'
+
+    def export_png(self, fp):
+	im = Image.open(fp)
+        sio = StringIO()
+        im.save(sio, format='png')
+        return sio.getvalue(), '.png'
+
+    def export_jpg(self, fp):
+        im = Image.open(fp)
+        sio = StringIO()
+        im.save(sio, format='jpg')
+        return sio.getvalue(), '.jpg'

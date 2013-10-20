@@ -6,8 +6,8 @@ class TextRenderer(FileRenderer):
         fname = fp.name
         for ext in ['txt']:
             if fname.endswith(ext):
-                return True
-        return False
+                return ext
+        return ''
 
     def render(self, fp, path):
         fname = fp.name

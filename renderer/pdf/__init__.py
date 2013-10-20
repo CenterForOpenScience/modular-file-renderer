@@ -3,7 +3,9 @@ from .. import FileRenderer
 class PdfRenderer(FileRenderer):
 
     def detect(self, fp):
-        return fp.name.endswith('pdf')
+	if fp.name.endswith('pdf'):
+        	return 'pdf'
+	return ''
 
     def render(self, fp, path):
         return '''

@@ -1,6 +1,6 @@
 from .. import FileRenderer
-
 from flask import render_template
+
 from IPython.nbformat import current as nbformat
 from IPython.nbconvert.exporters import HTMLExporter
 from IPython.config import Config
@@ -10,9 +10,7 @@ config = Config()
 config.HTMLExporter.template_file = 'basic'
 config.NbconvertApp.fileext = 'html'
 config.CSSHTMLHeaderTransformer.enabled = False
-# don't strip the files prefix - we use it for redirects
-config.Exporter.filters = {'strip_files_prefix': lambda s: s}
-
+config.Exporter.filters = {'strip_files_prefix': lambda s: s} #don't strip the files prefix
 html_exporter = HTMLExporter(config=config)
 
 class NbFormatError(Exception):
@@ -31,12 +29,10 @@ class IPynbRenderer(FileRenderer):
         nb = self._parse_json(content)
         name, css_theme = self._get_metadata(nb)
         body = html_exporter.from_notebook_node(nb)[0] 
-        context =  {'download_url': None,
-                    'download_name': name,
+        context =  {'file_name': name,
                     'css_theme': css_theme,
                     'mathjax_conf': None,
                     'body': body }
-        # render template
         return render_template('notebook.html', **context)
 
     def _parse_json(self, content):
@@ -47,22 +43,20 @@ class IPynbRenderer(FileRenderer):
         return nb
 
     def _get_metadata(self, nb):
+        # notebook title
+        name = nb.get('metadata', {})\
+                 .get('name', None) 
+        if not name:
+            name = url.rsplit('/')[-1]
+        if not name.endswith(".ipynb"):
+            name = name + ".ipynb"
+
         # css
         css_theme = nb.get('metadata', {})\
                       .get('_nbviewer', {})\
                       .get('css', None)
         if css_theme and not re.match('\w', css_theme):
             css_theme = None
-
-        # get the notebook title
-        try:
-            name = nb.metadata.name
-        except AttributeError:
-            name = None  
-        if not name:
-            name = url.rsplit('/')[-1]
-        if not name.endswith(".ipynb"):
-            name = name + ".ipynb"
 
         return name, css_theme   
 

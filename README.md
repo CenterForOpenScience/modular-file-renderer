@@ -1,5 +1,11 @@
 modular-file-renderer
 =====================
-Our priority is to be robust to many kinds of research across many domains, so we accept a wide array of file types, from images to scripts.
+Our priority is to be robust to many kinds of research across many domains, so we host many file types.
 
-If you're coming to this page from Science Hack Day Boston, you can find a link to a spreadsheet on who plans to work on what [here](https://openscienceframework.org/project/5G8bY/wiki/home). You can find a link to our Open Science Framework project [here](https://docs.google.com/spreadsheet/ccc?key=0AiqGQUg1pLpKdENmRlFSNW5EV3JSdW5SaXgtaUlGV2c&usp=drive_web#gid=0).
+The modular file renderer makes it possible for people to easily build independent means of previewing and sometimes exporting files uploaded to the OSF. The renderer directory already contains several working examples you can examine for ideas and extrapolate from in building your own, whatever your specialty or interest.
+
+
+##Issue Tracking (bug reports, suggestions, requests)
+
+Whether you're a developer who knows of interesting libraries for file rendering or a scientist with a need for particular file support, or both, feel free to make suggestions on our [Issue Tracker](https://github.com/CenterForOpenScience/modular-file-renderer/issues?state=open).
+

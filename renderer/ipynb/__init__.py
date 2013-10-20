@@ -33,7 +33,7 @@ class IPynbRenderer(FileRenderer):
                     'css_theme': theme, #'css_linalg', 'cdp_1'
                     'mathjax_conf': None,
                     'body': body }
-        return render_template('notebook.html', **context)
+        return render_template('ipynb/notebook.html', **context)
 
     def export_ipynb(self, fp):
         return fp.read(), '.ipynb'
@@ -66,5 +66,4 @@ class IPynbRenderer(FileRenderer):
             css_theme = None
 
         return name, css_theme   
-
 

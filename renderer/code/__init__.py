@@ -12,8 +12,8 @@ class CodeRenderer(FileRenderer):
         fname = fp.name
         for ext in ['py', 'rb']:
             if fname.endswith(ext):
-                return True
-        return False
+                return ext
+        return ''
 
     def render(self, fp, path):
         content = fp.read()

@@ -5,7 +5,7 @@ import inspect
 class FileMeta(abc.ABCMeta):
     
     def __init__(cls, name, bases, dct):
-        
+       
         # Call super-metaclass __init__
         super(FileMeta, cls).__init__(name, bases, dct)
         
@@ -19,37 +19,36 @@ class FileMeta(abc.ABCMeta):
         cls.exporters = [
             name.replace('export_', '')
             for name, value in dct.iteritems()
-            if name.startswith('export_')
-                and inspect.isfunction(value)
+            if name.startswith('export_') 
+		and inspect.isfunction(value) 
         ]
 
 class FileRenderer(object):
 
     __metaclass__ = FileMeta
     
-    def _render(self, fp, path):
-        
+    def _render(self, fp, path, fileType):
         _, filename = os.path.split(fp.name)
-        exporters = self.render_exporters(filename)
+        exporters = self.render_exporters(filename, fileType)
         rendered = self.render(fp, path)
         return exporters + '\n' + rendered
 
-    def render_exporters(self, filename):
+    def render_exporters(self, filename, fileType):
         """Render exporters to an HTML form.
 
-        :param filename: Name of file to export
+        :param filename: Name of file to export fileType: extension of the file
         :return: HTML form with dropdown widget
 
         """
         if not self.exporters:
             return ''
-
-        options = [
-            '<option value="{}">{}</option>'.format(
-                exporter, exporter.capitalize()
-            )
-            for exporter in self.exporters
-        ]
+	
+	options = []
+	for exporter in self.exporters:
+		if exporter != fileType:	
+            		options.append('<option value="{}">{}</option>'.format(
+                		exporter, exporter.capitalize()
+            			))
 
         return '''
         <form method="post" action="/export/{klass}/{filename}/">
@@ -69,7 +68,7 @@ class FileRenderer(object):
         this renderer.
 
         :param fp: File pointer
-        :return: Can file be rendered? (bool)
+        :return: File type of the file to be rendered (string)
 
         """
         pass

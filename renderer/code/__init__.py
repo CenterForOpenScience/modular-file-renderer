@@ -10,7 +10,7 @@ class CodeRenderer(FileRenderer):
 
     def detect(self, fp):
         fname = fp.name
-        for ext in ['py', 'rb']:
+        for ext in ['py', 'rb', 'R']:
             if fname.endswith(ext):
                 return True
         return False

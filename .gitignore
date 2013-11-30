@@ -41,3 +41,7 @@ nosetests.xml
 .idea
 .hg
 .hgignore
+
+# virtualenv
+####################
+.env

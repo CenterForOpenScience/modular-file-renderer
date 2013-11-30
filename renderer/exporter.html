@@ -1,86 +1,10 @@
-<html>
-<body>
-
-    <div>
-        <button id="prev" onclick="goPrevious()">Previous</button>
-        <button id="next" onclick="goNext()">Next</button>
-        &nbsp; &nbsp;
-        <span>Page: <span id="page_num"></span> / <span id="page_count">
-
-        </span></span>
-    </div>
-
-    <script> var url = "%s";</script>
-
-    <div>
-        <canvas id="the-canvas" style="border:1px solid black"></canvas>
-    </div>
-
-    <script type="text/javascript" src="/static/pdf/js/build/generic/build/pdf.js">
-    </script>
-    <script>
-    PDFJS.disableWorker = true;
-
-    var pdfDoc = null,
-        pageNum = 1,
-        scale = 1.5,
-        canvas = document.getElementById('the-canvas'),
-        ctx = canvas.getContext('2d');
-
-    //
-    // Get page info from document, resize canvas accordingly, and render page
-    //
-    function renderPage(num) {
-      // Using promise to fetch the page
-      pdfDoc.getPage(num).then(function(page) {
-        var viewport = page.getViewport(scale);
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        // Render PDF page into canvas context
-        var renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
-        page.render(renderContext);
-      });
-
-      // Update page counters
-      document.getElementById('page_num').textContent = pageNum;
-      document.getElementById('page_count').textContent = pdfDoc.numPages;
-    }
-
-    //
-    // Go to previous page
-    //
-    function goPrevious() {
-      if (pageNum <= 1)
-        return;
-      pageNum--;
-      renderPage(pageNum);
-    }
-
-    //
-    // Go to next page
-    //
-    function goNext() {
-      if (pageNum >= pdfDoc.numPages)
-        return;
-      pageNum++;
-      renderPage(pageNum);
-    }
-
-    //
-    // Asynchronously download PDF as an ArrayBuffer
-    //
-    PDFJS.getDocument(url).then(function getPdfHelloWorld(_pdfDoc) {
-      pdfDoc = _pdfDoc;
-      renderPage(pageNum);
-    });
-
-
-
-    </script>
-
-</body>
-</html>
+        <span style="float:left;">
+            <form method="post" action="/export/{klass}/{filename}/">
+                <select name="exporter">
+                    {options}
+                </select>
+                <input type="submit" value="Submit" />
+            </form>
+        </span>
+        <span>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>

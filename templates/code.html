@@ -16,15 +16,11 @@
 
 <div id="editor"></div>
 <script src="/static/text/js/ace-builds/src/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-<script>
-
-</script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/textmate");
     editor.getSession().setMode("ace/mode/{{ syntax }}");
-    editor.setValue("{{ editor_content }}")
+    editor.setValue({{ editor_content | tojson | safe }})
       $(document).ready(function() {
             $('#save').click(function() {
             var content = editor.getValue();
@@ -33,7 +29,7 @@
             contentType: 'application/json',
             data: JSON.stringify(content),
             dataType: 'json',
-            url: '/edit/save/'+ document.URL.split("edit/").pop(),
+            url: '/save/'+ document.URL.split("edit/").pop(),
             success: function (e) {
                 console.log('e');
     }
@@ -42,4 +38,3 @@
       });
 
 </script>
-

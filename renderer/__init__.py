@@ -2,6 +2,7 @@ import os
 import abc
 import inspect
 
+
 class FileMeta(abc.ABCMeta):
     
     def __init__(cls, name, bases, dct):
@@ -28,11 +29,23 @@ class FileRenderer(object):
     __metaclass__ = FileMeta
     
     def _render(self, fp, path):
-        
         _, filename = os.path.split(fp.name)
         exporters = self.render_exporters(filename)
         rendered = self.render(fp, path)
         return exporters + '\n' + rendered
+
+    def _edit(self, fp, path):
+        _, filename = os.path.split(fp.name)
+        exporters = self.render_exporters(filename)
+        rendered = self.edit(fp, path)
+        # return exporters + '\n' + rendered
+        return exporters + '\n' + rendered
+
+    def _save(self, fp, path):
+        _, filename = os.path.split(fp.name)
+        rendered = self.save(fp, path)
+        # return exporters + '\n' + rendered
+        return rendered
 
     def render_exporters(self, filename):
         """Render exporters to an HTML form.
@@ -51,17 +64,12 @@ class FileRenderer(object):
             for exporter in self.exporters
         ]
 
-        return '''
-        <form method="post" action="/export/{klass}/{filename}/">
-            <select name="exporter">
-                {options}
-            </select>
-            <input type="submit" value="Submit" />
-        </form>'''.format(
+        html_from_file = open(os.getcwd() + "/renderer/exporter.html").read()
+        html_with_data = html_from_file.format(
             klass=self.__class__.__name__,
             filename=filename,
-            options='\n'.join(options)
-        )
+            options='\n'.join(options))
+        return html_with_data
 
     @abc.abstractmethod
     def detect(self, fp):
@@ -76,6 +84,26 @@ class FileRenderer(object):
 
     @abc.abstractmethod
     def render(self, fp, path):
+        """Renders a file to HTML.
+
+        :param fp: File pointer
+        :param path: Path to file
+        :return: HTML rendition of file
+
+        """
+        pass
+
+    def edit(self, fp, path):
+        """Renders a file to HTML.
+
+        :param fp: File pointer
+        :param path: Path to file
+        :return: HTML rendition of file
+
+        """
+        pass
+
+    def save(self, fp, path):
         """Renders a file to HTML.
 
         :param fp: File pointer

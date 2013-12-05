@@ -1,4 +1,4 @@
-modular-file-renderer
+OSF Modular File Renderer
 =====================
 Our priority is to be robust to many kinds of research across many domains, so we host many file types.
 
@@ -31,6 +31,7 @@ class TextRenderer(FileRenderer):
 
 Whether you're a developer who knows of interesting libraries for file rendering or a scientist with a need for particular file support, or both, feel free to make suggestions on our [Issue Tracker](https://github.com/CenterForOpenScience/modular-file-renderer/issues?state=open).
 
+When you build your own renderer, keep track of its progress here by modifying this readme when you push changes.
 ##
 | renderer          | filetype(s)        | status   |
 | :---------------: | :----------------: | :------: |

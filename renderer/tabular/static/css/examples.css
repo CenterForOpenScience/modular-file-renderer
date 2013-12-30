@@ -6,7 +6,7 @@
 }
 
 body {
-  background: beige;
+  background: #c7d3cd;
   padding: 0;
   margin: 8;
 }
@@ -103,7 +103,7 @@ li {
 }
 
 .cell-move-handle:hover {
-  background: #b6b9bd;
+  background: #52bd2b;
 }
 
 .slick-row.selected .cell-move-handle {
@@ -183,7 +183,7 @@ input.editor-percentcomplete {
 }
 
 .editor-percentcomplete-wrapper {
-  background: beige;
+  background: white;
   padding: 20px 8px;
 
   width: 100%;

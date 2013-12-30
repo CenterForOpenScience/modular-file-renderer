@@ -1,60 +1,32 @@
 from .. import FileRenderer
 import os
+import PyPDF2
 
-
-"""
-Extract PDF text using PDFMiner. Adapted from
-http://stackoverflow.com/questions/5725278/python-help-using-pdfminer-as-a-library
-"""
-
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter#process_pdf
-from pdfminer.pdfpage import PDFPage
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-
-from cStringIO import StringIO
-
-def pdf_to_text(fp):
-    """Extract text from PDF document.
-
-    :param fp: File pointer containing PDF
-    :return: Text in PDF
-
-    """
-    # PDFMiner boilerplate
-    rsrcmgr = PDFResourceManager()
-    sio = StringIO()
-    codec = 'utf-8'
-    laparams = LAParams()
-    device = TextConverter(rsrcmgr, sio, codec=codec, laparams=laparams)
-    interpreter = PDFPageInterpreter(rsrcmgr, device)
-
-    # Extract text
-    for page in PDFPage.get_pages(fp):
-        interpreter.process_page(page)
-
-    # Get text from StringIO
-    text = sio.getvalue()
-
-    # Cleanup
-    device.close()
-    sio.close()
-
-    return text
 
 class PdfRenderer(FileRenderer):
 
-    def detect(self, fp):
-        fname = fp.name
-        for ext in ['pdf']:
-            if fname.endswith(ext):
-                return True
+    # Gets here using the .pdf extension check then attempts to read the file
+        # using pydf2, if it can it accepts it as a valid pdf
+
+    def detect(self, file_pointer):
+        if file_pointer.name.endswith('.pdf'):
+            try:
+                PyPDF2.PdfFileReader(file_pointer)
+            except:
+                return False
+            return True
         return False
 
-    def render(self, fp, path):
-        html_from_file = open(os.getcwd() + "/renderer/pdf/display_pdf.html").read()
-        html_with_data = html_from_file % (path)
+    def render(self, file_pointer, file_path):
+        pdf = PyPDF2.PdfFileReader(file_pointer)
+        
+        numPages = pdf.getNumPages()
+        html_from_file = open(
+            os.getcwd() + "/renderer/pdf/static/html/pdf.html").read()
+        html_with_data = '''
+            <script>
+            var numPages = parseInt({});
+            var url = "{}";
+            </script>
+        '''.format(numPages, file_path) + html_from_file
         return html_with_data
-
-    def export_text(self, fp):
-        return pdf_to_text(fp), '.txt'

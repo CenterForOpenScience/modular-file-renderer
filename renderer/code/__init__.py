@@ -4,54 +4,47 @@ import pygments
 import pygments.lexers
 import pygments.formatters
 from flask import render_template, request
-import json
-from flask import jsonify
 
-formatter = pygments.formatters.HtmlFormatter()
 
 class CodeRenderer(FileRenderer):
 
-    def detect(self, fp):
-        fname = fp.name
-        code_exts_dict = eval(open(os.getcwd() + "/renderer/code/highlightable.txt").read())
-        code_exts = list(code_exts_dict.keys())
-        for ext in code_exts:
-            if fname.endswith(ext):
-
-
-                #########
-                ########
-                #todo this is breaking because it wants to read csv files, wtf? turn it back to true
+    def detect(self, file_pointer):
+        syntax_by_ext = eval(open(os.getcwd() +
+                                  "/renderer/code/syntax.txt").read())
+        syntax = list(syntax_by_ext.keys())
+        for ext in syntax:
+            if file_pointer.name.endswith(ext):
                 return True
-                #########
-                ########
         return False
 
-    def render(self, fp, path):
-        content = fp.read()
+    def render(self, file_pointer, file_path):
+        formatter = pygments.formatters.HtmlFormatter()
+        content = file_pointer.read()
         highlight = pygments.highlight(
-            content,
-            pygments.lexers.guess_lexer_for_filename(fp.name, content),
-            formatter
-        )
-        return '<br></br><link rel="stylesheet" href="/static/code/css/style.css" />' + '\n' + highlight
+            content, pygments.lexers.guess_lexer_for_filename(
+                file_pointer.name, content), formatter)
 
-    def edit(self, fp, path):
-        fname = fp.name
-        code_exts_dict = eval(open(os.getcwd() + "/renderer/code/highlightable.txt").read())
-        code_exts = list(code_exts_dict.keys())
-        #todo this does not always get the right extension...
-        for ext in code_exts:
-            if fname.endswith(ext):
+        return '<br></br><link rel="stylesheet" ' \
+               'href="/static/code/css/style.css" />' + '\n' + highlight
+
+    def edit(self, file_pointer, file_path):
+        syntax_by_ext = eval(open(os.getcwd() +
+                                  "/renderer/code/syntax.txt").read())
+        syntax = list(syntax_by_ext.keys())
+        code_ext = "plaintext"
+        for ext in syntax:
+            if file_pointer.name.endswith(ext):
                 code_ext = ext
-        return render_template("code.html", syntax = code_exts_dict[code_ext], editor_content = fp.read())
+                break
+        return render_template("code.html", syntax=syntax_by_ext[code_ext],
+                               editor_content=file_pointer.read())
 
-    def save(self, fp, path):
-        filename = str(os.path.split(fp.name)[1])
-        file = open("examples/{}".format(filename),'w')
-        file.write(str(request.json))
-        file.close()
+    def save(self, file_pointer, file_path):
+        _, file_name = os.path.split(file_pointer.name)
+        f = open("examples/{}".format(file_name), 'w')
+        f.write(str(request.json))
+        f.close()
         return ""
 
-    def export_edit(self,fp):
-        return fp.read(), 'edit'
+    def export_edit(self, file_pointer):
+        return file_pointer.read(), 'edit'

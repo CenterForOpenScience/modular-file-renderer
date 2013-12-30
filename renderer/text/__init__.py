@@ -5,16 +5,17 @@ class TextRenderer(FileRenderer):
 
     def detect(self, fp):
         fname = fp.name
+        # todo fix this, borked on purpose
         for ext in ['narg']:
             if fname.endswith(ext):
                 return True
         return False
 
-    def render(self, fp, path):
+    def render(self, fp, file_path):
         fname = fp.name
         return '<br></br><pre>{}</pre>'.format(fp.read())
 
-    def edit(self, fp, path):
+    def edit(self, fp, file_path):
         fname = fp.name
         html_from_file = open(os.getcwd() + "/renderer/text/text.html").read()
         html_with_data = html_from_file % str(fp.read())
@@ -29,7 +30,7 @@ class TextRenderer(FileRenderer):
     def export_edit(self,fp):
         return fp.read(), 'edit'
 
-    def save(self, fp, path):
+    def save(self, fp, file_path):
         filename = str(os.path.split(fp.name)[1])
         file = open("examples/{}".format(filename),'w')
         file.write(str(request.json))

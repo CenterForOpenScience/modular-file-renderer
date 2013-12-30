@@ -2,26 +2,48 @@ import os
 import unittest
 from nose.tools import *
 
-from .__init__ import PdfRenderer
+from .__init__ import MovieRenderer
 
 here, _ = os.path.split(os.path.abspath(__file__))
 
 
-class TestPDF(unittest.TestCase):
+class TestMovie(unittest.TestCase):
     def setUp(self):
-        self.renderer = PdfRenderer()
-
-    # Test detector
+        self.renderer = MovieRenderer()
 
     # Do detect
-    def test_detect_pdf(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.pdf'))
+
+    def test_detect_avi(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.avi'))
+        detected = self.renderer.detect(file_pointer)
+        assert_true(detected)
+
+    def test_detect_mp4(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.mp4'))
+        detected = self.renderer.detect(file_pointer)
+        assert_true(detected)
+
+    def test_detect_ogv(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.ogv'))
+        detected = self.renderer.detect(file_pointer)
+        assert_true(detected)
+
+    def test_detect_webm(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.webm'))
+        detected = self.renderer.detect(file_pointer)
+        assert_true(detected)
+
+    def test_detect_wmv(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.wmv'))
         detected = self.renderer.detect(file_pointer)
         assert_true(detected)
 
     # Do not detect
 
- # Do not detect
+    def test_dont_detect_pdf(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.pdf'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
 
     def test_dont_detect_csv(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.csv'))
@@ -163,11 +185,6 @@ class TestPDF(unittest.TestCase):
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
-    def test_dont_detect_mp4(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.mp4'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)
-
     def test_dont_detect_glsl(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.glsl'))
         detected = self.renderer.detect(file_pointer)
@@ -185,11 +202,6 @@ class TestPDF(unittest.TestCase):
 
     def test_dont_detect_jade(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.jade'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)
-
-    def test_dont_detect_webm(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.webm'))
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
@@ -384,11 +396,6 @@ class TestPDF(unittest.TestCase):
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
-    def test_dont_detect_ogv(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.ogv'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)
-
     def test_dont_detect_vm(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.vm'))
         detected = self.renderer.detect(file_pointer)
@@ -479,10 +486,6 @@ class TestPDF(unittest.TestCase):
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
-    def test_dont_detect_avi(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.avi'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)
 
     def test_dont_detect_haml(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.haml'))

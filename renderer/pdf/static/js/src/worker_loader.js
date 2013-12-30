@@ -46,7 +46,6 @@ var files = [
   'core/jpx.js',
   'core/jbig2.js',
   'core/bidi.js',
-  '../external/jpgjs/jpg.js'
 ];
 
 function loadInOrder(index, path, files) {

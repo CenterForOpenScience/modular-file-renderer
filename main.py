@@ -2,22 +2,21 @@ from flask import Flask, request, send_file, send_from_directory, redirect
 from cStringIO import StringIO
 import importlib
 import os
-import Image
 import random
-from PIL import Image
-
+from urllib import quote
 from renderer import FileRenderer
+
 
 app = Flask(__name__, static_folder='examples')
 
-# # Recursively import modules
-for dirpath, dirnames, filenames in os.walk('renderer'):
-    for filename in filenames:
-        if filename.endswith('.py') and filename != "python.py":
-            modulename = os.path.join(dirpath, filename)\
-                .replace('/', '.')\
+# Recursively import modules
+for dir_path, dir_names, file_names in os.walk('renderer'):
+    for file_name in file_names:
+        if file_name.endswith('.py') and file_name != "python.py" and file_name !="test.py":
+            module_name = os.path.join(dir_path, file_name) \
+                .replace('/', '.') \
                 .replace('.py', '')
-            importlib.import_module(modulename)
+            importlib.import_module(module_name)
 
 # Optional configuration for renderers
 config = {
@@ -25,86 +24,85 @@ config = {
 }
 
 # Module static files should live in renderer/<module/static
-@app.route('/static/<module>/<path:filepath>')
-def send_module_file(module, filepath):
-    path, filename = os.path.split(filepath)
-    module_static_dir = os.path.join('renderer', module, 'static', path)
-    return send_from_directory(module_static_dir, filename)
+@app.route('/static/<module>/<path:file_path>')
+def send_module_file(module, file_path):
+    file_path, file_name = os.path.split(file_path)
+    module_static_dir = os.path.join('renderer', module, 'static', file_path)
+    return send_from_directory(module_static_dir, file_name)
 
-@app.route('/export/<renderer>/<filename>/', methods=['POST'])
-def export(renderer, filename):
+
+@app.route('/export/<renderer>/<file_name>/', methods=['POST'])
+def export(renderer, file_name):
     exporter = request.form.get('exporter')
     renderer_class = FileRenderer.registry.get(renderer)
     if exporter == "edit":
-        return redirect("/edit/{}".format(filename))
+        return redirect("/edit/{}".format(file_name))
     if exporter == "save":
-        return redirect("/save/{}".format(filename))
+        return redirect("/save/{}".format(file_name))
     if renderer_class is None:
         return 'Renderer not found.'
     renderer_object = renderer_class(**config.get(renderer, {}))
     renderer_method = getattr(
-        renderer_object, 
-        'export_{}'.format(exporter), 
+        renderer_object,
+        'export_{}'.format(exporter),
         None
     )
     if renderer_method is None:
         return 'Renderer exporter not found.'
-    filepath = os.path.join('examples', filename)
-    rendered, extension = renderer_method(open(filepath))
+    file_path = os.path.join('examples', file_name)
+    rendered, extension = renderer_method(open(file_path))
 
-    name, ext = os.path.splitext(filename)
-    export_name = name + extension
+    file_name, file_ext = os.path.splitext(file_name)
+    export_name = file_name + extension
 
     return send_file(
         StringIO(rendered),
         as_attachment=True,
         attachment_filename=export_name,
-    )
+        )
+
 
 @app.route('/')
 def index():
     html = ''
-    for fn in os.listdir('examples'):
-        html += '<a href="/render/{filename}">{filename}</a><br />'.format(
-            filename=fn)
+    for file_name in os.listdir('examples'):
+        safe_name = quote(file_name)
+        html += '<a href="/render/{safe_name}">{file_name}</a><br />'.format(
+             safe_name=safe_name, file_name=file_name)
     return html
 
-@app.route('/render/<filename>')
-def render(filename):
-    fp = open(os.path.join('examples', filename))
+
+@app.route('/render/<file_name>')
+def render(file_name):
+    file_path = open(os.path.join('examples', file_name))
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
-        if renderer.detect(fp):
-            return renderer._render(fp, '/examples/{}?{}'.format(
-                filename, random.random()))
-    return filename
+        if renderer.detect(file_path):
+            return renderer._render(file_path, '/examples/{}?{}'.format(
+                file_name, random.random()))
+    return file_name
 
-@app.route('/edit/<filename>')
-def edit(filename):
-    fp = open(os.path.join('examples', filename))
+
+@app.route('/edit/<file_name>')
+def edit(file_name):
+    file_path = open(os.path.join('examples', file_name))
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
-        if renderer.detect(fp):
-            return renderer._edit(fp, '/examples/{}?{}'.format(
-                filename, random.random()))
-    return filename
+        if renderer.detect(file_path):
+            return renderer._edit(file_path, '/examples/{}?{}'.format(
+                file_name, random.random()))
+    return file_name
 
-# @app.route('/edit/save/<filename>', methods=['POST'])
-# def edit_save(filename):
-#     file = open("examples/{}".format(filename),'w')
-#     file.write(str(request.json))
-#     file.close()
-#     return ""
 
-@app.route('/save/<filename>', methods=['POST'])
-def save(filename):
-    fp = open(os.path.join('examples', filename))
+@app.route('/save/<file_name>', methods=['POST'])
+def save(file_name):
+    file_path = open(os.path.join('examples', file_name))
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
-        if renderer.detect(fp):
-            return renderer._save(fp, '/examples/{}?{}'.format(
-                filename, random.random()))
-    return filename
+        if renderer.detect(file_path):
+            return renderer._save(file_path, '/examples/{}?{}'.format(
+                file_name, random.random()))
+    return file_name
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

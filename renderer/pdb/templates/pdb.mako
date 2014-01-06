@@ -52,7 +52,7 @@
 
 <div id="glmol01" style="width: 500px; height: 400px; background-color: black;"></div> 
 <textarea id="glmol01_src" style="display: none;">
-  {{ pdb_file }}
+  ${ pdb_file }
 </textarea>
 
 <script type="text/javascript">

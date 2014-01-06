@@ -33,9 +33,10 @@ Whether you're a developer who knows of interesting libraries for file rendering
 
 When you build your own renderer, keep track of its progress here by modifying this readme when you push changes.
 ##
-| renderer          | filetype(s)        | status   |
-| :---------------: | :----------------: | :------: |
-| PDF               | .pdf               |          |
-| tabular           | .csv, .xlsx        |          |
-| image             | .jpg, .png         |          |
-| code              | .py, .rb, .R       |          |
+| renderer          | filetype(s)        | status                          |
+| :---------------: | :----------------: | :-----------------------------: |
+| PDF               | .pdf               |                                 |
+| tabular           | .csv, .xlsx        |                                 |
+| image             | .jpg, .png         |                                 |
+| code              | .py, .rb, .R       |                                 |
+| docx              | .docx              | render, no edit, export to html |

@@ -47,6 +47,6 @@ class TabularRenderer(FileRenderer):
         print columns
         print rows
 
-        html_from_file = open(os.getcwd() + "/renderer/tabular/table.html").read()
+        html_from_file = open(os.getcwd() + "/renderer/tabular/static/html/tabular.html").read()
         html_with_data = html_from_file % (columns, rows)
         return html_with_data

@@ -13,7 +13,7 @@ class CodeRenderer(FileRenderer):
 
     def detect(self, fp):
         fname = fp.name
-        code_exts_dict = eval(open(os.getcwd() + "/renderer/code/highlightable.txt").read())
+        code_exts_dict = eval(open(os.getcwd() + "/renderer/code/syntax.txt").read())
         code_exts = list(code_exts_dict.keys())
         for ext in code_exts:
             if fname.endswith(ext):

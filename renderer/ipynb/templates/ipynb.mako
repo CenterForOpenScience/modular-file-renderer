@@ -1,8 +1,7 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{{file_name}}</title>
+    <title>${file_name}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -30,9 +29,9 @@
         }
     </style>
 
-    {% if css_theme %}
-    <link href="/static/ipynb/css/theme/{{css_theme}}.css" rel="stylesheet">
-    {% endif %}
+##    ${ if css_theme }
+    <link href="/static/ipynb/css/theme/${css_theme}.css" rel="stylesheet">
+##    ${ endif }
 
     <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"type="text/javascript">
     </script>
@@ -51,7 +50,7 @@
                     styles: {'.MathJax_Display': {"margin": 0}}
                 }
             });
-            MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
         }
     }
     init_mathjax();
@@ -59,7 +58,7 @@
   </head>
 
   <body>
-    {{ body | safe}}
+    ${ body | safe}
   </body>
 </html>
 

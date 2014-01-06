@@ -33,9 +33,13 @@ Whether you're a developer who knows of interesting libraries for file rendering
 
 When you build your own renderer, keep track of its progress here by modifying this readme when you push changes.
 ##
-| renderer          | filetype(s)        | status   |
-| :---------------: | :----------------: | :------: |
-| PDF               | .pdf               |          |
-| tabular           | .csv, .xlsx        |          |
-| image             | .jpg, .png         |          |
-| code              | .py, .rb, .R       |          |
+| renderer          | filetype(s)                    | status       
+| :---------------: | :----------------------------: | :-------------------:   
+| PDF               | .pdf                           |    working   
+| tabular           | .csv, .xlsx, .xls, .dta, .sav  |    working   
+| image             | .jpg, .png, .bmp,              |    working   
+| code & txt        | most code formats, .txt        |    working   
+| 3d molecule       | .pdb                           |    evaluating  
+| ipython notebooks | .ipynb, .json                  |    evaluating  
+| docx              | .docx                          |    evaluating  
+| movie             | .avi, .mp4, .ogv, .wmv, .webm  |    all but wmv and avi (browser issues)

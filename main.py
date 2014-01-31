@@ -15,7 +15,7 @@ for dirpath, dirnames, filenames in os.walk('renderer'):
     for filename in filenames:
         if filename.endswith('.py') and filename != "python.py":
             modulename = os.path.join(dirpath, filename)\
-                .replace('/', '.')\
+                .replace(os.path.sep, '.')\
                 .replace('.py', '')
             importlib.import_module(modulename)
 

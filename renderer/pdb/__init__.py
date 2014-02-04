@@ -10,10 +10,11 @@ class PdbRenderer(FileRenderer):
                 return True
         return False
 
-    def render(self, fp, path):
-        fname = fp.name
-        pdb_id = fname.split('.')[0]
-        return render_template('pdb/pdbviewer.html', pdb_file=fp.read())
+    def render(self, file_pointer, url=None, **kwargs):
+        return self._render_mako(
+            "pdb.mako",
+            pdb_file=file_pointer.read(),
+        )
 
     def export_pdb(self, fp):
         return fp.read(), '.pdb'

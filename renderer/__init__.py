@@ -1,13 +1,13 @@
 import os
 import inspect
+import logging
 from hurry.filesize import size
+from mako.lookup import TemplateLookup
 
-class TooBigError(Exception):
-    pass
-
+logger = logging.getLogger(__name__)
 
 class FileMeta(type):
-    
+
     def __init__(cls, name, bases, dct):
         
         # Call super-metaclass __init__
@@ -18,27 +18,39 @@ class FileMeta(type):
             cls.registry = {}
         if name != 'FileRenderer':
             cls.registry[name] = cls
+
+        class_file = inspect.getfile(cls)
+        cls.path = os.path.split(class_file)[0]
+        cls.mako_lookup = TemplateLookup(
+            directories=[os.path.join(cls.path, 'templates')]
+        )
         
-        # Get export methods
-        cls.exporters = [
-            name.replace('export_', '')
-            for name, value in dct.iteritems()
-            if name.startswith('export_') and inspect.isfunction(value)
-        ]
+
+# class RenderError(Exception):
+#todo add later for specific renderer error handling -ajs
+#     def __init__(self, *args, **kwargs):
+#         super(RenderError, self).__init__(*args, **kwargs)
+#         self.details = kwargs['details']
+#
+#     def to_html(self):
+#         return self.base + self.details
 
 
 class FileRenderer(object):
 
     __metaclass__ = FileMeta
 
-    # MAX_SIZE = 204800
-    MAX_SIZE = 1004800
+    STATIC_PATH = '/static'
+    MAX_SIZE = 1024*1024*2.5
 
+    @classmethod
+    def _render_mako(cls, filename, **kwargs):
+        return cls.mako_lookup.get_template(filename).render(**kwargs)
     
     def _check_size(self, file_pointer):
         return os.stat(file_pointer.name).st_size > self.MAX_SIZE
 
-    def _render(self, file_pointer, file_path):
+    def render(self, file_pointer, **kwargs):
 
         if self._check_size(file_pointer):
             max_kb = size(self.MAX_SIZE)
@@ -46,48 +58,19 @@ class FileRenderer(object):
             return """
         There was an error rendering {}
         <div>This file is too big: Max size = {}; File size = {}</div>
-        """.format(file_pointer.name, max_kb, file_kb)
+        """.format(file_pointer.name.encode("utf-8"), max_kb, file_kb)
 
         _, file_name = os.path.split(file_pointer.name)
-        exporters = self.render_exporters(file_name)
-        rendered = self.render(file_pointer, file_path)
-        return exporters + '\n' + rendered
-
-    def _edit(self, file_pointer, file_path):
-        _, file_name = os.path.split(file_pointer.name)
-        exporters = self.render_exporters(file_name)
-        rendered = self.edit(file_pointer, file_path)
-        return exporters + '\n' + rendered
-
-    def _save(self, file_pointer, file_path):
-        _, filename = os.path.split(file_pointer.name)
-        rendered = self.save(file_pointer, file_path)
+        try:
+            rendered = self._render(file_pointer, **kwargs)
+        # except RenderError as error:
+        #     rendered = error.to_html()
+        except Exception as error:
+            logging.error(error)
+            rendered = 'Unable to render; download file to view it'
         return rendered
 
-    def render_exporters(self, file_name):
-        """Render exporters to an HTML form.
-
-        :param file_name: Name of file to export
-        :return: HTML form with drop down widget
-
-        """
-        if not self.exporters:
-            return ''
-        options = [
-            '<option value="{}">{}</option>'.format(
-                exporter, exporter.capitalize()
-            )
-            for exporter in self.exporters
-        ]
-
-        html_from_file = open(os.getcwd() + "/renderer/exporter.html").read()
-        html_with_data = html_from_file.format(
-            klass=self.__class__.__name__,
-            filename=file_name,
-            options='\n'.join(options))
-        return html_with_data
-
-    def detect(self, file_pointer):
+    def _detect(self, file_pointer):
         """Detects whether a given file pointer can be rendered by 
         this renderer. Each renderer needs a detect method that at minimum
         checks the file extension, but ideally includes other checks (e.g.,
@@ -99,34 +82,11 @@ class FileRenderer(object):
         """
         return False
 
-    def render(self, file_pointer, file_path):
+    def _render(self, file_pointer, **kwargs):
         """Renders a file to HTML.
 
         :param file_pointer: File pointer
-        :param file_path: Path to file
         :return: HTML rendition of file
 
         """
-        pass
-
-    def edit(self, file_pointer, file_path):
-        """Renders a file to HTML.
-
-        :param file_pointer: File pointer
-        :param file_path: Path to file
-        :return: HTML rendition of file
-
-        """
-        pass
-
-    def save(self, file_pointer, file_path):
-        """Renders a file to HTML.
-
-        :param file_pointer: File pointer
-        :param file_path: Path to file
-        :return: HTML rendition of file
-
-        """
-        pass
-
-    #todo make these more useful doc strings to help out new people writing renderers
+        return ""

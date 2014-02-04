@@ -13,6 +13,8 @@ app = Flask(__name__, static_folder='examples')
 # # Recursively import modules
 for dirpath, dirnames, filenames in os.walk('renderer'):
     for filename in filenames:
+        if 'test' in filename:
+            continue
         if filename.endswith('.py') and filename != "python.py":
             modulename = os.path.join(dirpath, filename)\
                 .replace('/', '.')\
@@ -107,6 +109,6 @@ def save(filename):
     return filename
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(host='0.0.0.0', port=8080)
 
 

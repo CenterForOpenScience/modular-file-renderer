@@ -4,7 +4,7 @@ import os
 from urllib import quote
 from renderer import FileRenderer
 import importlib
-from renderer import image, tabular
+from renderer import image, docx
 
 app = Flask(__name__, static_folder='examples')
 

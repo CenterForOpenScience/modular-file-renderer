@@ -14,14 +14,13 @@ class TestPDF(unittest.TestCase):
     # Test detector
 
     # Do detect
+
     def test_detect_pdf(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.pdf'))
         detected = self.renderer.detect(file_pointer)
         assert_true(detected)
 
     # Do not detect
-
- # Do not detect
 
     def test_dont_detect_csv(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.csv'))
@@ -340,6 +339,11 @@ class TestPDF(unittest.TestCase):
 
     def test_dont_detect_java(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.java'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_wmv(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.wmv'))
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 

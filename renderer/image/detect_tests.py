@@ -2,49 +2,61 @@ import os
 import unittest
 from nose.tools import *
 
-from .__init__ import MovieRenderer
+from .__init__ import ImageRenderer
 
 here, _ = os.path.split(os.path.abspath(__file__))
 
 
-class TestMovie(unittest.TestCase):
+class TestImage(unittest.TestCase):
     def setUp(self):
-        self.renderer = MovieRenderer()
+        self.renderer = ImageRenderer()
 
-    # Test detector
-
-    # Do detect
-
-
-    def test_detect_avi(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.avi'))
+    def test_detect_tif(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.tif'))
         detected = self.renderer.detect(file_pointer)
         assert_true(detected)
 
-    def test_detect_mp4(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.mp4'))
+    def test_detect_jpg(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.jpg'))
         detected = self.renderer.detect(file_pointer)
         assert_true(detected)
 
-    def test_detect_ogv(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.ogv'))
+    def test_detect_jpeg(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.jpeg'))
         detected = self.renderer.detect(file_pointer)
         assert_true(detected)
 
-    def test_detect_webm(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.webm'))
+    def test_detect_png(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.png'))
         detected = self.renderer.detect(file_pointer)
         assert_true(detected)
-
-    def test_detect_wmv(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.wmv'))
-        detected = self.renderer.detect(file_pointer)
-        assert_true(detected)
-
 
     # Do not detect
 
- # Do not detect
+    def test_dont_detect_avi(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.avi'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_mp4(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.mp4'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_ogv(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.ogv'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_webm(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.webm'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_wmv(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.wmv'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
 
     def test_dont_detect_pdf(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.pdf'))
@@ -88,11 +100,6 @@ class TestMovie(unittest.TestCase):
 
     def test_dont_detect_less(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.less'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)
-
-    def test_dont_detect_jpeg(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.jpeg'))
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
@@ -407,11 +414,6 @@ class TestMovie(unittest.TestCase):
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
-    def test_dont_detect_png(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.png'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)
-
     def test_dont_detect_groovy(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.groovy'))
         detected = self.renderer.detect(file_pointer)
@@ -482,10 +484,7 @@ class TestMovie(unittest.TestCase):
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
-    def test_dont_detect_jpg(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.jpg'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)
+
 
     def test_dont_detect_as(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.as'))
@@ -598,7 +597,3 @@ class TestMovie(unittest.TestCase):
         detected = self.renderer.detect(file_pointer)
         assert_false(detected)
 
-    def test_dont_detect_tif(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.tif'))
-        detected = self.renderer.detect(file_pointer)
-        assert_false(detected)

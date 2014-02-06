@@ -1,10 +1,12 @@
 body {
     font-family: arial, verdana, sans-serif;
+    background-color:white;
 }
 
-.pdf-content {
+.textLayer {
     border: 1px solid #000000;
 }
+
 
 /* CSS classes used by TextLayerBuilder to style the text layer divs */
 
@@ -55,3 +57,9 @@ body {
     background-color: rgba(0, 100, 0, 0.2);
 }
 
+.yellow { background-color: yellow; }
+.red { background-color: red; color: #ccc; }
+.black { background-color: #000; color: #fff; }
+.big { font-size: 1.5em; font-weight: bold; }
+input { margin: 5px; width: 150px; }
+p { color: #666; }

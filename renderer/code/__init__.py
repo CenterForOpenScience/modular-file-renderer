@@ -1,57 +1,124 @@
 from .. import FileRenderer
-import os
+import os.path
 import pygments
 import pygments.lexers
 import pygments.formatters
-from flask import render_template, request
-import json
-from flask import jsonify
 
-formatter = pygments.formatters.HtmlFormatter()
+
+KNOWN_EXTENSIONS = ['.rb',
+ '.cs',
+ '.ahk',
+ '.rs',
+ '.c9search_results',
+ '.scm',
+ '.vhd',
+ '.vbs',
+ '.twig',
+ '.jack',
+ '.jl',
+ '.js',
+ '.matlab',
+ '.tcl',
+ '.dot',
+ '.plg',
+ '.clj',
+ '.Rd',
+ '.pl',
+ '.ejs',
+ '.scad',
+ '.lisp',
+ '.py',
+ '.cpp',
+ '.snippets',
+ '.css',
+ '.vm',
+ '.groovy',
+ '.liquid',
+ '.xq',
+ '.proto',
+ '.php',
+ '.asm',
+ '.sh',
+ '.curly',
+ '.hs',
+ '.hx',
+ '.tex',
+ '.sjs',
+ '.mysql',
+ '.html',
+ '.space',
+ '.haml',
+ '.CBL',
+ '.styl',
+ '.ada',
+ '.lucene',
+ '.pas',
+ '.tmSnippet',
+ '.ps1',
+ '.yaml',
+ '.soy',
+ '.sass',
+ '.scala',
+ '.scss',
+ '.ini',
+ '.bat',
+ '.glsl',
+ '.diff',
+ '.frt',
+ '.less',
+ '.erl',
+ '.erb',
+ '.toml',
+ '.hbs',
+ '.m',
+ '.sql',
+ '.json',
+ '.d',
+ '.lua',
+ '.as',
+ '.nix',
+ '.txt',
+ '.r',
+ '.v',
+ '.jade',
+ '.go',
+ '.ts',
+ '.md',
+ '.jq',
+ '.mc',
+ '.xml',
+ '.Rhtml',
+ '.ml',
+ '.dart',
+ '.pgsql',
+ '.coffee',
+ '.lp',
+ '.ls',
+ '.jsx',
+ '.asciidoc',
+ '.jsp',
+ '.logic',
+ '.properties',
+ '.textile',
+ '.lsl',
+ '.abap',
+ '.ftl',
+ '.java',
+ '.cfm']
+
+
 
 class CodeRenderer(FileRenderer):
+    def _detect(self, file_pointer):
+        _, ext = os.path.splitext(file_pointer.name)
+        return ext in KNOWN_EXTENSIONS
 
-    def detect(self, fp):
-        fname = fp.name
-        code_exts_dict = eval(open(os.getcwd() + "/renderer/code/highlightable.txt").read())
-        code_exts = list(code_exts_dict.keys())
-        for ext in code_exts:
-            if fname.endswith(ext):
-
-
-                #########
-                ########
-                #todo this is breaking because it wants to read csv files, wtf? turn it back to true
-                return True
-                #########
-                ########
-        return False
-
-    def render(self, fp, path):
-        content = fp.read()
+    def _render(self, file_pointer, url):
+        formatter = pygments.formatters.HtmlFormatter()
+        content = file_pointer.read()
         highlight = pygments.highlight(
-            content,
-            pygments.lexers.guess_lexer_for_filename(fp.name, content),
-            formatter
-        )
-        return '<br></br><link rel="stylesheet" href="/static/code/css/style.css" />' + '\n' + highlight
+            content, pygments.lexers.guess_lexer_for_filename(
+                file_pointer.name, content), formatter)
+        link = 'href="{}/code/css/style.css" />'.format(self.STATIC_PATH)
+        return '<link rel="stylesheet"' + link + '\n' + highlight
 
-    def edit(self, fp, path):
-        fname = fp.name
-        code_exts_dict = eval(open(os.getcwd() + "/renderer/code/highlightable.txt").read())
-        code_exts = list(code_exts_dict.keys())
-        #todo this does not always get the right extension...
-        for ext in code_exts:
-            if fname.endswith(ext):
-                code_ext = ext
-        return render_template("code.html", syntax = code_exts_dict[code_ext], editor_content = fp.read())
-
-    def save(self, fp, path):
-        filename = str(os.path.split(fp.name)[1])
-        file = open("examples/{}".format(filename),'w')
-        file.write(str(request.json))
-        file.close()
-        return ""
-
-    def export_edit(self,fp):
-        return fp.read(), 'edit'

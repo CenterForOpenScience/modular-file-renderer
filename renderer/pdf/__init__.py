@@ -1,60 +1,27 @@
 from .. import FileRenderer
-import os
+import PyPDF2
+import os.path
 
 
-"""
-Extract PDF text using PDFMiner. Adapted from
-http://stackoverflow.com/questions/5725278/python-help-using-pdfminer-as-a-library
-"""
-
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter#process_pdf
-from pdfminer.pdfpage import PDFPage
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-
-from cStringIO import StringIO
-
-def pdf_to_text(fp):
-    """Extract text from PDF document.
-
-    :param fp: File pointer containing PDF
-    :return: Text in PDF
-
-    """
-    # PDFMiner boilerplate
-    rsrcmgr = PDFResourceManager()
-    sio = StringIO()
-    codec = 'utf-8'
-    laparams = LAParams()
-    device = TextConverter(rsrcmgr, sio, codec=codec, laparams=laparams)
-    interpreter = PDFPageInterpreter(rsrcmgr, device)
-
-    # Extract text
-    for page in PDFPage.get_pages(fp):
-        interpreter.process_page(page)
-
-    # Get text from StringIO
-    text = sio.getvalue()
-
-    # Cleanup
-    device.close()
-    sio.close()
-
-    return text
 
 class PdfRenderer(FileRenderer):
 
-    def detect(self, fp):
-        fname = fp.name
-        for ext in ['pdf']:
-            if fname.endswith(ext):
-                return True
+    # Gets here using the .pdf extension check then attempts to read the file
+        # using pydf2, if it can it accepts it as a valid pdf
+
+    def _detect(self, file_pointer):
+        _, ext = os.path.splitext(file_pointer.name)
+        if ext.lower() == ".pdf":
+            try:
+                PyPDF2.PdfFileReader(file_pointer)
+            except PyPDF2.utils.PdfReadError:
+                return False
+            return True
         return False
 
-    def render(self, fp, path):
-        html_from_file = open(os.getcwd() + "/renderer/pdf/display_pdf.html").read()
-        html_with_data = html_from_file % (path)
-        return html_with_data
-
-    def export_text(self, fp):
-        return pdf_to_text(fp), '.txt'
+    def _render(self, file_pointer, url=None, **kwargs):
+        return self._render_mako(
+            "pdfpage.mako",
+            url=url,
+            STATIC_PATH=self.STATIC_PATH,
+        )

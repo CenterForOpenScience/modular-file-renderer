@@ -3,14 +3,14 @@ from flask import render_template
 
 class PdbRenderer(FileRenderer):
 
-    def detect(self, fp):
+    def _detect(self, fp):
         fname = fp.name
         for ext in ['pdb']:
             if fname.endswith(ext):
                 return True
         return False
 
-    def render(self, file_pointer, url=None, **kwargs):
+    def _render(self, file_pointer, url=None, **kwargs):
         return self._render_mako(
             "pdb.mako",
             pdb_file=file_pointer.read(),

@@ -3,19 +3,26 @@ from cStringIO import StringIO
 import os
 from urllib import quote
 from renderer import FileRenderer
+
 import importlib
-from renderer import image, tabular
 
 app = Flask(__name__, static_folder='examples')
 
 # Recursively import modules
-# for dir_path, dir_names, file_names in os.walk('renderer'):
-#     for file_name in file_names:
-#         if file_name.endswith('.py') and file_name != "python.py" and file_name !="test.py":
-#             module_name = os.path.join(dir_path, file_name) \
-#                 .replace('/', '.') \
-#                 .replace('.py', '')
-#             importlib.import_module(module_name)
+for dir_path, dir_names, file_names in os.walk('renderer'):
+    for file_name in file_names:
+        if file_name.endswith('.py'):
+        # if file_name.endswith('.py') and file_name != "python.py" and file_name !="test.py":
+            module_name = os.path.join(dir_path, file_name) \
+                .replace('/', '.') \
+                .replace('.py', '')
+            try:
+                importlib.import_module(module_name)
+                print module_name
+            except ImportError:
+                pass
+
+
 
 # Optional configuration for renderers
 config = {}

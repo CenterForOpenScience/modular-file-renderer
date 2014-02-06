@@ -27,76 +27,74 @@
          Copyright (c) 2011 John Resig
 -->
 
-<html>
 
-<head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">
 
   <meta charset="utf-8">
 
-  <title>GLmol embedding examples</title>
   <style type="text/css">
   </style>
 
   <script src="/static/pdb/js/jquery-1.7.min.js"></script>
   <script src="/static/pdb/js/Three49custom.js"></script>
   <script type="text/javascript" src="/static/pdb/js/GLmol.js"></script>
-</head>
 
-<body>
-<h1>GLmol embedding</h1>
-<p>You can embed multiple instances of GLmol in a page. Molecular representations can be customized by Javascript. For the details, please examine the source code of this page. If it is not clear, don't hesitate to ask me (biochem_fan at users.sourceforge.jp).</p>
-
-<p>Rotation: left button, Translation: middle button or Ctrl-key + left button, Zoom: Wheel or right button(up/down) or Shift-key + left button(up/down)</p>
-
-<div id="glmol01" style="width: 500px; height: 400px; background-color: black;"></div> 
+<div id="glmol01" style="width: 500px; height: 400px; background-color: black; display:none;"></div>
 <textarea id="glmol01_src" style="display: none;">
   ${ pdb_file }
 </textarea>
 
 <script type="text/javascript">
-var glmol01 = new GLmol('glmol01', true);
+(function(){
+    try{
+        var glmol01 = new GLmol('glmol01', true);
 
-glmol01.defineRepresentation = function() {
-  var all = this.getAllAtoms();
-  var hetatm = this.removeSolvents(this.getHetatms(all));
-  this.colorByAtom(all, {});
-  this.colorByChain(all);
+        glmol01.defineRepresentation = function() {
+            var all = this.getAllAtoms();
+            var hetatm = this.removeSolvents(this.getHetatms(all));
+            this.colorByAtom(all, {});
+            this.colorByChain(all);
 
-  var asu = new THREE.Object3D(); 
-  this.drawBondsAsStick(
-    asu, 
-    hetatm, 
-    this.cylinderRadius, 
-    this.cylinderRadius
-  );
-  this.drawBondsAsStick(
-    asu, 
-    this.getResiduesById(this.getSidechains(this.getChain(all, ['A'])), [58, 87]), 
-    this.cylinderRadius, 
-    this.cylinderRadius
-  );
-  this.drawBondsAsStick(
-    asu, 
-    this.getResiduesById(
-      this.getSidechains(this.getChain(all, ['B'])), [63, 92]), this.cylinderRadius, this.cylinderRadius);
-    this.drawCartoon(asu, all, this.curveWidth, this.thickness
-  );
-  this.drawSymmetryMates2(
-    this.modelGroup, 
-    asu, 
-    this.protein.biomtMatrices
-  );
-  this.modelGroup.add(asu);
-};
+            var asu = new THREE.Object3D();
 
-glmol01.loadMolecule();
+            this.drawBondsAsStick(
+                asu,
+                hetatm,
+                this.cylinderRadius,
+                this.cylinderRadius
+            );
+
+            this.drawBondsAsStick(
+                asu,
+                this.getResiduesById(this.getSidechains(this.getChain(all, ['A'])), [58, 87]),
+                this.cylinderRadius,
+                this.cylinderRadius
+            );
+
+            this.drawBondsAsStick(
+                asu,
+                this.getResiduesById(
+                this.getSidechains(this.getChain(all, ['B'])), [63, 92]), this.cylinderRadius, this.cylinderRadius);
+                this.drawCartoon(asu, all, this.curveWidth, this.thickness
+            );
+
+            this.drawSymmetryMates2(
+                this.modelGroup,
+                asu,
+                this.protein.biomtMatrices
+            );
+
+            this.modelGroup.add(asu);
+
+            $("#glmol01").css({"display": "block"})
+        };
+
+    glmol01.loadMolecule();
+}
+    catch(e){
+        $("#glmol01").remove();
+        document.write('File did not render properly. Try finding a current version on the <a href="http://www.rcsb.org/pdb/home/home.do">Protein Data Bank</a>');
+    }
+})();
 </script>
-
-<hr style="clear: both;">
-<br>(C) Copyright 2011 biochem_fan (biochem_fan at users.sourceforge.jp). <br>
-<p>This program is released under LGPL3.</p>
-</body>
-
-</html>

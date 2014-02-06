@@ -12,7 +12,6 @@ app = Flask(__name__, static_folder='examples')
 for dir_path, dir_names, file_names in os.walk('renderer'):
     for file_name in file_names:
         if file_name.endswith('.py'):
-        # if file_name.endswith('.py') and file_name != "python.py" and file_name !="test.py":
             module_name = os.path.join(dir_path, file_name) \
                 .replace('/', '.') \
                 .replace('.py', '')

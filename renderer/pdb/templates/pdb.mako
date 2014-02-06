@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+##<!DOCTYPE html>
 
 <!--  
    GLmol - Molecular Viewer on WebGL/Javascript 
@@ -39,7 +39,7 @@
   <script src="/static/pdb/js/jquery-1.7.min.js"></script>
   <script src="/static/pdb/js/Three49custom.js"></script>
   <script type="text/javascript" src="/static/pdb/js/GLmol.js"></script>
-
+<div id="errorDisp"></div>
 <div id="glmol01" style="width: 500px; height: 400px; background-color: black; display:none;"></div>
 <textarea id="glmol01_src" style="display: none;">
   ${ pdb_file }
@@ -94,7 +94,7 @@
 }
     catch(e){
         $("#glmol01").remove();
-        document.write('File did not render properly. Try finding a current version on the <a href="http://www.rcsb.org/pdb/home/home.do">Protein Data Bank</a>');
+        $("#errorDisp").html('File did not render properly. Try finding a current version on the <a href="http://www.rcsb.org/pdb/home/home.do">Protein Data Bank</a>');
     }
 })();
 </script>

@@ -15,6 +15,7 @@
         padding: 0px;
         border: none;
     }
+
 </style>
 <div class="mfr-ipynb-body">
 ${ body | n }

@@ -18,11 +18,8 @@ for dir_path, dir_names, file_names in os.walk('renderer'):
                 .replace('.py', '')
             try:
                 importlib.import_module(module_name)
-                print module_name
             except ImportError:
                 pass
-
-
 
 # Optional configuration for renderers
 config = {}

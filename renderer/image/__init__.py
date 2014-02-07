@@ -4,6 +4,7 @@ from PIL import Image
 import os
 from flask import request, redirect
 import imghdr
+import base64
 
 
 import logging
@@ -53,21 +54,34 @@ class ImageRenderer(FileRenderer):
     def edit(self, file_pointer, file_path):
         _, file_name = os.path.split(file_pointer.name)
         html_from_file = open(os.getcwd() +
-                              "/renderer/image/static/jcrop/html/jcrop.html").read()
-        html_with_data = html_from_file % (file_path, file_name)
+                              #"/renderer/image/static/Jcrop/html/jcrop.html").read()
+                              "/renderer/image/static/canvas/html/edit.html").read()
+
+        html_with_data = html_from_file % (file_path, imghdr.what(file_pointer), file_name)
         return html_with_data
+
+    # def save(self, file_pointer, file_path):
+    #     _, file_name = os.path.split(file_pointer.name)
+    #     file_path = os.path.join('examples', file_name)
+    #     box = (int(request.form['x1']), int(request.form['y1']),
+    #            int(request.form['x2']), int(request.form['y2']))
+    #     img = Image.open(file_path)
+    #     width, height = img.size
+    #     if width > 600 or height > 600:
+    #         multiplier = 600.0 / max(height, width)
+    #         box = [int(x / multiplier) for x in box]
+    #     img.crop(box).save(file_path)
+    #     return redirect('/render/{}'.format(file_name))
 
     def save(self, file_pointer, file_path):
         _, file_name = os.path.split(file_pointer.name)
         file_path = os.path.join('examples', file_name)
-        box = (int(request.form['x1']), int(request.form['y1']),
-               int(request.form['x2']), int(request.form['y2']))
-        img = Image.open(file_path)
-        width, height = img.size
-        if width > 600 or height > 600:
-            multiplier = 600.0 / max(height, width)
-            box = [int(x / multiplier) for x in box]
-        img.crop(box).save(file_path)
+        image_data = request.form['imageData']
+        _, b64_image_data = image_data.split('base64,')
+        binary_image_data = base64.b64decode(b64_image_data)
+        f = open(file_path, 'wb')
+        f.write(binary_image_data)
+        f.close()
         return redirect('/render/{}'.format(file_name))
 
     def export_gif(self, file_pointer):

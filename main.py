@@ -5,18 +5,19 @@ import os
 import random
 from urllib import quote
 from renderer import FileRenderer
-
+from renderer import image
 
 app = Flask(__name__, static_folder='examples')
 
 # Recursively import modules
-for dir_path, dir_names, file_names in os.walk('renderer'):
-    for file_name in file_names:
-        if file_name.endswith('.py') and file_name != "python.py" and file_name !="test.py":
-            module_name = os.path.join(dir_path, file_name) \
-                .replace('/', '.') \
-                .replace('.py', '')
-            importlib.import_module(module_name)
+# for dir_path, dir_names, file_names in os.walk('renderer'):
+#     for file_name in file_names:
+#         if file_name.endswith('.py') and file_name != "python.py" and file_name !="test.py":
+#             module_name = os.path.join(dir_path, file_name) \
+#                 .replace('/', '.') \
+#                 .replace('.py', '')
+#             print module_name
+#             importlib.import_module(module_name)
 
 # Optional configuration for renderers
 config = {

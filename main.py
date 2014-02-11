@@ -1,27 +1,28 @@
 from flask import Flask, request, send_file, send_from_directory, redirect
 from cStringIO import StringIO
+import importlib
 import os
+import random
 from urllib import quote
 from renderer import FileRenderer
-
-import importlib
+from renderer import image
 
 app = Flask(__name__, static_folder='examples')
 
 # Recursively import modules
-for dir_path, dir_names, file_names in os.walk('renderer'):
-    for file_name in file_names:
-        if file_name.endswith('.py'):
-            module_name = os.path.join(dir_path, file_name) \
-                .replace('/', '.') \
-                .replace('.py', '')
-            try:
-                importlib.import_module(module_name)
-            except ImportError:
-                pass
+# for dir_path, dir_names, file_names in os.walk('renderer'):
+#     for file_name in file_names:
+#         if file_name.endswith('.py') and file_name != "python.py" and file_name !="test.py":
+#             module_name = os.path.join(dir_path, file_name) \
+#                 .replace('/', '.') \
+#                 .replace('.py', '')
+#             print module_name
+#             importlib.import_module(module_name)
 
 # Optional configuration for renderers
-config = {}
+config = {
+    'ImageRenderer': {'max_width': '200px'},
+}
 
 # Module static files should live in renderer/<module/static
 @app.route('/static/<module>/<path:file_path>')
@@ -75,35 +76,34 @@ def index():
 @app.route('/render/<file_name>')
 def render(file_name):
     file_path = open(os.path.join('examples', file_name))
-    print FileRenderer.registry.items()
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
-        if renderer._detect(file_path):
-            return renderer._render(file_path, url='/examples/{}'.format(
-                file_name))
+        if renderer.detect(file_path):
+            return renderer._render(file_path, '/examples/{}?{}'.format(
+                file_name, random.random()))
     return file_name
 
-#
-# @app.route('/edit/<file_name>')
-# def edit(file_name):
-#     file_path = open(os.path.join('examples', file_name))
-#     for name, cls in FileRenderer.registry.items():
-#         renderer = cls(**config.get(name, {}))
-#         if renderer.detect(file_path):
-#             return renderer._edit(file_path, '/examples/{}?{}'.format(
-#                 file_name, random.random()))
-#     return file_name
-#
-#
-# @app.route('/save/<file_name>', methods=['POST'])
-# def save(file_name):
-#     file_path = open(os.path.join('examples', file_name))
-#     for name, cls in FileRenderer.registry.items():
-#         renderer = cls(**config.get(name, {}))
-#         if renderer.detect(file_path):
-#             return renderer._save(file_path, '/examples/{}?{}'.format(
-#                 file_name, random.random()))
-#     return file_name
+
+@app.route('/edit/<file_name>')
+def edit(file_name):
+    file_path = open(os.path.join('examples', file_name))
+    for name, cls in FileRenderer.registry.items():
+        renderer = cls(**config.get(name, {}))
+        if renderer.detect(file_path):
+            return renderer._edit(file_path, '/examples/{}?{}'.format(
+                file_name, random.random()))
+    return file_name
+
+
+@app.route('/save/<file_name>', methods=['POST'])
+def save(file_name):
+    file_path = open(os.path.join('examples', file_name))
+    for name, cls in FileRenderer.registry.items():
+        renderer = cls(**config.get(name, {}))
+        if renderer.detect(file_path):
+            return renderer._save(file_path, '/examples/{}?{}'.format(
+                file_name, random.random()))
+    return file_name
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

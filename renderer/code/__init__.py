@@ -113,7 +113,8 @@ class CodeRenderer(FileRenderer):
         _, ext = os.path.splitext(file_pointer.name)
         return ext in KNOWN_EXTENSIONS
 
-    def _render(self, file_pointer, url):
+    def _render(self, file_pointer, **kwargs):
+        # url = kwargs['url']
         formatter = pygments.formatters.HtmlFormatter()
         content = file_pointer.read()
         highlight = pygments.highlight(

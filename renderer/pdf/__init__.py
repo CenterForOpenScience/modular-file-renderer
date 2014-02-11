@@ -19,7 +19,8 @@ class PdfRenderer(FileRenderer):
             return True
         return False
 
-    def _render(self, file_pointer, url=None, **kwargs):
+    def _render(self, file_pointer, **kwargs):
+        url = kwargs['url']
         return self._render_mako(
             "pdfpage.mako",
             url=url,

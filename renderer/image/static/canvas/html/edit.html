@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <script src="/static/image/canvas/js/jquery.min.js"></script>
+        <script src="/static/image/canvas/js/kinetic-v4.7.4.min.js"></script>
+        <script src="/static/image/canvas/js/pixastic.custom.js"></script>
+
+        <script src="/static/image/canvas/js/Global.js"></script>
+        <script src="/static/image/canvas/js/common/PointGeometry.js"></script>
+        <script src="/static/image/canvas/js/common/SpaceConversion.js"></script>
+        <script src="/static/image/canvas/js/AdjustmentSet.js"></script>
+        <script src="/static/image/canvas/js/Adjustment.js"></script>
+        <script src="/static/image/canvas/js/adjustments/Grayscale.js"></script>
+        <script src="/static/image/canvas/js/adjustments/Invert.js"></script>
+        <script src="/static/image/canvas/js/adjustments/Sepia.js"></script>
+        <script src="/static/image/canvas/js/adjustments/FreeRotate.js"></script>
+        <script src="/static/image/canvas/js/adjustments/Crop.js"></script>
+
+        <link rel="stylesheet" href="/static/image/Jcrop/css/jquery.Jcrop.css" type="text/css"/>
+
+        <style type="text/css">
+            .hidden {
+                visibility: hidden;
+            }
+        </style>
+
+        <script type="text/javascript">
+
+            function loadImageToCanvas(stage, url, callback) {
+                var layer,
+                    layerName = 'imageLayer';
+
+                if (stage.get('.' + layerName)[0]) {
+                    layer = stage.get('.' + layerName)[0];
+                    layer.destroyChildren();
+                } else {
+                    layer = new Kinetic.Layer({name: layerName});
+                }
+
+                var imageGroup = new Kinetic.Group({
+                    name: 'imageGroup',
+                    x: stage.getWidth() / 2,
+                    y: stage.getHeight() / 2,
+                    offset: {
+                        x: stage.getWidth() / 2,
+                        y: stage.getHeight() / 2
+                    }
+                });
+
+                var image = new Kinetic.Image({name: 'image'});
+                image.isFlippedVertically = false;
+                image.isFlippedHorizontally = false;
+
+                imageGroup.add(image);
+                layer.add(imageGroup);
+                stage.add(layer);
+
+                var imageObj = new Image();
+                imageObj.style.maxWidth = 'none';
+                imageObj.style.maxHeight = 'none';
+
+                imageObj.onload = function() {
+                    stage.setSize(imageObj.width, imageObj.height);
+
+                    var imageScale,
+                        eyes = [];
+
+                    image.originalSize = {
+                        width: imageObj.width,
+                        height: imageObj.height
+                    };
+
+                    image.absoluteRotation = 0;
+
+                    var	scaleHeight = stage.getHeight() / imageObj.height,
+                        scaleWidth = stage.getWidth() / imageObj.width;
+
+                    imageScale = (scaleWidth < scaleHeight) ? scaleWidth : scaleHeight;
+
+                    image.setAttrs({
+                        x: stage.getWidth() / 2,
+                        y: stage.getHeight() / 2,
+                        image: imageObj,
+                        scale: imageScale,
+                        offset: {
+                            x: imageObj.width / 2,
+                            y: imageObj.height / 2
+                        }
+                    });
+
+                    if (typeof(callback) === 'function') {
+                        callback(stage, layer);
+                    }
+                };
+
+                imageObj.src = url;
+            }
+
+            $(function() {
+                var stage = new Kinetic.Stage({
+                    container: 'stage',
+                    width: 640,
+                    height: 480
+                });
+
+                loadImageToCanvas(stage, '%s', function(stage, layer) {
+                    layer.draw();
+
+                    var adjustmentSet = new ImageEditing.AdjustmentSet({
+                        layer: layer
+                    });
+
+                    adjustmentSet.add(new ImageEditing.Grayscale({
+                        button: $('#grayscale').off('click')
+                    }));
+
+                    adjustmentSet.add(new ImageEditing.Invert({
+                        button: $('#invert').off('click')
+                    }));
+
+                    adjustmentSet.add(new ImageEditing.Sepia({
+                        button: $('#sepia').off('click')
+                    }));
+
+                    adjustmentSet.add(new ImageEditing.FreeRotate({
+                        button: $('#rotate').off('click'),
+                        onStart: function() {
+	                        $('#saveForm > input[type=submit]').attr('disabled', 'disabled');
+                        },
+                        onFinish: function() {
+                            var image = layer.get('.image')[0]
+                            var size = image.getSize();
+                            var halfCoords = {x: size.width / 2, y: size.height / 2};
+                            stage.setSize(size);
+                            var group = layer.get('.imageGroup')[0];
+
+                            group.setOffset(halfCoords);
+                            group.setPosition(halfCoords);
+                            image.setPosition(halfCoords);
+                            image.setOffset(halfCoords);
+                            layer.draw();
+                            
+                            $('#saveForm > input[type=submit]').removeAttr('disabled');
+                        }
+                    }));
+
+                    /*adjustmentSet.add(new ImageEditing.Crop({
+                        button: $('#crop').off('click'),
+                        onStart: function() {
+                            $('#coords').removeClass('hidden');
+
+                            $('#coords').on('change','input',function(e){
+                                var x1 = $('#x1').val(),
+                                    x2 = $('#x2').val(),
+                                    y1 = $('#y1').val(),
+                                    y2 = $('#y2').val();
+                                //jcrop_api.setSelect([x1,y1,x2,y2]);
+                            });
+                        }
+                    }));*/
+                });
+                
+                $('#saveForm').submit(function( event ) {
+                	var that = this;
+                	event.preventDefault();
+					
+					stage.toDataURL({
+						mimeType: 'image/%s',
+						callback: function(dataUrl) {
+							$('#imageData').attr('value', dataUrl);
+							that.submit();
+						}
+					});
+				});
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <div class="jc-demo-box">
+                        <button id="grayscale">Grayscale</button>
+                        <button id="invert">Invert</button>
+                        <button id="sepia">Sepia</button>
+                        <button id="rotate">Rotate</button>
+                        <!--<button id="crop">Crop</button>-->
+
+                        <div id="stage"></div>
+                        
+                        <form id="saveForm" method="post" action="/save/%s">
+                        	<input type="hidden" name="imageData" id="imageData" />
+                        	<input type="submit" value="Save" class="save" />
+                        </form>
+
+                          <!-- This is the form that our event handler fills -->
+                        <!--<form id="coords" class="coords hidden">
+                            <div class="inline-labels">
+                                <label>X1 <input type="text" size="4" class="modular-form-data" id="x1" name="x1" /></label>
+                                <label>Y1 <input type="text" size="4" id="y1" name="y1" /></label>
+                                <label>X2 <input type="text" size="4" id="x2" name="x2" /></label>
+                                <label>Y2 <input type="text" size="4" id="y2" name="y2" /></label>
+                                <input type="submit" value="Done" />
+                            </div>
+                        </form>-->
+
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

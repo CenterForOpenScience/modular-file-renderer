@@ -9,7 +9,6 @@ from .utilities import TooBigError, MAX_COLS, MAX_ROWS
 
 class CSVRenderer(TabularRenderer):
     def _detect(self, file_pointer):
-        print "got here"
         _, ext = os.path.splitext(file_pointer.name)
         return ext.lower() == ".csv"
 

@@ -6,6 +6,8 @@ import random
 from urllib import quote
 from renderer import FileRenderer
 
+import importlib
+from renderer import image, docx
 
 app = Flask(__name__, static_folder='examples')
 
@@ -79,7 +81,7 @@ def render(file_name):
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
         if renderer._detect(file_path):
-            return renderer._render(file_path, '/examples/{}?{}'.format(
+            return renderer._render(file_path, url='/examples/{}?{}'.format(
                 file_name, random.random()))
     return file_name
 
@@ -90,7 +92,7 @@ def edit(file_name):
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
         if renderer._detect(file_path):
-            return renderer._edit(file_path, '/examples/{}?{}'.format(
+            return renderer._edit(file_path, url='/examples/{}?{}'.format(
                 file_name, random.random()))
     return file_name
 
@@ -101,7 +103,7 @@ def save(file_name):
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
         if renderer._detect(file_path):
-            return renderer._save(file_path, '/examples/{}?{}'.format(
+            return renderer._save(file_path, url='/examples/{}?{}'.format(
                 file_name, random.random()))
     return file_name
 

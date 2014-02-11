@@ -38,20 +38,14 @@ class ImageRenderer(FileRenderer):
                         return True
         return False
 
-    def _render(self, file_pointer, file_path):
-        if self.max_width:
-
-
-            style = 'style="max-width: {}"'.format(self.max_width)
-        else:
-            style = ''
+    def _render(self, file_pointer, **kwargs):
+        url = kwargs['url']
         img = '''
-           <br></br><br></br>
-           <img src='%s'%s id='target'/>
-            ''' % (file_path, style)
+           <img src='%s' id='target'/>
+            ''' % (url)
         return img
 
-    def _edit(self, file_pointer, file_path):
+    def _edit(self, file_pointer, **kwargs):
         _, file_name = os.path.split(file_pointer.name)
         html_from_file = open(os.getcwd() +
                               #"/renderer/image/static/Jcrop/html/jcrop.html").read()
@@ -61,7 +55,7 @@ class ImageRenderer(FileRenderer):
         return html_with_data
 
 
-    def _save(self, file_pointer, file_path):
+    def _save(self, file_pointer, **kwargs):
         _, file_name = os.path.split(file_pointer.name)
         file_path = os.path.join('examples', file_name)
         image_data = request.form['imageData']

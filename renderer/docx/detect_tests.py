@@ -11,27 +11,31 @@ class TestImage(unittest.TestCase):
     def setUp(self):
         self.renderer = ImageRenderer()
 
-    def test_detect_tif(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.tif'))
-        detected = self.renderer.detect(file_pointer)
-        assert_true(detected)
-
-    def test_detect_jpg(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.jpg'))
-        detected = self.renderer.detect(file_pointer)
-        assert_true(detected)
-
-    def test_detect_jpeg(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.jpeg'))
-        detected = self.renderer.detect(file_pointer)
-        assert_true(detected)
-
-    def test_detect_png(self):
-        file_pointer = open(os.path.join(here, 'fixtures/test.png'))
+    def test_detect_docx(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.docx'))
         detected = self.renderer.detect(file_pointer)
         assert_true(detected)
 
     # Do not detect
+    def test_dont_detect_tif(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.tif'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_jpg(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.jpg'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_jpeg(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.jpeg'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
+
+    def test_dont_detect_png(self):
+        file_pointer = open(os.path.join(here, 'fixtures/test.png'))
+        detected = self.renderer.detect(file_pointer)
+        assert_false(detected)
 
     def test_dont_detect_avi(self):
         file_pointer = open(os.path.join(here, 'fixtures/test.avi'))

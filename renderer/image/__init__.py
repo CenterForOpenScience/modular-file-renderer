@@ -17,7 +17,7 @@ class ImageRenderer(FileRenderer):
     def __init__(self, max_width=None):
         self.max_width = max_width
 
-    def detect(self, file_pointer):
+    def _detect(self, file_pointer):
         """Detects whether a given file pointer can be rendered by
         this renderer. Checks both the extension in list and the file encoding
         using the imghdr lib
@@ -38,7 +38,7 @@ class ImageRenderer(FileRenderer):
                         return True
         return False
 
-    def render(self, file_pointer, file_path):
+    def _render(self, file_pointer, file_path):
         if self.max_width:
 
 
@@ -51,7 +51,7 @@ class ImageRenderer(FileRenderer):
             ''' % (file_path, style)
         return img
 
-    def edit(self, file_pointer, file_path):
+    def _edit(self, file_pointer, file_path):
         _, file_name = os.path.split(file_pointer.name)
         html_from_file = open(os.getcwd() +
                               #"/renderer/image/static/Jcrop/html/jcrop.html").read()
@@ -60,20 +60,8 @@ class ImageRenderer(FileRenderer):
         html_with_data = html_from_file % (file_path, imghdr.what(file_pointer), file_name)
         return html_with_data
 
-    # def save(self, file_pointer, file_path):
-    #     _, file_name = os.path.split(file_pointer.name)
-    #     file_path = os.path.join('examples', file_name)
-    #     box = (int(request.form['x1']), int(request.form['y1']),
-    #            int(request.form['x2']), int(request.form['y2']))
-    #     img = Image.open(file_path)
-    #     width, height = img.size
-    #     if width > 600 or height > 600:
-    #         multiplier = 600.0 / max(height, width)
-    #         box = [int(x / multiplier) for x in box]
-    #     img.crop(box).save(file_path)
-    #     return redirect('/render/{}'.format(file_name))
 
-    def save(self, file_pointer, file_path):
+    def _save(self, file_pointer, file_path):
         _, file_name = os.path.split(file_pointer.name)
         file_path = os.path.join('examples', file_name)
         image_data = request.form['imageData']

@@ -26,16 +26,10 @@ class ImageRenderer(FileRenderer):
         :return: Can file be rendered? (bool)
 
         """
-        _, file_name = os.path.split(file_pointer.name)
-        for ext in ['.jpeg', '.jpg', '.png', '.tiff', '.bmp', '.tif']:
-            if file_pointer.name.endswith(ext):
-                header_type = imghdr.what(file_pointer)
-                if type is None:
-                    return False
-                file_type = "." + header_type
-                for ext in ['.jpeg', '.jpg', '.png', '.tiff', '.bmp', '.tif']:
-                    if file_type == ext:
-                        return True
+        _, ext = os.path.splitext(file_pointer.name)
+        if ext.lower() in ['.jpeg', '.jpg', '.png', '.bmp', '.gif']:
+            if imghdr.what(file_pointer):
+                return True
         return False
 
     def _render(self, file_pointer, **kwargs):

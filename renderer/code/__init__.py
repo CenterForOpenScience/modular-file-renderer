@@ -22,7 +22,7 @@ KNOWN_EXTENSIONS = ['.rb',
  '.dot',
  '.plg',
  '.clj',
- '.Rd',
+ '.rd',
  '.pl',
  '.ejs',
  '.scad',
@@ -48,12 +48,12 @@ KNOWN_EXTENSIONS = ['.rb',
  '.html',
  '.space',
  '.haml',
- '.CBL',
+ '.cbl',
  '.styl',
  '.ada',
  '.lucene',
  '.pas',
- '.tmSnippet',
+ '.tmsnippet',
  '.ps1',
  '.yaml',
  '.soy',
@@ -87,7 +87,7 @@ KNOWN_EXTENSIONS = ['.rb',
  '.jq',
  '.mc',
  '.xml',
- '.Rhtml',
+ '.rhtml',
  '.ml',
  '.dart',
  '.pgsql',
@@ -111,7 +111,7 @@ KNOWN_EXTENSIONS = ['.rb',
 class CodeRenderer(FileRenderer):
     def _detect(self, file_pointer):
         _, ext = os.path.splitext(file_pointer.name)
-        return ext in KNOWN_EXTENSIONS
+        return ext.lower() in KNOWN_EXTENSIONS
 
     def _render(self, file_pointer, **kwargs):
         # url = kwargs['url']

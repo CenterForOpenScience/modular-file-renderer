@@ -1,5 +1,5 @@
 from .. import FileRenderer
-
+import os
 
 class MovieRenderer(FileRenderer):
 
@@ -7,10 +7,8 @@ class MovieRenderer(FileRenderer):
         self.max_width = max_width
 
     def _detect(self, file_pointer):
-        for ext in ['avi', 'mp4', 'ogv', 'wmv', 'webm']:
-            if file_pointer.name.endswith(ext):
-                return True
-        return False
+        _, ext = os.path.splitext(file_pointer.name)
+        return ext.lower() in ['.avi', '.mp4', '.ogv', '.wmv', '.webm']
 
     def _render(self, file_pointer, **kwargs):
         url = kwargs['url']

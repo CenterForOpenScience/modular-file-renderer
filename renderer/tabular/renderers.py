@@ -6,6 +6,8 @@ import pandas.rpy.common as com
 from .base import TabularRenderer
 from .utilities import TooBigError, MAX_COLS, MAX_ROWS
 
+import ezodf
+
 
 class CSVRenderer(TabularRenderer):
     def _detect(self, file_pointer):
@@ -38,7 +40,6 @@ class ExcelRenderer(TabularRenderer):
             raise TooBigError
         return pd.read_excel(file_pointer, sheets[0])
 
-
 class SPSSRenderer(TabularRenderer):
     def _detect(self, file_pointer):
         _, ext = os.path.splitext(file_pointer.name)
@@ -50,3 +51,24 @@ class SPSSRenderer(TabularRenderer):
         r.r('x <- read.spss("{}",to.data.frame=T)'.format(file_pointer.name))
         r.r('row.names(x) = 0:(nrow(x)-1)')
         return com.load_data('x')
+
+class ODSRenderer(TabularRenderer):
+
+    def _detect(self, file_pointer):
+        _, ext = os.path.splitext(file_pointer.name)
+        return ext.lower() == ".ods"
+
+    def _build_df(self, file_pointer):
+        workbook = ezodf.opendoc(file_pointer.name)
+        sheet = workbook.sheets[0]
+        if sheet.ncols() > MAX_COLS or sheet.nrows() > MAX_ROWS:
+            raise TooBigError
+
+        data = []
+        for row in sheet.rows():
+            row_values = []
+            for cell in row:
+                row_values.append(cell.value)
+            data.append(row_values)
+
+        return pd.DataFrame(data)

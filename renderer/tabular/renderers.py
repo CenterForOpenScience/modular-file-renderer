@@ -64,11 +64,6 @@ class ODSRenderer(TabularRenderer):
         if sheet.ncols() > MAX_COLS or sheet.nrows() > MAX_ROWS:
             raise TooBigError
 
-        data = []
-        for row in sheet.rows():
-            row_values = []
-            for cell in row:
-                row_values.append(cell.value)
-            data.append(row_values)
+        data = [[cell.value for cell in row] for row in sheet.rows()]
 
         return pd.DataFrame(data)

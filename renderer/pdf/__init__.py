@@ -3,7 +3,6 @@ import PyPDF2
 import os.path
 
 
-
 class PdfRenderer(FileRenderer):
 
     # Gets here using the .pdf extension check then attempts to read the file

@@ -1,13 +1,17 @@
 from flask import Flask, request, send_file, send_from_directory, redirect
 from cStringIO import StringIO
 import importlib
+import logging
 import os
 import random
 from urllib import quote
 from renderer import FileRenderer
+from renderer.exceptions import MFRError
 
 import importlib
 from renderer import image, docx
+
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__, static_folder='examples')
 
@@ -20,8 +24,8 @@ for dir_path, dir_names, file_names in os.walk('renderer'):
                 .replace('.py', '')
             try:
                 importlib.import_module(module_name)
-            except:
-                pass
+            except Exception as err:
+                logger.exception(err)
 
 # Optional configuration for renderers
 config = {}
@@ -81,8 +85,11 @@ def render(file_name):
     for name, cls in FileRenderer.registry.items():
         renderer = cls(**config.get(name, {}))
         if renderer._detect(file_path):
-            return renderer._render(file_path, url='/examples/{}?{}'.format(
-                file_name, random.random()))
+            try:
+                return renderer._render(file_path, url='/examples/{}?{}'.format(
+                    file_name, random.random()))
+            except MFRError as err:
+                return err.message
     return file_name
 
 

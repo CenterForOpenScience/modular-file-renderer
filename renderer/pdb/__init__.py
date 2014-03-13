@@ -1,6 +1,7 @@
 from .. import FileRenderer
-from flask import render_template
 import os
+
+
 class PdbRenderer(FileRenderer):
 
     def _detect(self, file_pointer):

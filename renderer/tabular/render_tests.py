@@ -2,16 +2,13 @@ import os
 import pandas
 from pandas.util.testing import assert_frame_equal
 from nose.tools import *
-from pandas.parser import CParserError
 from .exceptions import BlankOrCorruptTableError, TooBigTableError, StataVersionError
-from rpy2.rinterface import RRuntimeError
 from xlrd.biffh import XLRDError
 from struct import error
 from .utilities import row_population, column_population,\
     MAX_COLS, MAX_ROWS, check_shape
 from .renderers import CSVRenderer, STATARenderer, ExcelRenderer, SPSSRenderer
 import unittest
-
 
 here, _ = os.path.split(os.path.abspath(__file__))
 
@@ -156,9 +153,9 @@ class TestExcel(unittest.TestCase):
         file_pointer = open(os.path.join(here, 'fixtures/blank.xls'))
         self.assertRaises(BlankOrCorruptTableError, self.renderer._build_df, file_pointer)
 
-#     def test_broken_xls(self):
-#         file_pointer = open(os.path.join(here, 'fixtures/broken.xls'))
-#         self.assertRaises(XLRDError, self.renderer._build_df, file_pointer)
+    def test_broken_xls(self):
+        file_pointer = open(os.path.join(here, 'fixtures/broken.xls'))
+        self.assertRaises(XLRDError, self.renderer._build_df, file_pointer)
 
     ########
     # XLSX #
@@ -197,16 +194,14 @@ class TestExcel(unittest.TestCase):
         file_pointer = open(os.path.join(here, 'fixtures/blank.xlsx'))
         self.assertRaises(BlankOrCorruptTableError, self.renderer._build_df, file_pointer)
 
-#     def test_broken_xlsx(self):
-#         file_pointer = open(os.path.join(here, 'fixtures/broken.xlsx'))
-#         self.assertRaises(XLRDError, self.renderer._build_df, file_pointer)
-#
-#
+    def test_broken_xlsx(self):
+        file_pointer = open(os.path.join(here, 'fixtures/broken.xlsx'))
+        self.assertRaises(XLRDError, self.renderer._build_df, file_pointer)
+
+
 class TestSPSS(unittest.TestCase):
     def setUp(self):
         self.renderer = SPSSRenderer()
-
-# THESE TESTS ARE CURRENTLY BREAKING BECAUSE THEY ARE MISSING THE TEST FILE, NEED TO REMAKE IT
 
     # Test renderer
     def  test_build_df_sav(self):
@@ -245,6 +240,6 @@ class TestSPSS(unittest.TestCase):
         df = self.renderer._build_df(file_pointer)['dataframe']
         assert_true(df.shape == (4, 2))
 
-#     def test_broken_sav(self):
-#         file_pointer = open(os.path.join(here, 'fixtures/broken.sav'))
-#         self.assertRaises(RRuntimeError, self.renderer._build_df, file_pointer)
+    def test_broken_sav(self):
+        file_pointer = open(os.path.join(here, 'fixtures/broken.sav'))
+        self.assertRaises(BlankOrCorruptTableError, self.renderer._build_df, file_pointer)

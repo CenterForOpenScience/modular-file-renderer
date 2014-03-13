@@ -7,9 +7,7 @@ import random
 from urllib import quote
 from renderer import FileRenderer
 from renderer.exceptions import MFRError
-
 import importlib
-from renderer import image, docx
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +16,7 @@ app = Flask(__name__, static_folder='examples')
 # Recursively import modules
 for dir_path, dir_names, file_names in os.walk('renderer'):
     for file_name in file_names:
-        if file_name.endswith('.py'):
+        if file_name==('__init__.py'):
             module_name = os.path.join(dir_path, file_name) \
                 .replace('/', '.') \
                 .replace('.py', '')

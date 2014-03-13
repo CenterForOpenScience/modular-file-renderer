@@ -54,7 +54,7 @@ class TestCSV(unittest.TestCase):
 
     def test_blank_error_csv(self):
         file_pointer = open(os.path.join(here, 'fixtures/blank.csv'))
-        self.assertRaises(CParserError, self.renderer._build_df, file_pointer)
+        self.assertRaises(BlankOrCorruptTableError, self.renderer._build_df, file_pointer)
 
         ##### General shape check #####
 
@@ -135,8 +135,8 @@ class TestExcel(unittest.TestCase):
         file_pointer = open(os.path.join(here, 'fixtures/test.xls'))
         df = self.renderer._build_df(file_pointer)['dataframe']
         rows = row_population(df)
-        test_rows = [{'A': 1, 'B': 2}, {'A': 2, 'B': 3},
-                    {'A': 3, 'B': 4}, {'A': 4, 'B': 5}]
+        test_rows = [{'A': '1', 'B': '2'}, {'A': '2', 'B': '3'},
+                    {'A': '3', 'B': '4'}, {'A': '4', 'B': '5'}]
         assert_true(rows == test_rows)
 
     def test_column_population_xls(self):
@@ -154,7 +154,7 @@ class TestExcel(unittest.TestCase):
 
     def test_blank_error_xls(self):
         file_pointer = open(os.path.join(here, 'fixtures/blank.xls'))
-        self.assertRaises(IndexError, self.renderer._build_df, file_pointer)
+        self.assertRaises(BlankOrCorruptTableError, self.renderer._build_df, file_pointer)
 
 #     def test_broken_xls(self):
 #         file_pointer = open(os.path.join(here, 'fixtures/broken.xls'))
@@ -176,8 +176,8 @@ class TestExcel(unittest.TestCase):
         df = self.renderer._build_df(file_pointer)['dataframe']
         rows = row_population(df)
         # xlsx files default to float
-        test_rows = [{'A': 1, 'B': 2}, {'A': 2, 'B': 3},
-                    {'A': 3, 'B': 4}, {'A': 4, 'B': 5}]
+        test_rows = [{'A': '1', 'B': '2'}, {'A': '2', 'B': '3'},
+                    {'A': '3', 'B': '4'}, {'A': '4', 'B': '5'}]
         assert_true(rows == test_rows)
 
     def test_column_population_xlsx(self):
@@ -195,7 +195,7 @@ class TestExcel(unittest.TestCase):
 
     def test_blank_error_xlsx(self):
         file_pointer = open(os.path.join(here, 'fixtures/blank.xlsx'))
-        self.assertRaises(IndexError, self.renderer._build_df['dataframe'], file_pointer)
+        self.assertRaises(BlankOrCorruptTableError, self.renderer._build_df, file_pointer)
 
 #     def test_broken_xlsx(self):
 #         file_pointer = open(os.path.join(here, 'fixtures/broken.xlsx'))

@@ -9,7 +9,7 @@ ReStructuredText (rst): plain text markup
 What is reStructuredText?
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
- üüüüüü An easy-to-read, what-you-see-is-what-you-get plaintext markup syntax
+üüüüüü An easy-to-read, what-you-see-is-what-you-get plaintext markup syntax
 and parser system, abbreviated *rst*. In other words, using a simple
 text editor, documents can be created which
 

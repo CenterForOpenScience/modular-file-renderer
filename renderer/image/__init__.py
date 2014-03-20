@@ -45,7 +45,7 @@ class ImageRenderer(FileRenderer):
                               #"/renderer/image/static/Jcrop/html/jcrop.html").read()
                               "/renderer/image/static/canvas/html/edit.html").read()
 
-        html_with_data = html_from_file % (file_path, imghdr.what(file_pointer), file_name)
+        html_with_data = html_from_file % (file_pointer.name, imghdr.what(file_pointer), file_name)
         return html_with_data
 
 

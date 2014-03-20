@@ -9,9 +9,12 @@ This was tested using Ubuntu 13.10
 ```
 pip install xlrd
 pip install pandas
+# Ubuntu:
 apt-get install r-base-dev
+
 pip install rpy2
 # Open Office file format support
+# Ubuntu
 apt-get install libxml2-dev libxslt-dev zlib1g-dev
 pip install lxml
 pip install ezodf

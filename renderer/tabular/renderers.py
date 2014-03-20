@@ -85,9 +85,6 @@ class ODSRenderer(TabularRenderer):
         workbook = ezodf.opendoc(file_pointer.name)
         sheet = workbook.sheets[0]
         if sheet.ncols() > MAX_COLS or sheet.nrows() > MAX_ROWS:
-            print MAX_COLS
-            print MAX_ROWS
             raise TooBigTableError("Too many columns or rows")
-
         data = [[cell.value for cell in row] for row in sheet.rows()]
         return {"dataframe":pd.DataFrame(data)}

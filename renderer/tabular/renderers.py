@@ -3,7 +3,7 @@ import pandas as pd
 import xlrd
 import rpy2.robjects as robjects
 import pandas.rpy.common as com
-
+import ezodf
 from .base import TabularRenderer
 from .exceptions import TooBigTableError, BlankOrCorruptTableError, StataVersionError
 
@@ -47,9 +47,7 @@ class ExcelRenderer(TabularRenderer):
         sheets = workbook.sheet_names()
         sheet = workbook.sheet_by_name(sheets[0])
         if sheet.ncols > MAX_COLS or sheet.nrows > MAX_ROWS:
-            raise TooBigTableError
-
-
+            raise TooBigTableError("Too many columns or rows")
         retdic = {}
         num_sheets = len(sheets)
 
@@ -78,3 +76,18 @@ class SPSSRenderer(TabularRenderer):
             raise BlankOrCorruptTableError("Is this a valid SPSS file?")
 
 
+class ODSRenderer(TabularRenderer):
+    def _detect(self, file_pointer):
+        _, ext = os.path.splitext(file_pointer.name)
+        return ext.lower() == ".ods"
+
+    def _build_df(self, file_pointer):
+        workbook = ezodf.opendoc(file_pointer.name)
+        sheet = workbook.sheets[0]
+        if sheet.ncols() > MAX_COLS or sheet.nrows() > MAX_ROWS:
+            print MAX_COLS
+            print MAX_ROWS
+            raise TooBigTableError("Too many columns or rows")
+
+        data = [[cell.value for cell in row] for row in sheet.rows()]
+        return {"dataframe":pd.DataFrame(data)}

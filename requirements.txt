@@ -23,3 +23,5 @@ numpy==1.8.0
 pandas==0.13.1
 PyPDF2==1.20
 Pygments==1.6
+ezodf==0.2.5
+lxml==2.2.8

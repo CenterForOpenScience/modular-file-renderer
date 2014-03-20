@@ -10,3 +10,5 @@ six==1.4.1
 wsgiref==0.1.2
 hurry.filesize==0.9
 Mako==0.9.1
+Pygments==1.6
+PyPDF2==1.20

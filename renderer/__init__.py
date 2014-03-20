@@ -90,3 +90,21 @@ class FileRenderer(object):
 
         """
         return ""
+
+    def _edit(self, file_pointer, **kwargs):
+        """Renders a file to HTML.
+
+        :param file_pointer: File pointer
+        :return: HTML rendition of file
+
+        """
+        return ""
+
+    def _save(self, file_pointer, **kwargs):
+        """Renders a file to HTML.
+
+        :param file_pointer: File pointer
+        :return: HTML rendition of file
+
+        """
+        return ""

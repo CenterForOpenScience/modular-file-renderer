@@ -63,11 +63,6 @@ def get_file_extension(path, lower=True):
     return ext.lower() if lower else ext
 
 
-class MFRException(Exception):
-    """Base exception from which all MFR-related errors inherit."""
-    pass
-
-
 class FileHandler(object):
     """Abstract base class from which all file handlers must inherit.
     """

@@ -22,7 +22,7 @@ Detect a file's type and render it to HTML.
 
 Or do it all in one step.
 
-.. code-block::
+.. code-block:: python
 
     rendered = mfr.render(open('myimage.png'))
     # => '<img src="myimage.png" alt="" />'

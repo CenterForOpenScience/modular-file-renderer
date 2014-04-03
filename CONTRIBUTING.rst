@@ -28,6 +28,11 @@ Install the development dependencies. ::
 
     It is recommended that you use a `virtualenv`_ during development.
 
+
+Lastly, install mfr in development mode. ::
+
+    $ python setup.py develop
+
 .. _virtualenv: http://www.virtualenv.org/en/latest/
 
 

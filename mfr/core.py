@@ -3,9 +3,9 @@
 """
 
 #: Mapping of file handler names to classes
+# {'tabular': TabularFileHandler}
 # TODO(sloria): Possible make this an OrderredDict so that detection is deterministic when
 # two filehandlers can handle a file?
-# {'tabular': TabularFileHandler}
 _registry = {}
 
 
@@ -39,7 +39,7 @@ def detect(fp, handlers=None, *args, **kwargs):
     return False
 
 
-def render(fp, handler, renderer=None, *args, **kwargs):
+def render(fp, handler=None, renderer=None, *args, **kwargs):
     """Core rendering function. Return the rendered HTML for a given file.
 
     :param File fp: A file-like object to render.
@@ -47,7 +47,8 @@ def render(fp, handler, renderer=None, *args, **kwargs):
     :param str renderer: The name of the renderer function to use (must be a key in
         in the handler class's `renderers` dictionary)
     """
-    HandlerClass = _registry.get(handler)
+    # Get the specified handler, detect it if not given
+    HandlerClass = _registry.get(handler, detect(fp))
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))

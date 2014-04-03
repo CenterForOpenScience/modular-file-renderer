@@ -100,3 +100,8 @@ def test_detect_returns_a_handler(fakefile):
 def test_detect_returns_false_if_no_handler_found(fakefile):
     core._registry = {}
     assert core.detect(fakefile) is False
+
+def test_render_detects_filetype_if_no_handler_given(fakefile):
+    core.register_filehandler('myhandler', FakeHandler)
+    core.render(fakefile)
+    assert FakeHandler.renderers['html'].called

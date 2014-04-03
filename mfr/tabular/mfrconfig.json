@@ -1,0 +1,6 @@
+{
+    "requirements": {
+        "render": "render-requirements.txt",
+        "export": "export-requirements.txt"
+    }
+}

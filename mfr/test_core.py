@@ -109,3 +109,9 @@ def test_render_detects_filetype_if_no_handler_given(fakefile):
     core.register_filehandler('myhandler', FakeHandler)
     core.render(fakefile)
     assert FakeHandler.renderers['html'].called
+
+def test_get_file_extension():
+    assert core.get_file_extension('foo.txt') == '.txt'
+    assert core.get_file_extension('foo.TXT') == '.txt'
+    assert core.get_file_extension('foo/bar/baz.Mp3') == '.mp3'
+    assert core.get_file_extension('foo') == ''

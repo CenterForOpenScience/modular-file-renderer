@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Core mfr functions and classes.
 """
+import os
 
 #: Mapping of file handler names to classes
 # {'tabular': TabularFileHandler}
@@ -54,6 +55,12 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
                         .format(handler=handler))
     handler = HandlerClass()
     return handler.render(fp, renderer=renderer, *args, **kwargs)
+
+
+def get_file_extension(path, lower=True):
+    """Get the file extension for a given file path."""
+    ext = os.path.splitext(path)[1]
+    return ext.lower() if lower else ext
 
 
 class MFRException(Exception):

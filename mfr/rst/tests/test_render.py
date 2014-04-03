@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
-"""Tests for the TEMPLATE renderer module."""
+"""Tests for the RST renderer module."""
 
-from mfr.TEMPLATE.render import render_TEMPLATE_tag
-from mfr.TEMPLATE.handler import TEMPLATEFileHandler
+from mfr.rst.render import render_html
+from mfr.rst.handler import RstFileHandler
 
 
-def test_render_TEMPLATE_tag(fakefile):
+def test_render_html(fakefile):
     ### Testing stuff###
-    result = render_TEMPLATE_tag(fakefile, src="/my/file.SAMPLE", alt='My SAMPLE')
-    assert 'src="/my/file.SAMPLE"' in result
-    assert 'alt="My SAMPLE"' in result
-
+    # TODO
+    pass
 
 
 # TODO: Move this to test_handler.py?
-def test_TEMPLATE_handler_detect_TEMPLATE(fakefile):
+def test_rst_handler_detect_rst(fakefile):
     # set the file's name
-    fakefile.name = 'file.SAMPLE'
-
-    handler = TEMPLATEFileHandler()
-    assert handler.detect(fakefile) is True
+    # TODO
+    pass

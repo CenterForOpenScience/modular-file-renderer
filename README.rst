@@ -1,35 +1,48 @@
-===============================
+***
 mfr
-===============================
+***
 
-.. image:: https://badge.fury.io/py/mfr.png
-    :target: http://badge.fury.io/py/mfr
-
-.. image:: https://travis-ci.org/CenterForOpenScience/mfr.png?branch=master
-        :target: https://travis-ci.org/CenterForOpenScience/mfr
-
-.. image:: https://pypip.in/d/mfr/badge.png
-        :target: https://crate.io/packages/mfr?version=latest
+**mfr** (short for "Modular File Renderer") is a Python package for rendering files to HTML.
 
 
-HTML file renderer for Python
+Detect a file's type and render it to HTML.
 
-Features
---------
+.. code-block:: python
 
-* TODO
+    import mfr
 
-Documentation
--------------
+    filepointer = open('hello.jpg')
+    # Get a FileHandler for the detected filetype
+    handler = mfr.detect(filepointer)
 
-Full documentation is available at https://mfr.readthedocs.org/.
+    # Render the file to html
+    handler.render(filepointer, alt="Hello world")
+    # => '<img src="hello.jpg" alt="Hello world" />'
+
+
+Or do it all in one step.
+
+.. code-block::
+
+    rendered = mfr.render(open('myimage.png'))
+    # => '<img src="myimage.png" alt="" />'
+
 
 Requirements
-------------
+============
 
 - Python >= 2.6 or >= 3.3
 
-License
--------
 
-MIT licensed. See the bundled `LICENSE <https://github.com/CenterForOpenScience/mfr/blob/master/LICENSE>`_ file for more details.
+Installing Extra Dependencies
+=============================
+
+TODO
+
+
+
+
+License
+=======
+
+TODO

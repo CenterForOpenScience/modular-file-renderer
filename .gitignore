@@ -17,7 +17,7 @@ develop-eggs
 .installed.cfg
 lib
 lib64
-.konch
+.konchrc
 .env
 
 # Installer logs
@@ -42,3 +42,4 @@ output/*/index.html
 
 # Sphinx
 docs/_build
+README.html

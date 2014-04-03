@@ -8,6 +8,13 @@ docs_dir = 'docs'
 build_dir = os.path.join(docs_dir, '_build')
 
 @task
+def previewer():
+    """Run the previewer app."""
+    from previewer.app import app
+    app.run(debug=True)
+
+
+@task
 def test():
     run('python setup.py test', pty=True)
 
@@ -28,7 +35,7 @@ def browse_docs():
     run("open %s" % os.path.join(build_dir, 'index.html'))
 
 @task
-def build_docs(clean=False, browse=False):
+def docs(clean=False, browse=False):
     if clean:
         clean_docs()
     run("sphinx-build %s %s" % (docs_dir, build_dir), pty=True)

@@ -1,7 +1,7 @@
 Changelog
 ---------
 
-0.1.0 (2014-04-01)
+0.1.0 (unreleased)
 ++++++++++++++++++
 
 * First release.

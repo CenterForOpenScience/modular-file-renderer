@@ -6,7 +6,7 @@ from setuptools.command.test import test as TestCommand
 
 
 REQUIRES = [
-
+    'docopt'
 ]
 
 
@@ -58,10 +58,8 @@ setup(
     packages=find_packages(exclude=("test*", )),
     package_dir={'mfr': 'mfr'},
     include_package_data=True,
-    install_requires=[
-
-    ],
-    license=read("LICENSE"),
+    install_requires=REQUIRES,
+    # license=read("LICENSE"),
     zip_safe=False,
     keywords='mfr',
     classifiers=[
@@ -75,6 +73,11 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
     ],
+    entry_points={
+        'console_scripts': [
+            "mfrinstall = mfr.installer:main"
+        ]
+    },
     test_suite='tests',
     tests_require=['pytest'],
     cmdclass={'test': PyTest}

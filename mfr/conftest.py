@@ -7,9 +7,10 @@ Example test: ::
         assert my_renderer(fakefile) == '..expected result..'
 
 """
-import io
 import pytest
+import mock
 
 @pytest.fixture
 def fakefile():
-    return io.BytesIO(b'foo')
+    """A simple file-like object."""
+    return mock.Mock(spec=file)

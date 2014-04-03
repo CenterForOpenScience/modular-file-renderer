@@ -1,28 +1,26 @@
 # -*- coding: utf-8 -*-
 
 from mfr.core import FileHandler, get_file_extension
-from mfr.template.render import render_TEMPLATE_tag
+from mfr.rst.render import render_html
 
-from mfr.TEMPLATE.export import TEMPLATEExporter
+from mfr.rst.export import RstExporter
 
 EXTENSIONS = [
-    '.SAMPLE',
-    '.TEST',
-    # TODO: finish this list
+    '.rst',
 ]
 
 
-class TEMPLATEFileHandler(FileHandler):
+class RstFileHandler(FileHandler):
     # Renderers and exporters can be callables
     renderers = {
         # like functions
-        'html': render_TEMPLATE_tag,
+        'html': render_html,
     }
 
     exporters = {
         # Or instance methods
-        'SAMPLE': TEMPLATEExporter().export_SAMPLE,
-        'TEST': TEMPLATEExporter().export_TEST,
+        'html': RstExporter().export_html,
+        'txt': RstExporter().export_txt,
         # ...
     }
 

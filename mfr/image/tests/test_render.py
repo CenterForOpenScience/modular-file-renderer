@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Tests for the image renderer module."""
-from mfr.image import ImageFileHandler
 
 from mfr.image.render import render_img_tag
+from mfr.image.handler import ImageFileHandler
 
 
 def test_render_img_tag(fakefile):
@@ -10,7 +10,7 @@ def test_render_img_tag(fakefile):
     assert 'src="/my/image.png"' in result
     assert 'alt="My image"' in result
 
-
+# TODO: Move this to test_handler.py?
 def test_image_handler_detect_image(fakefile):
     # set the file's name
     fakefile.name = 'myimage.jpg'

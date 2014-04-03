@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Core mfr functions and classes.
+"""Core functions and classes.
+
+Basic Usage: ::
+
+    from mfr.core import detect
+
+    with open('myfile.jpg', 'r') as fp:
+        handler = detect(fp)
+        if handler:
+            html = handler.render(fp)
 """
 import os
 
@@ -24,7 +33,8 @@ def register_filehandler(name, file_handler):
 
 
 def detect(fp, handlers=None, instance=False, *args, **kwargs):
-    """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file.
+    """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,
+    or ``False`` if no handler could be found for the file.
 
     :param list handlers: A list of filehandler names to try. If ``None``,
         try all registered handlers.

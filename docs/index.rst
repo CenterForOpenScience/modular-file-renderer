@@ -8,7 +8,7 @@ mfr: HTML file renderer for Python
 
 Release v\ |version|. (:ref:`Installation <install>`)
 
-HTML file renderer for Python
+**mfr** (short for "Modular File Renderer") is a Python package for rendering files to HTML.
 
 Guide
 -----

@@ -3,6 +3,13 @@
 API Reference
 =============
 
-TODO
+.. module:: mfr
+
+
+mfr.core
+--------
+
+.. automodule:: mfr.core
+    :inherited-members:
 
 

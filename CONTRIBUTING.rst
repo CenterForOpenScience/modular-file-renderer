@@ -37,7 +37,7 @@ Writing A File Format Package
 There are two main pieces of a file format package are
 
 - Your custom rendering and/or exporting code
-- Your :class:`FileHandler <mfr.core.FileHandler>``
+- Your :class:`FileHandler <mfr.core.FileHandler>`
 
 
 Rendering/Exporting Code
@@ -61,7 +61,7 @@ TODO: Show examples of renderers as functions, instance methods, class or static
 The FileHandler
 ---------------
 
-A file handler is responsible for using your custom rendering and exporting code to actually render and export a file. When you call :func:`mfr.detect <mfr.detect>`, you receive a :class:`FileHandler <mfr.core.FileHandler>`` class.
+A file handler is responsible for using your custom rendering and exporting code to actually render and export a file. When you call :func:`mfr.detect <mfr.detect>`, you receive a :class:`FileHandler <mfr.core.FileHandler>` class.
 
 Your FileHandler **must** define a ``detect`` method which, given a file object, returns whether or not it can handle the file.
 
@@ -119,7 +119,7 @@ A typical directory structure might look like this.
 
 .. note::
 
-    You may decide to make subdirectories for `render` and `export` if those files start to become very large.
+    You may decide to make subdirectories for rendering and exporting code if  single files start to become very large.
 
 
 Running tests

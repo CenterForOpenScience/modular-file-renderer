@@ -1,8 +1,8 @@
 
 from mfr import core
-from mfr.rst.render import render_html
+from mfr.TEMPLATE.render import render_TEMPLATE_tag
 
 
-class RstHandler(core.FileHandler):
+class TEMPLATEHandler(core.FileHandler):
 
-    renderer = {'html': render_html}
+    renderer = {'html': render_TEMPLATE_tag}

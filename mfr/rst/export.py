@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-"""RST exporter module."""
+"""Image exporter module."""
 
-class RstExporter(object):
 
-    def export_html (self, fp):
+
+class TEMPLATEExporter(object):
+
+    def export_SAMPLE(self, fp):
         # TODO
         pass
 
-    def export_txt(self, fp):
+    def export_TEST(self, fp):
         # TODO
         pass

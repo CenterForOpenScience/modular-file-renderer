@@ -91,10 +91,14 @@ def test_error_raised_if_renderer_not_found(fakefile):
     with pytest.raises(ValueError):
         core.render(fakefile, handler='notfound')
 
-def test_detect_returns_a_handler(fakefile):
+def test_detect_returns_a_handler_class(fakefile):
     core.register_filehandler('myhandler', FakeHandler)
-    handler = core.detect(fakefile)
-    # returns an instance of the handler
+    handler_cls = core.detect(fakefile)
+    assert issubclass(handler_cls, FakeHandler)
+
+def test_detect_can_return_instance(fakefile):
+    core.register_filehandler('myhandler', FakeHandler)
+    handler = core.detect(fakefile, instance=True)
     assert isinstance(handler, FakeHandler)
 
 def test_detect_returns_false_if_no_handler_found(fakefile):

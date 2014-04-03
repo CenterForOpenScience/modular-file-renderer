@@ -23,6 +23,12 @@ Install the development dependencies. ::
 
     $ pip install -r dev-requirements.txt
 
+.. note::
+
+    It is recommended that you use a `virtualenv`_ during development.
+
+.. _virtualenv: http://www.virtualenv.org/en/latest/
+
 
 Running tests
 -------------

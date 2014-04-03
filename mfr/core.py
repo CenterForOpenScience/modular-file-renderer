@@ -22,7 +22,7 @@ def register_filehandler(name, file_handler):
     _registry[name] = file_handler
 
 
-def detect(fp, handlers=None, *args, **kwargs):
+def detect(fp, handlers=None, instance=False, *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file.
 
     :param list handlers: A list of filehandler names to try. If ``None``,
@@ -35,7 +35,7 @@ def detect(fp, handlers=None, *args, **kwargs):
         HandlerClass = _registry.get(handler_name)
         handler = HandlerClass()
         if handler.detect(fp, *args, **kwargs):
-            return handler
+            return handler if instance else HandlerClass
     return False
 
 

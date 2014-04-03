@@ -5,7 +5,9 @@
 #: Mapping of file handler names to classes
 # TODO(sloria): Possible make this an OrderredDict so that detection is deterministic when
 # two filehandlers can handle a file?
+# {'tabular': TabularFileHandler}
 _registry = {}
+
 
 
 def register_filehandler(name, file_handler):
@@ -102,5 +104,3 @@ class FileHandler(object):
         else:
             raise ValueError('`export` method called with no exporter specified and '
                             'no default.')
-
-

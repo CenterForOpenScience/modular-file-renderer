@@ -1,12 +1,13 @@
 """mfr: CLI for installing mfr modules.
 
 Usage:
-    mfrinstall <module> [-d]
-    mfrinstall <module> [--render-only | --export-only] [-d]
+    mfr init
+    mfr install [--exclude-static]
 
 Options:
     -h --help       Show this screen.
     -d --debug      Use debug mode.
+    install         Reads mfrconfig file and installs all necessary dependencies.
 
 """
 import logging
@@ -21,7 +22,7 @@ def parse_args():
     return args
 
 
-def install_module(render_only=False, export_only=False):
+def install_module():
     # TODO(sloria)
     pass
 
@@ -35,10 +36,6 @@ def main():
             level=logging.DEBUG)
     logger.debug(args)
     module = args['<module>']
-    install_module(module=module,
-        render_only=args['--render-only'],
-        export_only=args['--export-only'])
-
 
 if __name__ == '__main__':
     main()

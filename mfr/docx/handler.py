@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from mfr.core import FileHandler, get_file_extension
-from mfr.rst.render import render_html
+from mfr.docx.render import render_html
 
-from mfr.rst.export import RstExporter
+from mfr.docx.export import DocxExporter
 
 EXTENSIONS = [
-    '.rst',
+    '.docx',
+    # TODO: finish this list
 ]
 
 
-class RstFileHandler(FileHandler):
+class DocxFileHandler(FileHandler):
     # Renderers and exporters can be callables
     renderers = {
         # like functions
@@ -19,8 +20,8 @@ class RstFileHandler(FileHandler):
 
     exporters = {
         # Or instance methods
-        'html': RstExporter().export_html,
-        'txt': RstExporter().export_txt,
+        'pdf': DocxExporter().export_pdf,
+        'txt': DocxExporter().export_txt,
         # ...
     }
 

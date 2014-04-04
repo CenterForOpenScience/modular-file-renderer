@@ -7,7 +7,7 @@ import os
 import random
 
 from urllib import quote
-from flask import Flask, send_file
+from flask import Flask, send_file, send_from_directory
 from cStringIO import StringIO
 import mfr
 
@@ -27,6 +27,13 @@ mfr.register_filehandler('code', CodeFileHandler)
 
 app = Flask(__name__, static_folder='files')
 
+
+# Module static files should live in renderer/<module/static
+@app.route('/render/static/<module>/<path:file_path>')
+def send_module_file(module, file_path):
+    file_path, file_name = os.path.split(file_path)
+    module_static_dir = os.path.join('..', 'mfr', module, 'static', file_path)
+    return send_from_directory(module_static_dir, file_name)
 
 @app.route('/')
 def index():

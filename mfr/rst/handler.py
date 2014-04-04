@@ -1,31 +1,28 @@
 # -*- coding: utf-8 -*-
 
 from mfr.core import FileHandler, get_file_extension
-from mfr.image.render import render_img_tag
+from mfr.template.render import render_TEMPLATE_tag
 
-from mfr.image.export import ImageExporter
+from mfr.TEMPLATE.export import TEMPLATEExporter
 
 EXTENSIONS = [
-    '.jpg',
-    '.png',
-    '.tiff',
+    '.SAMPLE',
+    '.TEST',
     # TODO: finish this list
 ]
 
 
-class ImageFileHandler(FileHandler):
+class TEMPLATEFileHandler(FileHandler):
     # Renderers and exporters can be callables
     renderers = {
         # like functions
-        'html': render_img_tag,
+        'html': render_TEMPLATE_tag,
     }
 
     exporters = {
         # Or instance methods
-        'png': ImageExporter().export_png,
-        'jpg': ImageExporter().export_jpg,
-        'gif': ImageExporter().export_gif,
-        'tif': ImageExporter().export_tif,
+        'SAMPLE': TEMPLATEExporter().export_SAMPLE,
+        'TEST': TEMPLATEExporter().export_TEST,
         # ...
     }
 

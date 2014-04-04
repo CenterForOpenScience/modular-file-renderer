@@ -3,12 +3,12 @@
 
 
 
-class TEMPLATEExporter(object):
+class DocxExporter(object):
 
-    def export_SAMPLE(self, fp):
+    def export_pdf(self, fp):
         # TODO
         pass
 
-    def export_TEST(self, fp):
+    def export_txt(self, fp):
         # TODO
         pass

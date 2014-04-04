@@ -1,28 +1,27 @@
 # -*- coding: utf-8 -*-
 
 from mfr.core import FileHandler, get_file_extension
-from mfr.template.render import render_TEMPLATE_tag
+from mfr.docx.render import render_html
 
-from mfr.TEMPLATE.export import TEMPLATEExporter
+from mfr.docx.export import DocxExporter
 
 EXTENSIONS = [
-    '.SAMPLE',
-    '.TEST',
+    '.docx',
     # TODO: finish this list
 ]
 
 
-class TEMPLATEFileHandler(FileHandler):
+class DocxFileHandler(FileHandler):
     # Renderers and exporters can be callables
     renderers = {
         # like functions
-        'html': render_TEMPLATE_tag,
+        'html': render_html,
     }
 
     exporters = {
         # Or instance methods
-        'SAMPLE': TEMPLATEExporter().export_SAMPLE,
-        'TEST': TEMPLATEExporter().export_TEST,
+        'pdf': DocxExporter().export_pdf,
+        'txt': DocxExporter().export_txt,
         # ...
     }
 

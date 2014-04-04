@@ -1,8 +1,8 @@
 
 from mfr import core
-from mfr.TEMPLATE.render import render_TEMPLATE_tag
+from mfr.docx.render import render_html
 
 
-class TEMPLATEHandler(core.FileHandler):
+class DocxHandler(core.FileHandler):
 
-    renderer = {'html': render_TEMPLATE_tag}
+    renderer = {'html': render_html}

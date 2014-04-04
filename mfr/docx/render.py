@@ -1,11 +1,6 @@
 """TEMPLATE renderer module."""
 
-def render_TEMPLATE_tag(fp, src=None, alt=''):
-    """A simple TEMPLATE tag renderer.
+import pydocx
 
-    :param str:
-    """
-    # Default src to the filename
-    if src is None:
-        src = fp.name
-    return '<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt)
+def render_html(fp, src=None, alt=''):
+    return pydocx.Docx2Html(fp).parsed

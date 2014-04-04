@@ -24,6 +24,8 @@ class ImageFileHandler(FileHandler):
         # Or instance methods
         'png': ImageExporter().export_png,
         'jpg': ImageExporter().export_jpg,
+        'gif': ImageExporter().export_gif,
+        'tif': ImageExporter().export_tif,
         # ...
     }
 

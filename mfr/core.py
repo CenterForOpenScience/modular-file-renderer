@@ -19,7 +19,6 @@ import os
 _registry = {}
 
 
-
 def register_filehandler(name, file_handler):
     """Register a new file handler.
     Usage: ::
@@ -59,7 +58,7 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
         in the handler class's `renderers` dictionary)
     """
     # Get the specified handler, detect it if not given
-    HandlerClass = _registry.get(handler, detect(fp))
+    HandlerClass = _registry.get(handler) or detect(fp)
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))
@@ -67,10 +66,34 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
     return handler.render(fp, renderer=renderer, *args, **kwargs)
 
 
+def export(fp, handler=None, exporter=None, *args, **kwargs):
+    """Core rendering function. Return the rendered HTML for a given file.
+
+    :param File fp: A file-like object to render.
+    :param FileHandler: The file handler class to use.
+    :param str renderer: The name of the renderer function to use (must be a key in
+        in the handler class's `renderers` dictionary)
+    """
+    # Get the specified handler, detect it if not given
+    HandlerClass = _registry.get(handler) or detect(fp)
+    if not HandlerClass:
+        raise ValueError('No available handler with name {handler}.'
+                        .format(handler=handler))
+    handler = HandlerClass()
+    return handler.export(fp, exporter=exporter, *args, **kwargs)
+
+
 def get_file_extension(path, lower=True):
     """Get the file extension for a given file path."""
     ext = os.path.splitext(path)[1]
     return ext.lower() if lower else ext
+
+
+def get_file_exporters(handler):
+    try:
+        return handler.exporters.keys()
+    except AttributeError:
+        return None
 
 
 class FileHandler(object):

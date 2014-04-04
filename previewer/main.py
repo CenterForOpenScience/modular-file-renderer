@@ -13,17 +13,19 @@ import mfr
 
 
 # module imports
-from mfr.image.handler import ImageFileHandler
+# from mfr.image.handler import ImageFileHandler
 from mfr.docx.handler import DocxFileHandler
 from mfr.rst.handler import RstFileHandler
 from mfr.code.handler import CodeFileHandler
+from mfr.pdf.handler import PdfFileHandler
 
 
 # register module imports
-mfr.register_filehandler('image', ImageFileHandler)
+# mfr.register_filehandler('image', ImageFileHandler)
 mfr.register_filehandler('docx', DocxFileHandler)
 mfr.register_filehandler('rst', RstFileHandler)
 mfr.register_filehandler('code', CodeFileHandler)
+mfr.register_filehandler('pdf', PdfFileHandler)
 
 app = Flask(__name__, static_folder='files')
 

@@ -1,11 +1,22 @@
 """Pdf renderer module."""
 
 import PyPDF2
+import os.path
+
+#TODO Fix this because it doesn't actually work :)  The Mako template needs help!!!
+temp = PdfFileHandler.TEMPLATE_LOOKUP
+
+def render_template(file_name, **kwargs):
+    return temp.get_template(file_name).render(**kwargs)
+
+
 
 def render_html(fp, src=None, alt=''):
-    url = kwargs['url']
-    return self._render_mako(
+
+    if src is None:
+        src = fp.name
+    return render_template(
         "pdfpage.mako",
-        url=url,
-        STATIC_PATH=self.STATIC_PATH,
+        url=src,
+        STATIC_PATH='static/'
     )

@@ -2,7 +2,7 @@
 import pytest
 import mock
 
-from . import core
+from mfr import core
 
 
 def teardown_function(testfunc):

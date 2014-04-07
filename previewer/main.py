@@ -42,6 +42,8 @@ from mfr.code.handler import CodeFileHandler
 mfr.register_filehandler('code', CodeFileHandler)
 mfr.register_filehandler('pdf', PdfFileHandler)
 
+mfr.config['STATIC_ROOT'] = STATIC_PATH
+
 
 ### html building helpers
 

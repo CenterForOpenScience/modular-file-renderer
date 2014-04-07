@@ -3,7 +3,7 @@
 import PyPDF2
 import os.path
 
-#TODO Fix this because it doesn't actually work :)  The Mako template needs help!!!
+#TODO (kjungersen): Fix this because it doesn't actually work :)  The Mako template needs help!!!
 temp = PdfFileHandler.TEMPLATE_LOOKUP
 
 def render_template(file_name, **kwargs):

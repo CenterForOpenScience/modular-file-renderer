@@ -18,6 +18,10 @@ import os
 # two filehandlers can handle a file?
 _registry = {}
 
+config = {
+    'STATIC_ROOT': os.path.split(__file__)[0],
+}
+
 
 def register_filehandler(name, file_handler):
     """Register a new file handler.
@@ -29,7 +33,6 @@ def register_filehandler(name, file_handler):
     :param FileHandler file_handler: The filehandler class.
     """
     _registry[name] = file_handler
-
 
 def detect(fp, handlers=None, instance=False, *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,

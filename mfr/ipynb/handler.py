@@ -1,30 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from mfr.core import FileHandler, get_file_extension
-from mfr.image.render import render_img_tag
+from mfr.ipynb.render import render_html
 try:  # Exporter requires PIL
-    from mfr.image.export import ImageExporter
+    from mfr.Ipynb.export import IpynbExporter
     exporters = {
-        'png': ImageExporter().export_png,
-        'jpg': ImageExporter().export_jpg,
-        'gif': ImageExporter().export_gif,
-        'tif': ImageExporter().export_tif,
+        'python': IpynbExporter().export_python,
     }
 except ImportError:
     exporters = {}
 
 EXTENSIONS = [
-    '.jpg',
-    '.png',
-    '.tiff',
-    # TODO: finish this list
+    '.ipynb'
 ]
-
 
 class ImageFileHandler(FileHandler):
     # Renderers and exporters are callables
     renderers = {
-        'html': render_img_tag,
+        'html': render_html,
     }
 
     exporters = exporters

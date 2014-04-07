@@ -19,14 +19,11 @@ FILES_DIR = os.path.join(HERE, 'files')
 from mfr.image.handler import ImageFileHandler
 mfr.register_filehandler('image', ImageFileHandler)
 
+from  mfr.docx.handler import DocxFileHandler
+mfr.register_filehandler('docx', DocxFileHandler)
+
 #todo(ajs) fix this stupid way of doing ALL the try/excepts
 # module imports
-try:
-    from  mfr.docx.handler import DocxFileHandler
-    mfr.register_filehandler('docx', DocxFileHandler)
-except Exception as error:
-    logging.error(error)
-
 try:
     from mfr.rst.handler import RstFileHandler
     mfr.register_filehandler('rst', RstFileHandler)

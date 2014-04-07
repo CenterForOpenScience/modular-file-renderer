@@ -19,7 +19,7 @@ FILES_DIR = os.path.join(HERE, 'files')
 from mfr.image.handler import ImageFileHandler
 mfr.register_filehandler('image', ImageFileHandler)
 
-from  mfr.docx.handler import DocxFileHandler
+from mfr.docx.handler import DocxFileHandler
 mfr.register_filehandler('docx', DocxFileHandler)
 
 #todo(ajs) fix this stupid way of doing ALL the try/excepts
@@ -30,11 +30,9 @@ try:
 except Exception as error:
     logging.error(error)
 
-try:
-    from mfr.code.handler import CodeFileHandler
-    mfr.register_filehandler('code', CodeFileHandler)
-except Exception as error:
-    logging.error(error)
+from mfr.code.handler import CodeFileHandler
+mfr.register_filehandler('code', CodeFileHandler)
+
 
 ### html building helpers
 

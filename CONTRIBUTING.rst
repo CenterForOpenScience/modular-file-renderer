@@ -120,7 +120,7 @@ A typical directory structure might look like this.
     ├── render-requirements.txt
     ├── render.py
     ├── static
-    └── tests.py
+    └── test_myformat.py
 
 .. note::
 

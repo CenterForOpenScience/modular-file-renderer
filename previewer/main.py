@@ -22,13 +22,8 @@ mfr.register_filehandler('image', ImageFileHandler)
 from mfr.docx.handler import DocxFileHandler
 mfr.register_filehandler('docx', DocxFileHandler)
 
-#todo(ajs) fix this stupid way of doing ALL the try/excepts
-# module imports
-try:
-    from mfr.rst.handler import RstFileHandler
-    mfr.register_filehandler('rst', RstFileHandler)
-except Exception as error:
-    logging.error(error)
+from mfr.rst.handler import RstFileHandler
+mfr.register_filehandler('rst', RstFileHandler)
 
 from mfr.code.handler import CodeFileHandler
 mfr.register_filehandler('code', CodeFileHandler)

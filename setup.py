@@ -75,7 +75,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            "mfrinstall = mfr.installer:main"
+            "mfr = mfr.cli:main"
         ]
     },
     test_suite='tests',

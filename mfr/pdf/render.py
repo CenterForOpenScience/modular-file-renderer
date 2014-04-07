@@ -2,7 +2,7 @@
 
 import PyPDF2
 import os.path
-
+import mfr.pdf
 #TODO (kjungersen): Fix this because it doesn't actually work :)  The Mako template needs help!!!
 temp = PdfFileHandler.TEMPLATE_LOOKUP
 

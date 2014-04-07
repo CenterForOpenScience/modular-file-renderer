@@ -14,7 +14,7 @@ EXTENSIONS = [
     '.ipynb'
 ]
 
-class ImageFileHandler(FileHandler):
+class IpynbFileHandler(FileHandler):
     # Renderers and exporters are callables
     renderers = {
         'html': render_html,

@@ -28,6 +28,14 @@ mfr.register_filehandler('rst', RstFileHandler)
 from mfr.code.handler import CodeFileHandler
 mfr.register_filehandler('code', CodeFileHandler)
 
+from mfr.ipynb.handler import IpynbFileHandler
+mfr.register_filehandler('ipynb', IpynbFileHandler)
+
+# #from mfr.pdf.handler import PdfFileHandler
+# mfr.register_filehandler('pdf', PdfFileHandler)
+
+mfr.config['STATIC_ROOT'] = '/render/static'
+
 
 ### html building helpers
 

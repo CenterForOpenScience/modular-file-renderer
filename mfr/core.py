@@ -24,6 +24,9 @@ logger = logging.getLogger(__name__)
 # two filehandlers can handle a file?
 _registry = {}
 
+config = {
+}
+
 
 def register_filehandler(name, file_handler):
     """Register a new file handler.
@@ -35,7 +38,6 @@ def register_filehandler(name, file_handler):
     :param FileHandler file_handler: The filehandler class.
     """
     _registry[name] = file_handler
-
 
 def detect(fp, handlers=None, instance=False, *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,
@@ -105,6 +107,8 @@ def get_file_exporters(handler):
 class FileHandler(object):
     """Abstract base class from which all file handlers must inherit.
     """
+    TEMPLATE_LOOKUP = None
+
     #: Maps renderer names to renderer callables, e.g. {'html': render_img_html}
     renderers = {}
     #: Maps exporter names to exporter callables, e.g. {'png': export_png}
@@ -112,6 +116,11 @@ class FileHandler(object):
 
     default_renderer = 'html'
     default_exporter = None
+
+    def get_template(self, template_name):
+        if not self.TEMPLATE_LOOKUP:
+            raise Exception('oh no')
+        self.TEMPLATE_LOOKUP.get_template(template_name)
 
     def detect(self, fp):
         """Return whether a given file can be handled by this file handler.

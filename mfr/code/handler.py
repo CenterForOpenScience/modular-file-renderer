@@ -3,7 +3,6 @@
 from mfr.core import FileHandler, get_file_extension
 from mfr.code.render import render_html
 
-from mfr.code.export import CodeExporter
 
 EXTENSIONS = ['.rb',
  '.cs',
@@ -107,18 +106,9 @@ EXTENSIONS = ['.rb',
  '.cfm']
 
 
-
 class CodeFileHandler(FileHandler):
-    # Renderers and exporters can be callables
     renderers = {
-        # like functions
         'html': render_html,
-    }
-
-    exporters = {
-        # Or instance methods
-        'text': CodeExporter().export_txt,
-        # ...
     }
 
     def detect(self, fp):

@@ -4,21 +4,23 @@
 
 import os
 from urllib import quote
-from flask import Flask, send_file, send_from_directory
+from flask import Flask, send_file, send_from_directory, url_for
 from cStringIO import StringIO
 import mfr
 import logging
 
 logger = logging.getLogger(__name__)
+HERE = os.path.abspath(os.path.dirname(__file__))
+FILES_DIR = os.path.join(HERE, 'files')
+
+# TODO(sloria): For now, filehandlers are registered manually. Once the configuration
+# system is in place use a proper config file to define which handlers should be used
+# and remove this code.
+from mfr.image.handler import ImageFileHandler
+mfr.register_filehandler('image', ImageFileHandler)
 
 #todo(ajs) fix this stupid way of doing ALL the try/excepts
 # module imports
-try:
-    from mfr.image.handler import ImageFileHandler
-    mfr.register_filehandler('image', ImageFileHandler)
-except Exception as error:
-    logging.error(error)
-
 try:
     from  mfr.docx.handler import DocxFileHandler
     mfr.register_filehandler('docx', DocxFileHandler)
@@ -50,11 +52,11 @@ def build_export_html(file_name, handler):
                 file_name=file_name)
     return html
 
-
+# TODO(sloria): Put in template
 def build_html(file_name):
     html = ''
     if file_name[0] != ".": # gets rid of .DSStore and .gitignore
-        fp = open(os.path.join('files', file_name))
+        fp = open(os.path.join(FILES_DIR, file_name))
         handler = mfr.detect(fp)
         if handler:
             html += '<a href="/render/{safe_name}">{file_name} </a>'.format(
@@ -73,25 +75,26 @@ app = Flask(__name__, static_folder='files')
 @app.route('/')
 def index():
     html = 'Below are files in the modular-file-renderer/previewer/files folder. Click-able links are those that the renderer can detect.</br>'
-    for file_name in os.listdir('files'):
+    for file_name in os.listdir(FILES_DIR):
         html += build_html(file_name)
     return html
 
 
 @app.route('/render/<file_name>')
 def render(file_name):
-    fp = open(os.path.join('files', file_name))
+    fp = open(os.path.join(FILES_DIR, file_name))
     handler = mfr.detect(fp)
     if handler:
         try:
-            return mfr.render(fp, handler)
+            return mfr.render(fp, handler,
+                src=url_for('static', filename=file_name))
         except Exception as err:
             return err.message
-    return file_name
+    return 'Cannot render {file_name}.'.format(file_name=file_name)
 
 @app.route('/export/<exporter>/<file_name>')
 def export(exporter, file_name):
-    fp = open(os.path.join('files', file_name))
+    fp = open(os.path.join(FILES_DIR, file_name))
     handler = mfr.detect(fp)
     exp = mfr.export(fp, handler, exporter="png")
     short_name, _ = os.path.splitext(file_name)

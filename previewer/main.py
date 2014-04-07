@@ -2,90 +2,118 @@
 """Flask app for previewing files.
 """
 
-
 import os
-import random
-
 from urllib import quote
-from flask import Flask, send_file
+from flask import Flask, send_file, send_from_directory, url_for
 from cStringIO import StringIO
 import mfr
+import logging
 
+logger = logging.getLogger(__name__)
+HERE = os.path.abspath(os.path.dirname(__file__))
+FILES_DIR = os.path.join(HERE, 'files')
 
+<<<<<<< HEAD
 # module imports
-from mfr.image.handler import ImageFileHandler
+# from mfr.image.handler import ImageFileHandler
 from mfr.docx.handler import DocxFileHandler
 from mfr.rst.handler import RstFileHandler
 from mfr.code.handler import CodeFileHandler
+from mfr.pdf.handler import PdfFileHandler
 
 
 # register module imports
+# mfr.register_filehandler('image', ImageFileHandler)
+=======
+# TODO(sloria): For now, filehandlers are registered manually. Once the configuration
+# system is in place use a proper config file to define which handlers should be used
+# and remove this code.
+from mfr.image.handler import ImageFileHandler
 mfr.register_filehandler('image', ImageFileHandler)
+
+from mfr.docx.handler import DocxFileHandler
+>>>>>>> 2554b9dcdfd622fa347e783d6449cb3dea496ae2
 mfr.register_filehandler('docx', DocxFileHandler)
+
+from mfr.rst.handler import RstFileHandler
 mfr.register_filehandler('rst', RstFileHandler)
+
+from mfr.code.handler import CodeFileHandler
 mfr.register_filehandler('code', CodeFileHandler)
+mfr.register_filehandler('pdf', PdfFileHandler)
+
+
+### html building helpers
+
+def build_export_html(file_name, handler):
+    html = ''
+    exporters = mfr.get_file_exporters(handler)
+    if exporters:
+        html += "</br><span style='margin-left:20px;'> export to: </span>"
+        for exporter in exporters:
+            html += '<a href="/export/{exporter}/{file_name}"> {exporter}, </a>'.format(
+                exporter=exporter,
+                file_name=file_name)
+    return html
+
+# TODO(sloria): Put in template
+def build_html(file_name):
+    html = ''
+    if file_name[0] != ".": # gets rid of .DSStore and .gitignore
+        fp = open(os.path.join(FILES_DIR, file_name))
+        handler = mfr.detect(fp)
+        if handler:
+            html += '<a href="/render/{safe_name}">{file_name} </a>'.format(
+                safe_name=quote(file_name),
+                file_name=file_name)
+            html += build_export_html(file_name, handler)
+        else:
+            html += '<span>' + file_name + "</span>"
+        html += "</br></br>"
+    return html
+
+## App Start ##
 
 app = Flask(__name__, static_folder='files')
 
-
 @app.route('/')
 def index():
-    html = ''
-    for file_name in os.listdir('files'):
-        fp = open(os.path.join('files', file_name))
-        handler = mfr.detect(fp)
-        safe_name = quote(file_name)
-        if handler:
-            html += '<a href="/render/{safe_name}">{file_name}</a>'.format(
-                safe_name=safe_name, file_name=file_name)
-            exporters = mfr.get_file_exporters(handler)
-            if exporters:
-                html += "<span style='margin:20px;'>export to:</span>"
-                for exporter in exporters:
-                    html += '<a href="/export/{exporter}/{file_name}" style="margin:10px;"> {exporter} </a>'.format(exporter=exporter, file_name=file_name)
-        else:
-            html += '<span>' + file_name + "</span>"
-        html += "</br>"
+    html = 'Below are files in the modular-file-renderer/previewer/files folder. Click-able links are those that the renderer can detect.</br>'
+    for file_name in os.listdir(FILES_DIR):
+        html += build_html(file_name)
     return html
 
 
 @app.route('/render/<file_name>')
 def render(file_name):
-    fp = open(os.path.join('files', file_name))
-
+    fp = open(os.path.join(FILES_DIR, file_name))
     handler = mfr.detect(fp)
-
-
-    # exp = export(fp, handler, exporter="png")
-    # send_file(
-    #     StringIO(exp),
-    #     as_attachment=True,
-    #     attachment_filename=export_name,
-    #     )
-
     if handler:
         try:
-            return mfr.render(fp, handler)
+            return mfr.render(fp, handler,
+                src=url_for('static', filename=file_name))
         except Exception as err:
             return err.message
-    return file_name
+    return 'Cannot render {file_name}.'.format(file_name=file_name)
 
 @app.route('/export/<exporter>/<file_name>')
 def export(exporter, file_name):
-    print exporter
-    print file_name
-    fp = open(os.path.join('files', file_name))
+    fp = open(os.path.join(FILES_DIR, file_name))
     handler = mfr.detect(fp)
     exp = mfr.export(fp, handler, exporter="png")
     short_name, _ = os.path.splitext(file_name)
     export_name = short_name + '.' + exporter
     return send_file(
-            StringIO(exp),
-            as_attachment=True,
-            attachment_filename=export_name,
-            )
+        StringIO(exp),
+        as_attachment=True,
+        attachment_filename=export_name,
+    )
 
-
+@app.route('/render/static/<module>/<path:file_path>')
+def send_module_file(module, file_path):
+    file_path, file_name = os.path.split(file_path)
+    module_static_dir = os.path.join('..', 'mfr', module, 'static', file_path)
+    return send_from_directory(module_static_dir, file_name)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

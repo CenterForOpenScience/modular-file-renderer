@@ -90,7 +90,7 @@ def render(file_name):
                 src=url_for('static', filename=file_name))
         except Exception as err:
             return err.message
-    return file_name
+    return 'Cannot render {file_name}.'.format(file_name=file_name)
 
 @app.route('/export/<exporter>/<file_name>')
 def export(exporter, file_name):

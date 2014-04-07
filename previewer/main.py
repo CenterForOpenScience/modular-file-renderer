@@ -13,14 +13,14 @@ logger = logging.getLogger(__name__)
 HERE = os.path.abspath(os.path.dirname(__file__))
 FILES_DIR = os.path.join(HERE, 'files')
 
+# TODO(sloria): For now, filehandlers are registered manually. Once the configuration
+# system is in place use a proper config file to define which handlers should be used
+# and remove this code.
+from mfr.image.handler import ImageFileHandler
+mfr.register_filehandler('image', ImageFileHandler)
+
 #todo(ajs) fix this stupid way of doing ALL the try/excepts
 # module imports
-try:
-    from mfr.image.handler import ImageFileHandler
-    mfr.register_filehandler('image', ImageFileHandler)
-except Exception as error:
-    logging.error(error)
-
 try:
     from  mfr.docx.handler import DocxFileHandler
     mfr.register_filehandler('docx', DocxFileHandler)

@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 _registry = {}
 
 config = {
-    'STATIC_ROOT': os.path.split(__file__)[0],
 }
 
 

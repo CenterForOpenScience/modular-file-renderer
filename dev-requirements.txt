@@ -1,7 +1,16 @@
+# Distribution
+wheel
+
+# Task runner
+invoke
+
+# Docs
+sphinx
+
+# Testing
+mock
 pytest
 tox>=1.5.0
-sphinx
-wheel
-invoke
-mock
+
+# Previewer dependencies
 Flask

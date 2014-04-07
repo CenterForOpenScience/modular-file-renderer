@@ -11,6 +11,12 @@ Basic Usage: ::
             html = handler.render(fp)
 """
 import os
+import shutil
+import inspect
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 #: Mapping of file handler names to classes
 # {'tabular': TabularFileHandler}
@@ -140,3 +146,36 @@ class FileHandler(object):
         else:
             raise ValueError('`export` method called with no exporter specified and '
                             'no default.')
+
+def _get_dir_for_class(cls):
+    """Return the absolute directory where a class resides."""
+    fpath = inspect.getfile(cls)
+    return os.path.abspath(os.path.dirname(fpath))
+
+def get_static_path_for_handler(handler_cls):
+    # If STATIC_PATH is defined, use that
+    if hasattr(handler_cls, 'STATIC_PATH'):
+        static_path = handler_cls.STATIC_PATH
+    # Otherwise assume 'static' dir is in the same directory as
+    # the handler class's module
+    else:
+        static_path = os.path.join(_get_dir_for_class(handler_cls), 'static')
+    return static_path
+
+def copy_dir(src, dest):
+    try:
+        shutil.copytree(src, dest)
+    except shutil.Error as err:
+        logger.warn(err)
+    except OSError as err:
+        logger.warn(err)
+
+def collect_static(dest='.', dry_run=False):
+    for name, handler_cls in _registry.items():
+        static_path = get_static_path_for_handler(handler_cls)
+        namespaced_destination = os.path.join(dest, name)
+        if dry_run:
+            print('Pretending to copy {static_path} to {namespaced_destination}.'
+                .format(**locals()))
+        else:
+            copy_dir(static_path, namespaced_destination)

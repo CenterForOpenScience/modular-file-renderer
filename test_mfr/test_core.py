@@ -5,7 +5,7 @@ import shutil
 import pytest
 import mock
 
-from mfr import core, config
+from mfr import core, _config
 from mfr.exceptions import ConfigurationError
 from test_mfr.fakemodule.handler import FakeHandler as TestHandler
 
@@ -16,7 +16,7 @@ def teardown_function(testfunc):
     # clear the registry after each test
     core._registry = {}
     # clear config
-    core.config = config.Config()
+    core.config = _config.Config()
 
 ##### Fixtures, etc. ######
 
@@ -158,11 +158,11 @@ def test_collect_static():
 
 def test_collect_static_uses_configuration_value():
     core.register_filehandler('fakemodule', TestHandler)
-    core.config['STATIC_PATH'] = os.path.join(HERE, 'static')
+    core.config['STATIC_FOLDER'] = os.path.join(HERE, 'static')
     core.collect_static()
     expected1 = os.path.join(HERE, 'static', 'fakemodule', 'fakestyle.css')
     assert_file_exists(expected1)
-    shutil.rmtree(core.config['STATIC_PATH'])
+    shutil.rmtree(core.config['STATIC_FOLDER'])
 
 def test_collect_static_raises_error_if_no_destination():
     with pytest.raises(ConfigurationError):

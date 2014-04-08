@@ -181,7 +181,7 @@ def copy_dir(src, dest):
     except shutil.Error as err:
         logger.warn(err)
     except OSError as err:
-        logger.warn(err)
+        logger.debug('Skipping {src} (already exists)'.format(src=src))
 
 
 def collect_static(dest=None, dry_run=False):
@@ -189,9 +189,9 @@ def collect_static(dest=None, dry_run=False):
     Files will be copied to ``dest``, if specified, or the STATIC_PATH config
     variable.
     """
-    dest_ = dest or config.get('STATIC_PATH')
+    dest_ = dest or config.get('STATIC_FOLDER')
     if not dest_:
-        raise ConfigurationError('STATIC_PATH has not been configured.')
+        raise ConfigurationError('STATIC_FOLDER has not been configured.')
     for name, handler_cls in _registry.items():
         static_path = get_static_path_for_handler(handler_cls)
         namespaced_destination = os.path.join(dest_, name)

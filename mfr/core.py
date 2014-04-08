@@ -15,6 +15,8 @@ import shutil
 import inspect
 import logging
 
+from mfr.config import Config
+from mfr.exceptions import ConfigurationError
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,9 @@ logger = logging.getLogger(__name__)
 # TODO(sloria): Possible make this an OrderredDict so that detection is deterministic when
 # two filehandlers can handle a file?
 _registry = {}
+
+#: Current mfr configuration object
+config = Config()
 
 
 def register_filehandler(name, file_handler):
@@ -147,12 +152,18 @@ class FileHandler(object):
             raise ValueError('`export` method called with no exporter specified and '
                             'no default.')
 
+
 def _get_dir_for_class(cls):
     """Return the absolute directory where a class resides."""
     fpath = inspect.getfile(cls)
     return os.path.abspath(os.path.dirname(fpath))
 
+
 def get_static_path_for_handler(handler_cls):
+    """Return the absolute path for a given FileHandler class.
+    Defaults to a ``static`` folder within the same directory of the handler's
+    module.
+    """
     # If STATIC_PATH is defined, use that
     if hasattr(handler_cls, 'STATIC_PATH'):
         static_path = handler_cls.STATIC_PATH
@@ -162,18 +173,28 @@ def get_static_path_for_handler(handler_cls):
         static_path = os.path.join(_get_dir_for_class(handler_cls), 'static')
     return static_path
 
+
 def copy_dir(src, dest):
+    """Recursively copies a directory's contents."""
     try:
         shutil.copytree(src, dest)
     except shutil.Error as err:
         logger.warn(err)
     except OSError as err:
-        logger.warn(err)
+        logger.debug('Skipping {src} (already exists)'.format(src=src))
 
-def collect_static(dest='.', dry_run=False):
+
+def collect_static(dest=None, dry_run=False):
+    """Collect all static assets for registered handlers to a single directory.
+    Files will be copied to ``dest``, if specified, or the STATIC_PATH config
+    variable.
+    """
+    dest_ = dest or config.get('STATIC_FOLDER')
+    if not dest_:
+        raise ConfigurationError('STATIC_FOLDER has not been configured.')
     for name, handler_cls in _registry.items():
         static_path = get_static_path_for_handler(handler_cls)
-        namespaced_destination = os.path.join(dest, name)
+        namespaced_destination = os.path.join(dest_, name)
         if dry_run:
             print('Pretending to copy {static_path} to {namespaced_destination}.'
                 .format(**locals()))

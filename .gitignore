@@ -67,3 +67,6 @@ README.html
 
 # Previewer files
 previewer/files/*
+previewer/static/*
+
+!.gitkeep

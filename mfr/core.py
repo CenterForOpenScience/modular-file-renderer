@@ -15,6 +15,8 @@ import shutil
 import inspect
 import logging
 
+from mfr.config import Config
+from mfr.exceptions import ConfigurationError
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,9 @@ logger = logging.getLogger(__name__)
 # TODO(sloria): Possible make this an OrderredDict so that detection is deterministic when
 # two filehandlers can handle a file?
 _registry = {}
+
+#: Current mfr configuration object
+config = Config()
 
 
 def register_filehandler(name, file_handler):
@@ -170,7 +175,10 @@ def copy_dir(src, dest):
     except OSError as err:
         logger.warn(err)
 
-def collect_static(dest='.', dry_run=False):
+def collect_static(dest=None, dry_run=False):
+    dest = dest or config.get('STATIC_PATH')
+    if not dest:
+        raise ConfigurationError('STATIC_PATH has not been configured.')
     for name, handler_cls in _registry.items():
         static_path = get_static_path_for_handler(handler_cls)
         namespaced_destination = os.path.join(dest, name)

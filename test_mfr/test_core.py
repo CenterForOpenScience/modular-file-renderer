@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
+import os
+import shutil
+
 import pytest
 import mock
 
 from mfr import core
+from test_mfr.fakemodule.handler import FakeHandler as TestHandler
 
+
+HERE = os.path.abspath(os.path.dirname(__file__))
 
 def teardown_function(testfunc):
     # clear the registry after each test
@@ -115,3 +121,33 @@ def test_get_file_extension():
     assert core.get_file_extension('foo.TXT') == '.txt'
     assert core.get_file_extension('foo/bar/baz.Mp3') == '.mp3'
     assert core.get_file_extension('foo') == ''
+
+def test_error_raised_if_renderer_not_callable(fakefile):
+    bad_renderer = 'badnewsbears'
+    class BadHandler(core.FileHandler):
+        renderers = {'html': bad_renderer}
+    with pytest.raises(TypeError):
+        handler = BadHandler()
+        handler.render(fakefile, 'html')
+
+def test_get_dir_for_class():
+    class Foo:
+        pass
+    assert core._get_dir_for_class(Foo) == os.path.abspath(os.path.dirname(__file__))
+
+def test_get_static_path_for_handler_from_class_var():
+    class MyHandler(core.FileHandler):
+        STATIC_PATH = 'foo/bar/static/'
+
+    assert core.get_static_path_for_handler(MyHandler) == MyHandler.STATIC_PATH
+
+def assert_file_exists(path, msg='File does not exist'):
+    assert os.path.exists(path) is True, msg
+
+def test_collect_static():
+    core.register_filehandler('fakemodule', TestHandler)
+    dest = os.path.join(HERE, 'static')
+    core.collect_static(dest=dest)
+    expected1 = os.path.join(HERE, 'static', 'fakemodule', 'fakestyle.css')
+    assert_file_exists(expected1)
+    shutil.rmtree(dest)

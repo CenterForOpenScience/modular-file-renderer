@@ -13,6 +13,18 @@ logger = logging.getLogger(__name__)
 HERE = os.path.abspath(os.path.dirname(__file__))
 FILES_DIR = os.path.join(HERE, 'files')
 
+<<<<<<< HEAD
+# module imports
+# from mfr.image.handler import ImageFileHandler
+from mfr.docx.handler import DocxFileHandler
+from mfr.rst.handler import RstFileHandler
+from mfr.code.handler import CodeFileHandler
+from mfr.pdf.handler import PdfFileHandler
+
+
+# register module imports
+# mfr.register_filehandler('image', ImageFileHandler)
+=======
 # TODO(sloria): For now, filehandlers are registered manually. Once the configuration
 # system is in place use a proper config file to define which handlers should be used
 # and remove this code.
@@ -20,6 +32,7 @@ from mfr.image.handler import ImageFileHandler
 mfr.register_filehandler('image', ImageFileHandler)
 
 from mfr.docx.handler import DocxFileHandler
+>>>>>>> 2554b9dcdfd622fa347e783d6449cb3dea496ae2
 mfr.register_filehandler('docx', DocxFileHandler)
 
 from mfr.rst.handler import RstFileHandler
@@ -27,6 +40,7 @@ mfr.register_filehandler('rst', RstFileHandler)
 
 from mfr.code.handler import CodeFileHandler
 mfr.register_filehandler('code', CodeFileHandler)
+mfr.register_filehandler('pdf', PdfFileHandler)
 
 
 ### html building helpers

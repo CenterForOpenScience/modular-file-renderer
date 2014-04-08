@@ -15,7 +15,7 @@ import shutil
 import inspect
 import logging
 
-from mfr.config import Config
+from mfr._config import Config
 from mfr.exceptions import ConfigurationError
 
 logger = logging.getLogger(__name__)

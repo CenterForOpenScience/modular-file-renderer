@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 import pytest
 import mock
 
@@ -115,3 +117,25 @@ def test_get_file_extension():
     assert core.get_file_extension('foo.TXT') == '.txt'
     assert core.get_file_extension('foo/bar/baz.Mp3') == '.mp3'
     assert core.get_file_extension('foo') == ''
+
+def test_error_raised_if_renderer_not_callable(fakefile):
+    bad_renderer = 'badnewsbears'
+    class BadHandler(core.FileHandler):
+        renderers = {'html': bad_renderer}
+    with pytest.raises(TypeError):
+        handler = BadHandler()
+        handler.render(fakefile, 'html')
+
+def test_find_static():
+    assert 0, 'finish me'
+
+def test_get_dir_for_class():
+    class Foo:
+        pass
+    assert core._get_dir_for_class(Foo) == os.path.abspath(os.path.dirname(__file__))
+
+def test_get_static_path_for_handler_from_class_var():
+    class MyHandler(core.FileHandler):
+        STATIC_PATH = 'foo/bar/static/'
+
+    assert core.get_static_path_for_handler(MyHandler) == MyHandler.STATIC_PATH

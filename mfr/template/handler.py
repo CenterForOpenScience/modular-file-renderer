@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from mfr.core import FileHandler, get_file_extension
-from mfr.template.render import render_TEMPLATE_tag
 
-from mfr.TEMPLATE.export import TEMPLATEExporter
 
 EXTENSIONS = [
     '.SAMPLE',
@@ -13,17 +11,9 @@ EXTENSIONS = [
 
 
 class TEMPLATEFileHandler(FileHandler):
-    # Renderers and exporters can be callables
+    # Renderers and exporters are callables
     renderers = {
-        # like functions
-        'html': render_TEMPLATE_tag,
-    }
-
-    exporters = {
-        # Or instance methods
-        'SAMPLE': TEMPLATEExporter().export_SAMPLE,
-        'TEST': TEMPLATEExporter().export_TEST,
-        # ...
+        # TODO
     }
 
     def detect(self, fp):

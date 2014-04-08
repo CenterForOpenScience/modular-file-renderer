@@ -10,7 +10,7 @@ build_dir = os.path.join(docs_dir, '_build')
 @task
 def previewer():
     """Run the previewer app."""
-    from previewer.app import app
+    from previewer.main import app
     app.run(debug=True)
 
 

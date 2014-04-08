@@ -14,10 +14,12 @@ except ImportError:
     exporters = {}
 
 EXTENSIONS = [
+    '.jpeg',
     '.jpg',
     '.png',
-    '.tiff',
-    # TODO: finish this list
+    '.bmp',
+    '.gif',
+    #todo (ajs) figure out why tiffs never work...
 ]
 
 

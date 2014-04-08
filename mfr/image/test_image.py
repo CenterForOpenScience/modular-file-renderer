@@ -7,13 +7,29 @@ from mfr.image.handler import ImageFileHandler
     'image.png',
     'image.jpg',
     'image.bmp',
+    'image.JPEG',
+    'image.PNG',
+    'image.JPG',
+    'image.BMP',
+    'image.Jpeg',
+    'image.pnG',
 ])
-
-
 def test_detect_image_extensions(fakefile, filename):
     fakefile.name = filename
     handler = ImageFileHandler()
     assert handler.detect(fakefile) is True
+
+
+@pytest.mark.parametrize('filename',[
+    'other.g',
+    'otherjpg',
+    'other.bump'
+    'other.'
+])
+def test_does_not_detect_other_extensions(fakefile, filename):
+    fakefile.name = filename
+    handler = ImageFileHandler()
+    assert handler.detect(fakefile) is False
 
 
 def test_render_img_tag(fakefile):

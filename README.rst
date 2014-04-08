@@ -75,8 +75,8 @@ You can configure mfr via the ``mfr.config`` object, which has the same API as `
 
 
 
-Example Flask Usage
-===================
+Example Usage with Flask
+========================
 
 Below is an example `Flask`_ application that uses mfr.
 

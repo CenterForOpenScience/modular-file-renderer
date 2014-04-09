@@ -72,6 +72,7 @@ You can configure mfr via the ``mfr.config`` object.
         'HANDLERS': [mfr_image.Handler, mfr_code_pygments.Handler]
     })
 
+    mfr.config['STATIC_FOLDER']  #=> '/path/to/static/folder'
     mfr.collect_static()  # copies static files to '/path/to/static/folder'
 
 The config object has the same the same API as `Flask's config module`_. The following example is equivalent to above.
@@ -84,6 +85,8 @@ The config object has the same the same API as `Flask's config module`_. The fol
         HANDLERS = [mfr_image.Handler, mfr_code_pygments.Handler]
 
     mfr.config.from_object(MFRConfig)
+    mfr.config['STATIC_FOLDER']  #=> '/path/to/static/folder'
+    mfr.collect_static()
 
 
 .. _Flask's config module: http://flask.pocoo.org/docs/api/#configuration

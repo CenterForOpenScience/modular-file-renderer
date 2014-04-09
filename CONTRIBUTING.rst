@@ -48,7 +48,7 @@ There are two main pieces of a file format package are
 Rendering/Exporting Code
 ------------------------
 
-Renderes are simply callables (functions or methods) that take a file as their first argument and return a string of the rendered HTML.
+Renderers are simply callables (functions or methods) that take a file as their first argument and return a string of the rendered HTML.
 
 Here is a very simple example of function that takes a filepointer and outputs an HTML image tag from it.
 
@@ -61,32 +61,46 @@ Here is a very simple example of function that takes a filepointer and outputs a
 
 You can also write renderers as methods.
 
-TODO: Show examples of renderers as functions, instance methods, class or static methods, etc.
+.. code-block:: python
+
+    # in mfr_video/render.py
+
+    class VideoRenderer(object):
+
+        def render_html5_tag(self, fp):
+            return '<video src="{filename}"></video>'.format(filename=fp.name)
+
+        def render_flash(self, fp):
+            # ...
+            pass
+
 
 The FileHandler
 ---------------
 
-A file handler is responsible for using your custom rendering and exporting code to actually render and export a file. When you call :func:`mfr.detect <mfr.detect>`, you receive a :class:`FileHandler <mfr.core.FileHandler>` class.
+A file handler is responsible for using your custom rendering and exporting code to actually render and export a file. When you call :func:`mfr.detect <mfr.detect>`, you receive a list of :class:`FileHandler <mfr.core.FileHandler>` classes.
 
 Your FileHandler **must** define a ``detect`` method which, given a file object, returns whether or not it can handle the file.
 
+**Your FileHandler class should be named Handler and should be defined in your ``mfr_format/__init__.py`` file.**
+
 .. code-block:: python
+
+    # in mfr_image/__init__.py
 
     from mfr import FileHandler, get_file_extension
 
     # Your custom code
-    from mfr.image.render import render_img_tag
-    from mfr.image.export import ImageExporter
+    from mfr_image.render import render_img_tag
+    from mfr_image.export import ImageExporter
 
 
-    class ImageFileHandler(FileHandler):
+    class Handler(FileHandler):
         renderers = {
-            # like functions
             'html': render_img_tag,
         }
 
         exporters = {
-            # Or instance methods
             'png': ImageExporter().export_png,
             'jpg': ImageExporter().export_jpg,
             # ...
@@ -102,29 +116,30 @@ Organization
 
 Each package has its own directory. At a minimum, your package should include:
 
-- ``handler.py``: Where your :class:`FileHandler <mfr.core.FileHandler>`` subclass will live.
+- ``__init__.py``: Where your :class:`FileHandler <mfr.core.FileHandler>`` subclass will live.
 - ``render-requirements.txt``: External dependencies for rendering functionality.
 - ``export-requirements.txt``: External dependencies for export functionality.
 
 Apart from those files, you  are free to organize your rendering and export code however you want.
 
-A typical directory structure might look like this.
+A typical directory structure might look like this:
 
 ::
 
-    myformat
+    mfr_something
     ├── __init__.py
     ├── export-requirements.txt
     ├── export.py
-    ├── handler.py
     ├── render-requirements.txt
     ├── render.py
     ├── static
     └── test_myformat.py
 
+where "something" is a file format, e.g. "mfr_image", "mfr_video".
+
 .. note::
 
-    You may decide to make subdirectories for rendering and exporting code if  single files start to become very large.
+    You may decide to make subdirectories for rendering and exporting code if single files start to become very large.
 
 
 Running tests

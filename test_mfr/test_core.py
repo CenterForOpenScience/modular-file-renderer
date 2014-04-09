@@ -34,11 +34,18 @@ class FakeHandler(core.FileHandler):
 
 ##### The tests #####
 
-def test_register_filetype():
-    # clear the registry
-    core._registry = {}
+def test_register_filehandler():
     core.register_filehandler('fakefiles', FakeHandler)
     assert core._registry['fakefiles'] == FakeHandler
+
+def test_register_filehandlers():
+    core.register_filehandlers({
+        'fakefiles': FakeHandler,
+        'testfiles': TestHandler
+    })
+    assert core._registry['fakefiles'] == FakeHandler
+    assert core._registry['testfiles'] == TestHandler
+
 
 def test_render_uses_default_renderer(fakefile):
     handler = FakeHandler()

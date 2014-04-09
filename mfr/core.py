@@ -42,6 +42,17 @@ def register_filehandler(name, file_handler):
     _registry[name] = file_handler
 
 
+def register_filehandlers(handler_dict):
+    """Register multiple file handlers.
+    Usage: ::
+
+        register_file_handlers({'image': ImageFileHandler, 'movie': MovieHandler})
+
+    :param dict handler_dict: A dictionary mapping handler names to handler classes
+    """
+    _registry.update(handler_dict)
+
+
 def detect(fp, handlers=None, instance=False, *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,
     or ``False`` if no handler could be found for the file.

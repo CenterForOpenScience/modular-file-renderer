@@ -1,19 +1,27 @@
 # -*- coding: utf-8 -*-
 
+from mfr.template.render import render_html
 from mfr.core import FileHandler, get_file_extension
 
+try:
+    from mfr.template.export import TEMPLATEExporter
+    exporters = {
+        'sample': TEMPLATEExporter().export_SAMPLE,
+    }
+except ImportError:
+    exporters = {}
 
+""" Defines extensions this module should detect """
 EXTENSIONS = [
     '.SAMPLE',
     '.TEST',
-    # TODO: finish this list
 ]
 
 
 class TEMPLATEFileHandler(FileHandler):
     # Renderers and exporters are callables
     renderers = {
-        # TODO
+        'html': render_html,
     }
 
     def detect(self, fp):

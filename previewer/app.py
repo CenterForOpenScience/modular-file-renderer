@@ -6,24 +6,18 @@ import os
 from urllib import quote
 from flask import Flask, send_file, send_from_directory, url_for
 from cStringIO import StringIO
-import mfr
 import logging
+
+import mfr
+import mfr_image
+import mfr_docx
+import mfr_rst
+import mfr_code_pygments
 
 logger = logging.getLogger(__name__)
 HERE = os.path.abspath(os.path.dirname(__file__))
 FILES_DIR = os.path.join(HERE, 'files')
 
-from mfr.image.handler import ImageFileHandler
-mfr.register_filehandler('image', ImageFileHandler)
-
-from mfr.docx.handler import DocxFileHandler
-mfr.register_filehandler('docx', DocxFileHandler)
-
-from mfr.rst.handler import RstFileHandler
-mfr.register_filehandler('rst', RstFileHandler)
-
-from mfr.code.handler import CodeFileHandler
-mfr.register_filehandler('code', CodeFileHandler)
 
 
 ### html building helpers
@@ -69,6 +63,13 @@ class MFRConfig:
     # Allow renderers to include static asset imports
     INCLUDE_STATIC = True
 
+    # Available file handlers
+    HANDLERS = [mfr_image.Handler,
+                mfr_docx.Handler,
+                mfr_rst.Handler,
+                mfr_code_pygments.Handler]
+
+
 class AppConfig:
     # Where the files to render are
     FILES_DIR = FILES_DIR
@@ -86,11 +87,11 @@ def index():
 @app.route('/render/<filename>')
 def render(filename):
     fp = open(os.path.join(FILES_DIR, filename))
-    handler = mfr.detect(fp)
+    handler = mfr.detect(fp, many=False)  # return the first valid filehandler
     if handler:
         try:
             src = url_for('serve_file', filename=filename)
-            return mfr.render(fp, handler, src=src)
+            return mfr.render(fp, handler=handler, src=src)
         except Exception as err:
             return err.message
     return 'Cannot render {filename}.'.format(filename=filename)

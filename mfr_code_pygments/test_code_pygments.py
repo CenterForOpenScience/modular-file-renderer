@@ -42,7 +42,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 def test_get_stylesheet():
     result = get_stylesheet()
-    expected_url = '{0}/code/css/style.css'.format(mfr.config['STATIC_URL'])
+    expected_url = '{0}/mfr_code_pygments/css/style.css'.format(mfr.config['STATIC_URL'])
     assert expected_url in result
 
 def test_stylesheet_not_included_by_default(fakefile):

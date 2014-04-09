@@ -21,5 +21,5 @@ def render_html(fp, *args, **kwargs):
 
 
 def get_stylesheet():
-    return '<link rel="stylesheet" href="{0}/code/css/style.css" />'\
+    return '<link rel="stylesheet" href="{0}/mfr_code_pygments/css/style.css" />'\
         .format(config['STATIC_URL'])

@@ -25,26 +25,22 @@ _defaults = {
     'INCLUDE_STATIC': False
 }
 config = Config(defaults=_defaults)
-#: Mapping of file handler names to classes
-# {'tabular': TabularFileHandler}
-# TODO(sloria): Possible make this an OrderredDict so that detection is deterministic when
-# two filehandlers can handle a file?
-config['HANDLERS'] = {}
+
+config['HANDLERS'] = []
 
 
-def register_filehandler(name, file_handler):
+def register_filehandler(file_handler):
     """Register a new file handler.
     Usage: ::
 
-        register_filehandler('movie', MovieHandler)
+        register_filehandler(MovieHandler)
 
-    :param str name: The name of the filehandler.
     :param FileHandler file_handler: The filehandler class.
     """
-    get_registry()[name] = file_handler
+    get_registry().append(file_handler)
 
 
-def register_filehandlers(handler_dict):
+def register_filehandlers(handlers):
     """Register multiple file handlers.
     Usage: ::
 
@@ -52,7 +48,7 @@ def register_filehandlers(handler_dict):
 
     :param dict handler_dict: A dictionary mapping handler names to handler classes
     """
-    get_registry().update(handler_dict)
+    get_registry().extend(handlers)
 
 
 def get_registry():
@@ -60,13 +56,13 @@ def get_registry():
 
 
 def clear_registry():
-    config['HANDLERS'] = {}
+    config['HANDLERS'] = []
 
 
 def reset_config():
     global config
     config = Config(defaults=_defaults)
-    config['HANDLERS'] = {}
+    config['HANDLERS'] = []
 
 
 def detect(fp, handlers=None, instance=False, many=True, *args, **kwargs):
@@ -78,10 +74,9 @@ def detect(fp, handlers=None, instance=False, many=True, *args, **kwargs):
     :return: A FileHandler that can handle the file, or False if no handler was
         found.
     """
-    handlers = handlers or get_registry().keys()
+    handlers = handlers or get_registry()
     valid_handlers = []
-    for handler_name in handlers:
-        HandlerClass = get_registry().get(handler_name)
+    for HandlerClass in handlers:
         handler = HandlerClass()
         if handler.detect(fp, *args, **kwargs):
             handler_obj = handler if instance else HandlerClass
@@ -101,10 +96,10 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
         in the handler class's `renderers` dictionary)
     """
     # Get the specified handler, detect it if not given
-    HandlerClass = get_registry().get(handler) or detect(fp, many=False)
+    HandlerClass = handler or detect(fp, many=False)
     if not HandlerClass:
-        raise ValueError('No available handler with name {handler}.'
-                        .format(handler=handler))
+        raise ValueError('No available handler that can handle {name!r}.'
+                        .format(name=fp.name))
     handler = HandlerClass()
     return handler.render(fp, renderer=renderer, *args, **kwargs)
 
@@ -118,7 +113,7 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
         in the handler class's `renderers` dictionary)
     """
     # Get the specified handler, detect it if not given
-    HandlerClass = get_registry().get(handler) or detect(fp)
+    HandlerClass = handler or detect(fp)
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))
@@ -216,6 +211,20 @@ def copy_dir(src, dest):
         logger.debug('Skipping {src} (already exists)'.format(src=src))
 
 
+def get_namespace(handler_cls):
+    """Given a FileHandler class, return the namespace used by collect_static.
+    The namespace defines the name of the folder that a file module's static
+    assets will be copied to.
+    """
+    # If 'namespace' is defined on the class, use that
+    if hasattr(handler_cls, 'namespace'):
+        return handler_cls.namespace
+    # Otherwise use the base name of the module
+    else:
+        # mypackage.mymodule.MyHandler => 'mymodule'
+        return handler_cls.__module__.split('.')[-1]
+
+
 def collect_static(dest=None, dry_run=False):
     """Collect all static assets for registered handlers to a single directory.
     Files will be copied to ``dest``, if specified, or the STATIC_PATH config
@@ -224,9 +233,9 @@ def collect_static(dest=None, dry_run=False):
     dest_ = dest or config.get('STATIC_FOLDER')
     if not dest_:
         raise ConfigurationError('STATIC_FOLDER has not been configured.')
-    for name, handler_cls in get_registry().items():
+    for handler_cls in get_registry():
         static_path = get_static_path_for_handler(handler_cls)
-        namespaced_destination = os.path.join(dest_, name)
+        namespaced_destination = os.path.join(dest_, get_namespace(handler_cls))
         if dry_run:
             print('Pretending to copy {static_path} to {namespaced_destination}.'
                 .format(**locals()))

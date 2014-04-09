@@ -32,16 +32,13 @@ class FakeHandler(core.FileHandler):
 ##### The tests #####
 
 def test_register_filehandler():
-    core.register_filehandler('fakefiles', FakeHandler)
-    assert core.get_registry()['fakefiles'] == FakeHandler
+    core.register_filehandler(FakeHandler)
+    assert FakeHandler in core.get_registry()
 
 def test_register_filehandlers():
-    core.register_filehandlers({
-        'fakefiles': FakeHandler,
-        'testfiles': TestHandler
-    })
-    assert core.get_registry()['fakefiles'] == FakeHandler
-    assert core.get_registry()['testfiles'] == TestHandler
+    core.register_filehandlers([FakeHandler, TestHandler])
+    assert FakeHandler in core.get_registry()
+    assert TestHandler in core.get_registry()
 
 
 def test_render_uses_default_renderer(fakefile):
@@ -96,32 +93,32 @@ def test_detect_must_be_implemented(fakefile):
         handler.detect(fakefile)
 
 def test_render(fakefile):
-    core.register_filehandler('myhandler', FakeHandler)
-    core.render(fakefile, handler='myhandler')
+    core.register_filehandler(FakeHandler)
+    core.render(fakefile, handler=FakeHandler)
     assert FakeHandler.renderers['html'].called
 
 def test_error_raised_if_renderer_not_found(fakefile):
     with pytest.raises(ValueError):
-        core.render(fakefile, handler='notfound')
+        core.render(fakefile, handler=None)
 
 def test_detect_returns_a_list_of_handler_classes_by_default(fakefile):
-    core.register_filehandler('myhandler', FakeHandler)
+    core.register_filehandler(FakeHandler)
     handlers = core.detect(fakefile)
     assert handlers[0] == FakeHandler
 
 def test_detect_can_return_instances(fakefile):
-    core.register_filehandler('myhandler', FakeHandler)
+    core.register_filehandler(FakeHandler)
     handlers = core.detect(fakefile, instance=True)
     assert isinstance(handlers[0], FakeHandler)
 
 def test_detect_many(fakefile):
-    core.register_filehandler('myhandler', FakeHandler)
+    core.register_filehandler(FakeHandler)
     handlers = core.detect(fakefile, many=True)
     assert isinstance(handlers, list)
     assert handlers[0] == FakeHandler
 
 def test_detect_single(fakefile):
-    core.register_filehandler('myhandler', FakeHandler)
+    core.register_filehandler(FakeHandler)
     handler = core.detect(fakefile, many=False)
     assert handler == FakeHandler
 
@@ -130,7 +127,7 @@ def test_detect_returns_empty_list_if_no_handler_found(fakefile):
     assert core.detect(fakefile) == []
 
 def test_render_detects_filetype_if_no_handler_given(fakefile):
-    core.register_filehandler('myhandler', FakeHandler)
+    core.register_filehandler(FakeHandler)
     core.render(fakefile)
     assert FakeHandler.renderers['html'].called
 
@@ -163,7 +160,7 @@ def assert_file_exists(path, msg='File does not exist'):
     assert os.path.exists(path) is True, msg
 
 def test_collect_static():
-    core.register_filehandler('fakemodule', TestHandler)
+    core.register_filehandler(TestHandler)
     dest = os.path.join(HERE, 'static')
     core.collect_static(dest=dest)
     expected1 = os.path.join(HERE, 'static', 'fakemodule', 'fakestyle.css')
@@ -172,7 +169,7 @@ def test_collect_static():
     shutil.rmtree(dest)
 
 def test_collect_static_uses_configuration_value():
-    core.register_filehandler('fakemodule', TestHandler)
+    core.register_filehandler(TestHandler)
     core.config['STATIC_FOLDER'] = os.path.join(HERE, 'static')
     core.collect_static()
     expected1 = os.path.join(HERE, 'static', 'fakemodule', 'fakestyle.css')
@@ -190,18 +187,23 @@ def test_config_from_file():
     assert core.config['STATIC_PATH'] == STATIC_PATH
 
 def test_get_registry():
-    core.register_filehandler('testfiles', TestHandler)
-    assert 'testfiles' in core.get_registry()
-    assert core.get_registry()['testfiles'] == TestHandler
+    core.register_filehandler(TestHandler)
+    assert TestHandler in core.get_registry()
 
 def test_registering_handlers_with_config():
     class FakeConfig:
-        HANDLERS = {
-            'fakefiles': FakeHandler,
-            'testfiles': TestHandler
-        }
+        HANDLERS = [FakeHandler, TestHandler]
     core.config.from_object(FakeConfig)
-    assert 'fakefiles' in core.get_registry()
+    assert FakeHandler in core.get_registry()
 
 def test_include_static_defaults_to_false():
     assert core.config['INCLUDE_STATIC'] is False
+
+def test_get_namespace_defaults_to_module_name():
+    assert core.get_namespace(TestHandler) == 'fakemodule'
+
+def test_get_namespace_for_class_that_defines_namespace_var():
+    class FooHandler(core.FileHandler):
+        namespace = 'foonamespace'
+
+    assert core.get_namespace(FooHandler) == 'foonamespace'

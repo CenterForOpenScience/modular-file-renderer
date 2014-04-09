@@ -6,7 +6,7 @@ from mfr_code_pygments.render import get_stylesheet
 
 
 def setup_function(func):
-    mfr.register_filehandler("code", CodeFileHandler)
+    mfr.register_filehandler(CodeFileHandler)
     mfr.config['STATIC_URL'] = '/static'
 
 

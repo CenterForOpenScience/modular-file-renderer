@@ -89,6 +89,7 @@ The config object has the same the same API as `Flask's config module`_. The fol
     mfr.collect_static()
 
 
+
 .. _Flask's config module: http://flask.pocoo.org/docs/api/#configuration
 
 Example Usage with Flask

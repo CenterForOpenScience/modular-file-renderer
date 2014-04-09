@@ -1,3 +1,4 @@
+"""The mfr core module."""
 # -*- coding: utf-8 -*-
 import os
 

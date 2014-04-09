@@ -17,6 +17,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
+    """FileHandler for reStructuredText files."""
     # Renderers and exporters can be callables
     renderers = renderers
 

@@ -1,6 +1,6 @@
 import pytest
-from mfr.image.render import render_img_tag
-from mfr.image.handler import ImageFileHandler
+import mfr_image
+from mfr_image.render import render_img_tag
 
 @pytest.mark.parametrize('filename', [
     'image.jpeg',
@@ -16,7 +16,7 @@ from mfr.image.handler import ImageFileHandler
 ])
 def test_detect_image_extensions(fakefile, filename):
     fakefile.name = filename
-    handler = ImageFileHandler()
+    handler = mfr_image.Handler()
     assert handler.detect(fakefile) is True
 
 
@@ -28,7 +28,7 @@ def test_detect_image_extensions(fakefile, filename):
 ])
 def test_does_not_detect_other_extensions(fakefile, filename):
     fakefile.name = filename
-    handler = ImageFileHandler()
+    handler = mfr_image.Handler()
     assert handler.detect(fakefile) is False
 
 

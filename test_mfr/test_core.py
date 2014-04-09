@@ -7,7 +7,7 @@ import mock
 
 from mfr import core
 from mfr.exceptions import ConfigurationError
-from test_mfr.fakemodule.handler import FakeHandler as TestHandler
+from test_mfr.fakemodule import Handler as TestHandler
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))

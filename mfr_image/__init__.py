@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-
 from mfr.core import FileHandler, get_file_extension
-from mfr.image.render import render_img_tag
+from mfr_image.render import render_img_tag
+
 try:  # Exporter requires PIL
-    from mfr.image.export import ImageExporter
+    from mfr_image.export import ImageExporter
+    exporter = ImageExporter()
     exporters = {
-        'png': ImageExporter().export_png,
-        'jpg': ImageExporter().export_jpg,
-        'gif': ImageExporter().export_gif,
-        'tif': ImageExporter().export_tif,
+        'png': exporter.export_png,
+        'jpg': exporter.export_jpg,
+        'gif': exporter.export_gif,
+        'tif': exporter.export_tif,
     }
 except ImportError:
     exporters = {}
@@ -19,11 +20,10 @@ EXTENSIONS = [
     '.png',
     '.bmp',
     '.gif',
-    #todo (ajs) figure out why tiffs never work...
 ]
 
 
-class ImageFileHandler(FileHandler):
+class Handler(FileHandler):
     # Renderers and exporters are callables
     renderers = {
         'html': render_img_tag,

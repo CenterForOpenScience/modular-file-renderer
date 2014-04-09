@@ -10,7 +10,7 @@ EXTENSIONS = [
 ]
 
 
-class TEMPLATEFileHandler(FileHandler):
+class Handler(FileHandler):
     # Renderers and exporters are callables
     renderers = {
         # TODO

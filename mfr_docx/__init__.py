@@ -3,7 +3,7 @@
 from mfr.core import FileHandler, get_file_extension
 
 try:  # requires pydocx
-    from mfr.docx.render import render_docx
+    from mfr_docx.render import render_docx
     renderers = {
         'html': render_docx,
     }
@@ -14,7 +14,7 @@ EXTENSIONS = [
     '.docx',
 ]
 
-class DocxFileHandler(FileHandler):
+class Handler(FileHandler):
     """FileHandler for Microsoft Docx files."""
     renderers = renderers
 

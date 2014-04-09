@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 import mfr
-from mfr.code.handler import CodeFileHandler
-from mfr.code.render import render_html, get_stylesheet
+from mfr_code_pygments import Handler as CodeFileHandler
+from mfr_code_pygments.render import get_stylesheet
 
 
 def setup_function(func):

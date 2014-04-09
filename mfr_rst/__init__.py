@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+"""RST support for mfr."""
 
 from mfr.core import FileHandler, get_file_extension
-try:
+
+try:  # requires docutils
     from mfr.rst.render import render_rst
     renderers = {
         'html': render_rst
@@ -14,7 +16,7 @@ EXTENSIONS = [
 ]
 
 
-class RstFileHandler(FileHandler):
+class Handler(FileHandler):
     # Renderers and exporters can be callables
     renderers = renderers
 

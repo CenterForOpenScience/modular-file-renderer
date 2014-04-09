@@ -1,4 +1,4 @@
-from mfr.docx.handler import DocxFileHandler
+from mfr_docx import Handler as DocxFileHandler
 
 
 def test_detect_docx(fakefile):

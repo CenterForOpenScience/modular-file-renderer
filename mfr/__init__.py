@@ -10,5 +10,7 @@ from mfr.core import (render, detect, FileHandler, get_file_extension,
     config, collect_static
 )
 
+from mfr._config import Config
+
 
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))

@@ -13,7 +13,7 @@ import mfr_image
 import mfr_docx
 import mfr_rst
 import mfr_code_pygments
-from mfr_code_pygments.configuration import config
+from mfr_code_pygments.configuration import config as mfr_code_config
 
 logger = logging.getLogger(__name__)
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -70,12 +70,13 @@ class MFRConfig:
                 mfr_rst.Handler,
                 mfr_code_pygments.Handler]
 
+# example how module-level configuration
+mfr_code_config['PYGMENTS_THEME'] = 'manni'
+
 
 class AppConfig:
     # Where the files to render are
     FILES_DIR = FILES_DIR
-
-app.config.from_object(AppConfig)
 
 @app.route('/')
 def index():
@@ -125,6 +126,7 @@ def send_module_file(module, file_path):
 
 def main(*args, **kwargs):
     """Run the app. Takes the same arguments as ``Flask#run``."""
+    app.config.from_object(AppConfig)
     mfr.config.from_object(MFRConfig)
     mfr.collect_static()
     app.run(*args, **kwargs)

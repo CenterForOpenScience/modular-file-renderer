@@ -61,5 +61,5 @@ def test_stylesheet_included_if_include_static_is_true(fakefile):
     assert get_stylesheet() in rendered
 
 def test_configuration_defaults():
-    assert config['pygments_theme'] == 'default'
-    assert config['cssclass'] == 'codehilite'
+    assert config['PYGMENTS_THEME'] == 'default'
+    assert config['CSS_CLASS'] == 'codehilite'

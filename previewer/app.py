@@ -13,9 +13,6 @@ logger = logging.getLogger(__name__)
 HERE = os.path.abspath(os.path.dirname(__file__))
 FILES_DIR = os.path.join(HERE, 'files')
 
-# TODO(sloria): For now, filehandlers are registered manually. Once the configuration
-# system is in place use a proper config file to define which handlers should be used
-# and remove this code.
 from mfr.image.handler import ImageFileHandler
 mfr.register_filehandler('image', ImageFileHandler)
 
@@ -69,6 +66,8 @@ class MFRConfig:
     STATIC_URL = app.static_url_path
     # Where to save static files
     STATIC_FOLDER = app.static_folder
+    # Allow renderers to include static asset imports
+    INCLUDE_STATIC = True
 
 class AppConfig:
     # Where the files to render are
@@ -93,7 +92,6 @@ def render(filename):
             src = url_for('serve_file', filename=filename)
             return mfr.render(fp, handler, src=src)
         except Exception as err:
-            print(err)
             return err.message
     return 'Cannot render {filename}.'.format(filename=filename)
 

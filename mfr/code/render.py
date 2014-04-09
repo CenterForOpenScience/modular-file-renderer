@@ -12,9 +12,12 @@ def render_html(fp, *args, **kwargs):
     content = fp.read()
     lexer = pygments.lexers.guess_lexer_for_filename(
         fp.name, content)
-    highlight = pygments.highlight(content, lexer, formatter)
-    link = get_stylesheet()
-    return '\n'.join([link, highlight])
+    content = pygments.highlight(content, lexer, formatter)
+    if config['INCLUDE_STATIC']:
+        link = get_stylesheet()
+        return '\n'.join([link, content])
+    else:
+        return content
 
 
 def get_stylesheet():

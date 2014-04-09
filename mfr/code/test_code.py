@@ -4,9 +4,15 @@ import mfr
 from mfr.code.handler import CodeFileHandler
 from mfr.code.render import render_html, get_stylesheet
 
+
 def setup_function(func):
     mfr.register_filehandler("code", CodeFileHandler)
     mfr.config['STATIC_URL'] = '/static'
+
+
+def teardown_function(func):
+    mfr.core.reset_config()
+
 
 @pytest.mark.parametrize('filename', [
     'script.py',
@@ -20,6 +26,7 @@ def test_detect_common_extensions(fakefile, filename):
     fakefile.name = filename
     handler = CodeFileHandler()
     assert handler.detect(fakefile) is True
+
 
 @pytest.mark.parametrize('filename', [
     'other.y',
@@ -37,3 +44,16 @@ def test_get_stylesheet():
     result = get_stylesheet()
     expected_url = '{0}/code/css/style.css'.format(mfr.config['STATIC_URL'])
     assert expected_url in result
+
+def test_stylesheet_not_included_by_default(fakefile):
+    fakefile.name = 'zen.py'
+    fakefile.read.return_value = 'import this'
+    rendered = CodeFileHandler().render(fakefile)
+    assert get_stylesheet() not in rendered
+
+def test_stylesheet_included_if_include_static_is_true(fakefile):
+    mfr.config['INCLUDE_STATIC'] = True
+    fakefile.name = 'zen.py'
+    fakefile.read.return_value = 'import this'
+    rendered = CodeFileHandler().render(fakefile)
+    assert get_stylesheet() in rendered

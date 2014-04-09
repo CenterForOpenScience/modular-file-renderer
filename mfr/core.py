@@ -69,7 +69,7 @@ def reset_config():
     config['HANDLERS'] = {}
 
 
-def detect(fp, handlers=None, instance=False, *args, **kwargs):
+def detect(fp, handlers=None, instance=False, many=True, *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,
     or ``False`` if no handler could be found for the file.
 
@@ -79,12 +79,17 @@ def detect(fp, handlers=None, instance=False, *args, **kwargs):
         found.
     """
     handlers = handlers or get_registry().keys()
+    valid_handlers = []
     for handler_name in handlers:
         HandlerClass = get_registry().get(handler_name)
         handler = HandlerClass()
         if handler.detect(fp, *args, **kwargs):
-            return handler if instance else HandlerClass
-    return False
+            handler_obj = handler if instance else HandlerClass
+            if many:
+                valid_handlers.append(handler_obj)
+            else:
+                return handler_obj
+    return valid_handlers
 
 
 def render(fp, handler=None, renderer=None, *args, **kwargs):
@@ -96,7 +101,7 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
         in the handler class's `renderers` dictionary)
     """
     # Get the specified handler, detect it if not given
-    HandlerClass = get_registry().get(handler) or detect(fp)
+    HandlerClass = get_registry().get(handler) or detect(fp, many=False)
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))

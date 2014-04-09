@@ -104,19 +104,30 @@ def test_error_raised_if_renderer_not_found(fakefile):
     with pytest.raises(ValueError):
         core.render(fakefile, handler='notfound')
 
-def test_detect_returns_a_handler_class(fakefile):
+def test_detect_returns_a_list_of_handler_classes_by_default(fakefile):
     core.register_filehandler('myhandler', FakeHandler)
-    handler_cls = core.detect(fakefile)
-    assert issubclass(handler_cls, FakeHandler)
+    handlers = core.detect(fakefile)
+    assert handlers[0] == FakeHandler
 
-def test_detect_can_return_instance(fakefile):
+def test_detect_can_return_instances(fakefile):
     core.register_filehandler('myhandler', FakeHandler)
-    handler = core.detect(fakefile, instance=True)
-    assert isinstance(handler, FakeHandler)
+    handlers = core.detect(fakefile, instance=True)
+    assert isinstance(handlers[0], FakeHandler)
 
-def test_detect_returns_false_if_no_handler_found(fakefile):
+def test_detect_many(fakefile):
+    core.register_filehandler('myhandler', FakeHandler)
+    handlers = core.detect(fakefile, many=True)
+    assert isinstance(handlers, list)
+    assert handlers[0] == FakeHandler
+
+def test_detect_single(fakefile):
+    core.register_filehandler('myhandler', FakeHandler)
+    handler = core.detect(fakefile, many=False)
+    assert handler == FakeHandler
+
+def test_detect_returns_empty_list_if_no_handler_found(fakefile):
     core.clear_registry()
-    assert core.detect(fakefile) is False
+    assert core.detect(fakefile) == []
 
 def test_render_detects_filetype_if_no_handler_given(fakefile):
     core.register_filehandler('myhandler', FakeHandler)

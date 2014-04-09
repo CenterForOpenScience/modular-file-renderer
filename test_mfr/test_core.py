@@ -191,3 +191,6 @@ def test_registering_handlers_with_config():
         }
     core.config.from_object(FakeConfig)
     assert 'fakefiles' in core.get_registry()
+
+def test_include_static_defaults_to_false():
+    assert core.config['INCLUDE_STATIC'] is False

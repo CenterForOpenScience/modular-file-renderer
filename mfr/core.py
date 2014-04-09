@@ -21,7 +21,10 @@ from mfr.exceptions import ConfigurationError
 logger = logging.getLogger(__name__)
 
 #: Current mfr configuration object
-config = Config()
+_defaults = {
+    'INCLUDE_STATIC': False
+}
+config = Config(defaults=_defaults)
 #: Mapping of file handler names to classes
 # {'tabular': TabularFileHandler}
 # TODO(sloria): Possible make this an OrderredDict so that detection is deterministic when
@@ -62,7 +65,7 @@ def clear_registry():
 
 def reset_config():
     global config
-    config = Config()
+    config = Config(defaults=_defaults)
     config['HANDLERS'] = {}
 
 

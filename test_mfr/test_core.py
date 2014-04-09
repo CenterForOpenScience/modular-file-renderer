@@ -5,7 +5,7 @@ import shutil
 import pytest
 import mock
 
-from mfr import core, _config
+from mfr import core
 from mfr.exceptions import ConfigurationError
 from test_mfr.fakemodule.handler import FakeHandler as TestHandler
 
@@ -13,10 +13,7 @@ from test_mfr.fakemodule.handler import FakeHandler as TestHandler
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 def teardown_function(testfunc):
-    # clear the registry after each test
-    core._registry = {}
-    # clear config
-    core.config = _config.Config()
+    core.reset_config()
 
 ##### Fixtures, etc. ######
 
@@ -34,11 +31,18 @@ class FakeHandler(core.FileHandler):
 
 ##### The tests #####
 
-def test_register_filetype():
-    # clear the registry
-    core._registry = {}
+def test_register_filehandler():
     core.register_filehandler('fakefiles', FakeHandler)
-    assert core._registry['fakefiles'] == FakeHandler
+    assert core.get_registry()['fakefiles'] == FakeHandler
+
+def test_register_filehandlers():
+    core.register_filehandlers({
+        'fakefiles': FakeHandler,
+        'testfiles': TestHandler
+    })
+    assert core.get_registry()['fakefiles'] == FakeHandler
+    assert core.get_registry()['testfiles'] == TestHandler
+
 
 def test_render_uses_default_renderer(fakefile):
     handler = FakeHandler()
@@ -111,7 +115,7 @@ def test_detect_can_return_instance(fakefile):
     assert isinstance(handler, FakeHandler)
 
 def test_detect_returns_false_if_no_handler_found(fakefile):
-    core._registry = {}
+    core.clear_registry()
     assert core.detect(fakefile) is False
 
 def test_render_detects_filetype_if_no_handler_given(fakefile):
@@ -173,3 +177,20 @@ STATIC_PATH = '/my/static/path'
 def test_config_from_file():
     core.config.from_pyfile(__file__)
     assert core.config['STATIC_PATH'] == STATIC_PATH
+
+def test_get_registry():
+    core.register_filehandler('testfiles', TestHandler)
+    assert 'testfiles' in core.get_registry()
+    assert core.get_registry()['testfiles'] == TestHandler
+
+def test_registering_handlers_with_config():
+    class FakeConfig:
+        HANDLERS = {
+            'fakefiles': FakeHandler,
+            'testfiles': TestHandler
+        }
+    core.config.from_object(FakeConfig)
+    assert 'fakefiles' in core.get_registry()
+
+def test_include_static_defaults_to_false():
+    assert core.config['INCLUDE_STATIC'] is False

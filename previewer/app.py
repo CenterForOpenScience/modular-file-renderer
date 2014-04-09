@@ -13,6 +13,7 @@ import mfr_image
 import mfr_docx
 import mfr_rst
 import mfr_code_pygments
+from mfr_code_pygments.configuration import config
 
 logger = logging.getLogger(__name__)
 HERE = os.path.abspath(os.path.dirname(__file__))

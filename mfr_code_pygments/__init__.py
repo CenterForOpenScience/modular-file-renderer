@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from mfr.core import FileHandler, get_file_extension
+from mfr import FileHandler, get_file_extension
 
 try:  # requires pygments
     from mfr_code_pygments.render import render_html
@@ -9,7 +9,6 @@ try:  # requires pygments
     }
 except ImportError:
     renderers = {}
-
 
 EXTENSIONS = [
     '.rb',

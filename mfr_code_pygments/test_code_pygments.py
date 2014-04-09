@@ -4,6 +4,8 @@ import mfr
 from mfr_code_pygments import Handler as CodeFileHandler
 from mfr_code_pygments.render import get_stylesheet
 
+from mfr_code_pygments.configuration import config
+
 
 def setup_function(func):
     mfr.register_filehandler(CodeFileHandler)
@@ -42,7 +44,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 def test_get_stylesheet():
     result = get_stylesheet()
-    expected_url = '{0}/mfr_code_pygments/css/style.css'.format(mfr.config['STATIC_URL'])
+    expected_url = '{0}/mfr_code_pygments/css/default.css'.format(mfr.config['STATIC_URL'])
     assert expected_url in result
 
 def test_stylesheet_not_included_by_default(fakefile):
@@ -57,3 +59,7 @@ def test_stylesheet_included_if_include_static_is_true(fakefile):
     fakefile.read.return_value = 'import this'
     rendered = CodeFileHandler().render(fakefile)
     assert get_stylesheet() in rendered
+
+def test_configuration_defaults():
+    assert config['pygments_theme'] == 'default'
+    assert config['cssclass'] == 'codehilite'

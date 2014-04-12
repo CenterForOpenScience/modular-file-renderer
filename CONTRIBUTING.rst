@@ -156,16 +156,41 @@ You can also use pytest directly. ::
 Writing tests
 =============
 
-TODO
+Unit tests should be written for all rendering, exporting, and detection code.
 
-Using the previewer
-===================
+Tests can be written as functions, like so:
 
-The mfr comes with a Flask app for previewing rendered files.
+.. code-block:: python
 
-To run the app, run: ::
+    # in test_myformat.py
 
-    $ invoke previewer
+    from mfr_something import render
+
+    def test_render_html():
+        with open('testfile.mp4') as fp:
+            assert render.render_html(fp) == '<p>rendered testfile.mp4</p>'
+
+There are a few `pytest fixtures`_ to help you mock files. You can use them by simply including them as parameters to your test functions. For example, the ``fakefile`` fixture is a fake file-like object whose name and content you can set to any value.
+
+The above test can be rewritten like so:
+
+.. code-block:: python
+
+    # in test_myformat.py
+
+    from mfr_something import render
+
+    def test_render_html(fakefile):
+        assert render.render_html(fakefile) == '<p>rendered testfile.mp4</p>'
+
+.. _pytest fixtures: https://pytest.org/latest/fixture.html
+
+Using the player
+================
+
+The mfr comes with a Flask app for previewing rendered files. Copy the files you want to render to the ``player/files`` directory then run the ap with ::
+
+    $ invoke player
 
 Then browse to ``localhost:5000`` in your browser.
 

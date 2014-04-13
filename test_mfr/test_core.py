@@ -122,9 +122,13 @@ def test_detect_single(fakefile):
     handler = core.detect(fakefile, many=False)
     assert handler == FakeHandler
 
-def test_detect_returns_empty_list_if_no_handler_found(fakefile):
+def test_detect_single_returns_none_if_no_handler_found(fakefile):
     core.clear_registry()
-    assert core.detect(fakefile) == []
+    assert core.detect(fakefile, many=False) is None
+
+def test_detect_many_returns_empty_list_if_no_handler_found(fakefile):
+    core.clear_registry()
+    assert core.detect(fakefile, many=True) == []
 
 def test_render_detects_filetype_if_no_handler_given(fakefile):
     core.register_filehandler(FakeHandler)

@@ -85,7 +85,10 @@ def detect(fp, handlers=None, instance=False, many=True, *args, **kwargs):
                 valid_handlers.append(handler_obj)
             else:
                 return handler_obj
-    return valid_handlers
+    if many:
+        return valid_handlers
+    else:
+        return None
 
 
 def render(fp, handler=None, renderer=None, *args, **kwargs):

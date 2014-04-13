@@ -14,6 +14,7 @@ import os
 import shutil
 import inspect
 import logging
+from collections import defaultdict
 
 from mfr._config import Config
 from mfr.exceptions import ConfigurationError
@@ -145,6 +146,9 @@ class FileHandler(object):
     default_renderer = 'html'
     default_exporter = None
 
+    def __init__(self):
+        self.__assets = defaultdict(list)
+
     def detect(self, fp):
         """Return whether a given file can be handled by this file handler.
         MUST be implemented by descendant classes.
@@ -179,6 +183,43 @@ class FileHandler(object):
             raise ValueError('`export` method called with no exporter specified and '
                             'no default.')
 
+    def iterstatic(self, url=True):
+        """Iterates through the static asset files for the filehandler,
+        yielding absolute paths to the files.
+
+        :param bool url: If ``True``, return the static url for each asset.
+            If ``False``, return the static folder for each asset.
+        """
+        static_folder = get_static_path_for_handler(self.__class__)
+        for root, dirs, files in os.walk(static_folder):
+            for filename in files:
+                absolute_path = os.path.join(root, filename)
+                if url:
+                    static_path = os.path.relpath(absolute_path, static_folder)
+                    yield os.path.join(config['STATIC_URL'], static_path)
+                else:
+                    yield absolute_path
+
+    def get_assets(self, extension=None):
+        """Get the urls for this handler's static assets. Return either a dict
+        keyed by extension or a list of assets if ``extension`` is provided.
+
+        Usage: ::
+
+            >>> handler.get_assets()
+            {'css': '/static/myformat/style.css', 'js': '/static/myformat/script.js'}
+
+        """
+        if not self.__assets:
+            for asset in self.iterstatic(url=True):
+                ext = get_file_extension(asset).lstrip('.')
+                if ext:
+                    self.__assets[ext].append(asset)
+                else:
+                    self.__assets['_'].append(asset)
+        if extension:
+            return self.__assets[extension]
+        return self.__assets
 
 def _get_dir_for_class(cls):
     """Return the absolute directory where a class resides."""
@@ -199,6 +240,13 @@ def get_static_path_for_handler(handler_cls):
     else:
         static_path = os.path.join(_get_dir_for_class(handler_cls), 'static')
     return static_path
+
+def get_static_url_for_handler(handler_cls):
+    if hasattr(handler_cls, 'STATIC_URL'):
+        url = os.path.join(config['STATIC_URL'], handler_cls.STATIC_URL)
+    else:
+        url = os.path.join(config['STATIC_URL'], get_namespace(handler_cls))
+    return url
 
 
 def copy_dir(src, dest):

@@ -139,6 +139,7 @@ def test_get_file_extension():
 
 def test_error_raised_if_renderer_not_callable(fakefile):
     bad_renderer = 'badnewsbears'
+
     class BadHandler(core.FileHandler):
         renderers = {'html': bad_renderer}
     with pytest.raises(TypeError):
@@ -149,6 +150,13 @@ def test_get_dir_for_class():
     class Foo:
         pass
     assert core._get_dir_for_class(Foo) == os.path.abspath(os.path.dirname(__file__))
+
+def test_get_static_url_for_handler():
+    core.config.update({
+        'STATIC_URL': '/static'
+    })
+    url = core.get_static_url_for_handler(TestHandler)
+    assert url == '/static/fakemodule'
 
 def test_get_static_path_for_handler_from_class_var():
     class MyHandler(core.FileHandler):
@@ -207,3 +215,40 @@ def test_get_namespace_for_class_that_defines_namespace_var():
         namespace = 'foonamespace'
 
     assert core.get_namespace(FooHandler) == 'foonamespace'
+
+def test_iterstatic_folder():
+    handler = TestHandler()
+    assets = list(handler.iterstatic(url=False))
+    assert os.path.abspath(
+        os.path.join(HERE, 'fakemodule', 'static', 'fakestyle.css')) in assets
+    assert len(assets) == 3
+
+def test_iterstatic_url():
+    core.config.update({
+        'STATIC_URL': '/static'
+    })
+    handler = TestHandler()
+    assets = list(handler.iterstatic(url=True))
+    assert len(assets) == 3
+    assert os.path.join('/static', 'fakestyle.css') in assets
+    assert os.path.join('/static', 'fakejs', 'fakescript.js') in assets
+
+
+def test_get_assets():
+    core.config.update({
+        'STATIC_URL': '/static'
+    })
+    handler = TestHandler()
+    assets = handler.get_assets()
+    assert assets['css'] == ['/static/fakestyle.css']
+    assert assets['js'] == ['/static/fakejs/fakescript.js']
+    assert assets['_'] == ['/static/noextfile']
+
+def test_get_assets_with_extension():
+    core.config.update({
+        'STATIC_URL': '/static'
+    })
+    handler = TestHandler()
+    css_assets = handler.get_assets('css')
+    assert isinstance(css_assets, list)
+    assert css_assets == ['/static/fakestyle.css']

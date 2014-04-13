@@ -8,9 +8,9 @@ docs_dir = 'docs'
 build_dir = os.path.join(docs_dir, '_build')
 
 @task
-def previewer():
-    """Run the previewer app."""
-    from previewer import app
+def player():
+    """Run the player app."""
+    from player import app
     app.main(debug=True)
 
 @task

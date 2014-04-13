@@ -13,17 +13,17 @@ Detect a file's type and render it to HTML.
 .. code-block:: python
 
     import mfr
-    from mfr.image.handler import ImageFileHandler
+    import mfr_image
 
     # Enable the ImageModule
-    mfr.register_filehandler('image', ImageFileHandler)
+    mfr.register_filehandler(mfr_image.Handler)
 
     filepointer = open('hello.jpg')
-    # Get a FileHandler for the detected filetype
-    handler = mfr.detect(filepointer)
+    # Get available FileHandlers for the detected filetype
+    handlers = mfr.detect(filepointer)
 
     # Render the file to html
-    handler.render(filepointer, alt="Hello world")
+    handlers[0].render(filepointer, alt="Hello world")
     # => '<img src="hello.jpg" alt="Hello world" />'
 
 
@@ -40,10 +40,10 @@ Some renderers may require static assets (JS and CSS files). To collect all the 
 .. code-block:: python
 
     import mfr
-    from mfr.code.handler import CodeFileHandler
+    import mfr_code_pygments
 
     # The code module requires pygments CSS files
-    mfr.register_filehandler('code', CodeFileHandler)
+    mfr.register_filehandler(mfr_code_pygments.Handler)
 
     # Copy all necessary static files (e.g. style.css)
     mfr.collect_static(dest='/path/to/app/static')
@@ -53,27 +53,44 @@ You will now be able to include the static assets in your HTML:
 
 .. code-block:: html
 
-    <link rel="stylesheet" href="/path/to/app/static/code/css/style.css">
+    <link rel="stylesheet" href="/path/to/app/static/mfr_code_pygments/css/style.css">
 
-You can configure mfr via the ``mfr.config`` object, which has the same API as `Flask's config module`_.
-
-.. _Flask's config module: http://flask.pocoo.org/docs/api/#configuration
+You can configure mfr via the ``mfr.config`` object.
 
 .. code-block:: python
 
     import mfr
+    import mfr_image
+    import mfr_code_pygments
 
-    class MFRConfig:
+    mfr.config({
         # Static assets will be collected here
-        STATIC_FOLDER = '/path/to/static/folder'
+        'STATIC_FOLDER': '/path/to/static/folder',
         # Your app's base URL for static files
-        STATIC_URL = '/static'
+        'STATIC_URL': '/static',
+        # Another way to register handlers
+        'HANDLERS': [mfr_image.Handler, mfr_code_pygments.Handler]
+    })
 
-    mfr.config.from_object(MFRConfig)
-
+    mfr.config['STATIC_FOLDER']  #=> '/path/to/static/folder'
     mfr.collect_static()  # copies static files to '/path/to/static/folder'
 
+The config object has the same the same API as `Flask's config module`_. The following example is equivalent to above.
 
+.. code-block:: python
+
+    class MFRConfig:
+        STATIC_FOLDER = '/path/to/static/folder'
+        STATIC_URL = '/static'
+        HANDLERS = [mfr_image.Handler, mfr_code_pygments.Handler]
+
+    mfr.config.from_object(MFRConfig)
+    mfr.config['STATIC_FOLDER']  #=> '/path/to/static/folder'
+    mfr.collect_static()
+
+
+
+.. _Flask's config module: http://flask.pocoo.org/docs/api/#configuration
 
 Example Usage with Flask
 ========================
@@ -85,39 +102,39 @@ Below is an example `Flask`_ application that uses mfr.
 .. code-block:: python
 
     from flask import Flask, url_for, send_from_directory
+
     import mfr
+    import mfr_image
 
     app = Flask(__name__)
 
-    class MFRConfig:
-        STATIC_URL = app.static_url_path
-        STATIC_FOLDER = app.static_folder
-
-    class AppConfig:
-        UPLOADS_FOLDER = '/path/to/uploads/'
-
     @app.route('/view/<filename>')
     def view_file(filename):
-        fp = open(os.path.join(app.config['UPLOADS_FOLDER'], filename))
-        # Get a handler for the file
-        handler = mfr.detect(fp)
-        if handler:
-            # some renderers, e.g. the image renderer, require a src argument
-            src = url_for('serve_file', filename=filename)
-            rendered_html = handler.render(fp, src=src)
-            return render_template('view_file.html', rendered=rendered_html)
-        else:
-            return 'Cannot render {filename}.'.format(filename=filename)
+        with open(os.path.join('/path/to/uploads/', filename)) as fp:
+            # Get first available handler for the file
+            handler = mfr.detect(fp)[0]
+            if handler:
+                # some renderers, e.g. the image renderer, require a src argument
+                src = url_for('serve_file', filename=filename)
+                rendered_html = handler.render(fp, src=src)
+                return render_template('view_file.html', rendered=rendered_html)
+            else:
+                return 'Cannot render {filename}.'.format(filename=filename)
 
     @app.route('/files/<filename>')
     def serve_file(filename):
         return send_from_directory(app.config['FILES_DIR'], filename)
 
-    def main(*args, **kwargs):
-        mfr.config.from_object(MFRConfig)
-        app.config.from_object(AppConfig)
-        mfr.collect_static()
-        app.run(*args, **kwargs)
+
+    def main():
+        # Configure MFR with correct static URL and folder
+        mfr.config({
+            'STATIC_URL': app.static_url_path,
+            'STATIC_FOLDER': app.static_folder,
+            # Register handlers through config
+            'HANDLERS': [mfr_image.Handler]
+        })
+        app.run(debug=True)
 
     if __name__ == '__main__':
         main()

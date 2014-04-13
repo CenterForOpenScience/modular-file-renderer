@@ -5,11 +5,6 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 
-REQUIRES = [
-    'docopt'
-]
-
-
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -55,10 +50,8 @@ setup(
     author='Center for Open Science',
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/mfr',
-    packages=find_packages(exclude=("test*", )),
-    package_dir={'mfr': 'mfr'},
+    packages=find_packages(exclude=("test*", 'previewer')),
     include_package_data=True,
-    install_requires=REQUIRES,
     # license=read("LICENSE"),
     zip_safe=False,
     keywords='mfr',

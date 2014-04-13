@@ -14,6 +14,7 @@ import os
 import shutil
 import inspect
 import logging
+from collections import defaultdict
 
 from mfr._config import Config
 from mfr.exceptions import ConfigurationError
@@ -25,26 +26,22 @@ _defaults = {
     'INCLUDE_STATIC': False
 }
 config = Config(defaults=_defaults)
-#: Mapping of file handler names to classes
-# {'tabular': TabularFileHandler}
-# TODO(sloria): Possible make this an OrderredDict so that detection is deterministic when
-# two filehandlers can handle a file?
-config['HANDLERS'] = {}
+
+config['HANDLERS'] = []
 
 
-def register_filehandler(name, file_handler):
+def register_filehandler(file_handler):
     """Register a new file handler.
     Usage: ::
 
-        register_filehandler('movie', MovieHandler)
+        register_filehandler(MovieHandler)
 
-    :param str name: The name of the filehandler.
     :param FileHandler file_handler: The filehandler class.
     """
-    get_registry()[name] = file_handler
+    get_registry().append(file_handler)
 
 
-def register_filehandlers(handler_dict):
+def register_filehandlers(handlers):
     """Register multiple file handlers.
     Usage: ::
 
@@ -52,7 +49,7 @@ def register_filehandlers(handler_dict):
 
     :param dict handler_dict: A dictionary mapping handler names to handler classes
     """
-    get_registry().update(handler_dict)
+    get_registry().extend(handlers)
 
 
 def get_registry():
@@ -60,16 +57,16 @@ def get_registry():
 
 
 def clear_registry():
-    config['HANDLERS'] = {}
+    config['HANDLERS'] = []
 
 
 def reset_config():
     global config
     config = Config(defaults=_defaults)
-    config['HANDLERS'] = {}
+    config['HANDLERS'] = []
 
 
-def detect(fp, handlers=None, instance=False, *args, **kwargs):
+def detect(fp, handlers=None, instance=False, many=True, *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,
     or ``False`` if no handler could be found for the file.
 
@@ -78,13 +75,17 @@ def detect(fp, handlers=None, instance=False, *args, **kwargs):
     :return: A FileHandler that can handle the file, or False if no handler was
         found.
     """
-    handlers = handlers or get_registry().keys()
-    for handler_name in handlers:
-        HandlerClass = get_registry().get(handler_name)
+    handlers = handlers or get_registry()
+    valid_handlers = []
+    for HandlerClass in handlers:
         handler = HandlerClass()
         if handler.detect(fp, *args, **kwargs):
-            return handler if instance else HandlerClass
-    return False
+            handler_obj = handler if instance else HandlerClass
+            if many:
+                valid_handlers.append(handler_obj)
+            else:
+                return handler_obj
+    return valid_handlers
 
 
 def render(fp, handler=None, renderer=None, *args, **kwargs):
@@ -96,10 +97,10 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
         in the handler class's `renderers` dictionary)
     """
     # Get the specified handler, detect it if not given
-    HandlerClass = get_registry().get(handler) or detect(fp)
+    HandlerClass = handler or detect(fp, many=False)
     if not HandlerClass:
-        raise ValueError('No available handler with name {handler}.'
-                        .format(handler=handler))
+        raise ValueError('No available handler that can handle {name!r}.'
+                        .format(name=fp.name))
     handler = HandlerClass()
     return handler.render(fp, renderer=renderer, *args, **kwargs)
 
@@ -113,7 +114,7 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
         in the handler class's `renderers` dictionary)
     """
     # Get the specified handler, detect it if not given
-    HandlerClass = get_registry().get(handler) or detect(fp)
+    HandlerClass = handler or detect(fp)
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))
@@ -144,6 +145,9 @@ class FileHandler(object):
 
     default_renderer = 'html'
     default_exporter = None
+
+    def __init__(self):
+        self.__assets = defaultdict(list)
 
     def detect(self, fp):
         """Return whether a given file can be handled by this file handler.
@@ -179,6 +183,43 @@ class FileHandler(object):
             raise ValueError('`export` method called with no exporter specified and '
                             'no default.')
 
+    def iterstatic(self, url=True):
+        """Iterates through the static asset files for the filehandler,
+        yielding absolute paths to the files.
+
+        :param bool url: If ``True``, return the static url for each asset.
+            If ``False``, return the static folder for each asset.
+        """
+        static_folder = get_static_path_for_handler(self.__class__)
+        for root, dirs, files in os.walk(static_folder):
+            for filename in files:
+                absolute_path = os.path.join(root, filename)
+                if url:
+                    static_path = os.path.relpath(absolute_path, static_folder)
+                    yield os.path.join(config['STATIC_URL'], static_path)
+                else:
+                    yield absolute_path
+
+    def get_assets(self, extension=None):
+        """Get the urls for this handler's static assets. Return either a dict
+        keyed by extension or a list of assets if ``extension`` is provided.
+
+        Usage: ::
+
+            >>> handler.get_assets()
+            {'css': '/static/myformat/style.css', 'js': '/static/myformat/script.js'}
+
+        """
+        if not self.__assets:
+            for asset in self.iterstatic(url=True):
+                ext = get_file_extension(asset).lstrip('.')
+                if ext:
+                    self.__assets[ext].append(asset)
+                else:
+                    self.__assets['_'].append(asset)
+        if extension:
+            return self.__assets[extension]
+        return self.__assets
 
 def _get_dir_for_class(cls):
     """Return the absolute directory where a class resides."""
@@ -200,6 +241,13 @@ def get_static_path_for_handler(handler_cls):
         static_path = os.path.join(_get_dir_for_class(handler_cls), 'static')
     return static_path
 
+def get_static_url_for_handler(handler_cls):
+    if hasattr(handler_cls, 'STATIC_URL'):
+        url = os.path.join(config['STATIC_URL'], handler_cls.STATIC_URL)
+    else:
+        url = os.path.join(config['STATIC_URL'], get_namespace(handler_cls))
+    return url
+
 
 def copy_dir(src, dest):
     """Recursively copies a directory's contents."""
@@ -211,6 +259,20 @@ def copy_dir(src, dest):
         logger.debug('Skipping {src} (already exists)'.format(src=src))
 
 
+def get_namespace(handler_cls):
+    """Given a FileHandler class, return the namespace used by collect_static.
+    The namespace defines the name of the folder that a file module's static
+    assets will be copied to.
+    """
+    # If 'namespace' is defined on the class, use that
+    if hasattr(handler_cls, 'namespace'):
+        return handler_cls.namespace
+    # Otherwise use the base name of the module
+    else:
+        # mypackage.mymodule.MyHandler => 'mymodule'
+        return handler_cls.__module__.split('.')[-1]
+
+
 def collect_static(dest=None, dry_run=False):
     """Collect all static assets for registered handlers to a single directory.
     Files will be copied to ``dest``, if specified, or the STATIC_PATH config
@@ -219,9 +281,9 @@ def collect_static(dest=None, dry_run=False):
     dest_ = dest or config.get('STATIC_FOLDER')
     if not dest_:
         raise ConfigurationError('STATIC_FOLDER has not been configured.')
-    for name, handler_cls in get_registry().items():
+    for handler_cls in get_registry():
         static_path = get_static_path_for_handler(handler_cls)
-        namespaced_destination = os.path.join(dest_, name)
+        namespaced_destination = os.path.join(dest_, get_namespace(handler_cls))
         if dry_run:
             print('Pretending to copy {static_path} to {namespaced_destination}.'
                 .format(**locals()))

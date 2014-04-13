@@ -68,13 +68,11 @@ class Config(dict):
 
     On windows use `set` instead.
 
-    :param root_path: path to which files are read relative from.  When the
-                      config object is created by the application, this is
-                      the application's :attr:`~flask.Flask.root_path`.
     :param defaults: an optional dictionary of default values
+    :param root_path: path to which files are read relative from.
     """
 
-    def __init__(self, root_path='.', defaults=None):
+    def __init__(self, defaults=None, root_path='.'):
         dict.__init__(self, defaults or {})
         self.root_path = root_path
 

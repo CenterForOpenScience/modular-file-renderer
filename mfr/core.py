@@ -66,7 +66,7 @@ def reset_config():
     config['HANDLERS'] = []
 
 
-def detect(fp, handlers=None, instance=False, many=True, *args, **kwargs):
+def detect(fp, handlers=None, instance=False, many=False, *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,
     or ``False`` if no handler could be found for the file.
 

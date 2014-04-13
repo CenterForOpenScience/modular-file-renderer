@@ -15,6 +15,10 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 def teardown_function(testfunc):
     core.reset_config()
 
+
+def assert_file_exists(path, msg='File does not exist'):
+    assert os.path.exists(path) is True, msg
+
 ##### Fixtures, etc. ######
 
 class FakeHandler(core.FileHandler):
@@ -101,14 +105,14 @@ def test_error_raised_if_renderer_not_found(fakefile):
     with pytest.raises(ValueError):
         core.render(fakefile, handler=None)
 
-def test_detect_returns_a_list_of_handler_classes_by_default(fakefile):
+def test_detect_returns_a_single_handler_class_by_default(fakefile):
     core.register_filehandler(FakeHandler)
-    handlers = core.detect(fakefile)
-    assert handlers[0] == FakeHandler
+    handler = core.detect(fakefile)
+    assert handler == FakeHandler
 
 def test_detect_can_return_instances(fakefile):
     core.register_filehandler(FakeHandler)
-    handlers = core.detect(fakefile, instance=True)
+    handlers = core.detect(fakefile, many=True, instance=True)
     assert isinstance(handlers[0], FakeHandler)
 
 def test_detect_many(fakefile):
@@ -167,9 +171,6 @@ def test_get_static_path_for_handler_from_class_var():
         STATIC_PATH = 'foo/bar/static/'
 
     assert core.get_static_path_for_handler(MyHandler) == MyHandler.STATIC_PATH
-
-def assert_file_exists(path, msg='File does not exist'):
-    assert os.path.exists(path) is True, msg
 
 def test_collect_static():
     core.register_filehandler(TestHandler)

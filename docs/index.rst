@@ -8,7 +8,21 @@ mfr: HTML file renderer for Python
 
 Release v\ |version|. (:ref:`Installation <install>`)
 
-**mfr** (short for "Modular File Renderer") is a Python package for rendering files to HTML.
+**mfr** (short for "modular file renderer") is a Python package for rendering files to HTML.
+
+.. code-block:: python
+
+    import mfr
+    import mfr_image
+
+    # Enable the ImageModule
+    mfr.register_filehandler(mfr_image.Handler)
+
+    with open('hello.jpg') as filepointer:
+       mfr.render(filepointer, alt="Hello world")
+       # => '<img src="hello.jpg" alt="Hello world" />'
+
+
 
 Guide
 -----
@@ -19,6 +33,7 @@ Guide
    license
    install
    quickstart
+   examples
    api_reference
 
 Project info

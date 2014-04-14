@@ -5,7 +5,6 @@ API Reference
 
 .. module:: mfr
 
-
 mfr.core
 --------
 

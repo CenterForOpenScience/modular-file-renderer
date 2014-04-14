@@ -197,8 +197,12 @@ class FileHandler(object):
             for filename in files:
                 absolute_path = os.path.join(root, filename)
                 if url:
+                    namespace = get_namespace(self)
                     static_path = os.path.relpath(absolute_path, static_folder)
-                    yield os.path.join(config['STATIC_URL'], static_path)
+                    try:
+                        yield os.path.join(config['STATIC_URL'], namespace, static_path)
+                    except KeyError:
+                        raise KeyError('STATIC_URL is not configured.')
                 else:
                     yield absolute_path
 

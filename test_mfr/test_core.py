@@ -235,8 +235,8 @@ def test_iterstatic_url():
     handler = TestHandler()
     assets = list(handler.iterstatic(url=True))
     assert len(assets) == 3
-    assert os.path.join('/static', 'fakestyle.css') in assets
-    assert os.path.join('/static', 'fakejs', 'fakescript.js') in assets
+    assert os.path.join('/static', 'fakemodule', 'fakestyle.css') in assets
+    assert os.path.join('/static', 'fakemodule', 'fakejs', 'fakescript.js') in assets
 
 
 def test_get_assets():
@@ -245,9 +245,9 @@ def test_get_assets():
     })
     handler = TestHandler()
     assets = handler.get_assets()
-    assert assets['css'] == ['/static/fakestyle.css']
-    assert assets['js'] == ['/static/fakejs/fakescript.js']
-    assert assets['_'] == ['/static/noextfile']
+    assert assets['css'] == ['/static/fakemodule/fakestyle.css']
+    assert assets['js'] == ['/static/fakemodule/fakejs/fakescript.js']
+    assert assets['_'] == ['/static/fakemodule/noextfile']
 
 def test_get_assets_with_extension():
     core.config.update({
@@ -256,9 +256,10 @@ def test_get_assets_with_extension():
     handler = TestHandler()
     css_assets = handler.get_assets('css')
     assert isinstance(css_assets, list)
-    assert css_assets == ['/static/fakestyle.css']
+    assert css_assets == ['/static/fakemodule/fakestyle.css']
 
 def test_get_assets_returns_key_error_if_static_url_not_configured():
     handler = TestHandler()
-    with pytest.raises(KeyError):
+    with pytest.raises(KeyError) as excinfo:
         handler.get_assets()
+    assert 'STATIC_URL is not configured' in str(excinfo)

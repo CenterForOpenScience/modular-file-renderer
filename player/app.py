@@ -12,6 +12,7 @@ import mfr
 import mfr_image
 import mfr_docx
 import mfr_rst
+import mfr_md
 import mfr_code_pygments
 from mfr_code_pygments.configuration import config as mfr_code_config
 
@@ -68,6 +69,7 @@ class MFRConfig:
     HANDLERS = [mfr_image.Handler,
                 mfr_docx.Handler,
                 mfr_rst.Handler,
+                mfr_md.Handler,
                 mfr_code_pygments.Handler]
 
 # example how module-level configuration

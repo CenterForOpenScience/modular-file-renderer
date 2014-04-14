@@ -1,5 +1,4 @@
 import markdown
 
-def render_html(fp):
-    #print(markdown.markdown(fp.read()))
+def render_html(fp, **kwargs):
     return(markdown.markdown(fp.read()))

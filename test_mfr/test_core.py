@@ -98,7 +98,7 @@ def test_detect_must_be_implemented(fakefile):
 
 def test_render(fakefile):
     core.register_filehandler(FakeHandler)
-    core.render(fakefile, handler=FakeHandler)
+    core.render(fakefile, handler=FakeHandler())
     assert FakeHandler.renderers['html'].called
 
 def test_error_raised_if_renderer_not_found(fakefile):
@@ -108,7 +108,7 @@ def test_error_raised_if_renderer_not_found(fakefile):
 def test_detect_returns_a_single_handler_class_by_default(fakefile):
     core.register_filehandler(FakeHandler)
     handler = core.detect(fakefile)
-    assert handler == FakeHandler
+    assert isinstance(handler, FakeHandler)
 
 def test_detect_can_return_instances(fakefile):
     core.register_filehandler(FakeHandler)
@@ -119,12 +119,12 @@ def test_detect_many(fakefile):
     core.register_filehandler(FakeHandler)
     handlers = core.detect(fakefile, many=True)
     assert isinstance(handlers, list)
-    assert handlers[0] == FakeHandler
+    assert isinstance(handlers[0], FakeHandler)
 
 def test_detect_single(fakefile):
     core.register_filehandler(FakeHandler)
     handler = core.detect(fakefile, many=False)
-    assert handler == FakeHandler
+    assert isinstance(handler, FakeHandler)
 
 def test_detect_single_returns_none_if_no_handler_found(fakefile):
     core.clear_registry()
@@ -257,3 +257,8 @@ def test_get_assets_with_extension():
     css_assets = handler.get_assets('css')
     assert isinstance(css_assets, list)
     assert css_assets == ['/static/fakestyle.css']
+
+def test_get_assets_returns_key_error_if_static_url_not_configured():
+    handler = TestHandler()
+    with pytest.raises(KeyError):
+        handler.get_assets()

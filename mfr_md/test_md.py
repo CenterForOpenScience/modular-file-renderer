@@ -16,12 +16,12 @@ def test_render_html(fakefile):
 <li>two</li>
 </ul>'''
         
-def test_handler(fakefile):
-    testHandler=Handler()
+def test_detect(fakefile):
+    test_handler=Handler()
     fakefile.name='file.notmd'
-    assert testHandler.detect(fakefile) == False
+    assert test_handler.detect(fakefile) is False
     fakefile.name='file.md'
-    assert testHandler.detect(fakefile) == True
+    assert test_handler.detect(fakefile) is True
     fakefile.name='file.markdown'
-    assert testHandler.detect(fakefile) == True
+    assert test_handler.detect(fakefile) is True
 

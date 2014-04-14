@@ -13,12 +13,12 @@ import mfr_image
 import mfr_docx
 import mfr_rst
 import mfr_code_pygments
+import mfr_libreoffice
 from mfr_code_pygments.configuration import config as mfr_code_config
 
 logger = logging.getLogger(__name__)
 HERE = os.path.abspath(os.path.dirname(__file__))
 FILES_DIR = os.path.join(HERE, 'files')
-
 
 
 ### html building helpers
@@ -41,7 +41,7 @@ def build_html(filename):
         fp = open(os.path.join(FILES_DIR, filename))
         handler = mfr.detect(fp)
         if handler:
-            html += '<a href="/render/{safe_name}">{filename} </a>'.format(
+            html += '<a href="/render/{safe_name}">{filename}</a>'.format(
                 safe_name=quote(filename),
                 filename=filename)
             html += build_export_html(filename, handler)
@@ -68,7 +68,8 @@ class MFRConfig:
     HANDLERS = [mfr_image.Handler,
                 mfr_docx.Handler,
                 mfr_rst.Handler,
-                mfr_code_pygments.Handler]
+                mfr_code_pygments.Handler,
+                mfr_libreoffice.Handler,]
 
 # example how module-level configuration
 mfr_code_config['PYGMENTS_THEME'] = 'manni'
@@ -101,7 +102,7 @@ def render(filename):
 @app.route('/export/<exporter>/<filename>')
 def export(exporter, filename):
     fp = open(os.path.join(FILES_DIR, filename))
-    handler = mfr.detect(fp)
+    handler = mfr.detect(fp, many=False)
     exp = mfr.export(fp, handler, exporter="png")
     short_name, _ = os.path.splitext(filename)
     export_name = short_name + '.' + exporter

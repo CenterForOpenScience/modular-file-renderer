@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
 """
-    flask boilerplate
-    ~~~~~~~~~~~~~~~~~
+    MFR Player
+    ~~~~~~~~~~
 
-    Simple barebones flask project
+    Simple barebones flask project to bootstrap the MFR on top of a
+    locally-hosted directory of files.
 
     :author: Elijah Hamovitz
-    :copyright: (c) 2014 by Elijah Hamovitz.
 """
-from flask import Flask, render_template, g
+from flask import Flask, render_template
 
 import filters
 
+# TODO the mfr import and configuration system could use a whole ton of
+# work. Highest priority is putting that pygments theme config option
+# into the main config object with everything else. Second priority is
+# coming up with a much more dynamic way to configure the MFR based on
+# this app
 import mfr
 import mfr_image
 import mfr_docx
@@ -20,6 +25,7 @@ import mfr_md
 import mfr_code_pygments
 from mfr_code_pygments.configuration import config as mfr_code_config
 mfr_code_config['PYGMENTS_THEME'] = 'manni'
+
 
 def create_app(config_overrides={}):
     """Create and return an Flask app instance"""
@@ -30,6 +36,7 @@ def create_app(config_overrides={}):
 
     @app.before_request
     def before_request():
+        # TODO as referenced above, this needs to be fixed
         class MFRConfig:
             # Base URL for static files
             STATIC_URL = app.static_url_path
@@ -47,7 +54,6 @@ def create_app(config_overrides={}):
         mfr.config.from_object(MFRConfig)
         mfr.collect_static()
 
-    # error page handlers
     @app.errorhandler(404)
     def not_found(error):
         return render_template('404.html'), 404
@@ -66,4 +72,3 @@ def create_app(config_overrides={}):
     app.jinja_env.globals['build_html'] = filters.build_html
 
     return app
-

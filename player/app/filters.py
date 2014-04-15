@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+    filters
+    ~~~~~~~
+
+    Jinja filters for rendering the list of files
+
+    :author: Elijah Hamovitz
+"""
 import os
 import mfr
 import jinja2

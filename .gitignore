@@ -65,8 +65,8 @@ nosetests.xml
 docs/_build
 README.html
 
-# Previewer files
-previewer/files/*
-previewer/static/*
+# Player files
+player/files/*
+player/static/*
 
 !.gitkeep

@@ -3,4 +3,4 @@ DEBUG = True
 DEBUG_TOOLBAR = False
 
 HOST = '0.0.0.0'
-PORT = 8000
+PORT = 5000

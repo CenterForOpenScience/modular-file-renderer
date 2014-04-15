@@ -6,7 +6,7 @@ FILES_DIR = os.path.join(_basedir, 'files')
 DEBUG = False
 
 HOST = '127.0.0.1'
-PORT = 8000
+PORT = 5000
 
 SECRET_KEY = 'some_secret_key'
 

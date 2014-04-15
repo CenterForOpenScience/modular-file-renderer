@@ -134,4 +134,4 @@ def main(*args, **kwargs):
     app.run(*args, **kwargs)
 
 if __name__ == '__main__':
-    main()
+    main(debug=True)

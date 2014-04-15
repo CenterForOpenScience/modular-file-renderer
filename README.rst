@@ -9,7 +9,7 @@ mfr
     import mfr
     import mfr_image
 
-    # Enable the ImageModule
+    # Enable the mfr_image module
     mfr.register_filehandler(mfr_image.Handler)
 
     with open('hello.jpg') as filepointer:

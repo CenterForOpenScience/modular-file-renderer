@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 mfr: HTML file renderer for Python
-=========================================================
+==================================
 
 Release v\ |version|. (:ref:`Installation <install>`)
 
@@ -22,6 +22,11 @@ Release v\ |version|. (:ref:`Installation <install>`)
        mfr.render(filepointer, alt="Hello world")
        # => '<img src="hello.jpg" alt="Hello world" />'
 
+
+Ready to dive in?
+-----------------
+
+Go on to the :ref:`Quickstart tutorial <quickstart>` or check out some :ref:`Examples <examples>`.
 
 
 Guide

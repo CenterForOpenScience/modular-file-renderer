@@ -21,10 +21,10 @@ from mfr.exceptions import ConfigurationError
 
 logger = logging.getLogger(__name__)
 
-#: Current mfr configuration object
 _defaults = {
     'INCLUDE_STATIC': False
 }
+#: Global mfr configuration object
 config = Config(defaults=_defaults)
 
 config['HANDLERS'] = []
@@ -53,14 +53,20 @@ def register_filehandlers(handlers):
 
 
 def get_registry():
+    """Get the current list of registered filehandlers.
+
+    :rtype: list
+    """
     return config['HANDLERS']
 
 
 def clear_registry():
+    """Reset the list of registered handlers."""
     config['HANDLERS'] = []
 
 
 def reset_config():
+    """Reset config defaults and empty the registry of file handlers."""
     global config
     config = Config(defaults=_defaults)
     config['HANDLERS'] = []

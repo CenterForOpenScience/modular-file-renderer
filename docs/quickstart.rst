@@ -4,7 +4,7 @@
 Quickstart
 **********
 
-Before we start rendering, we need to enable a file format's module. To do this, use :func:`mfr.register_handler <mfr.core.register_handler>`, passing in a :class:`FileHandler <mfr.core.FileHandler>`.
+Before we start rendering, we need to enable a file format's module. To do this, use :func:`mfr.register_filehandler <mfr.core.register_filehandler>`, passing in a :class:`FileHandler <mfr.core.FileHandler>`.
 
 Let's use the ``mfr_code_pygments`` module as an example.
 
@@ -54,19 +54,26 @@ Configuration is stored on a ``mfr.config``, which can be modified like a dictio
     mfr.config['STATIC_URL'] = '/static'
     mfr.config['STATIC_FOLDER'] = '/path/to/app/static'
 
+    # Filehandlers can be registered this way
+    mfr.config['HANDLERS'] = [mfr_code_pygments.Handler]
+
 .. note::
 
     The ``mfr.config`` shares the same API as `Flask's config <http://flask.pocoo.org/docs/config/>`_, so you can also load configuration values from files or Python objects.
 
     .. code-block:: python
 
+        import mfr
+
         # Equivalent to above
         class MFRConfig:
             STATIC_URL = '/static'
             STATIC_FOLDER = '/path/to/app/static'
+            HANDLERS = [mfr_code_pygments.Handler]
 
         mfr.config.from_object(MFRConfig)
         mfr.config['STATIC_URL']  # '/static'
+
 
 
 Using Static Files

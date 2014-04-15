@@ -1,3 +1,5 @@
+.. _examples:
+
 ********
 Examples
 ********
@@ -22,7 +24,7 @@ Below is an example `Flask`_ application that uses mfr.
     def view_file(filename):
         with open(os.path.join('/path/to/uploads/', filename)) as fp:
             # Get first available handler for the file
-            handler = mfr.detect(fp)[0]
+            handler = mfr.detect(fp)
             if handler:
                 # some renderers, e.g. the image renderer, require a src argument
                 src = url_for('serve_file', filename=filename)

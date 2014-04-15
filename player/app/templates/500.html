@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ super() }}
+<div class="errormessage">
+    <p>500 Error. Something went wrong on our end, sorry.</p>
+    <p>Try going <a href="/">Home</a>.</p>
+</div>
+{% endblock %}

@@ -10,8 +10,6 @@
 """
 from flask import Flask, render_template
 
-import filters
-
 # TODO the mfr import and configuration system could use a whole ton of
 # work. Highest priority is putting that pygments theme config option
 # into the main config object with everything else. Second priority is
@@ -68,7 +66,5 @@ def create_app(config_overrides={}):
 
     from app.render.views import mod as render_module
     app.register_blueprint(render_module)
-
-    app.jinja_env.globals['build_html'] = filters.build_html
 
     return app

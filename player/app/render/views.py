@@ -37,8 +37,7 @@ def render(filename):
             flash(err, 'error')
             abort(404)
 
-    flash('Do not know how to render file {}'.format(filename), 'error')
-    abort(500)
+    abort(501)
 
 
 @mod.route('/files/<filename>')

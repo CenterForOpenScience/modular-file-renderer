@@ -53,12 +53,16 @@ def create_app(config_overrides={}):
         mfr.collect_static()
 
     @app.errorhandler(404)
-    def not_found(error):
+    def not_found_error(error):
         return render_template('404.html'), 404
 
     @app.errorhandler(500)
-    def server_error(error):
+    def generic_server_error(error):
         return render_template('500.html'), 500
+
+    @app.errorhandler(501)
+    def not_implemented_error(error):
+        return render_template('501.html'), 501
 
     # register blueprints
     from app.main.views import mod as main_module

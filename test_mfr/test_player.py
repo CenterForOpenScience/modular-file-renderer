@@ -14,9 +14,6 @@ class PlayerTest(unittest.TestCase):
             FILES_DIR=self.FILES_DIR
         ).test_client()
 
-    def tearDown(self):
-        pass
-
     def test_index_request(self):
         index = self.app.get('/')
         assert index.status_code == 200

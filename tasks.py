@@ -10,7 +10,7 @@ build_dir = os.path.join(docs_dir, '_build')
 @task
 def player():
     """Run the player app."""
-    from player.app import create_app
+    from player import create_app
     app = create_app()
     app.run(host=app.config.get('HOST'), port=app.config.get('PORT'))
 

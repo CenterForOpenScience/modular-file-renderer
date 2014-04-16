@@ -67,6 +67,6 @@ README.html
 
 # Player files
 player/files/*
-player/static/*
+player/config_local.py
 
 !.gitkeep

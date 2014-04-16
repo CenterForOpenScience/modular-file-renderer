@@ -17,11 +17,6 @@ import mfr_rst
 import mfr_md
 import mfr_code_pygments
 
-# TODO this is rather gross; the MFR Code Pygments module really neesd a
-# much better configuration system
-from mfr_code_pygments.configuration import config as mfr_code_config
-mfr_code_config['PYGMENTS_THEME'] = 'manni'
-
 
 def create_app(**kwargs):
     """Create and return an Flask app instance"""
@@ -48,6 +43,12 @@ def create_app(**kwargs):
                     mfr_rst.Handler,
                     mfr_md.Handler,
                     mfr_code_pygments.Handler]
+
+    # TODO this is rather gross; the MFR Code Pygments module really neesd a
+    # much better configuration system
+    from mfr_code_pygments.configuration import config as mfr_code_config
+    mfr_code_config['PYGMENTS_THEME'] = 'manni'
+
     mfr.config.from_object(MFRConfig)
     mfr.collect_static()
 

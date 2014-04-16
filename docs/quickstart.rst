@@ -79,7 +79,7 @@ Configuration is stored on a ``mfr.config``, which can be modified like a dictio
 Using Static Files
 ==================
 
-Many renderers require static files (e.g. CSS and Javascript). To retrieve the static files for a file handler, call its :func:`get_static <mfr.core.FileHandler.get_static>` method. This will return a dictionary which maps file extensions to a list of paths.
+Many renderers require static files (e.g. CSS and Javascript). To retrieve the static files for a file handler, call its :meth:`get_assets <mfr.core.FileHandler.get_assets>` method. This will return a dictionary which maps file extensions to a list of paths.
 
 .. code-block:: python
 
@@ -103,5 +103,10 @@ To copy all necessary static assets to your app's static folder, use :func:`coll
     mfr.config['STATIC_FOLDER'] = '/app/static'
     mfr.collect_static()  # Copies static files to STATIC_FOLDER
 
+
+Next Steps
+==========
+
+That's it for the quickstart. For more complete examples, check out the :ref:`examples <examples>` page.
 
 

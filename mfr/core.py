@@ -68,7 +68,8 @@ def clear_registry():
 def reset_config():
     """Reset config defaults and empty the registry of file handlers."""
     global config
-    config = Config(defaults=_defaults)
+    config.clear()
+    config.update(_defaults)
     config['HANDLERS'] = []
 
 

@@ -26,7 +26,7 @@ Release v\ |version|. (:ref:`Installation <install>`)
 Ready to dive in?
 -----------------
 
-Go on to the :ref:`Quickstart tutorial <quickstart>` or check out some :ref:`Examples <examples>`.
+Go on to the :ref:`Quickstart tutorial <quickstart>` or check out some :ref:`examples <examples>`.
 
 
 Guide

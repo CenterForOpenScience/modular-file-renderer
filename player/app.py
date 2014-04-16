@@ -82,7 +82,7 @@ class AppConfig:
 
 @app.route('/')
 def index():
-    html = 'Below are files in the modular-file-renderer/previewer/files folder. Click-able links are those that the renderer can detect.</br>'
+    html = 'Below are files in the modular-file-renderer/player/files folder. Click-able links are those that the renderer can detect.</br>'
     for filename in os.listdir(FILES_DIR):
         html += build_html(filename)
     return html

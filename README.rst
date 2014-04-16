@@ -23,6 +23,23 @@ Requirements
 - Python >= 2.6 or >= 3.3
 
 
+Available modules
+=================
+
+There are a number of 3rd-party modules available.
+
+- `mfr-code-pygments <https://github.com/CenterForOpenScience/mfr-code-pygments>`_
+- `mfr_md <https://github.com/TomBaxter/mfr_md>`_
+
+Make your own, then submit a pull request to add it to this list!
+
+
+Create your own module
+======================
+
+Interested in adding support for a new file format? Check out the CONTRIBUTING.rst docs.
+
+
 License
 =======
 

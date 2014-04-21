@@ -1,14 +1,7 @@
 import mfr_image
-import mfr_docx
-import mfr_md
-import mfr_code_pygments
-import mfr_rst
 
 # Available file handlers
 HANDLERS = [
     mfr_image.Handler,
-    mfr_docx.Handler,
-    mfr_rst.Handler,
-    mfr_md.Handler,
-    mfr_code_pygments.Handler
+    # Add additional handlers here
 ]

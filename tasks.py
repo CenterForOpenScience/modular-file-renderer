@@ -1,13 +1,25 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import shutil
 
 from invoke import task, run
 
 docs_dir = 'docs'
 build_dir = os.path.join(docs_dir, '_build')
 
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+
 @task
+def init_player():
+    src = os.path.join(HERE, 'player', 'mfr_config_local.py.example')
+    dest = os.path.join(HERE, 'player', 'mfr_config_local.py')
+    if not os.path.exists(dest):
+        print('Copying {src} to {dest}'.format(**locals()))
+        shutil.copy(src, dest)
+
+@task('init_player')
 def player():
     """Run the player app."""
     from player import create_app

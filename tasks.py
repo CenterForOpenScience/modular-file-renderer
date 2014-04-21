@@ -19,9 +19,19 @@ def init_player():
         print('Copying {src} to {dest}'.format(**locals()))
         shutil.copy(src, dest)
 
-@task('init_player')
-def player():
+@task
+def clean_player():
+    """Remove mfr assets from the player's static folder."""
+    player_static_dir = os.path.join(HERE, 'player', 'static', 'mfr')
+    print('Removing player static directory')
+    shutil.rmtree(player_static_dir)
+
+@task
+def player(clean=False):
     """Run the player app."""
+    init_player()
+    if clean:
+        clean_player()
     from player import create_app
     app = create_app()
     app.run(host=app.config.get('HOST'), port=app.config.get('PORT'))

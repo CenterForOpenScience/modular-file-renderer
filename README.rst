@@ -2,6 +2,8 @@
 mfr
 ***
 
+**WARNING: mfr is in a very alpha stage of development. As such, it's API is in constant flux. Expect many breaking changes.**
+
 **mfr** (short for "modular file renderer") is a Python package for rendering files to HTML.
 
 .. code-block:: python

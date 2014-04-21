@@ -2,7 +2,7 @@
 Contributing guidelines
 ***********************
 
-In General
+In general
 ==========
 
 - `PEP 8`_, when sensible.
@@ -11,9 +11,12 @@ In General
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 
+In particular
+=============
+
 
 Setting up for development
-==========================
+--------------------------
 
 Clone the repo: ::
 
@@ -37,7 +40,7 @@ Lastly, install mfr in development mode. ::
 
 
 Writing A File Format Package
-=============================
+-----------------------------
 
 There are two main pieces of a file format package are
 
@@ -46,7 +49,7 @@ There are two main pieces of a file format package are
 
 
 Rendering/Exporting Code
-------------------------
+++++++++++++++++++++++++
 
 Renderers are simply callables (functions or methods) that take a file as their first argument and return a string of the rendered HTML.
 
@@ -76,7 +79,7 @@ You can also write renderers as methods.
 
 
 The FileHandler
----------------
++++++++++++++++
 
 A file handler is responsible for using your custom rendering and exporting code to actually render and export a file. When you call :func:`mfr.detect <mfr.detect>`, you receive a list of :class:`FileHandler <mfr.core.FileHandler>` classes.
 
@@ -112,7 +115,7 @@ Your FileHandler **must** define a ``detect`` method which, given a file object,
 
 
 Organization
-------------
+++++++++++++
 
 Each package has its own directory. At a minimum, your package should include:
 
@@ -143,7 +146,7 @@ where "something" is a file format, e.g. "mfr_image", "mfr_video".
 
 
 Running tests
-=============
+
 
 To run all tests (requires pytest) ::
 
@@ -154,7 +157,7 @@ You can also use pytest directly. ::
     $ py.test
 
 Writing tests
-=============
+-------------
 
 Unit tests should be written for all rendering, exporting, and detection code.
 
@@ -186,7 +189,7 @@ The above test can be rewritten like so:
 .. _pytest fixtures: https://pytest.org/latest/fixture.html
 
 Using the player
-================
+----------------
 
 The mfr comes with a Flask app for previewing rendered files. Copy the files you want to render to the ``player/files`` directory then run the app from the ``player`` directory with ::
 
@@ -194,9 +197,27 @@ The mfr comes with a Flask app for previewing rendered files. Copy the files you
 
 Then browse to ``localhost:5000`` in your browser.
 
+Configuring the player
+++++++++++++++++++++++
+
+You will likely want to add additional filehandler modules to the player. The first time you run ``invoke player``, a file is created at ``player/mfr_config_local.py``. You can add additional handlers to the ``HANDLERS`` list and add any additional configuration here.
+
+.. code-block:: python
+
+    # in player/mfr_config_local.py
+
+    import mfr_image
+    import mfr_code_pygments
+
+    # Add additional handlers here
+    HANDLERS = [
+        mfr_image.Handler,
+        mfr_code_pygments.Handler,
+    ]
+
 
 Documentation
-=============
+-------------
 
 Contributions to the documentation are welcome. Documentation is written in `reStructured Text`_ (rST). A quick rST reference can be found `here <http://docutils.sourceforge.net/docs/user/rst/quickref.html>`_. Builds are powered by Sphinx_.
 

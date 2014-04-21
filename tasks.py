@@ -1,15 +1,37 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import shutil
 
 from invoke import task, run
 
 docs_dir = 'docs'
 build_dir = os.path.join(docs_dir, '_build')
 
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+
 @task
-def player():
+def init_player():
+    src = os.path.join(HERE, 'player', 'mfr_config_local.py.example')
+    dest = os.path.join(HERE, 'player', 'mfr_config_local.py')
+    if not os.path.exists(dest):
+        print('Copying {src} to {dest}'.format(**locals()))
+        shutil.copy(src, dest)
+
+@task
+def clean_player():
+    """Remove mfr assets from the player's static folder."""
+    player_static_dir = os.path.join(HERE, 'player', 'static', 'mfr')
+    print('Removing player static directory')
+    shutil.rmtree(player_static_dir)
+
+@task
+def player(clean=False):
     """Run the player app."""
+    init_player()
+    if clean:
+        clean_player()
     from player import create_app
     app = create_app()
     app.run(host=app.config.get('HOST'), port=app.config.get('PORT'))

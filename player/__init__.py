@@ -8,52 +8,37 @@
 
     :author: Elijah Hamovitz
 """
+import os
 from flask import Flask, render_template
 
 import mfr
-import mfr_image
-import mfr_docx
-import mfr_rst
-import mfr_md
-import mfr_code_pygments
 
+HERE = os.path.abspath(os.path.dirname(__file__))
 
 def create_app(**kwargs):
-    """Create and return an Flask app instance"""
+    """Create and return a Flask app instance"""
 
     # create app; load config
-
     app = Flask(__name__)
-    app.config.from_object('player.config')
+    app.config.from_pyfile(os.path.join(HERE, 'app_config.py'))
     app.config.update(**kwargs)
 
     # Configure MFR
-
-    class MFRConfig:
+    mfr.config.from_pyfile(os.path.join(HERE, 'mfr_config.py'))
+    # Local overrides
+    mfr.config.from_pyfile(os.path.join(HERE, 'mfr_config_local.py'), silent=True)
+    # update static url and folder
+    mfr.config.update({
         # Base URL for static files
-        STATIC_URL = app.static_url_path
+        'STATIC_URL': os.path.join(app.static_url_path, 'mfr'),
         # Where to save static files
-        STATIC_FOLDER = app.static_folder
-        # Allow renderers to include static asset imports
-        INCLUDE_STATIC = True
-
-        # Available file handlers
-        HANDLERS = [mfr_image.Handler,
-                    mfr_docx.Handler,
-                    mfr_rst.Handler,
-                    mfr_md.Handler,
-                    mfr_code_pygments.Handler]
-
-    # TODO this is rather gross; the MFR Code Pygments module really neesd a
-    # much better configuration system
-    from mfr_code_pygments.configuration import config as mfr_code_config
-    mfr_code_config['PYGMENTS_THEME'] = 'manni'
-
-    mfr.config.from_object(MFRConfig)
+        'STATIC_FOLDER': os.path.join(app.static_folder, 'mfr'),
+    })
+    app.logger.debug('Config: {0}'.format(mfr.config))
+    app.logger.debug('Registered handlers: {0}'.format(mfr.config['HANDLERS']))
     mfr.collect_static()
 
     # Set up error handlers
-
     @app.errorhandler(404)
     def not_found_error(error):
         return render_template('404.html'), 404

@@ -67,7 +67,7 @@ README.html
 
 # Player files
 player/files/*
-player/config_local.py
-player/static/*
+player/mfr_config_local.py
+player/static/mfr/*
 
 !.gitkeep

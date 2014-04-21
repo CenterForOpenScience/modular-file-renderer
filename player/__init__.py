@@ -19,12 +19,12 @@ import mfr_code_pygments
 
 
 def create_app(**kwargs):
-    """Create and return an Flask app instance"""
+    """Create and return a Flask app instance"""
 
     # create app; load config
 
     app = Flask(__name__)
-    app.config.from_object('player.config')
+    app.config.from_object('player.app_config')
     app.config.update(**kwargs)
 
     # Configure MFR

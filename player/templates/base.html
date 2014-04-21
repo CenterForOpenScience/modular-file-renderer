@@ -11,18 +11,20 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     </head>
     <body>
-        {% block content %}
-            {% block messages %}
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                    <div class="messages">
-                        {% for category, msg in messages %}
-                        <p class="message flash-{{ category }}">{{ msg }}</p>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                {% endwith %}
-            {% endblock %}
-        {% endblock%}
+        <div class="box">
+            {% block content %}
+                {% block messages %}
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        <div class="messages">
+                            {% for category, msg in messages %}
+                            <p class="message flash-{{ category }}">{{ msg }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                {% endblock %}
+            {% endblock%}
+        </div>
     </body>
 </html>

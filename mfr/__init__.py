@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-__version__ = '0.1.0-dev'
+__version__ = '0.1.0-alpha'
 __author__ = 'Center for Open Science'
 
 

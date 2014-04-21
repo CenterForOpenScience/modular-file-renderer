@@ -8,6 +8,7 @@
 
     :author: Elijah Hamovitz
 """
+import os
 from flask import Flask, render_template
 
 import mfr
@@ -31,9 +32,9 @@ def create_app(**kwargs):
 
     class MFRConfig:
         # Base URL for static files
-        STATIC_URL = app.static_url_path
+        STATIC_URL = os.path.join(app.static_url_path, 'mfr')
         # Where to save static files
-        STATIC_FOLDER = app.static_folder
+        STATIC_FOLDER = os.path.join(app.static_folder, 'mfr')
         # Allow renderers to include static asset imports
         INCLUDE_STATIC = True
 

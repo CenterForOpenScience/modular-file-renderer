@@ -143,6 +143,39 @@ def get_file_exporters(handler):
     except AttributeError:
         return None
 
+def assets_by_extension(assets):
+    """Given a list of assets, return a dictionary keyed by extension
+
+    :param list assets: List of asset paths (strings)
+    :rtype: dict
+    """
+    ret = defaultdict(list)
+    for asset in assets:
+        key = get_file_extension(asset).lstrip('.')
+        ret[key].append(asset)
+    return ret
+
+
+class RenderResult(object):
+
+    def __init__(self, rendered, assets=None):
+        self.rendered = rendered
+        if isinstance(assets, (list, tuple)):
+            self.assets = assets_by_extension(assets)
+        elif isinstance(assets, dict):  # assets is a dict
+            self.assets = defaultdict(list, assets)
+        else:  # assets is None
+            self.assets = defaultdict(list)
+
+    def __str__(self):
+        return str(self.rendered)
+
+    def __repr__(self):
+        return '<RenderResult({0!r})>'.format(self.rendered)
+
+    def __contains__(self, obj):
+        """Implements the ``in`` keyword."""
+        return obj in str(self.rendered)
 
 class FileHandler(object):
     """Abstract base class from which all file handlers must inherit.

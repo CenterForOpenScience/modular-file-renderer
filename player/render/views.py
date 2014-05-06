@@ -32,7 +32,13 @@ def render(filename):
     if handler:
         try:
             src = url_for('render.serve_file', filename=filename)
-            return mfr.render(fp, handler=handler, src=src)
+            rr = mfr.render(fp, handler=handler, src=src)
+            retval = ""
+            for key in rr.assets.keys():
+                retval += rr.assets[key]
+            retval += rr.rendered
+            return retval
+
         except Exception as err:
             flash(err, 'error')
             abort(404)

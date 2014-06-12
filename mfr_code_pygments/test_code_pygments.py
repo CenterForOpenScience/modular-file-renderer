@@ -58,7 +58,7 @@ def test_stylesheet_included_if_include_static_is_true(fakefile):
     fakefile.name = 'zen.py'
     fakefile.read.return_value = 'import this'
     rendered = CodeFileHandler().render(fakefile)
-    assert get_stylesheet() in rendered
+    assert get_stylesheet() in rendered.assets['css']
 
 def test_configuration_defaults():
     assert config['PYGMENTS_THEME'] == 'default'

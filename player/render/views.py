@@ -15,7 +15,7 @@ import mfr
 from cStringIO import StringIO
 
 from flask import Blueprint, flash, url_for, current_app, send_file, \
-    send_from_directory, abort
+    send_from_directory, abort, render_template
 
 mod = Blueprint('render', __name__)
 
@@ -32,7 +32,9 @@ def render(filename):
     if handler:
         try:
             src = url_for('render.serve_file', filename=filename)
-            return mfr.render(fp, handler=handler, src=src)
+            rr = mfr.render(fp, handler=handler, src=src)
+            return render_template("rendered.html", result=rr)
+
         except Exception as err:
             flash(err, 'error')
             abort(404)

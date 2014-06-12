@@ -33,11 +33,6 @@ def render(filename):
         try:
             src = url_for('render.serve_file', filename=filename)
             rr = mfr.render(fp, handler=handler, src=src)
-            # retval = ""
-            # for key in rr.assets.keys():
-            #     retval += rr.assets[key]
-            # retval += rr.rendered
-            print rr.assets
             return render_template("rendered.html", result=rr)
 
         except Exception as err:

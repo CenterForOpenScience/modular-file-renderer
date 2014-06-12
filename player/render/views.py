@@ -15,7 +15,7 @@ import mfr
 from cStringIO import StringIO
 
 from flask import Blueprint, flash, url_for, current_app, send_file, \
-    send_from_directory, abort
+    send_from_directory, abort, render_template
 
 mod = Blueprint('render', __name__)
 
@@ -33,11 +33,12 @@ def render(filename):
         try:
             src = url_for('render.serve_file', filename=filename)
             rr = mfr.render(fp, handler=handler, src=src)
-            retval = ""
-            for key in rr.assets.keys():
-                retval += rr.assets[key]
-            retval += rr.rendered
-            return retval
+            # retval = ""
+            # for key in rr.assets.keys():
+            #     retval += rr.assets[key]
+            # retval += rr.rendered
+            print rr.assets
+            return render_template("rendered.html", result=rr)
 
         except Exception as err:
             flash(err, 'error')

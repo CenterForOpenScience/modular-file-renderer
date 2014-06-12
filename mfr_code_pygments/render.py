@@ -15,12 +15,8 @@ def render_html(fp, *args, **kwargs):
     content = fp.read()
     lexer = pygments.lexers.guess_lexer_for_filename(fp.name, content)
     content = pygments.highlight(content, lexer, formatter)
-    # if core_config['INCLUDE_STATIC']:
     link = get_stylesheet()
-    #     return RenderResult(content, assets={'css':[link]})
-        # return '\n'.join([link, content])
-    # else:
-    return RenderResult(content, assets={'css':link})
+    return RenderResult(content, assets={'css':[link]})
 
 
 def get_stylesheet():

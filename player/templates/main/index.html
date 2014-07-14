@@ -15,10 +15,13 @@
                 {% endif %}
 
                 {% if exporters %}
-                    <span style='margin-left:20px'> export to: </span>
-                    {% for exporter in exporters %}
-                        <a href="{{ url_for('render.export', exporter=exporter, filename=filename) }}">{{exporter}}, </a>
-                    {% endfor %}
+                    <span style='margin-left:20px'> Export as: </span>
+                    <select onchange="location = this.options[this.selectedIndex].value;">
+                        <option>--Select format---</option>
+                        {% for exporter in exporters %}
+                            <option value={{ url_for('render.export', exporter=exporter, filename=filename) }}>{{ exporter }}</option>
+                        {% endfor %}
+                    </select>
                 {% endif %}
                 </li>
             {% else %}
@@ -27,4 +30,3 @@
         </ul>
     </div>
 {% endblock %}
-

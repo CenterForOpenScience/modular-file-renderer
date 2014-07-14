@@ -28,8 +28,13 @@ def index():
             continue
 
         fp = open(os.path.join(current_app.config['FILES_DIR'], f))
-        handler = mfr.detect(fp)
-        exporters = mfr.get_file_exporters(handler)
-        files.append((f, handler, exporters))
+        handlers = mfr.detect(fp, many=True)
+
+        handler_dict = {}
+        for handler in handlers:
+            exporters = mfr.get_file_exporters(handler)
+            handler_dict[handler] = exporters
+
+        files.append((f, handler_dict))
 
     return render_template('main/index.html', files=files)

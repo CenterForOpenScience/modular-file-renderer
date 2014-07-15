@@ -184,6 +184,7 @@ class FileHandler(object):
     renderers = {}
     #: Maps exporter names to exporter callables, e.g. {'png': export_png}
     exporters = {}
+    name = "Unnamed handler"
 
     default_renderer = 'html'
     default_exporter = None

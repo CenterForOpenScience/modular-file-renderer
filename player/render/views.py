@@ -113,9 +113,7 @@ def export_with(filename, handler_name, exporter):
 
     for handler in handlers:
         if handler.name == handler_name:
-            print 'not', type(handler)
             exp = mfr.export(fp, handler=handler(), exporter="png")
-            print 'intst', type(handler())
             short_name, _ = os.path.splitext(filename)
             export_name = short_name + '.' + exporter
             return send_file(

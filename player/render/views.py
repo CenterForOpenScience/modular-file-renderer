@@ -17,6 +17,8 @@ from cStringIO import StringIO
 from flask import Blueprint, flash, url_for, current_app, send_file, \
     send_from_directory, abort
 
+from mfr.core import get_registry
+
 mod = Blueprint('render', __name__)
 
 
@@ -38,6 +40,26 @@ def render(filename):
             abort(404)
 
     abort(501)
+
+@mod.route('/render_with/<handler_name>/<filename>', methods=['GET'])
+def render_with(filename, handler_name):
+    try:
+        fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
+    except IOError as err:
+        flash(err, 'error')
+        abort(404)
+
+    handlers = get_registry()
+
+    for handler in handlers:
+        if handler.name == handler_name:
+            try:
+                src = url_for('render.serve_file', filename=filename)
+                return mfr.render(fp, handler=handler(), src=src)
+            except Exception as err:
+                flash(err, 'error')
+                abort(404)
+    return "no valid handlers"
 
 
 @mod.route('/files/<filename>')
@@ -77,3 +99,29 @@ def export(exporter, filename):
         as_attachment=True,
         attachment_filename=export_name,
     )
+
+
+@mod.route('/export_with/<handler_name>/<exporter>/<filename>', methods=['GET'])
+def export_with(filename, handler_name, exporter):
+    try:
+        fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
+    except IOError as err:
+        flash(err, 'error')
+        abort(404)
+
+    handlers = get_registry()
+
+    for handler in handlers:
+        if handler.name == handler_name:
+            print 'not', type(handler)
+            exp = mfr.export(fp, handler=handler(), exporter="png")
+            print 'intst', type(handler())
+            short_name, _ = os.path.splitext(filename)
+            export_name = short_name + '.' + exporter
+            return send_file(
+                StringIO(exp),
+                as_attachment=True,
+                attachment_filename=export_name,
+            )
+
+    return "no valid handlers"

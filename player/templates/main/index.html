@@ -11,13 +11,13 @@
                     <li><span>Render {{ filename }} with:</span>
                         {%  for handler in handler_dict %}
                             <div>
-                                <a href="{{ url_for('render.render', filename=filename) }}">{{  handler  }}</a>
+                                <a href="{{ url_for('render.render_with', filename=filename, handler_name=handler.name) }}">{{  handler.name  }}</a>
                                 {% if handler_dict[handler] %}
                                     <span> Export as:</span>
                                         <select onchange="location = this.options[this.selectedIndex].value;">
                                             <option>--Select format---</option>
                                             {% for exporter in handler_dict[handler] %}
-                                                <option value={{ url_for('render.export', exporter=exporter, filename=filename) }}>{{ exporter }}</option>
+                                                <option value={{ url_for('render.export_with', exporter=exporter, handler_name=handler.name, filename=filename) }}>{{ exporter }}</option>
                                             {% endfor %}
                                         </select>
                                 {%  endif %}

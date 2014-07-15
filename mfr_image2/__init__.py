@@ -25,6 +25,7 @@ EXTENSIONS = [
 
 class Handler(FileHandler):
     """The image file handler."""
+    name = "MFR_Image2"
     renderers = {
         'html': render_img_tag,
     }

@@ -25,6 +25,12 @@ mod = Blueprint('render', __name__)
 @mod.route('/render/<filename>', methods=['GET'])
 @mod.route('/render/<renderer_name>/<filename>', methods=['GET'])
 def render(filename, renderer_name=None):
+    """Make a file viewable in HTML
+
+    :param filename: file to be rendered
+    :param renderer_name: optional name of the specific renderer module
+    :return: html representation of the file
+    """
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
@@ -71,8 +77,15 @@ def send_module_file(module, file_path):
 
 
 @mod.route('/export/<export_file_type>/<filename>')
-@mod.route('/export/<handler_name>/<export_file_type>/<filename>', methods=['GET'])
+@mod.route('/export/<exporter_name>/<export_file_type>/<filename>', methods=['GET'])
 def export(export_file_type, filename, exporter_name=None):
+    """ Convert a file to another type and download that file.
+
+    :param export_file_type: the type to export a file as
+    :param filename: file to be exported
+    :param exporter_name: optional name of the specific exporter module
+    """
+
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
@@ -87,12 +100,11 @@ def export(export_file_type, filename, exporter_name=None):
     else:
         handlers = get_registry(type="EXPORTERS")
         for handler in handlers:
-            if handler.name == handler_name:
+            if handler.name == exporter_name:
                 exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
     if not exp:
-
-        raise IOError("Exporter not found")
+        raise NameError("A matching exporter not found")
 
     short_name, _ = os.path.splitext(filename)
     export_name = short_name + '.' + export_file_type

@@ -25,6 +25,13 @@ mod = Blueprint('render', __name__)
 @mod.route('/render/<filename>', methods=['GET'])
 @mod.route('/render/<renderer_name>/<filename>', methods=['GET'])
 def render(filename, renderer_name=None):
+    """Make a file viewable in HTML
+
+    :param filename: file to be rendered
+    :param renderer_name: optional name of the specific renderer module
+    :return: html representation of the file
+    """
+
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
@@ -52,6 +59,12 @@ def render(filename, renderer_name=None):
 
 @mod.route('/files/<filename>')
 def serve_file(filename):
+    """Serve the file (not rendered)
+
+    :param filename: file to be shown
+    :return: file
+    """
+
     try:
         return send_from_directory(current_app.config['FILES_DIR'], filename)
     except IOError as err:
@@ -71,8 +84,15 @@ def send_module_file(module, file_path):
 
 
 @mod.route('/export/<export_file_type>/<filename>')
-@mod.route('/export/<handler_name>/<export_file_type>/<filename>', methods=['GET'])
-def export(export_file_type, filename, handler_name=None):
+@mod.route('/export/<exporter_name>/<export_file_type>/<filename>', methods=['GET'])
+def export(export_file_type, filename, exporter_name=None):
+    """ Convert a file to another type and download that file.
+
+    :param export_file_type: the type to export a file as
+    :param filename: file to be exported
+    :param exporter_name: optional name of the specific exporter module
+    """
+
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
@@ -80,22 +100,24 @@ def export(export_file_type, filename, handler_name=None):
         abort(404)
 
     # If handler name is not specified, choose the first that will work
-    if handler_name is None:
-        handler = mfr.detect(fp)
-        exp = mfr.export(fp, handler, exporter=export_file_type)
+    if exporter_name is None:
+        exporter = mfr.detect(fp, type="EXPORTERS", many=False)
+        exp = mfr.export(fp, exporter, exporter=export_file_type)
 
     else:
         handlers = get_registry(type="EXPORTERS")
         for handler in handlers:
-            if handler.name == handler_name:
+            if handler.name == exporter_name:
                 exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
-        short_name, _ = os.path.splitext(filename)
-        export_name = short_name + '.' + export_file_type
-        return send_file(
-            StringIO(exp),
-            as_attachment=True,
-            attachment_filename=export_name,
-        )
+    if not exp:
+        raise NameError("A matching exporter not found")
 
-    return "Error, no valid handlers called ", handler_name
+    short_name, _ = os.path.splitext(filename)
+    export_name = short_name + '.' + export_file_type
+
+    return send_file(
+        StringIO(exp),
+        as_attachment=True,
+        attachment_filename=export_name,
+    )

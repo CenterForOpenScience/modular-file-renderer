@@ -12,25 +12,13 @@
                         {%  for renderer in renderers %}
                             <div>
                                 <a href="{{ url_for('render.render', filename=filename, renderer_name=renderer.name) }}">{{  renderer.name  }}</a>
-
-{#                                {% if handler_dict[handler] %}#}
-{#                                    <span> Export as:</span>#}
-{#                                        <select onchange="location = this.options[this.selectedIndex].value;">#}
-{#                                            <option>--Select format---</option>#}
-{#                                            {% for exporter in handler_dict[handler] %}#}
-{#                                                <option value={{ url_for('render.export_with', exporter=exporter, handler_name=handler.name, filename=filename) }}>{{ exporter }}</option>#}
-{#                                            {% endfor %}#}
-{#                                        </select>#}
-{#                                {%  endif %}#}
-{#                            #}
-
                             </div>
                         {%  endfor %}
                         <span> Export as:</span>
                         <select onchange="location = this.options[this.selectedIndex].value;">
                             <option>--Select format---</option>
                             {% for option in export_options %}
-                                <option value={{ url_for('render.export', export_file_type=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} using {{  option[1] }}</option>
+                                <option value={{ url_for('render.export', export_file_type=option[0], exporter_name=option[1], filename=filename) }}>{{ option[0] }} using {{  option[1] }}</option>
                             {% endfor %}
                         </select>
                     </li>a

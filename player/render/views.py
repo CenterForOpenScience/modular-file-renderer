@@ -31,6 +31,7 @@ def render(filename, renderer_name=None):
     :param renderer_name: optional name of the specific renderer module
     :return: html representation of the file
     """
+
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
@@ -58,6 +59,12 @@ def render(filename, renderer_name=None):
 
 @mod.route('/files/<filename>')
 def serve_file(filename):
+    """Serve the file (not rendered)
+
+    :param filename: file to be shown
+    :return: file
+    """
+
     try:
         return send_from_directory(current_app.config['FILES_DIR'], filename)
     except IOError as err:

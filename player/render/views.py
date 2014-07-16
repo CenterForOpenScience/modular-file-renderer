@@ -41,21 +41,21 @@ def render(filename):
 
     abort(501)
 
-@mod.route('/render_with/<handler_name>/<filename>', methods=['GET'])
-def render_with(filename, handler_name):
+@mod.route('/render_with/<renderer_name>/<filename>', methods=['GET'])
+def render_with(filename, renderer_name):
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
         flash(err, 'error')
         abort(404)
 
-    handlers = get_registry()
+    renderers = get_registry(type="RENDERERS")
 
-    for handler in handlers:
-        if handler.name == handler_name:
+    for renderer in renderers:
+        if renderer.name == renderer_name:
             try:
                 src = url_for('render.serve_file', filename=filename)
-                return mfr.render(fp, handler=handler(), src=src)
+                return mfr.render(fp, handler=renderer(), src=src)
             except Exception as err:
                 flash(err, 'error')
                 abort(404)

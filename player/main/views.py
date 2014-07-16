@@ -28,7 +28,7 @@ def index():
             continue
 
         fp = open(os.path.join(current_app.config['FILES_DIR'], f))
-        handlers = mfr.detect(fp, many=True)
+        renderers = mfr.detect(fp, many=True)
 
         exporter_modules = mfr.detect(fp, type="EXPORTERS", many=True)
         export_options = []
@@ -37,6 +37,6 @@ def index():
             for exporter in exporters:
                 export_options.append((exporter, module.name))
 
-        files.append((f, handlers, export_options))
+        files.append((f, renderers, export_options))
 
     return render_template('main/index.html', files=files)

@@ -7,12 +7,11 @@
         <p>Below are files in the modular-file-renderer/player/files folder. Click-able links are those that the renderer can detect.</p>
         <ul>
             {% if files %}
-                {% for filename, handlers, export_options in files %}
+                {% for filename, renderers, export_options in files %}
                     <li><span>Render {{ filename }} with:</span>
-                        {%  for handler in handlers %}
+                        {%  for renderer in renderers %}
                             <div>
-                                <a href="{{ url_for('render.render_with', filename=filename, handler_name=handler.name) }}">{{  handler.name  }}</a>
-
+                                <a href="{{ url_for('render.render_with', filename=filename, renderer_name=renderer.name) }}">{{  renderer.name  }}</a>
 
 {#                                {% if handler_dict[handler] %}#}
 {#                                    <span> Export as:</span>#}
@@ -36,6 +35,8 @@
                         </select>
                     </li>
 {#                    {% endif %}#}
+                    <div>Let us choose the renderer:</div>
+                    <a href="{{ url_for('render.render', filename=filename) }}">A Renderer</a>
                 {% endfor %}
             {% else %}
                 <li>No files found. Perhaps try adding some?</li>

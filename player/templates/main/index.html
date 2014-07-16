@@ -11,7 +11,7 @@
                     <li><span>Render {{ filename }} with:</span>
                         {%  for renderer in renderers %}
                             <div>
-                                <a href="{{ url_for('render.render_with', filename=filename, renderer_name=renderer.name) }}">{{  renderer.name  }}</a>
+                                <a href="{{ url_for('render.render', filename=filename, renderer_name=renderer.name) }}">{{  renderer.name  }}</a>
 
 {#                                {% if handler_dict[handler] %}#}
 {#                                    <span> Export as:</span>#}
@@ -30,7 +30,7 @@
                         <select onchange="location = this.options[this.selectedIndex].value;">
                             <option>--Select format---</option>
                             {% for option in export_options %}
-                                <option value={{ url_for('render.export', exporter=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} - {{  option[1] }}</option>
+                                <option value={{ url_for('render.export', exporter=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} using {{  option[1] }}</option>
                             {% endfor %}
                         </select>
                     </li>

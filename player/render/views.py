@@ -23,44 +23,32 @@ mod = Blueprint('render', __name__)
 
 
 @mod.route('/render/<filename>', methods=['GET'])
-def render(filename):
+@mod.route('/render/<renderer_name>/<filename>', methods=['GET'])
+def render(filename, renderer_name=None):
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
         flash(err, 'error')
-        abort(404)
+        abort(501)
 
-    handler = mfr.detect(fp, many=False)  # return the first valid filehandler
-    if handler:
-        try:
-            src = url_for('render.serve_file', filename=filename)
-            return mfr.render(fp, handler=handler, src=src)
-        except Exception as err:
-            flash(err, 'error')
-            abort(404)
+    renderer = None
+    if renderer_name is None:
+        renderer = mfr.detect(fp, many=False)  # return the first valid filehandler
+    else:
+        renderers = get_registry(type="RENDERERS")
 
-    abort(501)
+        for available_renderer in renderers:
+            if available_renderer.name == renderer_name:
+                renderer = available_renderer()
+        if renderer is None:
+            raise IOError('Specified renderer cannot be used with that file.')
 
-@mod.route('/render_with/<renderer_name>/<filename>', methods=['GET'])
-def render_with(filename, renderer_name):
     try:
-        fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
-    except IOError as err:
+        src = url_for('render.serve_file', filename=filename)
+        return mfr.render(fp, handler=renderer, src=src)
+    except Exception as err:
         flash(err, 'error')
-        abort(404)
-
-    renderers = get_registry(type="RENDERERS")
-
-    for renderer in renderers:
-        if renderer.name == renderer_name:
-            try:
-                src = url_for('render.serve_file', filename=filename)
-                return mfr.render(fp, handler=renderer(), src=src)
-            except Exception as err:
-                flash(err, 'error')
-                abort(404)
-    return "no valid handlers"
-
+        abort(501)
 
 @mod.route('/files/<filename>')
 def serve_file(filename):
@@ -83,7 +71,7 @@ def send_module_file(module, file_path):
 
 
 @mod.route('/export/<exporter>/<filename>')
-@mod.route('/export_with/<handler_name>/<exporter>/<filename>', methods=['GET'])
+@mod.route('/export/<handler_name>/<exporter>/<filename>', methods=['GET'])
 def export(exporter, filename, handler_name=None):
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))

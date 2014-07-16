@@ -31,7 +31,7 @@
                         <select onchange="location = this.options[this.selectedIndex].value;">
                             <option>--Select format---</option>
                             {% for option in export_options %}
-                                <option value={{ url_for('render.export_with', exporter=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} - {{  option[1] }}</option>
+                                <option value={{ url_for('render.export', exporter=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} - {{  option[1] }}</option>
                             {% endfor %}
                         </select>
                     </li>

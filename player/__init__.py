@@ -35,7 +35,7 @@ def create_app(**kwargs):
         'STATIC_FOLDER': os.path.join(app.static_folder, 'mfr'),
     })
     app.logger.debug('Config: {0}'.format(mfr.config))
-    app.logger.debug('Registered handlers: {0}'.format(mfr.config['HANDLERS']))
+    app.logger.debug('Registered handlers: {0}'.format(mfr.config['RENDERERS']))
     mfr.collect_static()
 
     # Set up error handlers

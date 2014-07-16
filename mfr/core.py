@@ -27,10 +27,10 @@ _defaults = {
 #: Global mfr configuration object
 config = Config(defaults=_defaults)
 
-config['HANDLERS'] = []
+config['RENDERERS'] = []
 
 
-def register_filehandler(file_handler):
+def register_filehandler(file_handler, type="RENDERERS"):
     """Register a new file handler.
     Usage: ::
 
@@ -38,10 +38,10 @@ def register_filehandler(file_handler):
 
     :param FileHandler file_handler: The filehandler class.
     """
-    get_registry().append(file_handler)
+    get_registry(type).append(file_handler)
 
 
-def register_filehandlers(handlers):
+def register_filehandlers(handlers, type="RENDERERS"):
     """Register multiple file handlers.
     Usage: ::
 
@@ -49,36 +49,31 @@ def register_filehandlers(handlers):
 
     :param dict handler_dict: A dictionary mapping handler names to handler classes
     """
-    get_registry().extend(handlers)
+    get_registry(type).extend(handlers)
 
 
-def get_registry():
+def get_registry(type="RENDERERS"):
     """Get the current list of registered filehandlers.
 
     :rtype: list
     """
-    return config['HANDLERS']
+    return config[type]
 
 
-def get_exporters():
-
-    return config['EXPORTERS']
-
-
-def clear_registry():
+def clear_registry(type="RENDERERS"):
     """Reset the list of registered handlers."""
-    config['HANDLERS'] = []
+    config[type] = []
 
 
-def reset_config():
+def reset_config(type="RENDERERS"):
     """Reset config defaults and empty the registry of file handlers."""
     global config
     config.clear()
     config.update(_defaults)
-    config['HANDLERS'] = []
+    config[type] = []
 
 
-def detect(fp, handlers=None, instance=True, many=False, *args, **kwargs):
+def detect(fp, handlers=None, instance=True, many=False, type="RENDERERS", *args, **kwargs):
     """Return a :class:`FileHandler <mfr.core.FileHandler>` for a given file,
     or ``False`` if no handler could be found for the file.
 
@@ -87,7 +82,7 @@ def detect(fp, handlers=None, instance=True, many=False, *args, **kwargs):
     :return: A FileHandler that can handle the file, or False if no handler was
         found.
     """
-    handlers = handlers or get_registry()
+    handlers = handlers or get_registry(type)
     valid_handlers = []
     for HandlerClass in handlers:
         handler = HandlerClass()

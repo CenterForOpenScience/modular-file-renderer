@@ -17,7 +17,7 @@ from cStringIO import StringIO
 from flask import Blueprint, flash, url_for, current_app, send_file, \
     send_from_directory, abort
 
-from mfr.core import get_registry, get_exporters
+from mfr.core import get_registry
 
 mod = Blueprint('render', __name__)
 
@@ -83,43 +83,37 @@ def send_module_file(module, file_path):
 
 
 @mod.route('/export/<exporter>/<filename>')
-def export(exporter, filename):
-    try:
-        fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
-    except IOError as err:
-        flash(err, 'error')
-        abort(404)
-
-    handler = mfr.detect(fp)
-    exp = mfr.export(fp, handler, exporter="png")
-    short_name, _ = os.path.splitext(filename)
-    export_name = short_name + '.' + exporter
-    return send_file(
-        StringIO(exp),
-        as_attachment=True,
-        attachment_filename=export_name,
-    )
-
-
 @mod.route('/export_with/<handler_name>/<exporter>/<filename>', methods=['GET'])
-def export_with(filename, handler_name, exporter):
+def export(exporter, filename, handler_name=None):
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
         flash(err, 'error')
         abort(404)
 
-    handlers = get_exporters()
+    # If handler name is not specified, choose the first that will work
+    if handler_name is None:
+        handler = mfr.detect(fp)
+        exp = mfr.export(fp, handler, exporter="png")
+        short_name, _ = os.path.splitext(filename)
+        export_name = short_name + '.' + exporter
+        return send_file(
+            StringIO(exp),
+            as_attachment=True,
+            attachment_filename=export_name,
+        )
 
-    for handler in handlers:
-        if handler.name == handler_name:
-            exp = mfr.export(fp, handler=handler(), exporter="png")
-            short_name, _ = os.path.splitext(filename)
-            export_name = short_name + '.' + exporter
-            return send_file(
-                StringIO(exp),
-                as_attachment=True,
-                attachment_filename=export_name,
-            )
+    else:
+        handlers = get_registry(type="EXPORTERS")
+        for handler in handlers:
+            if handler.name == handler_name:
+                exp = mfr.export(fp, handler=handler(), exporter="png")
+                short_name, _ = os.path.splitext(filename)
+                export_name = short_name + '.' + exporter
+                return send_file(
+                    StringIO(exp),
+                    as_attachment=True,
+                    attachment_filename=export_name,
+                )
 
-    return "no valid handlers"
+    return "Error, no valid handlers called ", handler_name

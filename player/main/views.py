@@ -30,7 +30,7 @@ def index():
         fp = open(os.path.join(current_app.config['FILES_DIR'], f))
         handlers = mfr.detect(fp, many=True)
 
-        exporter_modules = mfr.detect(fp, handlers=mfr.get_exporters(), many=True)
+        exporter_modules = mfr.detect(fp, type="EXPORTERS", many=True)
         export_options = []
         for module in exporter_modules:
             exporters = mfr.get_file_exporters(module)

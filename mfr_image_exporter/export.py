@@ -12,11 +12,12 @@ class ImageExporter(object):
         im.save(sio, format='png')
         return sio.getvalue()
 
-    def export_jpg(self, fp):
-        im = Image.open(fp)
-        sio = StringIO()
-        im.save(sio, format='jpg')
-        return sio.getvalue()
+    # Doesn't work. Key error, JPG
+    # def export_jpg(self, fp):
+    #     im = Image.open(fp)
+    #     sio = StringIO()
+    #     im.save(sio, format='jpg')
+    #     return sio.getvalue()
 
     def export_gif(self, fp):
         im = Image.open(fp)
@@ -24,8 +25,9 @@ class ImageExporter(object):
         im.save(sio, format='gif')
         return sio.getvalue()
 
-    def export_tif(self, fp):
-        im = Image.open(fp)
-        sio = StringIO()
-        im.save(sio, format='tif')
-        return sio.getvalue()
+    # Doesn't work. Key error, TIF
+    # def export_tif(self, fp):
+    #     im = Image.open(fp)
+    #     sio = StringIO()
+    #     im.save(sio, format='tif')
+    #     return sio.getvalue()

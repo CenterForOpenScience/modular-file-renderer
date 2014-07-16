@@ -33,9 +33,9 @@ def index():
         exporter_modules = mfr.detect(fp, type="EXPORTERS", many=True)
         export_options = []
         for module in exporter_modules:
-            exporters = mfr.get_file_exporters(module)
-            for exporter in exporters:
-                export_options.append((exporter, module.name))
+            available_file_extensions = mfr.get_file_exporters(module)
+            for export_file_type in available_file_extensions:
+                export_options.append((export_file_type, module.name))
 
         files.append((f, renderers, export_options))
 

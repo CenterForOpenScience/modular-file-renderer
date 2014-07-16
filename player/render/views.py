@@ -72,7 +72,7 @@ def send_module_file(module, file_path):
 
 @mod.route('/export/<export_file_type>/<filename>')
 @mod.route('/export/<handler_name>/<export_file_type>/<filename>', methods=['GET'])
-def export(export_file_type, filename, handler_name=None):
+def export(export_file_type, filename, exporter_name=None):
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
@@ -80,9 +80,9 @@ def export(export_file_type, filename, handler_name=None):
         abort(404)
 
     # If handler name is not specified, choose the first that will work
-    if handler_name is None:
-        handler = mfr.detect(fp)
-        exp = mfr.export(fp, handler, exporter=export_file_type)
+    if exporter_name is None:
+        exporter = mfr.detect(fp, type="EXPORTERS", many=False)
+        exp = mfr.export(fp, exporter, exporter=export_file_type)
 
     else:
         handlers = get_registry(type="EXPORTERS")
@@ -90,12 +90,15 @@ def export(export_file_type, filename, handler_name=None):
             if handler.name == handler_name:
                 exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
-        short_name, _ = os.path.splitext(filename)
-        export_name = short_name + '.' + export_file_type
-        return send_file(
-            StringIO(exp),
-            as_attachment=True,
-            attachment_filename=export_name,
-        )
+    if not exp:
 
-    return "Error, no valid handlers called ", handler_name
+        raise IOError("Exporter not found")
+
+    short_name, _ = os.path.splitext(filename)
+    export_name = short_name + '.' + export_file_type
+
+    return send_file(
+        StringIO(exp),
+        as_attachment=True,
+        attachment_filename=export_name,
+    )

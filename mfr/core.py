@@ -57,6 +57,7 @@ def get_registry(type="RENDERERS"):
 
     :rtype: list
     """
+    print config
     return config[type]
 
 

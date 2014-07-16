@@ -17,7 +17,7 @@ from cStringIO import StringIO
 from flask import Blueprint, flash, url_for, current_app, send_file, \
     send_from_directory, abort
 
-from mfr.core import get_registry
+from mfr.core import get_registry, get_exporters
 
 mod = Blueprint('render', __name__)
 
@@ -109,7 +109,7 @@ def export_with(filename, handler_name, exporter):
         flash(err, 'error')
         abort(404)
 
-    handlers = get_registry()
+    handlers = get_exporters()
 
     for handler in handlers:
         if handler.name == handler_name:

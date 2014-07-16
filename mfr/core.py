@@ -60,6 +60,11 @@ def get_registry():
     return config['HANDLERS']
 
 
+def get_exporters():
+
+    return config['EXPORTERS']
+
+
 def clear_registry():
     """Reset the list of registered handlers."""
     config['HANDLERS'] = []
@@ -198,6 +203,7 @@ class FileHandler(object):
         """
         raise NotImplementedError('Must define detect method.')
 
+    #TODO(asmacdo) move to Renderer base class
     def render(self, fp, renderer=None, *args, **kwargs):
         """Return the rendered HTML for a file.
 
@@ -213,6 +219,7 @@ class FileHandler(object):
             raise ValueError('`render` method called with no renderer specified and '
                             'no default.')
 
+    #TODO(asmacdo) move to exporter base class
     def export(self, fp, exporter=None, *args, **kwargs):
         """Export a file to a different format.
 
@@ -226,6 +233,7 @@ class FileHandler(object):
             raise ValueError('`export` method called with no exporter specified and '
                             'no default.')
 
+    #TODO(asmacdo) See what assets can include and whether it should be moved to renderer
     def iterstatic(self, url=True):
         """Iterates through the static asset files for the filehandler,
         yielding absolute paths to the files.
@@ -319,7 +327,7 @@ def get_namespace(handler_cls):
         # mypackage.mymodule.MyHandler => 'mymodule'
         return handler_cls.__module__.split('.')[-1]
 
-
+#TODO(asmacdo) move to renderer?
 def collect_static(dest=None, dry_run=False):
     """Collect all static assets for registered handlers to a single directory.
     Files will be copied to ``dest``, if specified, or the STATIC_PATH config

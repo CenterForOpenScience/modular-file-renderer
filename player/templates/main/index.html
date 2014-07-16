@@ -7,22 +7,33 @@
         <p>Below are files in the modular-file-renderer/player/files folder. Click-able links are those that the renderer can detect.</p>
         <ul>
             {% if files %}
-                {% for filename, handler_dict in files %}
+                {% for filename, handlers, export_options in files %}
                     <li><span>Render {{ filename }} with:</span>
-                        {%  for handler in handler_dict %}
+                        {%  for handler in handlers %}
                             <div>
                                 <a href="{{ url_for('render.render_with', filename=filename, handler_name=handler.name) }}">{{  handler.name  }}</a>
-                                {% if handler_dict[handler] %}
-                                    <span> Export as:</span>
-                                        <select onchange="location = this.options[this.selectedIndex].value;">
-                                            <option>--Select format---</option>
-                                            {% for exporter in handler_dict[handler] %}
-                                                <option value={{ url_for('render.export_with', exporter=exporter, handler_name=handler.name, filename=filename) }}>{{ exporter }}</option>
-                                            {% endfor %}
-                                        </select>
-                                {%  endif %}
+
+
+{#                                {% if handler_dict[handler] %}#}
+{#                                    <span> Export as:</span>#}
+{#                                        <select onchange="location = this.options[this.selectedIndex].value;">#}
+{#                                            <option>--Select format---</option>#}
+{#                                            {% for exporter in handler_dict[handler] %}#}
+{#                                                <option value={{ url_for('render.export_with', exporter=exporter, handler_name=handler.name, filename=filename) }}>{{ exporter }}</option>#}
+{#                                            {% endfor %}#}
+{#                                        </select>#}
+{#                                {%  endif %}#}
+{#                            #}
+
                             </div>
                         {%  endfor %}
+                        <span> Export as:</span>
+                        <select onchange="location = this.options[this.selectedIndex].value;">
+                            <option>--Select format---</option>
+                            {% for option in export_options %}
+                                <option value={{ url_for('render.export_with', exporter=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} - {{  option[1] }}</option>
+                            {% endfor %}
+                        </select>
                     </li>
 {#                    {% endif %}#}
                 {% endfor %}

@@ -70,7 +70,6 @@ def send_module_file(module, file_path):
         abort(404)
 
 
-#TODO(asmacdo) whoa. export type is hardcoded to png. all this does is change the extension...
 @mod.route('/export/<export_file_type>/<filename>')
 @mod.route('/export/<handler_name>/<export_file_type>/<filename>', methods=['GET'])
 def export(export_file_type, filename, handler_name=None):
@@ -84,6 +83,13 @@ def export(export_file_type, filename, handler_name=None):
     if handler_name is None:
         handler = mfr.detect(fp)
         exp = mfr.export(fp, handler, exporter=export_file_type)
+
+    else:
+        handlers = get_registry(type="EXPORTERS")
+        for handler in handlers:
+            if handler.name == handler_name:
+                exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
+
         short_name, _ = os.path.splitext(filename)
         export_name = short_name + '.' + export_file_type
         return send_file(
@@ -91,18 +97,5 @@ def export(export_file_type, filename, handler_name=None):
             as_attachment=True,
             attachment_filename=export_name,
         )
-
-    else:
-        handlers = get_registry(type="EXPORTERS")
-        for handler in handlers:
-            if handler.name == handler_name:
-                exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
-                short_name, _ = os.path.splitext(filename)
-                export_name = short_name + '.' + export_file_type
-                return send_file(
-                    StringIO(exp),
-                    as_attachment=True,
-                    attachment_filename=export_name,
-                )
 
     return "Error, no valid handlers called ", handler_name

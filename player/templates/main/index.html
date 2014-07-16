@@ -30,10 +30,10 @@
                         <select onchange="location = this.options[this.selectedIndex].value;">
                             <option>--Select format---</option>
                             {% for option in export_options %}
-                                <option value={{ url_for('render.export', exporter=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} using {{  option[1] }}</option>
+                                <option value={{ url_for('render.export', export_file_type=option[0], handler_name=option[1], filename=filename) }}>{{ option[0] }} using {{  option[1] }}</option>
                             {% endfor %}
                         </select>
-                    </li>
+                    </li>a
 {#                    {% endif %}#}
                     <div>Let us choose the renderer:</div>
                     <a href="{{ url_for('render.render', filename=filename) }}">A Renderer</a>

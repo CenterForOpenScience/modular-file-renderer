@@ -3,7 +3,7 @@ from mfr.core import FileHandler, get_file_extension
 from mfr_image.render import render_img_tag
 
 try:  # Exporter requires PIL
-    from mfr_image.export import ImageExporter
+    from mfr_image2.export import ImageExporter
     exporter = ImageExporter()
     exporters = {
         'png': exporter.export_png,

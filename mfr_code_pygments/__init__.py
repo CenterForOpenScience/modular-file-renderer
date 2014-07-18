@@ -116,6 +116,7 @@ EXTENSIONS = [
 
 class Handler(FileHandler):
     renderers = renderers
+    name = "Code_Pygments"
 
     def detect(self, fp):
         return get_file_extension(fp.name) in EXTENSIONS

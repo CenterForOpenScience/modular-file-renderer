@@ -158,8 +158,8 @@ def assets_by_extension(assets):
 
 class RenderResult(object):
 
-    def __init__(self, rendered, assets=None):
-        self.rendered = rendered
+    def __init__(self, content_html, assets=None):
+        self.content_html = content_html
         if isinstance(assets, (list, tuple)):
             self.assets = assets_by_extension(assets)
         elif isinstance(assets, dict):  # assets is a dict
@@ -168,14 +168,14 @@ class RenderResult(object):
             self.assets = defaultdict(list)
 
     def __str__(self):
-        return str(self.rendered)
+        return str(self.content_html)
 
     def __repr__(self):
-        return '<RenderResult({0!r})>'.format(self.rendered)
+        return '<RenderResult({0!r})>'.format(self.content_html)
 
     def __contains__(self, obj):
         """Implements the ``in`` keyword."""
-        return obj in str(self.rendered)
+        return obj in str(self.content_html)
 
 class FileHandler(object):
     """Abstract base class from which all file handlers must inherit.

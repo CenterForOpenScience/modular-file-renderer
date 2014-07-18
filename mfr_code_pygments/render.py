@@ -4,7 +4,7 @@ import pygments
 import pygments.lexers
 import pygments.formatters
 
-from mfr import config as core_config
+from mfr import config as core_config, RenderResult
 
 from mfr_code_pygments.configuration import config as module_config
 
@@ -16,7 +16,9 @@ def render_html(fp, *args, **kwargs):
     content = pygments.highlight(content, lexer, formatter)
     if core_config['INCLUDE_STATIC']:
         link = get_stylesheet()
-        return '\n'.join([link, content])
+        # return '\n'.join([link, content])
+        assets = {"css": link}
+        return RenderResult(content_html=content, assets=assets)
     else:
         return content
 

@@ -34,6 +34,7 @@ def render(filename, renderer_name=None):
 
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
+
     except IOError as err:
         flash(err, 'error')
         abort(501)
@@ -49,11 +50,13 @@ def render(filename, renderer_name=None):
                 renderer = available_renderer()
         if renderer is None:
             raise IOError('Specified renderer cannot be used with that file.')
-
+    print dir(renderer)
     try:
         src = url_for('render.serve_file', filename=filename)
+        print src
         return mfr.render(fp, handler=renderer, src=src)
     except Exception as err:
+
         flash(err, 'error')
         abort(501)
 

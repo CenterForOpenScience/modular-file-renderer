@@ -21,7 +21,6 @@ from mfr.core import get_registry
 
 mod = Blueprint('render', __name__)
 
-
 @mod.route('/render/<filename>', methods=['GET'])
 @mod.route('/render/<renderer_name>/<filename>', methods=['GET'])
 def render(filename, renderer_name=None):
@@ -52,7 +51,9 @@ def render(filename, renderer_name=None):
 
     try:
         src = url_for('render.serve_file', filename=filename)
-        return mfr.render(fp, handler=renderer, src=src)
+        rendered_result = mfr.render(fp, handler=renderer, src=src)
+        return rendered_result
+
     except Exception as err:
         flash(err, 'error')
         abort(501)

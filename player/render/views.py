@@ -53,7 +53,8 @@ def render(filename, renderer_name=None):
     try:
         src = url_for('render.serve_file', filename=filename)
         rendered_result = mfr.render(fp, handler=renderer, src=src)
-        return '\n'.join([rendered_result.assets.get("css"), rendered_result.content_html])
+        print 'HELLO'
+        return '\n'.join([rendered_result.assets.get("css", '<style></style>'), rendered_result.content_html])
 
     except Exception as err:
         flash(err, 'error')

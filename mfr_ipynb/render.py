@@ -6,7 +6,7 @@ from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
 from mako.lookup import TemplateLookup
 
-from mfr import config as core_config
+from mfr import config as core_config, RenderResult
 
 
 c = Config()
@@ -29,13 +29,13 @@ def render_html(file_pointer, **kwargs):
     nb = parse_json(content)
     name, theme = get_metadata(nb)
     body = exporter.from_notebook_node(nb)[0]
-    return render_mako(
+    return RenderResult(content_html=render_mako(
             template_name="ipynb.mako",
             body=body,
             file_name=name,
             css_theme=theme,
             mathjax_conf=None
-        )
+        ))
 
 
 def parse_json(content):

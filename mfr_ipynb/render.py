@@ -6,6 +6,9 @@ from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
 from mako.lookup import TemplateLookup
 
+from mfr import config as core_config
+
+
 c = Config()
 c.HTMLExporter.template_file = 'basic'
 c.NbconvertApp.fileext = 'html'
@@ -60,4 +63,4 @@ def get_metadata(nb):
 
 def render_mako(template_name, css_theme, file_name, body, mathjax_conf, **kwargs):
     mako_lookup = TemplateLookup(directories=['/home/pfan/modular-file-renderer/mfr_ipynb/templates'])
-    return mako_lookup.get_template(template_name).render(STATIC_PATH='/home/pfan/modular-file-renderer/mfr_ipynb/static', body=body, file_name=file_name, css_theme=css_theme, mathjax_conf=None)
+    return mako_lookup.get_template(template_name).render(STATIC_PATH=core_config['STATIC_URL'], body=body, file_name=file_name, css_theme=css_theme, mathjax_conf=None)

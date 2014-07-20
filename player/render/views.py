@@ -52,12 +52,17 @@ def render(filename, renderer_name=None):
     try:
         src = url_for('render.serve_file', filename=filename)
         rendered_result = mfr.render(fp, handler=renderer, src=src)
-        assets = rendered_result.assets or {}
-        result = ""
-        for asset in assets:
-            result += assets[asset]
 
-        return result + rendered_result.content
+        # Dict of assets to include
+        assets = rendered_result.assets or {}
+
+        # Include all assets
+        results = [assets[asset] for asset in assets]
+
+        # Append html content
+        results.append(rendered_result.content)
+
+        return "\n".join(results)
 
     except Exception as err:
         flash(err, 'error')

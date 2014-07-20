@@ -12,14 +12,14 @@ def html():
 def test_basic_init(html):
     css = ['/static/style.css']
     rr = RenderResult(html, assets={'css': css})
-    assert rr.rendered == html
+    assert rr.content == html
     assert rr.assets['css'] == css
 
 
 def test_init_with_list(html):
     rr = RenderResult(html, assets=['/static/style.css', '/static/script.js'])
 
-    assert rr.rendered == html
+    assert rr.content == html
     assert rr.assets['css'] == ['/static/style.css']
     assert rr.assets['js'] == ['/static/script.js']
     assert rr.assets['notfound'] == []

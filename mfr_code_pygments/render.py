@@ -18,7 +18,7 @@ def render_html(fp, *args, **kwargs):
         link = get_stylesheet()
         # return '\n'.join([link, content])
         assets = {"css": link}
-        return RenderResult(content_html=content, assets=assets)
+        return RenderResult(content=content, assets=assets)
     else:
         return content
 

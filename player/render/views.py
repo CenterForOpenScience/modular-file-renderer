@@ -47,10 +47,15 @@ def render(filename, renderer_name=None):
             if available_renderer.name == renderer_name:
                 renderer = available_renderer()
         if renderer is None:
-            raise IOError('Specified renderer cannot be used with that file.')
+            raise IOError('Could not load a matching renderer')
 
+    #TODO(asmacdo) does this need to be in a try/except block?
     try:
+
         src = url_for('render.serve_file', filename=filename)
+
+        #TODO(asmacdo) just return the render result. This should be done in a
+        # template.
         rendered_result = mfr.render(fp, handler=renderer, src=src)
 
         # Dict of assets to include

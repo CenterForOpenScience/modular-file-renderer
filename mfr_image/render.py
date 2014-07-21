@@ -11,4 +11,5 @@ def render_img_tag(fp, src=None, alt=''):
     if src is None:
         src = fp.name
 
-    return RenderResult('<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt))
+    content = '<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt)
+    return RenderResult(content)

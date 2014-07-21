@@ -1,6 +1,6 @@
 import mfr_image
 
 # Available file handlers
-RENDERERS = [
+HANDLERS = [
     mfr_image.Handler,
 ]

@@ -42,15 +42,19 @@ def render(filename, renderer_name=None):
     if renderer_name is None:
         renderer = mfr.detect(fp, many=False)  # return the first valid filehandler
     else:
-        renderers = get_registry(type="RENDERERS")
+        handlers = get_registry()
 
-        for available_renderer in renderers:
-            if available_renderer.name == renderer_name:
-                renderer = available_renderer()
+        for available_handler in handlers:
+            if available_handler.name == renderer_name:
+                renderer = available_handler()
         if renderer is None:
             raise IOError('Specified renderer cannot be used with that file.')
     try:
+
         src = url_for('render.serve_file', filename=filename)
+
+        #TODO(asmacdo) just return the render result. This should be done in a
+        # template.
         rendered_result = mfr.render(fp, handler=renderer, src=src)
         return '\n'.join([rendered_result.assets.get("css", '<style></style>'), rendered_result.content])
 
@@ -113,24 +117,24 @@ def export(export_file_type, filename, exporter_name=None):
 
     # If handler name is not specified, choose the first that will work
     if exporter_name is None:
-        exporter = mfr.detect(fp, type="EXPORTERS", many=False)
-        exp = mfr.export(fp, exporter, exporter=export_file_type)
+        exporter = mfr.detect(fp, many=False)
+        exported_content = mfr.export(fp, exporter, exporter=export_file_type)
 
     else:
-        handlers = get_registry(type="EXPORTERS")
+        handlers = get_registry()
         for handler in handlers:
             if handler.name == exporter_name:
-                exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
+                exported_content = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
     #TODO(asmacdo) is this the appropriate error?
-    if not exp:
-        raise NameError("A matching exporter not found")
+    if not exported_content:
+        raise NameError("A matching exporter was not found")
 
     short_name, _ = os.path.splitext(filename)
     export_name = short_name + '.' + export_file_type
 
     return send_file(
-        StringIO(exp),
+        StringIO(exported_content),
         as_attachment=True,
         attachment_filename=export_name,
     )

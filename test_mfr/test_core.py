@@ -205,7 +205,7 @@ def test_get_registry():
 
 def test_registering_handlers_with_config():
     class FakeConfig:
-        RENDERERS = [FakeHandler, TestHandler]
+        HANDLERS = [FakeHandler, TestHandler]
     core.config.from_object(FakeConfig)
     assert FakeHandler in core.get_registry()
 

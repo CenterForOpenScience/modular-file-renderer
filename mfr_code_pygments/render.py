@@ -20,7 +20,7 @@ def render_to_html(fp, *args, **kwargs):
     content = fp.read()
     lexer = pygments.lexers.guess_lexer_for_filename(fp.name, content)
     content = pygments.highlight(content, lexer, formatter)
-    assets = {"css": [get_stylesheet()]}
+    assets = {"css": get_stylesheet()}
     return RenderResult(content=content, assets=assets)
 
 

@@ -6,8 +6,8 @@ try:  # Exporter requires PIL
     from mfr_image.export import ImageExporter
     exporter = ImageExporter()
     exporters = {
-        # 'png': exporter.export_png,
-        'jpg': exporter.export_jpg,
+        'png': exporter.export_png,
+        # 'jpg': exporter.export_jpg,
         'gif': exporter.export_gif,
         # 'tif': exporter.export_tif,
     }

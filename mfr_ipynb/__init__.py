@@ -9,7 +9,6 @@ __version__ = '0.1.0'
 
 EXTENSIONS = [
 	'.ipynb'
-    # TODO: finish this list
 ]
 
 

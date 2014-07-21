@@ -118,23 +118,23 @@ def export(export_file_type, filename, exporter_name=None):
     # If handler name is not specified, choose the first that will work
     if exporter_name is None:
         exporter = mfr.detect(fp, handler_type="EXPORTERS", many=False)
-        exp = mfr.export(fp, exporter, exporter=export_file_type)
+        exported_content = mfr.export(fp, exporter, exporter=export_file_type)
 
     else:
         handlers = get_registry(handler_type="EXPORTERS")
         for handler in handlers:
             if handler.name == exporter_name:
-                exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
+                exported_content = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
     #TODO(asmacdo) is this the appropriate error?
-    if not exp:
-        raise NameError("A matching exporter not found")
+    if not exported_content:
+        raise NameError("A matching exporter was not found")
 
     short_name, _ = os.path.splitext(filename)
     export_name = short_name + '.' + export_file_type
 
     return send_file(
-        StringIO(exp),
+        StringIO(exported_content),
         as_attachment=True,
         attachment_filename=export_name,
     )

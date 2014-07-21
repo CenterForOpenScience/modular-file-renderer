@@ -55,7 +55,13 @@ def clean_docs():
 
 @task
 def browse_docs():
-    run("open %s" % os.path.join(build_dir, 'index.html'))
+    system = check_os()
+    if system == 'Linux':
+        command = 'idle'
+    else:
+        command = 'open'
+
+    run("{0} {1}".format(command, os.path.join(build_dir, 'index.html')))
 
 @task
 def docs(clean=False, browse=False):
@@ -81,3 +87,8 @@ def publish(test=False):
         run('python setup.py register -r test sdist bdist_wheel upload -r test')
     else:
         run("python setup.py register sdist bdist_wheel upload")
+
+@task()
+def check_os():
+    system = run('uname -s')
+    return system

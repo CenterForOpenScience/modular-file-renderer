@@ -127,6 +127,7 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))
+    #TODO(asmacdo) does this need to be initialized?
     handler = HandlerClass
     return handler.export(fp, exporter=exporter, *args, **kwargs)
 
@@ -157,9 +158,18 @@ def assets_by_extension(assets):
 
 
 class RenderResult(object):
+    """ An object that contains the html representation of content and any
+     assets that should be included.
+    """
 
-    def __init__(self, content_html, assets=None):
-        self.content_html = content_html
+    def __init__(self, content, assets=None):
+        """
+        Initialize a Render result.
+
+        :param content: html representation of content
+        :param assets: css, javascript, or other asset to be included
+        """
+        self.content = content
         if isinstance(assets, (list, tuple)):
             self.assets = assets_by_extension(assets)
         elif isinstance(assets, dict):  # assets is a dict
@@ -168,14 +178,14 @@ class RenderResult(object):
             self.assets = defaultdict(list)
 
     def __str__(self):
-        return str(self.content_html)
+        return str(self.content)
 
     def __repr__(self):
-        return '<RenderResult({0!r})>'.format(self.content_html)
+        return '<RenderResult({0!r})>'.format(self.content)
 
     def __contains__(self, obj):
         """Implements the ``in`` keyword."""
-        return obj in str(self.content_html)
+        return obj in str(self.content)
 
 class FileHandler(object):
     """Abstract base class from which all file handlers must inherit.

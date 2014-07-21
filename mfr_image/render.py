@@ -1,6 +1,7 @@
 """Image renderer module."""
 from mfr import RenderResult
 
+
 def render_img_tag(fp, src=None, alt=''):
     """A simple image tag renderer.
 
@@ -10,5 +11,4 @@ def render_img_tag(fp, src=None, alt=''):
     if src is None:
         src = fp.name
 
-    # return RenderResult('<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt))
-    return RenderResult(content_html='<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt))
+    return RenderResult('<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt))

@@ -29,10 +29,10 @@ def index():
 
         fp = open(os.path.join(current_app.config['FILES_DIR'], f))
         # List of all renderer modules for this file type
-        renderers = mfr.detect(fp, type="RENDERERS", many=True)
+        renderers = mfr.detect(fp, handler_type="RENDERERS", many=True)
 
         # List of all exporter modules for this file type
-        exporter_modules = mfr.detect(fp, type="EXPORTERS", many=True)
+        exporter_modules = mfr.detect(fp, handler_type="EXPORTERS", many=True)
 
         # Generate a list of modules and their file extensions
         export_options = []

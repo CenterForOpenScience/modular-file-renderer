@@ -41,7 +41,7 @@ def render(filename, renderer_name=None):
     if renderer_name is None:
         renderer = mfr.detect(fp, many=False)  # return the first valid filehandler
     else:
-        renderers = get_registry(type="RENDERERS")
+        renderers = get_registry(handler_type="RENDERERS")
 
         for available_renderer in renderers:
             if available_renderer.name == renderer_name:
@@ -117,11 +117,11 @@ def export(export_file_type, filename, exporter_name=None):
 
     # If handler name is not specified, choose the first that will work
     if exporter_name is None:
-        exporter = mfr.detect(fp, type="EXPORTERS", many=False)
+        exporter = mfr.detect(fp, handler_type="EXPORTERS", many=False)
         exp = mfr.export(fp, exporter, exporter=export_file_type)
 
     else:
-        handlers = get_registry(type="EXPORTERS")
+        handlers = get_registry(handler_type="EXPORTERS")
         for handler in handlers:
             if handler.name == exporter_name:
                 exp = mfr.export(fp, handler=handler(), exporter=export_file_type)

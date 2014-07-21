@@ -127,6 +127,7 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))
+    #TODO(asmacdo) does this need to be initialized?
     handler = HandlerClass
     return handler.export(fp, exporter=exporter, *args, **kwargs)
 

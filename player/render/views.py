@@ -55,7 +55,6 @@ def render(filename, renderer_name=None):
 
         # Dict of assets to include
         assets = rendered_result.assets or {}
-
         # Include all assets
         results = [assets[asset] for asset in assets]
 
@@ -64,6 +63,7 @@ def render(filename, renderer_name=None):
 
         return "\n".join(results)
 
+    #TODO(asmacdo) more specific exception handling here
     except Exception as err:
         flash(err, 'error')
         abort(501)
@@ -121,6 +121,7 @@ def export(export_file_type, filename, exporter_name=None):
             if handler.name == exporter_name:
                 exp = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
+    #TODO(asmacdo) is this the appropriate error?
     if not exp:
         raise NameError("A matching exporter not found")
 

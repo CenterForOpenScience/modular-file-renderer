@@ -41,11 +41,11 @@ def render(filename, renderer_name=None):
     if renderer_name is None:
         renderer = mfr.detect(fp, many=False)  # return the first valid filehandler
     else:
-        renderers = get_registry(handler_type="RENDERERS")
+        handlers = get_registry()
 
-        for available_renderer in renderers:
-            if available_renderer.name == renderer_name:
-                renderer = available_renderer()
+        for available_handler in handlers:
+            if available_handler.name == renderer_name:
+                renderer = available_handler()
         if renderer is None:
             raise IOError('Could not load a matching renderer')
 
@@ -117,11 +117,11 @@ def export(export_file_type, filename, exporter_name=None):
 
     # If handler name is not specified, choose the first that will work
     if exporter_name is None:
-        exporter = mfr.detect(fp, handler_type="EXPORTERS", many=False)
+        exporter = mfr.detect(fp, many=False)
         exported_content = mfr.export(fp, exporter, exporter=export_file_type)
 
     else:
-        handlers = get_registry(handler_type="EXPORTERS")
+        handlers = get_registry()
         for handler in handlers:
             if handler.name == exporter_name:
                 exported_content = mfr.export(fp, handler=handler(), exporter=export_file_type)

@@ -3,9 +3,9 @@
 from mfr import FileHandler, get_file_extension
 
 try:  # requires pygments
-    from mfr_code_pygments.render import render_to_html
+    from mfr_code_pygments.render import render_html
     renderers = {
-        'html': render_to_html,
+        'html': render_html,
     }
 except ImportError:
     renderers = {}

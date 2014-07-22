@@ -47,6 +47,7 @@ def render(filename, renderer_name=None):
         for available_handler in handlers:
             if mfr.get_namespace(available_handler) == renderer_name:
                 renderer = available_handler()
+                break
         if renderer is None:
     try:
             raise IOError('Could not load a matching renderer')
@@ -57,18 +58,10 @@ def render(filename, renderer_name=None):
         #TODO(asmacdo) create a specific template for no handler available
         return ("A matching renderer cannot be found", 400)
 
-    rendered_result = mfr.render(fp, handler=renderer, src=src)
-
-    # Dict of assets to include
-    assets = rendered_result.assets or {}
-    # Include all assets
-    results = [assets[asset] for asset in assets]
-
-    # Append html content
-    results.append(rendered_result.content)
-
-    #TODO(asmacdo) just return the render result. This should be done in a
-    return "\n".join(results)
+    return render_template(
+        "main/view_file.html",
+        render_result=mfr.render(fp, handler=renderer, src=src)
+    )
 
 
 @mod.route('/files/<filename>')
@@ -124,7 +117,6 @@ def export(export_file_type, filename, exporter_name=None):
             if handler.name == exporter_name:
                 exported_content = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
-    #TODO(asmacdo) is this the appropriate error?
     if not exported_content:
         raise NameError("A matching exporter was not found")
 

@@ -45,7 +45,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 def test_get_stylesheet():
     result = get_stylesheet()
     expected_url = '{0}/mfr_code_pygments/css/default.css'.format(mfr.config['STATIC_URL'])
-    assert expected_url in result
+    assert expected_url == result
 
 
 #TODO(asmacdo) test that assets are included in the RenderResult

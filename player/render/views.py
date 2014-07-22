@@ -65,7 +65,7 @@ def render(filename, renderer_name=None):
     # Append html content
     results.append(rendered_result.content)
 
-    #TODO(asmacdo) just return the render result. This should be done in a
+    #TODO(asmacdo) just return the render result.
     return "\n".join(results)
 
 
@@ -122,7 +122,6 @@ def export(export_file_type, filename, exporter_name=None):
             if handler.name == exporter_name:
                 exported_content = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
-    #TODO(asmacdo) is this the appropriate error?
     if not exported_content:
         raise NameError("A matching exporter was not found")
 

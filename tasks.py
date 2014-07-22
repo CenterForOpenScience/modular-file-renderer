@@ -55,7 +55,17 @@ def clean_docs():
 
 @task
 def browse_docs():
-    run("open %s" % os.path.join(build_dir, 'index.html'))
+    platform = str(sys.platform).lower()
+    command = {'darwin': 'open ',
+               'linux': 'idle ',
+               'win32': '',
+               }
+    cmd = command.get(platform)
+    if cmd:
+        run("{0}{1}".format(cmd, os.path.join(build_dir, 'index.html')))
+    else:
+        print "Unsure how to open the built file on this operating system."
+        sys.exit(1)
 
 @task
 def docs(clean=False, browse=False):

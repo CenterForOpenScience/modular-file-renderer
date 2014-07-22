@@ -3,6 +3,7 @@ import os
 import mfr
 import unittest
 from player import create_app
+from flask import url_for
 
 
 class PlayerTest(unittest.TestCase):
@@ -31,7 +32,16 @@ class PlayerTest(unittest.TestCase):
             if mfr.detect(fp, many=False):
                 assert status_code == 200
             else:
-                assert status_code == 501
+                assert status_code == 400
+
+    def test_render_return_type(self):
+        for filename in os.listdir(self.FILES_DIR):
+            fp = open(os.path.join(self.FILES_DIR, filename))
+            renderer = mfr.detect(fp, many=False)
+            if renderer:
+                # src = url_for('render.serve_file', filename=filename)
+                result = mfr.render(fp)
+                assert type(result) == mfr.RenderResult
 
     def test_file_serve_request(self):
         for filename in os.listdir(self.FILES_DIR):

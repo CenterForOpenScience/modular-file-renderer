@@ -57,12 +57,12 @@ def get_registry():
 
     :rtype: list
     """
-    return config['HANDLERS']
+    return config["HANDLERS"]
 
 
 def clear_registry():
     """Reset the list of registered handlers."""
-    config['HANDLERS'] = []
+    config["HANDLERS"] = []
 
 
 def reset_config():
@@ -70,7 +70,7 @@ def reset_config():
     global config
     config.clear()
     config.update(_defaults)
-    config['HANDLERS'] = []
+    config["HANDLERS"] = []
 
 
 def detect(fp, handlers=None, instance=True, many=False, *args, **kwargs):
@@ -127,7 +127,8 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
     if not HandlerClass:
         raise ValueError('No available handler with name {handler}.'
                         .format(handler=handler))
-    handler = HandlerClass()
+    #TODO(asmacdo) does this need to be initialized?
+    handler = HandlerClass
     return handler.export(fp, exporter=exporter, *args, **kwargs)
 
 
@@ -157,9 +158,18 @@ def assets_by_extension(assets):
 
 
 class RenderResult(object):
+    """ An object that contains the html representation of content and any
+     assets that should be included.
+    """
 
-    def __init__(self, rendered, assets=None):
-        self.rendered = rendered
+    def __init__(self, content, assets=None):
+        """
+        Initialize a Render result.
+
+        :param content: html representation of content
+        :param assets: css, javascript, or other assets to be included
+        """
+        self.content = content
         if isinstance(assets, (list, tuple)):
             self.assets = assets_by_extension(assets)
         elif isinstance(assets, dict):  # assets is a dict
@@ -168,14 +178,14 @@ class RenderResult(object):
             self.assets = defaultdict(list)
 
     def __str__(self):
-        return str(self.rendered)
+        return str(self.content)
 
     def __repr__(self):
-        return '<RenderResult({0!r})>'.format(self.rendered)
+        return '<RenderResult({0!r})>'.format(self.content)
 
     def __contains__(self, obj):
         """Implements the ``in`` keyword."""
-        return obj in str(self.rendered)
+        return obj in str(self.content)
 
 class FileHandler(object):
     """Abstract base class from which all file handlers must inherit.
@@ -317,7 +327,6 @@ def get_namespace(handler_cls):
     else:
         # mypackage.mymodule.MyHandler => 'mymodule'
         return handler_cls.__module__.split('.')[-1]
-
 
 def collect_static(dest=None, dry_run=False):
     """Collect all static assets for registered handlers to a single directory.

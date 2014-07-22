@@ -14,6 +14,8 @@ from mfr.core import (
     register_filehandler,
     export,
     get_file_exporters,
+    get_namespace,
+    get_registry,
     config,
     collect_static,
     RenderResult,

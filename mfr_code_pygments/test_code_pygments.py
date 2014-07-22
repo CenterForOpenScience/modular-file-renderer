@@ -47,21 +47,8 @@ def test_get_stylesheet():
     expected_url = '{0}/mfr_code_pygments/css/default.css'.format(mfr.config['STATIC_URL'])
     assert expected_url in result
 
-# No longer included because INCLUDE_STATIC is depricated
-# def test_stylesheet_not_included_by_default(fakefile):
-#     fakefile.name = 'zen.py'
-#     fakefile.read.return_value = 'import this'
-#     rendered = CodeFileHandler().render(fakefile)
-#     assert get_stylesheet() not in rendered
 
-# Disabled because render now returns a RenderResult. Needs to be updated
-#TODO(asmacdo)
-# def test_stylesheet_included_if_include_static_is_true(fakefile):
-#     mfr.config['INCLUDE_STATIC'] = True
-#     fakefile.name = 'zen.py'
-#     fakefile.read.return_value = 'import this'
-#     rendered = CodeFileHandler().render(fakefile)
-#     assert get_stylesheet() in rendered
+#TODO(asmacdo) test that assets are included in the RenderResult
 
 def test_configuration_defaults():
     assert config['PYGMENTS_THEME'] == 'default'

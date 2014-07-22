@@ -35,7 +35,7 @@ def render(filename, renderer_name=None):
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
     except IOError as err:
         flash(err, 'error')
-        abort(501)
+        abort(404)
 
     renderer = None
     if renderer_name is None:
@@ -49,29 +49,22 @@ def render(filename, renderer_name=None):
         if renderer is None:
             raise IOError('Could not load a matching renderer')
 
-    #TODO(asmacdo) does this need to be in a try/except block?
-    try:
+    src = url_for('render.serve_file', filename=filename)
 
-        src = url_for('render.serve_file', filename=filename)
+    # template.
+    rendered_result = mfr.render(fp, handler=renderer, src=src)
 
-        #TODO(asmacdo) just return the render result. This should be done in a
-        # template.
-        rendered_result = mfr.render(fp, handler=renderer, src=src)
+    # Dict of assets to include
+    assets = rendered_result.assets or {}
+    # Include all assets
+    results = [assets[asset] for asset in assets]
 
-        # Dict of assets to include
-        assets = rendered_result.assets or {}
-        # Include all assets
-        results = [assets[asset] for asset in assets]
+    # Append html content
+    results.append(rendered_result.content)
+    
+    #TODO(asmacdo) just return the render result. This should be done in a
+    return "\n".join(results)
 
-        # Append html content
-        results.append(rendered_result.content)
-
-        return "\n".join(results)
-
-    #TODO(asmacdo) more specific exception handling here
-    except Exception as err:
-        flash(err, 'error')
-        abort(501)
 
 @mod.route('/files/<filename>')
 def serve_file(filename):

@@ -60,8 +60,12 @@ def browse_docs():
                'linux': 'idle ',
                'win32': '',
                }
-    run("{0}{1}".format(command[platform],
-                        os.path.join(build_dir, 'index.html')))
+    if command.get(platform):
+        run("{0}{1}".format(command[platform],
+                            os.path.join(build_dir, 'index.html')))
+    else:
+        print "Unsure how to open the built file on this operating system."
+        sys.exit(1)
 
 @task
 def docs(clean=False, browse=False):

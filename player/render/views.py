@@ -15,7 +15,7 @@ import mfr
 from cStringIO import StringIO
 
 from flask import Blueprint, flash, url_for, current_app, send_file, \
-    send_from_directory, abort
+    send_from_directory, abort, render_template
 
 from mfr.core import get_registry
 
@@ -51,7 +51,9 @@ def render(filename, renderer_name=None):
 
     src = url_for('render.serve_file', filename=filename)
 
-    # template.
+    if renderer is None:
+        #TODO(asmacdo) create a specific template for no handler available
+        return render_template("404.html")
     rendered_result = mfr.render(fp, handler=renderer, src=src)
 
     # Dict of assets to include
@@ -61,7 +63,7 @@ def render(filename, renderer_name=None):
 
     # Append html content
     results.append(rendered_result.content)
-    
+
     #TODO(asmacdo) just return the render result. This should be done in a
     return "\n".join(results)
 

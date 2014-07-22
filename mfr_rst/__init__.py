@@ -21,5 +21,6 @@ class Handler(FileHandler):
     # Renderers and exporters can be callables
     renderers = renderers
 
+    name = "RST"
     def detect(self, fp):
         return get_file_extension(fp.name) in EXTENSIONS

@@ -1,0 +1,5 @@
+{% for asset in render_result.assets %}
+    {{ render_result.assets[asset]| safe }}
+{%  endfor %}
+
+{{ render_result.content|safe }}

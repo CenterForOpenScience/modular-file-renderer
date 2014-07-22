@@ -1,5 +1,5 @@
-{% for asset in render_result.assets %}
-    {{ render_result.assets[asset]| safe }}
+{% for stylesheet in render_result.assets.css %}
+    <link rel="stylesheet" href={{ stylesheet }}/>
 {%  endfor %}
 
 {{ render_result.content|safe }}

@@ -32,8 +32,7 @@ class PlayerTest(unittest.TestCase):
             if mfr.detect(fp, many=False):
                 assert status_code == 200
             else:
-                #TODO(asmacdo) test that it loaded an error page
-                assert status_code == 200
+                assert status_code == 400
 
     def test_render_return_type(self):
         for filename in os.listdir(self.FILES_DIR):

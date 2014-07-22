@@ -10,7 +10,7 @@ from mfr import RenderResult
 from mfr_code_pygments.configuration import config as module_config
 
 
-def render_to_html(fp, *args, **kwargs):
+def render_html(fp, *args, **kwargs):
     """Generate an html representation of the file
 
     :param fp: filepointer

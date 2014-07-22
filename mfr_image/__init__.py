@@ -25,11 +25,9 @@ EXTENSIONS = [
 
 class Handler(FileHandler):
     """The image file handler."""
-    name = "Image"
     renderers = {
         'html': render_img_tag,
     }
-
     exporters = exporters
 
     def detect(self, fp):

@@ -15,7 +15,7 @@ import mfr
 from cStringIO import StringIO
 
 from flask import Blueprint, flash, url_for, current_app, send_file, \
-    send_from_directory, abort
+    send_from_directory, abort, render_template
 
 from mfr.core import get_registry
 
@@ -36,7 +36,7 @@ def render(filename, renderer_name=None):
 
     except IOError as err:
         flash(err, 'error')
-        abort(501)
+        abort(404)
 
     renderer = None
     if renderer_name is None:
@@ -45,33 +45,31 @@ def render(filename, renderer_name=None):
         handlers = get_registry()
 
         for available_handler in handlers:
-            if available_handler.name == renderer_name:
+            if mfr.get_namespace(available_handler) == renderer_name:
                 renderer = available_handler()
         if renderer is None:
-            raise IOError('Specified renderer cannot be used with that file.')
     try:
+            raise IOError('Could not load a matching renderer')
 
-        src = url_for('render.serve_file', filename=filename)
+    src = url_for('render.serve_file', filename=filename)
 
-        #TODO(asmacdo) just return the render result. This should be done in a
-        # template.
-        rendered_result = mfr.render(fp, handler=renderer, src=src)
-        return '\n'.join([rendered_result.assets.get("css", '<style></style>'), rendered_result.content])
+    if renderer is None:
+        #TODO(asmacdo) create a specific template for no handler available
+        return ("A matching renderer cannot be found", 400)
 
-        # Dict of assets to include
-        assets = rendered_result.assets or {}
-        # Include all assets
-        results = [assets[asset] for asset in assets]
+    rendered_result = mfr.render(fp, handler=renderer, src=src)
 
-        # Append html content
-        results.append(rendered_result.content)
+    # Dict of assets to include
+    assets = rendered_result.assets or {}
+    # Include all assets
+    results = [assets[asset] for asset in assets]
 
-        return "\n".join(results)
+    # Append html content
+    results.append(rendered_result.content)
 
-    #TODO(asmacdo) more specific exception handling here
-    except Exception as err:
-        flash(err, 'error')
-        abort(501)
+    #TODO(asmacdo) just return the render result. This should be done in a
+    return "\n".join(results)
+
 
 @mod.route('/files/<filename>')
 def serve_file(filename):

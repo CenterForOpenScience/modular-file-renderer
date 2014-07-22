@@ -28,7 +28,6 @@ class Handler(FileHandler):
     renderers = {
         'html': render_img_tag,
     }
-    name = "Image"
     exporters = exporters
 
     def detect(self, fp):

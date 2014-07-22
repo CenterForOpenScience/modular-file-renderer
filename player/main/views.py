@@ -28,22 +28,19 @@ def index():
             continue
 
         fp = open(os.path.join(current_app.config['FILES_DIR'], f))
-        # List of all renderer modules for this file type
+        # List of all modules for this file type
         handlers = mfr.detect(fp, many=True)
 
-        # List of all exporter modules for this file type
-        exporter_modules = mfr.detect(fp, many=True)
-
-        renderer_modules = [handler for handler in handlers if handler.renderers]
-        exporter_modules = [handler for handler in handlers if handler.exporters]
+        renderer_handlers = [mfr.get_namespace(handler) for handler in handlers if handler.renderers]
+        exporter_handlers = [handler for handler in handlers if handler.exporters]
 
         # Generate a list of modules and their file extensions
         export_options = []
-        for module in exporter_modules:
-            available_file_extensions = mfr.get_file_exporters(module)
+        for handler in exporter_handlers:
+            available_file_extensions = mfr.get_file_exporters(handler)
             for export_file_type in available_file_extensions:
-                export_options.append((export_file_type, module.name))
+                export_options.append((export_file_type, mfr.get_namespace(handler)))
 
-        files.append((f, renderer_modules, export_options))
+        files.append((f, renderer_handlers, export_options))
 
     return render_template('main/index.html', files=files)

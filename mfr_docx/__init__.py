@@ -17,7 +17,6 @@ EXTENSIONS = [
 class Handler(FileHandler):
     """FileHandler for Microsoft Docx files."""
     renderers = renderers
-    name = "Pydocx"
 
     def detect(self, fp):
         return get_file_extension(fp.name) in EXTENSIONS

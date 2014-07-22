@@ -44,7 +44,7 @@ def render(filename, renderer_name=None):
         handlers = get_registry()
 
         for available_handler in handlers:
-            if available_handler.name == renderer_name:
+            if mfr.get_namespace(available_handler) == renderer_name:
                 renderer = available_handler()
         if renderer is None:
             raise IOError('Could not load a matching renderer')

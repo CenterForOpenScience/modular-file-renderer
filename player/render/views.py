@@ -53,7 +53,7 @@ def render(filename, renderer_name=None):
 
     if renderer is None:
         #TODO(asmacdo) create a specific template for no handler available
-        return render_template("404.html")
+        return render_template("501.html")
     rendered_result = mfr.render(fp, handler=renderer, src=src)
 
     # Dict of assets to include

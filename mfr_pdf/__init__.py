@@ -4,7 +4,7 @@ from mfr_pdf.render import render_pdf_mako
 import PyPDF2
 
 
-def is_valid(fp)
+def is_valid(fp):
     try:
         PyPDF2.PdfFileReader(fp)
         return True

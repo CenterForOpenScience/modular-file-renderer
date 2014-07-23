@@ -1,6 +1,6 @@
 """PDF renderer module."""
 from mfr.core import RenderResult
-
+from mako.lookup import TemplateLookup
 
 def render_pdf_mako(fp, src=None, alt=''):
     """A simple pdf renderer.

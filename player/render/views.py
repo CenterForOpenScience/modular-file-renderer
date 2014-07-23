@@ -49,8 +49,7 @@ def render(filename, renderer_name=None):
                 renderer = available_handler()
                 break
         if renderer is None:
-    try:
-            raise IOError('Could not load a matching renderer')
+                raise IOError('Could not load a matching renderer')
 
     src = url_for('render.serve_file', filename=filename)
 

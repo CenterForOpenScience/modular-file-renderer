@@ -34,7 +34,8 @@ def render_html(file_pointer, **kwargs):
             file_name=name,
             css_theme=theme,
             mathjax_conf=None
-        ))
+        ), assets={'css': get_stylesheets("mfr_ipynb/css/pygments.css", "mfr_ipynb/css/style.min.css", "mfr_ipynb/css/theme/cdp_1.css")})
+
 
 
 def parse_json(content):
@@ -64,4 +65,8 @@ def render_mako(template_name, css_theme, file_name, body, mathjax_conf, **kwarg
     template_path = os.path.split(get_static_path_for_handler(render_html))[0]
     template_path = os.path.join(template_path, 'templates')
     mako_lookup = TemplateLookup(directories=[template_path])
-    return mako_lookup.get_template(template_name).render(STATIC_PATH=core_config['STATIC_URL'], body=body, file_name=file_name, css_theme=css_theme, mathjax_conf=None)
+    return mako_lookup.get_template(template_name).render(body=body, file_name=file_name, css_theme=css_theme, mathjax_conf=None)
+
+def get_stylesheets(*args):
+    stylesheets = [os.path.join(core_config['STATIC_URL'], path) for path in args]
+    return stylesheets

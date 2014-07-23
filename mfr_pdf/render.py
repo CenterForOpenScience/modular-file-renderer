@@ -5,15 +5,15 @@ from mfr import config as core_config
 import PyPDF2
 
 template  = TemplateLookup(
-            directories=['/templates']
-        ).get_template("pdfpage.mako")
+    directories=['mfr_pdf/templates']
+).get_template("pdfpage.mako")
 
-def render_pdf_mako(fp, url=None):
+def render_pdf_mako(fp, src=None):
     """A simple pdf renderer.
 
     :param str:
     """
-    url = url or fp.name
+    src = src or fp.name
 
-    content = template.render(url=url,STATIC_PATH=core_config['STATIC_URL'])
+    content = template.render(url=src,STATIC_PATH=core_config['STATIC_URL'])
     return RenderResult(content)

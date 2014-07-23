@@ -11,6 +11,8 @@ def is_valid(fp):
     except PyPDF2.utils.PdfReadError:
         return False
 
+EXTENSIONS = ['.pdf']
+
 
 class Handler(FileHandler):
     """The image file handler."""

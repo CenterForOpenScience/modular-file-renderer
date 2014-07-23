@@ -5,7 +5,7 @@
     <nobr>
         <div id="leftDiv" style="display:inline-block;">
             <button unselectable="on" id="previousButton" class="mfr-pdf-button">
-                <img id="leftArrow" class="mfr-pdf-arrow" src="/static/pdf/images/leftarrow.png" style="width: 25px">
+                <img id="leftArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/mfr_pdf/images/leftarrow.png" style="width: 25px">
             </button>
         </div>
 
@@ -13,21 +13,21 @@
 
         <div id="rightDiv" style="display:inline-block;">
             <button unselectable="on" id="nextButton" class="mfr-pdf-button">
-                <img id="rightArrow" class="mfr-pdf-arrow" src="/static/pdf/images/rightarrow.png" style="width: 25px;">
+                <img id="rightArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/mfr_pdf/images/rightarrow.png" style="width: 25px;">
             </button>
         </div>
     </nobr>
 </div>
 
 
-<script type="text/javascript" src="${STATIC_PATH}/pdf/js/pdf.js"></script>
-<script type="text/javascript" src="${STATIC_PATH}/pdf/js/compatibility.js"></script>
-<script type="text/javascript" src="${STATIC_PATH}/pdf/js/jquery.min.js"></script>
+<script type="text/javascript" src="${STATIC_PATH}/mfr_pdf/js/pdf.js"></script>
+<script type="text/javascript" src="${STATIC_PATH}/mfr_pdf/js/compatibility.js"></script>
+<script type="text/javascript" src="${STATIC_PATH}/mfr_pdf/js/jquery.min.js"></script>
 <script type="text/javascript">
     // TODO: Figure out why we have to do this
 
 (function(){
-    PDFJS.workerSrc = '${STATIC_PATH}/pdf/js/pdf.worker.js';
+    PDFJS.workerSrc = '${STATIC_PATH}/mfr_pdf/js/pdf.worker.js';
     var url = "${url}";
     PDFJS.disableWorker = true;
     var pdfDoc = null,

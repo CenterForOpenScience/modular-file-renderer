@@ -113,7 +113,7 @@ def export(export_file_type, filename, exporter_name=None):
     else:
         handlers = get_registry()
         for handler in handlers:
-            if handler.name == exporter_name:
+            if mfr.get_namespace(handler) == exporter_name:
                 exported_content = mfr.export(fp, handler=handler(), exporter=export_file_type)
 
     if not exported_content:

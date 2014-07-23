@@ -7,9 +7,9 @@ try:  # Exporter requires PIL
     exporter = ImageExporter()
     exporters = {
         'png': exporter.export_png,
-        # 'jpg': exporter.export_jpg,
+        'jpg': exporter.export_jpg,
         'gif': exporter.export_gif,
-        # 'tif': exporter.export_tif,
+        'tif': exporter.export_tif,
     }
 except ImportError:
     exporters = {}

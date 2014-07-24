@@ -12,7 +12,7 @@ from __future__ import unicode_literals
 import os
 import mfr
 
-from cStringIO import StringIO
+from io import StringIO
 
 from flask import Blueprint, flash, url_for, current_app, send_file, \
     send_from_directory, abort, render_template

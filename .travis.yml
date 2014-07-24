@@ -11,4 +11,4 @@ python:
 
 install: pip install -r dev-requirements.txt
 
-script: invoke test 
+script: python setup.py test 

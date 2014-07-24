@@ -13,7 +13,7 @@ import mock
 @pytest.fixture
 def fakefile():
     """A simple file-like object."""
-    mockfile = mock.Mock(spec=file)
-    mockfile.read.return_value = '<stuff>'
+    mockfile = mock.Mock(spec=open)
+    mockfile.return_value = '<stuff>'
     mockfile.name = 'fakefile.md'
     return mockfile

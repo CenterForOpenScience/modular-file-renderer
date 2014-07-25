@@ -123,15 +123,17 @@ There are two main pieces of a file format package are
 Rendering/Exporting Code
 ++++++++++++++++++++++++
 
-Renderers are simply callables (functions or methods) that take a file as their first argument and return a string of the rendered HTML.
+Renderers are simply callables (functions or methods) that take a file as their first argument and return a string of the rendered HTML, encapsulated inside of a RenderResult object. Any links to css or javascript associated with the HTML should also be included in the RenderResult object. These links should be passed to the RenderResult object under the "assets" parameter.
 
 Here is a very simple example of function that takes a filepointer and outputs an HTML image tag from it.
 
 .. code-block:: python
+    from mfr import RenderResult
 
     def render_img_tag(filepointer):
         filename = filepointer.name
-        return '<img src="{filename}" />'.format(filename=filename)
+        content = '<img src="{filename}" />'.format(filename=filename)
+        return RenderResult(content)
 
 
 You can also write renderers as methods.
@@ -139,11 +141,13 @@ You can also write renderers as methods.
 .. code-block:: python
 
     # in mfr_video/render.py
+    from mfr import RenderResult
 
     class VideoRenderer(object):
 
         def render_html5_tag(self, fp):
-            return '<video src="{filename}"></video>'.format(filename=fp.name)
+            content = '<video src="{filename}"></video>'.format(filename=fp.name)
+            return RenderResult(content)
 
         def render_flash(self, fp):
             # ...

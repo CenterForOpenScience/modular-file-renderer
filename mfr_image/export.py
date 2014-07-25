@@ -15,7 +15,7 @@ class ImageExporter(object):
     def export_jpg(self, fp):
         im = Image.open(fp)
         sio = StringIO()
-        im.save(sio, format='jpg')
+        im.save(sio, format='jpeg')
         return sio.getvalue()
 
     def export_gif(self, fp):
@@ -27,5 +27,5 @@ class ImageExporter(object):
     def export_tif(self, fp):
         im = Image.open(fp)
         sio = StringIO()
-        im.save(sio, format='tif')
+        im.save(sio, format='tiff')
         return sio.getvalue()

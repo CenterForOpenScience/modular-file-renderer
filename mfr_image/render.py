@@ -8,8 +8,7 @@ def render_img_tag(fp, src=None, alt=''):
     :param str:
     """
     # Default src to the filename
-    if src is None:
-        src = fp.name
+    src = src or fp.name
 
     content = '<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt)
     return RenderResult(content)

@@ -13,7 +13,7 @@ Let's use the ``mfr_code_pygments`` module as an example.
     import mfr
     import mfr_code_pygments
 
-    # Enable the ImageModule
+    # Enable the module's Handler
     mfr.register_filehandler(mfr_code_pygments.Handler)
 
 
@@ -24,21 +24,35 @@ Then call :func:`mfr.detect <mfr.core.detect>` with a file object, which returns
     with open('mycode.img') as filepointer:
         handler = mfr.detect(filepointer)  # returns a handler object
         if handler:
-            html = handler.render(filepointer)
+            render_result = handler.render(filepointer)
         else:
-            html = '<p>Cannot render file.</p>'
+            render_result = '<p>Cannot render file.</p>'
 
 You can also use :func:`mfr.render <mfr.core.render>` to perform detection and rendering simultaneously. If no valid handler for a file is available, a ``ValueError`` is raised.
 
-This example is equivalient to above.
+This example is equivalent to above.
 
 .. code-block:: python
 
     with open('mycode.img') as filepointer:
         try:
-            html = mfr.render(filepointer)
+            render_result = mfr.render(filepointer)
         except ValueError:  # No valid handler available
-            html = '<p>Cannot render file.</p>'
+            render_result = mfr.RenderResult('<p>Cannot render file.</p>')
+
+
+The RenderResult object that is returned contains the rendered html and any css or javascript assets.
+
+.. code-block:: html
+
+    {% for stylesheet in render_result.assets.css %}
+        <link rel="stylesheet" href={{ stylesheet }}/>
+    {%  endfor %}
+    {% for javascript in render_result.assets.js %}
+        <script type="text/javascript" src={{ javascript }}/>
+    {%  endfor %}
+
+    {{ render_result.content|safe }}
 
 Configuration
 =============

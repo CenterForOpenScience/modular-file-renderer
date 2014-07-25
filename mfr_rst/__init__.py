@@ -4,7 +4,7 @@
 from mfr.core import FileHandler, get_file_extension
 
 try:  # requires docutils
-    from mfr.rst.render import render_rst
+    from mfr_rst.render import render_rst
     renderers = {
         'html': render_rst
     }

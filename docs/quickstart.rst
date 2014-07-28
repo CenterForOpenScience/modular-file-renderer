@@ -26,7 +26,7 @@ Then call :func:`mfr.detect <mfr.core.detect>` with a file object, which returns
         if handler:
             render_result = handler.render(filepointer)
         else:
-            render_result = '<p>Cannot render file.</p>'
+            render_result = mfr.RenderResult(content='<p>Cannot render file.</p>')
 
 You can also use :func:`mfr.render <mfr.core.render>` to perform detection and rendering simultaneously. If no valid handler for a file is available, a ``ValueError`` is raised.
 
@@ -41,13 +41,14 @@ This example is equivalent to above.
             render_result = mfr.RenderResult('<p>Cannot render file.</p>')
 
 
-The RenderResult object that is returned contains the rendered html and any css or javascript assets.
+RenderResult objects contain the resultant html as content. Any javascript or css assets are contained in a dictionary. To display assets with jinja, simply iterate through the lists.
 
 .. code-block:: html
 
     {% for stylesheet in render_result.assets.css %}
         <link rel="stylesheet" href={{ stylesheet }}/>
     {%  endfor %}
+
     {% for javascript in render_result.assets.js %}
         <script type="text/javascript" src={{ javascript }}/>
     {%  endfor %}
@@ -64,6 +65,7 @@ Configuration is stored on a ``mfr.config``, which can be modified like a dictio
 .. code-block:: python
 
     import mfr
+    import mfr_code_pygments
 
     mfr.config['STATIC_URL'] = '/static'
     mfr.config['STATIC_FOLDER'] = '/path/to/app/static'
@@ -78,6 +80,7 @@ Configuration is stored on a ``mfr.config``, which can be modified like a dictio
     .. code-block:: python
 
         import mfr
+        import mfr_code_pygments
 
         # Equivalent to above
         class MFRConfig:

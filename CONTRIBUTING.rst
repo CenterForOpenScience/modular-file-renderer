@@ -8,6 +8,7 @@ In general
 - `PEP 8`_, when sensible.
 - Test ruthlessly. Write docs for new features.
 - Even more important than Test-Driven Development--*Human-Driven Development*.
+- Please update AUTHORS.rst when you contribute.
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 
@@ -23,20 +24,25 @@ Clone the repo: ::
     $ git clone https://github.com/CenterForOpenScience/modular-file-renderer.git
     $ cd modular-file-renderer
 
-Install the development dependencies. ::
-
-    $ pip install -r dev-requirements.txt
+Install the development dependencies.
 
 .. note::
 
     It is recommended that you use a `virtualenv`_ during development.
+
+.. _virtualenv: http://www.virtualenv.org/en/latest/
+
+::
+
+    $ pip install -r dev-requirements.txt
+
+
 
 
 Lastly, install mfr in development mode. ::
 
     $ python setup.py develop
 
-.. _virtualenv: http://www.virtualenv.org/en/latest/
 
 Running tests
 -------------
@@ -123,16 +129,16 @@ There are two main pieces of a file format package are
 Rendering/Exporting Code
 ++++++++++++++++++++++++
 
-Renderers are simply callables (functions or methods) that take a file as their first argument and return a string of the rendered HTML.
+Renderers are simply callables (functions or methods) that take a file as their first argument and return a :class:`RenderResult <mfr.core.RenderResult>` which contains content(a string of the rendered HTML) and assets (a dictionary that points to lists of javascript or css sources).
 
-Here is a very simple example of function that takes a filepointer and outputs an HTML image tag from it.
+Here is a very simple example of function that takes a filepointer and outputs a render result with an HTML image tag.
 
 .. code-block:: python
 
     def render_img_tag(filepointer):
         filename = filepointer.name
-        return '<img src="{filename}" />'.format(filename=filename)
-
+        content = '<img src="{filename}" />'.format(filename=filename)
+        return RenderResult(content)
 
 You can also write renderers as methods.
 
@@ -143,7 +149,8 @@ You can also write renderers as methods.
     class VideoRenderer(object):
 
         def render_html5_tag(self, fp):
-            return '<video src="{filename}"></video>'.format(filename=fp.name)
+            content = '<video src="{filename}"></video>'.format(filename=fp.name)
+            return RenderResult(content)
 
         def render_flash(self, fp):
             # ...
@@ -157,7 +164,7 @@ A file handler is responsible for using your custom rendering and exporting code
 
 Your FileHandler **must** define a ``detect`` method which, given a file object, returns whether or not it can handle the file.
 
-**Your FileHandler class should be named Handler and should be defined in your ``mfr_format/__init__.py`` file.**
+**Your FileHandler class should be named Handler and should be defined in your `mfr_format/__init__.py` file.**
 
 .. code-block:: python
 

@@ -26,7 +26,8 @@ Then call :func:`mfr.detect <mfr.core.detect>` with a file object, which returns
         if handler:
             render_result = handler.render(filepointer)
         else:
-            render_result = mfr.RenderResult(content='<p>Cannot render file.</p>')
+            content = '<p>Cannot render file.</p>'
+            render_result = mfr.RenderResult(content=content)
 
 You can also use :func:`mfr.render <mfr.core.render>` to perform detection and rendering simultaneously. If no valid handler for a file is available, a ``ValueError`` is raised.
 

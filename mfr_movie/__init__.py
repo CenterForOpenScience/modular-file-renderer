@@ -6,8 +6,11 @@ from mfr_movie.render import render_movie_tag
 exporters = {}
 
 EXTENSIONS = [
-    # TODO(asmacdo) add more
-    '.mp4'
+    '.mp4',
+    '.avi',
+    '.ogv',
+    '.wmv',
+    '.webm',
 ]
 
 

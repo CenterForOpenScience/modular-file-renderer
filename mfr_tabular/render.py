@@ -1,12 +1,12 @@
-from mfr.core import RenderResult
+from mfr.core import RenderResult, get_file_extension
 from mako.lookup import TemplateLookup
 import csv
 
 try:
     import pandas
-    PANDAS = True
-except IOError:
-    PANDAS = False
+    use_pandas = True
+except ImportError:
+    use_pandas = False
 
 template = TemplateLookup(
     directories=['mfr_tabular/templates']
@@ -104,10 +104,9 @@ def render_html(fp, src=None):
     :param src:
     :return: RenderResult object containing html and assets
     """
+    ext = get_file_extension(fp.name)
 
-    PANDAS = False
-
-    if PANDAS:
+    if use_pandas and not ext == '.tsv':
         columns, rows = data_from_pandas(fp)
     else:
         columns, rows = data_from_csv(fp)
@@ -115,7 +114,7 @@ def render_html(fp, src=None):
     content = template.render(
         columns=columns,
         rows=rows,
-        writing="Pandas = " + str(PANDAS),
+        writing="Pandas = " + str(use_pandas and not ext == '.tsv'),
         STATIC_PATH="/mfr/mfr_tabular",
     )
 

@@ -17,6 +17,7 @@
     var columns = ${columns};
     var rows = ${rows};
 
+## TODO(asmacdo)
 ##todo make this based on the size of the window instead of hardcoded in -ajs
     if(columns.length < 9){
     var options = {

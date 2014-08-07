@@ -1,7 +1,6 @@
 from mfr.core import RenderResult, get_file_extension
 from mako.lookup import TemplateLookup
 from dependencies import pandas
-from utilities import column_population, row_population
 from panda_tools import data_from_pandas
 from csv_tools import data_from_csv
 
@@ -11,22 +10,20 @@ template = TemplateLookup(
 
 
 def render_html(fp, src=None):
-    """Determine which library to use and render a csv to html
+    """Render a tabular file to html
     :param fp: file pointer object
     :param src:
     :return: RenderResult object containing html and assets
     """
-    ext = get_file_extension(fp.name)
 
-    if pandas and not ext == '.tsv':
-        columns, rows = data_from_pandas(fp)
-    else:
-        columns, rows = data_from_csv(fp)
+    columns, rows = populate_data(fp)
 
     content = template.render(
         columns=columns,
         rows=rows,
-        writing="Pandas = " + str(pandas and not ext == '.tsv'),
+        # TODO(asmacdo) make this a title?
+        writing="",
+        # TODO(asmacdo) investigate
         STATIC_PATH="/mfr/mfr_tabular",
     )
 
@@ -61,3 +58,19 @@ def get_assets():
     assets['css'] = css_full_paths
 
     return assets
+
+
+def populate_data(fp):
+    """Determine the appropriate library and use it to populate rows and columns
+    :param fp: file pointer
+    :return: tuple of column headers and data
+    """
+    ext = get_file_extension(fp.name)
+
+    if ext == '.tsv':
+        headers, data = data_from_csv(fp)
+    elif ext == '.csv':
+        if pandas:
+            headers, data = data_from_pandas(fp)
+
+    return headers, data

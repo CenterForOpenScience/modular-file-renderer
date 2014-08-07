@@ -1,4 +1,4 @@
-def column_population(headers):
+def header_population(headers):
     """make column headers from a list
     :param headers: list of column headers
     :return: a list of dictionaries
@@ -13,7 +13,7 @@ def column_population(headers):
     return columns
 
 
-def row_population(data, fields=None):
+def data_population(in_data, headers=None):
     """Convert a list of lists into a list of dicts associating each
     cell with its column header and row
     :param data: two dimensional list of data
@@ -21,12 +21,12 @@ def row_population(data, fields=None):
     :return: JSON representation of rows
     """
 
-    if not fields:
-        fields = data[0]
+    if not headers:
+        headers = in_data[0]
 
-    rows = []
-    for n in range(len(data)):
-        rows.append({})
-        for i in range(len(fields)):
-            rows[n][fields[i]] = str(data[n][i])
-    return rows
+    out_data = []
+    for n in range(len(in_data)):
+        out_data.append({})
+        for i in range(len(headers)):
+            out_data[n][headers[i]] = str(in_data[n][i])
+    return out_data

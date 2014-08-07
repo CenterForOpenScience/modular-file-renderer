@@ -1,4 +1,4 @@
-from utilities import column_population, row_population
+from utilities import header_population, data_population
 import csv
 
 
@@ -14,9 +14,9 @@ def data_from_csv(fp):
     # has_header = csv.Sniffer().has_header(infile.read())
     # infile.seek(0)
     reader = csv.reader(fp, dialect)
-    data = [row for row in reader]
+    complete_data = [row for row in reader]
 
-    columns = column_population(data[0])
-    rows = row_population(data[1:], data[0])
+    header = header_population(complete_data[0])
+    data = data_population(complete_data[1:], complete_data[0])
 
-    return columns, rows
+    return header, data

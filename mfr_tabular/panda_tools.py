@@ -1,5 +1,5 @@
 from dependencies import pandas
-from utilities import column_population
+from utilities import header_population
 
 
 def data_from_pandas(fp):
@@ -10,13 +10,13 @@ def data_from_pandas(fp):
 
     dataframe = pandas.read_csv(fp.name)
     fields = dataframe.keys()
-    columns = column_population(fields)
-    rows = pandas_row_population(dataframe)
+    header = header_population(fields)
+    data = pandas_data_population(dataframe)
 
-    return columns, rows
+    return header, data
 
 
-def pandas_row_population(dataframe):
+def pandas_data_population(dataframe):
     """Convert dataframe into JSON repr of rows
     :param dataframe: object containing data
     :return: rows of data in JSON format

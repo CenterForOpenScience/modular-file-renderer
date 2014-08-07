@@ -1,6 +1,7 @@
-import pandas
-from mfr.core import RenderResult, collect_static
-import json
+# import pandas
+import csv
+from mfr.core import RenderResult
+# import json
 from mako.lookup import TemplateLookup
 
 template = TemplateLookup(
@@ -8,25 +9,22 @@ template = TemplateLookup(
 ).get_template('tabular.mako')
 
 
-def column_population(dataframe):
+def column_population(fields):
     """make column headers from the keys in dataframe
     :param dataframe:
     :return: a list of dictionaries
     """
-    fields = dataframe.keys()
-
     columns = []
     for field in fields:
-        uni = field
         columns.append({
-            'id': uni,
-            'name': uni,
-            'field': uni,
+            'id': field,
+            'name': field,
+            'field': field,
         })
     return columns
 
 
-def row_population(dataframe):
+def row_population(data, fields=None):
     """Convert the dictionary of lists Pandas has generated from the CSV into
     a list of dicts.
     :param dataframe:
@@ -36,34 +34,48 @@ def row_population(dataframe):
     # to iterate over, this will break spss
     # files that need rownames
     # todo right now it is renaming the rows in [r] when it reads it in
-    fields = dataframe.keys()
+    if not fields:
+        fields = data[0]
+
     rows = []
-    for n in range(len(dataframe[fields[0]])):
+    for n in range(len(data)):
         rows.append({})
-        for col_field in fields:
-            rows[n][col_field] = str(dataframe[col_field][n])
+        for i in range(len(fields)):
+            rows[n][fields[i]] = str(data[n][i])
     return rows
 
 
 def render_html(fp, src=None):
 
-    dataframe = pandas.read_csv(fp.name)
+    with open(fp.name) as infile:
+        dialect = csv.Sniffer().sniff(infile.read(1024))
+        infile.seek(0)
+        has_header = csv.Sniffer().has_header(infile.read())
+        infile.seek(0)
+        reader = csv.reader(infile, dialect)
+        data = [row for row in reader]
 
-    columns = json.dumps(column_population(dataframe), sort_keys=True, indent=4)
-    rows = json.dumps(row_population(dataframe), sort_keys=True, indent=4)
+    header = []
+    if has_header:
+        print "yessss"
+        header = data[0]
+        data = data[1:]
 
-    print columns
-    print rows
+    # dataframe = pandas.read_csv(fp.name)
+    print "header", header
+    print "data", data
 
-    collect_static()
+    columns = column_population(header)
+    rows = row_population(data, fields=header)
+
+    print "columns", columns
+    print "rows", rows
 
     content = template.render(
         columns=columns,
         rows=rows,
-        writing='',
-        STATIC_PATH="path",
+        writing='yes',
+        STATIC_PATH="/mfr/mfr_tabular",
     )
-
-    print content
 
     return RenderResult(content=content)

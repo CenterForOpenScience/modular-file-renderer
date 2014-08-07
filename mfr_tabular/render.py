@@ -1,24 +1,25 @@
 from mfr.core import RenderResult
 from mako.lookup import TemplateLookup
+import csv
 
 try:
     import pandas
     PANDAS = True
 except IOError:
     PANDAS = False
-    import csv
+
 template = TemplateLookup(
     directories=['mfr_tabular/templates']
 ).get_template('tabular.mako')
 
 
-def column_population(data):
-    """make column headers from the keys in dataframe
-    :param dataframe:
+def column_population(headers):
+    """make column headers from a list
+    :param headers: list of column headers
     :return: a list of dictionaries
     """
     columns = []
-    for field in data:
+    for field in headers:
         columns.append({
             'id': field,
             'name': field,
@@ -28,15 +29,13 @@ def column_population(data):
 
 
 def row_population(data, fields=None):
-    """Convert the dictionary of lists Pandas has generated from the CSV into
-    a list of dicts.
-    :param dataframe:
+    """Convert a list of lists into a list of dicts associating each
+    cell with its column header and row
+    :param data: two dimensional list of data
+    :param fields: column headers
     :return: JSON representation of rows
     """
-    # todo this needs to be reformatted NOT to use the row names as a variable
-    # to iterate over, this will break spss
-    # files that need rownames
-    # todo right now it is renaming the rows in [r] when it reads it in
+
     if not fields:
         fields = data[0]
 
@@ -48,7 +47,12 @@ def row_population(data, fields=None):
     return rows
 
 
-def pandas_row_pop(dataframe):
+def pandas_row_population(dataframe):
+    """Convert dataframe into JSON repr of rows
+    :param dataframe: object containing data
+    :return: rows of data in JSON format
+    """
+
     fields = dataframe.keys()
     rows = []
     for n in range(len(dataframe[fields[0]])):
@@ -60,6 +64,10 @@ def pandas_row_pop(dataframe):
 
 
 def data_from_csv(fp):
+    """Read and convert a csv file to JSON format using the csv library
+    :param fp: File pointer object
+    :return: tuple of columns and rows
+    """
 
     with open(fp.name) as infile:
         dialect = csv.Sniffer().sniff(infile.read(1024))
@@ -77,16 +85,27 @@ def data_from_csv(fp):
 
 
 def data_from_pandas(fp):
+    """Read and convert a csv to JSON format using the pandas library
+    :param fp: File pointer object
+    :return: tuple of columns and rows
+    """
 
     dataframe = pandas.read_csv(fp.name)
     fields = dataframe.keys()
     columns = column_population(fields)
-    rows = pandas_row_pop(dataframe)
+    rows = pandas_row_population(dataframe)
 
     return columns, rows
 
 
 def render_html(fp, src=None):
+    """Determine which library to use and render a csv to html
+    :param fp: file pointer object
+    :param src:
+    :return: RenderResult object containing html and assets
+    """
+
+    PANDAS = False
 
     if PANDAS:
         columns, rows = data_from_pandas(fp)

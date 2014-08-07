@@ -30,4 +30,34 @@ def render_html(fp, src=None):
         STATIC_PATH="/mfr/mfr_tabular",
     )
 
-    return RenderResult(content=content)
+    assets = get_assets()
+
+    return RenderResult(content=content, assets=assets)
+
+
+def get_assets():
+    static_dir = "/static/mfr/mfr_tabular"
+
+    assets = {}
+
+    css_files = [
+        "slick.grid.css",
+        "jquery-ui-1.8.16.custom.css",
+        "examples.css",
+        "slick-default-theme.css",
+    ]
+
+    js_files = [
+        "jquery-1.7.min.js",
+        "jquery.event.drag-2.2.js",
+        "slick.core.js",
+        "slick.grid.js",
+    ]
+
+    css_full_paths = [static_dir + '/css/' + filename for filename in css_files]
+    js_full_paths = [static_dir + '/js/' + filename for filename in js_files]
+
+    assets['js'] = js_full_paths
+    assets['css'] = css_full_paths
+
+    return assets

@@ -1,3 +1,4 @@
+<div>${writing}</div>
 <div id="mfrGrid" style="width: 600px; height: 600px;"></div>
 
 <script>

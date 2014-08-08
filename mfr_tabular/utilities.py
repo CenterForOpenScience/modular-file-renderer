@@ -3,14 +3,7 @@ def header_population(headers):
     :param headers: list of column headers
     :return: a list of dictionaries
     """
-    columns = []
-    for field in headers:
-        columns.append({
-            'id': field,
-            'name': field,
-            'field': field,
-        })
-    return columns
+    return [{'id': field, 'name': field, 'field': field} for field in headers]
 
 
 def data_population(in_data, headers=None):

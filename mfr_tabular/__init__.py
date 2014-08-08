@@ -5,6 +5,7 @@ from mfr_tabular.render import render_html
 EXTENSIONS = [
     '.csv',
     '.tsv',
+    '.xls',
 ]
 
 

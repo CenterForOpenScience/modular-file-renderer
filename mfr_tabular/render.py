@@ -3,6 +3,7 @@ from mako.lookup import TemplateLookup
 from dependencies import pandas
 from panda_tools import data_from_pandas
 from csv_tools import data_from_csv
+from xlrd_tools import data_from_xlrd
 
 template = TemplateLookup(
     directories=['mfr_tabular/templates']
@@ -72,5 +73,8 @@ def populate_data(fp):
     elif ext == '.csv':
         if pandas:
             headers, data = data_from_pandas(fp)
+    elif ext == '.xls':
+        headers, data = data_from_xlrd(fp)
+
 
     return headers, data

@@ -14,8 +14,7 @@ def data_population(in_data, headers=None):
     :return: JSON representation of rows
     """
 
-    if not headers:
-        headers = in_data[0]
+    headers = headers or in_data[0]
 
     out_data = []
     for n in range(len(in_data)):

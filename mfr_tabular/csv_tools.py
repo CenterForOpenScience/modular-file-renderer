@@ -10,12 +10,13 @@ def data_from_csv(fp):
 
     dialect = csv.Sniffer().sniff((fp).read(1024))
     fp.seek(0)
-    # TODO(asmacdo) Nice way of displaying if there is no header
+    # TODO(asmacdo) Nice way of using slickgrid if there is no header
     # has_header = csv.Sniffer().has_header(infile.read())
     # infile.seek(0)
     reader = csv.reader(fp, dialect)
     complete_data = [row for row in reader]
 
+    # First line is the header, other lines are data
     header = header_population(complete_data[0])
     data = data_population(complete_data[1:], complete_data[0])
 

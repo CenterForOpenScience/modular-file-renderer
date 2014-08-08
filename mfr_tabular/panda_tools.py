@@ -21,12 +21,4 @@ def pandas_data_population(dataframe):
     :param dataframe: object containing data
     :return: rows of data in JSON format
     """
-
-    fields = dataframe.keys()
-    rows = []
-    for n in range(len(dataframe[fields[0]])):
-        rows.append({})
-        for col_fields in fields:
-            rows[n][col_fields] = str(dataframe[col_fields][n])
-
-    return rows
+    return [data.to_dict() for _, data in dataframe.iterrows()]

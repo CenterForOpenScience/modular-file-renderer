@@ -4,6 +4,7 @@ from dependencies import pandas
 from panda_tools import data_from_pandas
 from csv_tools import data_from_csv
 from xlrd_tools import data_from_xlrd
+import json
 
 template = TemplateLookup(
     directories=['mfr_tabular/templates']
@@ -20,8 +21,8 @@ def render_html(fp, src=None):
     columns, rows = populate_data(fp)
 
     content = template.render(
-        columns=columns,
-        rows=rows,
+        columns=json.dumps(columns),
+        rows=json.dumps(rows),
         # TODO(asmacdo) make this a title?
         writing="",
         # TODO(asmacdo) investigate
@@ -73,8 +74,9 @@ def populate_data(fp):
     elif ext == '.csv':
         if pandas:
             headers, data = data_from_pandas(fp)
-    elif ext == '.xls':
+    elif ext == '.xlsx':
         headers, data = data_from_xlrd(fp)
-
+    else:
+        raise IOError
 
     return headers, data

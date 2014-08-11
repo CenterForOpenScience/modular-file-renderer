@@ -19,6 +19,13 @@ def teardown_function(func):
     'sheet.CSV',
     'sheet.TSV',
     'sheet.xlsx',
+    'sheet.XLSX',
+    'sheet.dta',
+    'sheet.DTA',
+    'sheet.sav',
+    'sheet.SAV',
+    'sheet.ods',
+    'sheet.ODS',
 ])
 def test_detect_extensions(fakefile, filename):
     fakefile.name = filename

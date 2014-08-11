@@ -4,6 +4,7 @@ from .dependencies import pandas
 from .panda_tools import data_from_pandas
 from .csv_tools import data_from_csv
 from .xlrd_tools import data_from_xlrd
+from .ezodf_tools import data_from_ezodf
 import json
 
 template = TemplateLookup(
@@ -62,6 +63,7 @@ def get_assets():
     return assets
 
 
+# TODO(asmacdo) better way of choosing the renderer
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns
     :param fp: file pointer
@@ -76,6 +78,13 @@ def populate_data(fp):
             headers, data = data_from_pandas(fp)
     elif ext == '.xlsx':
         headers, data = data_from_xlrd(fp)
+    elif ext == '.dta':
+        headers, data = data_from_pandas(fp)
+    elif ext == '.sav':
+        headers, data = data_from_pandas(fp)
+    elif ext == '.ods':
+        headers, data = data_from_ezodf(fp)
+
     else:
         raise IOError
 

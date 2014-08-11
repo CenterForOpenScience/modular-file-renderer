@@ -1,9 +1,9 @@
 from mfr.core import RenderResult, get_file_extension
 from mako.lookup import TemplateLookup
-from dependencies import pandas
-from panda_tools import data_from_pandas
-from csv_tools import data_from_csv
-from xlrd_tools import data_from_xlrd
+from .dependencies import pandas
+from .panda_tools import data_from_pandas
+from .csv_tools import data_from_csv
+from .xlrd_tools import data_from_xlrd
 import json
 
 template = TemplateLookup(

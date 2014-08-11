@@ -1,5 +1,5 @@
-from dependencies import xlrd
-from utilities import header_population
+from .dependencies import xlrd
+from .utilities import header_population
 
 
 def data_from_xlrd(fp):

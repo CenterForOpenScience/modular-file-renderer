@@ -1,5 +1,5 @@
 # Distribution
-wheel
+ wheel
 
 # Task runner
 invoke
@@ -14,3 +14,4 @@ tox>=1.5.0
 
 # Previewer dependencies
 Flask
+Mako==1.0.0

@@ -1,5 +1,5 @@
-from dependencies import pandas
-from utilities import header_population
+from .dependencies import pandas
+from .utilities import header_population
 
 
 def data_from_pandas(fp):

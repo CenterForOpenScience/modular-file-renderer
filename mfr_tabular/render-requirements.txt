@@ -1,2 +1,4 @@
-pandas
-mako
+# ezodf==0.2.5
+Mako==1.0.0
+xlrd==0.9.3
+pandas==0.14.1

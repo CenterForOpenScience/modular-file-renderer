@@ -74,8 +74,8 @@ def populate_data(fp):
 
     for function in function_preference:
         try:
-            print "Trying " + function.__name__
+            print("Trying " + function.__name__)
             return function(fp)
         except ImportError:
-            print "Failed to import using" + function.__name__
+            print("Failed to import using" + function.__name__)
             pass

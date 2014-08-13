@@ -12,7 +12,7 @@ from __future__ import unicode_literals
 import os
 import mfr
 
-from cStringIO import StringIO
+from io import StringIO
 
 from flask import Blueprint, flash, url_for, current_app, send_file, \
     send_from_directory, abort, render_template
@@ -113,7 +113,7 @@ def export(export_file_type, filename, exporter_name=None):
         handlers = get_registry()
         for handler in handlers:
             if mfr.get_namespace(handler) == exporter_name:
-                exported_content = mfr.export(fp, handler=handler(), exporter=export_file_type)
+                exported_content = mfr.export(fp, handler=handler, exporter=export_file_type)
 
     if not exported_content:
         raise NameError("A matching exporter was not found")

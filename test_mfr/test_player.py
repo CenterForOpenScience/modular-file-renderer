@@ -21,9 +21,9 @@ class PlayerTest(unittest.TestCase):
         data = index.get_data()
         for filename in os.listdir(self.FILES_DIR):
             if filename.startswith('.'):
-                assert filename not in data
+                assert filename not in str(data)
             else:
-                assert filename in data
+                assert filename in str(data)
 
     def test_render_request(self):
         for filename in os.listdir(self.FILES_DIR):

@@ -54,4 +54,4 @@ def test_in():
 
 def test_unicode():
     rr = RenderResult('foo')
-    assert unicode(rr) == unicode('foo')
+    assert str(rr) == str('foo')

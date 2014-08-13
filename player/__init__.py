@@ -53,10 +53,10 @@ def create_app(**kwargs):
 
     # register blueprints
 
-    from main.views import mod as main_module
+    from .main.views import mod as main_module
     app.register_blueprint(main_module)
 
-    from render.views import mod as render_module
+    from .render.views import mod as render_module
     app.register_blueprint(render_module)
 
     return app

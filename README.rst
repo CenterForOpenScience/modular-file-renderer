@@ -1,6 +1,8 @@
 ***
 mfr
 ***
+.. image:: https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=dev
+    :target: https://travis-ci.org/CenterForOpenScience/modular-file-renderer
 
 **WARNING: mfr is in a very alpha stage of development. As such, it's API is in constant flux. Expect many breaking changes.**
 

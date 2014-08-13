@@ -75,6 +75,37 @@ def docs(clean=False, browse=False):
     if browse:
         browse_docs()
 
+
+# @task
+# def pip_install(path, filename):
+#     open(os.path.join(path, filename)
+#     run(
+#         'pip install --upgrade -r {0}/{1}/render-requirements.txt'.format(
+#             '.',
+#             directory
+#         )
+#     )
+
+# @task
+# def plugin_requirements(renderers_only=False, exporters_only=False):
+#     for directory in os.listdir('.'):
+#         path = os.path.join('.', directory)
+#         if os.path.isdir(path):
+#             if not exporters_only:
+#                 try:
+#                 except IOError:
+#                     pass
+#             if not renderers_only:
+#                 try:
+#                     open(os.path.join(path, 'export-requirements.txt'))
+#                     print('Installing export requirements for {0}'.format(directory))
+#                 except IOError:
+#                     pass
+#     print('Finished')
+#     # if renderers:
+#     # if exporters:
+
+
 @task
 def readme(browse=False):
     run('rst2html.py README.rst > README.html')

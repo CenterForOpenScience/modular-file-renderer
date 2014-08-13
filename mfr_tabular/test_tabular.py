@@ -24,8 +24,8 @@ def teardown_function(func):
     'sheet.DTA',
     'sheet.sav',
     'sheet.SAV',
-    'sheet.ods',
-    'sheet.ODS',
+    # 'sheet.ods',
+    # 'sheet.ODS',
 ])
 def test_detect_extensions(fakefile, filename):
     fakefile.name = filename

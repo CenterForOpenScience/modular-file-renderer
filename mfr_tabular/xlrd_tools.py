@@ -1,8 +1,12 @@
-from .dependencies import xlrd
+import xlrd
 from .utilities import header_population
 
 
-def data_from_xlrd(fp):
+def xlsx_xlrd(fp):
+    """Read and convert a xlsx file to JSON format using the xlrd library
+    :param fp: File pointer object
+    :return: tuple of table headers and data
+    """
 
     wb = xlrd.open_workbook(fp.name)
 

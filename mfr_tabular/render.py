@@ -1,11 +1,7 @@
 from mfr.core import RenderResult, get_file_extension
 from mako.lookup import TemplateLookup
-from .dependencies import pandas
-from .panda_tools import data_from_pandas
-from .csv_tools import data_from_csv
-from .xlrd_tools import data_from_xlrd
-from .ezodf_tools import data_from_ezodf
 import json
+from .configuration import config
 
 template = TemplateLookup(
     directories=['mfr_tabular/templates']
@@ -20,6 +16,11 @@ def render_html(fp, src=None):
     """
 
     columns, rows = populate_data(fp)
+
+    max_size = config.get('max_size')
+
+    if len(columns) > max_size or len(rows) > max_size:
+        return RenderResult("Table is too large")
 
     content = template.render(
         columns=json.dumps(columns),
@@ -36,9 +37,9 @@ def render_html(fp, src=None):
 
 
 def get_assets():
-    static_dir = "/static/mfr/mfr_tabular"
+    """Create dictionary of js and css assets"""
 
-    assets = {}
+    static_dir = "/static/mfr/mfr_tabular"
 
     css_files = [
         "slick.grid.css",
@@ -54,11 +55,9 @@ def get_assets():
         "slick.grid.js",
     ]
 
-    css_full_paths = [static_dir + '/css/' + filename for filename in css_files]
-    js_full_paths = [static_dir + '/js/' + filename for filename in js_files]
-
-    assets['js'] = js_full_paths
-    assets['css'] = css_full_paths
+    assets = {}
+    assets['css'] = [static_dir + '/css/' + filename for filename in css_files]
+    assets['js'] = [static_dir + '/js/' + filename for filename in js_files]
 
     return assets
 
@@ -67,25 +66,16 @@ def get_assets():
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns
     :param fp: file pointer
-    :return: tuple of column headers and data
+    :return: tuple of column headers and row data
     """
+
     ext = get_file_extension(fp.name)
+    function_preference = config['tabular_libraries'].get(ext)
 
-    if ext == '.tsv':
-        headers, data = data_from_csv(fp)
-    elif ext == '.csv':
-        if pandas:
-            headers, data = data_from_pandas(fp)
-    elif ext == '.xlsx':
-        headers, data = data_from_xlrd(fp)
-    elif ext == '.dta':
-        headers, data = data_from_pandas(fp)
-    elif ext == '.sav':
-        headers, data = data_from_pandas(fp)
-    elif ext == '.ods':
-        headers, data = data_from_ezodf(fp)
-
-    else:
-        raise IOError
-
-    return headers, data
+    for function in function_preference:
+        try:
+            print "Trying " + function.__name__
+            return function(fp)
+        except ImportError:
+            print "Failed to import using" + function.__name__
+            pass

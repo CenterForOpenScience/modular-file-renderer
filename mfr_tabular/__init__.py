@@ -8,7 +8,7 @@ EXTENSIONS = [
     '.xlsx',
     '.dta',
     '.sav',
-    '.ods',
+    # '.ods',
 ]
 
 

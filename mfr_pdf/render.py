@@ -6,7 +6,32 @@ import PyPDF2
 
 template  = TemplateLookup(
     directories=['mfr_pdf/templates']
-).get_template("pdfpage.mako")
+    ).get_template("pdfpage.mako")
+
+
+def get_assets():
+    """Creates a dictionary of js and css assets"""
+
+    static_dir = "/static/mfr/mfr_pdf"
+
+    js_files = [
+        "pdf.js",
+        "compatibility.js",
+        "jquery.min.js",
+    ]
+
+    assets = {}
+    assets['js'] = [static_dir + '/js/' + filename for filename in js_files]
+
+    return assets
+
+
+def is_valid(fp):
+    try:
+        PyPDF2.PdfFileReader(fp)
+        return True
+    except PyPDF2.utils.PdfReadError:
+        return False
 
 def render_pdf_mako(fp, src=None):
     """A simple pdf renderer.
@@ -15,5 +40,15 @@ def render_pdf_mako(fp, src=None):
     """
     src = src or fp.name
 
-    content = template.render(url=src,STATIC_PATH=core_config['STATIC_URL'])
-    return RenderResult(content)
+    if is_valid(fp):
+        content = template.render(url=src,STATIC_PATH=core_config['STATIC_URL'])
+        return RenderResult(content, assets=get_assets())
+    else:
+        return RenderResult("This is not a valid css")
+
+
+
+
+
+
+

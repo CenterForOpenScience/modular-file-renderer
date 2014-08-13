@@ -4,13 +4,6 @@ from mfr_pdf.render import render_pdf_mako
 import PyPDF2
 
 
-def is_valid(fp):
-    try:
-        PyPDF2.PdfFileReader(fp)
-        return True
-    except PyPDF2.utils.PdfReadError:
-        return False
-
 EXTENSIONS = ['.pdf']
 
 
@@ -23,4 +16,4 @@ class Handler(FileHandler):
     exporters = {}
 
     def detect(self, fp):
-        return get_file_extension(fp.name) in EXTENSIONS and is_valid(fp)
+        return get_file_extension(fp.name) in EXTENSIONS

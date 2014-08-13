@@ -1,6 +1,7 @@
 
 <span>Page: <span id="pageNum"></span> / <span id="pageCount"></span></span><br>
 
+
 <div>
     <nobr>
         <div id="leftDiv" style="display:inline-block;">
@@ -20,9 +21,6 @@
 </div>
 
 
-<script type="text/javascript" src="${STATIC_PATH}/mfr_pdf/js/pdf.js"></script>
-<script type="text/javascript" src="${STATIC_PATH}/mfr_pdf/js/compatibility.js"></script>
-<script type="text/javascript" src="${STATIC_PATH}/mfr_pdf/js/jquery.min.js"></script>
 <script type="text/javascript">
     // TODO: Figure out why we have to do this
 
@@ -65,8 +63,8 @@
 
             var navBarHeight = viewport.height + 2 + "px";
 
-            $prevButton.css("height", navBarHeight);
-            $nextButton.css("height",navBarHeight);
+            $prevButton.css("height", 2);
+            $nextButton.css("height", 2);
 
             page.render(renderContext);
       });

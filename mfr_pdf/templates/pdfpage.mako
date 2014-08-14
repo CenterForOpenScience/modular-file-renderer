@@ -62,7 +62,7 @@
             };
 
             var navBarHeight = viewport.height + 2 + "px";
-            var navOffSet = -1 * (viewport.height/2 - 18 + 5) + "px";
+            var navOffSet = -1 * (viewport.height/2 - 18 + 6) + "px";
 
             $prevButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
             $nextButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});

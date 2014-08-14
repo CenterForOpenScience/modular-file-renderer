@@ -15,7 +15,10 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    columns, rows = populate_data(fp)
+    try:
+        columns, rows = populate_data(fp)
+    except TypeError:
+        return RenderResult("A matching renderer was not found")
 
     max_size = config.get('max_size')
 
@@ -74,8 +77,8 @@ def populate_data(fp):
 
     for function in function_preference:
         try:
-            print("Trying " + function.__name__)
-            return function(fp)
+            imported = function()
+            print("Trying " + imported.__name__)
+            return imported(fp)
         except ImportError:
-            print("Failed to import using" + function.__name__)
-            pass
+            print("Failed to import " + function.__name__)

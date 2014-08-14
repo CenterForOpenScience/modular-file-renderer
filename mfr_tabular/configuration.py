@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """Configuration object for the mfr_tabular module."""
 
-from .panda_tools import csv_pandas, dta_pandas, sav_pandas
-from .csv_tools import csv_csv
-# from .ezodf_tools import ods_ezodf
-from .xlrd_tools import xlsx_xlrd
+from import_dependencies import csv_pandas, dta_pandas, sav_pandas, csv_csv, xlsx_xlrd
 from mfr import Config
+
 
 # Define ordered lists to indicate the preference of which library to use for
 # a partocular extension.

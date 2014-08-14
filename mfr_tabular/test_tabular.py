@@ -13,6 +13,7 @@ def teardown_function(func):
     mfr.core.reset_config()
 
 
+# Some ods files work, but it is very inconsistent. Turning off for now.
 @pytest.mark.parametrize('filename', [
     'sheet.csv',
     'sheet.tsv',

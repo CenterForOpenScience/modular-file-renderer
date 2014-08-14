@@ -19,7 +19,7 @@ Release v\ |version|. (:ref:`Installation <install>`)
     mfr.register_filehandler(mfr_image.Handler)
 
     with open('hello.jpg') as filepointer:
-       mfr.render(filepointer, alt="Hello world")
+       mfr.render(filepointer, alt="Hello world").content
        # => '<img src="hello.jpg" alt="Hello world" />'
 
 

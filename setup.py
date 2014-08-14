@@ -49,7 +49,7 @@ setup(
                         read("HISTORY.rst")),
     author='Center for Open Science',
     author_email='contact@cos.io',
-    url='https://github.com/CenterForOpenScience/mfr',
+    url='https://github.com/CenterForOpenScience/modular-file-renderer',
     packages=find_packages(exclude=("test*", 'previewer')),
     include_package_data=True,
     # license=read("LICENSE"),

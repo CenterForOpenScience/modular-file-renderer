@@ -23,20 +23,25 @@ Clone the repo: ::
     $ git clone https://github.com/CenterForOpenScience/modular-file-renderer.git
     $ cd modular-file-renderer
 
-Install the development dependencies. ::
-
-    $ pip install -r dev-requirements.txt
+Install the development dependencies.
 
 .. note::
 
     It is recommended that you use a `virtualenv`_ during development.
+
+.. _virtualenv: http://www.virtualenv.org/en/latest/
+
+::
+
+    $ pip install -r dev-requirements.txt
+
+
 
 
 Lastly, install mfr in development mode. ::
 
     $ python setup.py develop
 
-.. _virtualenv: http://www.virtualenv.org/en/latest/
 
 Running tests
 -------------
@@ -123,9 +128,9 @@ There are two main pieces of a file format package are
 Rendering/Exporting Code
 ++++++++++++++++++++++++
 
-Renderers are simply callables (functions or methods) that take a file as their first argument and return a string of the rendered HTML, encapsulated inside of a RenderResult object. Any links to css or javascript associated with the HTML should also be included in the RenderResult object. These links should be passed to the RenderResult object under the "assets" parameter.
+Renderers are simply callables (functions or methods) that take a file as their first argument and return a :class:`RenderResult <mfr.core.RenderResult>` which contains content(a string of the rendered HTML) and assets (a dictionary that points to lists of javascript or css sources).
 
-Here is a very simple example of function that takes a filepointer and outputs an HTML image tag from it.
+Here is a very simple example of function that takes a filepointer and outputs a render result with an HTML image tag.
 
 .. code-block:: python
     from mfr import RenderResult
@@ -135,13 +140,11 @@ Here is a very simple example of function that takes a filepointer and outputs a
         content = '<img src="{filename}" />'.format(filename=filename)
         return RenderResult(content)
 
-
 You can also write renderers as methods.
 
 .. code-block:: python
 
     # in mfr_video/render.py
-    from mfr import RenderResult
 
     class VideoRenderer(object):
 
@@ -161,7 +164,7 @@ A file handler is responsible for using your custom rendering and exporting code
 
 Your FileHandler **must** define a ``detect`` method which, given a file object, returns whether or not it can handle the file.
 
-**Your FileHandler class should be named Handler and should be defined in your ``mfr_format/__init__.py`` file.**
+**Your FileHandler class should be named Handler and should be defined in your `mfr_format/__init__.py` file.**
 
 .. code-block:: python
 

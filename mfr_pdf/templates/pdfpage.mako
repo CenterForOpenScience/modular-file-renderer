@@ -63,8 +63,8 @@
 
             var navBarHeight = viewport.height + 2 + "px";
 
-            $prevButton.css("height", 2);
-            $nextButton.css("height", 2);
+            $prevButton.css("height", navBarHeight);
+            $nextButton.css("height", navBarHeight);
 
             page.render(renderContext);
       });

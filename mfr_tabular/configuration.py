@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Configuration object for the mfr_tabular module."""
 
-from import_dependencies import csv_pandas, dta_pandas, sav_pandas, csv_csv, xlsx_xlrd
+from .import_dependencies import csv_pandas, dta_pandas, sav_pandas, csv_csv, xlsx_xlrd
 from mfr import Config
 
 

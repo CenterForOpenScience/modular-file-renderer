@@ -1,5 +1,3 @@
-
-
 <style type="text/css">
     .imgwrap {
         text-align: center;

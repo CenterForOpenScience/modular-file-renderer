@@ -5,16 +5,13 @@ from mfr_ipynb.render import render_html
 
 __version__ = '0.1.0'
 
-
-
 EXTENSIONS = [
-	'.ipynb'
+    '.ipynb'
 ]
 
 
 class Handler(FileHandler):
-    # Renderers and exporters are callables
-    name = 'IPython'
+
     renderers = {
         'html': render_html,
     }

@@ -18,12 +18,16 @@ def render_html(fp, src=None):
     try:
         columns, rows = populate_data(fp)
     except TypeError:
-        return RenderResult("A matching renderer was not found")
+        return RenderResult("A matching renderer was not found or render "
+                            + "requirements are not met")
 
     max_size = config.get('max_size')
 
     if len(columns) > max_size or len(rows) > max_size:
         return RenderResult("Table is too large")
+
+    if len(columns) < 1 or len(rows) < 1:
+        return RenderResult("Table is empty")
 
     content = template.render(
         columns=json.dumps(columns),

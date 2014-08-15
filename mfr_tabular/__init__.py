@@ -6,6 +6,7 @@ EXTENSIONS = [
     '.csv',
     '.tsv',
     '.xlsx',
+    '.xls',
     '.dta',
     '.sav',
     # '.ods',

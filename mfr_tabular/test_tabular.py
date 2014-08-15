@@ -21,6 +21,8 @@ def teardown_function(func):
     'sheet.TSV',
     'sheet.xlsx',
     'sheet.XLSX',
+    'sheet.xls',
+    'sheet.XLS',
     'sheet.dta',
     'sheet.DTA',
     'sheet.sav',

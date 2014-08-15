@@ -12,6 +12,7 @@ config = Config(defaults={
         '.csv': [csv_pandas, csv_csv],
         '.tsv': [csv_csv],
         '.xlsx': [xlsx_xlrd],
+        '.xls': [xlsx_xlrd],
         '.dta': [dta_pandas],
         '.sav': [sav_pandas],
         # '.ods': [ods_ezodf],

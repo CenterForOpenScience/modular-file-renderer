@@ -9,6 +9,8 @@ python:
   - "3.4"
   - "pypy"
 
-install: travis_retry pip install -r dev-requirements.txt
+install:
+    - travis_retry pip install -r dev-requirements.txt
+    - travis_retry invoke plugin_requirements
 
 script: python setup.py test

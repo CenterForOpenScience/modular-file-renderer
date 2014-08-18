@@ -1,5 +1,5 @@
 """GEO renderer module."""
-from mfr.core import RenderResults
+from mfr.core import RenderResult
 
 with open('mfr_geo/templates/geo_template.html') as fid:
     template = fid.read()

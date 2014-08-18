@@ -19,11 +19,11 @@ L.mapbox.accessToken = 'pk.eyJ1Ijoib21kYW5pZWwiLCJhIjoiblFoQTd3WSJ9.wMhZDicLVWlx
 
 var geojson = [{{geo_json}}]
 
-var map = L.mapbox.map('map', 'omdaniel.j7jeplco')
-    .setView([38, -78.5], 11);
+var map = L.mapbox.map('map', 'omdaniel.j7jeplco');
 
-L.geoJson (geojson, {style: L.mapbox.simplestyle.style }).addTo(map);
+var featureLayer = L.mapbox.featureLayer(geojson).addTo(map);
 
+map.fitBounds(featureLayer.getBounds());
 </script>
 </body>
 </html>

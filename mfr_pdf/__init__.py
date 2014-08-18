@@ -8,7 +8,7 @@ EXTENSIONS = ['.pdf']
 
 
 class Handler(FileHandler):
-    """The image file handler."""
+    """The pdf file handler."""
     renderers = {
         'html': render_pdf_mako,
     }

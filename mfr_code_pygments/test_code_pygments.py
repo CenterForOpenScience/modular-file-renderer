@@ -2,7 +2,7 @@
 import pytest
 import mfr
 from mfr_code_pygments import Handler as CodeFileHandler
-from mfr_code_pygments.render import get_stylesheet
+from mfr_code_pygments.render import get_stylesheet, render_html
 
 from mfr_code_pygments.configuration import config
 
@@ -55,6 +55,6 @@ def test_configuration_defaults():
 
 def test_render_returns_render_result():
     with open('mfr_code_pygments/fixtures/test.py') as fp:
-        result = mfr.core.render(fp)
+        result = render_html(fp)
 
     assert type(result) == mfr.core.RenderResult

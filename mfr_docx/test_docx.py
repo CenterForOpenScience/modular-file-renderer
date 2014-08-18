@@ -1,7 +1,11 @@
 import sys
+import mfr
 if not sys.version_info >= (3, 0):
 
     from mfr_docx import Handler as DocxFileHandler
+
+    def setup_function(func):
+        mfr.register_filehandler(DocxFileHandler)
 
     def test_detect_docx(fakefile):
         # set file's name
@@ -14,3 +18,9 @@ if not sys.version_info >= (3, 0):
         fakefile.name = 'not_doc.odt'
         handler = DocxFileHandler()
         assert handler.detect(fakefile) is False
+
+    def test_render_docx():
+        with open('mfr_docx/fixtures/test.docx') as fp:
+            result = mfr.core.render(fp)
+
+        assert type(result) == mfr.core.RenderResult

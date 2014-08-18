@@ -14,7 +14,9 @@ def teardown_function(func):
 
 @pytest.mark.parametrize('filename', [
     'script.geojson',
+    'script.geoJSON',
     'script.GeoJson',
+    'script.GeoJSON',
     'script.Geojson',
     'script.GEOJSON',
 ])

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from mfr_pdf.render import render_geo
+from mfr_geo.render import render_geo
 
 EXTENSIONS = ['geojson']
 

@@ -9,21 +9,6 @@ template = TemplateLookup(
 ).get_template('tabular.mako')
 
 
-CSS_FILES = [
-    "slick.grid.css",
-    "jquery-ui-1.8.16.custom.css",
-    "examples.css",
-    "slick-default-theme.css",
-]
-
-JS_FILES = [
-    "jquery-1.7.min.js",
-    "jquery.event.drag-2.2.js",
-    "slick.core.js",
-    "slick.grid.js",
-]
-
-
 def render_html(fp, src=None):
     """Render a tabular file to html
     :param fp: file pointer object

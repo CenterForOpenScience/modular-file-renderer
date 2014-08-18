@@ -2,10 +2,26 @@ from mfr.core import RenderResult, get_file_extension
 from mako.lookup import TemplateLookup
 import json
 from .configuration import config
+import os
 
 template = TemplateLookup(
     directories=['mfr_tabular/templates']
 ).get_template('tabular.mako')
+
+
+CSS_FILES = [
+    "slick.grid.css",
+    "jquery-ui-1.8.16.custom.css",
+    "examples.css",
+    "slick-default-theme.css",
+]
+
+JS_FILES = [
+    "jquery-1.7.min.js",
+    "jquery.event.drag-2.2.js",
+    "slick.core.js",
+    "slick.grid.js",
+]
 
 
 def render_html(fp, src=None):
@@ -38,35 +54,22 @@ def render_html(fp, src=None):
         STATIC_PATH="/mfr/mfr_tabular",
     )
 
-    assets = get_assets()
+    assets = {
+        'css': find_assets('css'),
+        'js': find_assets('js')
+    }
 
     return RenderResult(content=content, assets=assets)
 
 
-def get_assets():
+def find_assets(asset_type):
     """Create dictionary of js and css assets"""
 
     static_dir = "/static/mfr/mfr_tabular"
+    files = os.listdir("mfr_tabular/static/{asset}".format(asset=asset_type))
 
-    css_files = [
-        "slick.grid.css",
-        "jquery-ui-1.8.16.custom.css",
-        "examples.css",
-        "slick-default-theme.css",
-    ]
-
-    js_files = [
-        "jquery-1.7.min.js",
-        "jquery.event.drag-2.2.js",
-        "slick.core.js",
-        "slick.grid.js",
-    ]
-
-    assets = {}
-    assets['css'] = [static_dir + '/css/' + filename for filename in css_files]
-    assets['js'] = [static_dir + '/js/' + filename for filename in js_files]
-
-    return assets
+    return ['{0}/{1}/{2}'.format(static_dir, asset_type, filename)
+            for filename in files]
 
 
 # TODO(asmacdo) better way of choosing the renderer

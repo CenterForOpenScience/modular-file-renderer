@@ -21,5 +21,5 @@ def render_geo(fp, src=None):
     :param str:
     """
 
-    content = template.format(geo_file = fp.read(), geo_fname = fp.name)
+    content = template.format(geo_json = fp.read(), geo_filename = fp.name)
     return RenderResult(content, assets=get_assets()) 

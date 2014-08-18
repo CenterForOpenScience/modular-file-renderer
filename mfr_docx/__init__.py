@@ -14,6 +14,7 @@ EXTENSIONS = [
     '.docx',
 ]
 
+
 class Handler(FileHandler):
     """FileHandler for Microsoft Docx files."""
     renderers = renderers

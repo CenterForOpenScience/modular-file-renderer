@@ -3,6 +3,7 @@ import mfr
 if not sys.version_info >= (3, 0):
 
     from mfr_docx import Handler as DocxFileHandler
+    from mfr_docx.render import render_docx
 
     def setup_function(func):
         mfr.register_filehandler(DocxFileHandler)
@@ -21,6 +22,6 @@ if not sys.version_info >= (3, 0):
 
     def test_render_docx():
         with open('mfr_docx/fixtures/test.docx') as fp:
-            result = mfr.core.render(fp)
+            result = render_docx(fp)
 
         assert type(result) == mfr.core.RenderResult

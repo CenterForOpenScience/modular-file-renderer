@@ -1,8 +1,9 @@
 """GEO renderer module."""
 from mfr.core import RenderResult
+from jinja2 import Template
 
-with open('mfr_geo/templates/geo_template.html') as fid:
-    template = fid.read()
+with open('mfr_geo/templates/geo_base_template.html') as fid:
+    template = Template(fid.read())
 
 def get_assets():
     """Creates a dictionary of js and css assets"""
@@ -21,5 +22,5 @@ def render_geo(fp, src=None):
     :param str:
     """
 
-    content = template.format(geo_json = fp.read(), geo_filename = fp.name)
+    content = template.render(geo_json = fp.read(), geo_filename = fp.name)
     return RenderResult(content, assets=get_assets()) 

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset=utf-8 />
-<title>{geo_filename}</title>
+<title>{{geo_filename}}</title>
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 <script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css' rel='stylesheet' />
@@ -18,7 +18,7 @@ L.mapbox.accessToken = 'pk.eyJ1Ijoib21kYW5pZWwiLCJhIjoiblFoQTd3WSJ9.wMhZDicLVWlx
 var map = L.mapbox.map('map', 'omdaniel.j7jeplco')
     .setView([38, -78.5], 11);
 
-var geojson = [{geo_json}]
+var geojson = [{{geo_json}}]
 
 L.geoJson (geojson, {style: L.mapbox.simplestyle.style }).addTo(map);
 

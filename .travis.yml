@@ -7,8 +7,13 @@ python:
   - "2.7"
   - "3.3"
   - "3.4"
-  - "pypy"
+  # TODO(asmacdo)
+  # pypy is unable to install numpy and pandas. The test should either not
+  # install pandas or it should install from the pypy repo.
+  # - "pypy"
 
-install: travis_retry pip install -r dev-requirements.txt
+install:
+    - travis_retry pip install -r dev-requirements.txt
+    - travis_retry invoke plugin_requirements
 
 script: python setup.py test

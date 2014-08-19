@@ -1,8 +1,8 @@
+import json
+import os
 from mfr.core import RenderResult, get_file_extension
 from mako.lookup import TemplateLookup
-import json
 from .configuration import config
-import os
 
 template = TemplateLookup(
     directories=['mfr_tabular/templates']
@@ -12,7 +12,6 @@ template = TemplateLookup(
 def render_html(fp, src=None):
     """Render a tabular file to html
     :param fp: file pointer object
-    :param src:
     :return: RenderResult object containing html and assets
     """
 
@@ -35,8 +34,6 @@ def render_html(fp, src=None):
         rows=json.dumps(rows),
         # TODO(asmacdo) make this a title?
         writing="",
-        # TODO(asmacdo) investigate
-        STATIC_PATH="/mfr/mfr_tabular",
     )
 
     assets = {
@@ -57,7 +54,6 @@ def find_assets(asset_type):
             for filename in files]
 
 
-# TODO(asmacdo) better way of choosing the renderer
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns
     :param fp: file pointer

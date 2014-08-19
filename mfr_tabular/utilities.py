@@ -16,5 +16,8 @@ def data_population(in_data, headers=None):
 
     headers = headers or in_data[0]
 
-    return [{header: row[cindex] for cindex, header in enumerate(headers)}
-            for row in in_data]
+    return [
+                dict([(header, row[cindex])
+                    for cindex, header in enumerate(headers)])
+                for row in in_data
+           ]

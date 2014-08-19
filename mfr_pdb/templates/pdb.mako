@@ -35,10 +35,6 @@
 
   <style type="text/css">
   </style>
-  static/mfr/mfr_pdb/js/GLmol.js
-  <script src="/static/mfr/mfr_pdb/js/jquery-1.7.min.js"></script>
-  <script src="/static/mfr/mfr_pdb/js/Three49custom.js"></script>
-  <script type="text/javascript" src="/static/mfr/mfr_pdb/js/GLmol.js"></script>
 <div id="errorDisp"></div>
 <div id="glmol01" style="width: 500px; height: 400px; background-color: black; display:none;"></div>
 <textarea id="glmol01_src" style="display: none;">

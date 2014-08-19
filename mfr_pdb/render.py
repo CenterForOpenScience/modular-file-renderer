@@ -9,4 +9,14 @@ template = TemplateLookup(
 def render_html(fp, **kwargs):
     print kwargs
     content = template.render(pdb_file=fp.read())
-    return RenderResult(content)
+
+    # assets must be loaded in this order
+    assets = {
+        'js': [
+            "/static/mfr/mfr_pdb/js/jquery-1.7.min.js",
+            "/static/mfr/mfr_pdb/js/Three49custom.js",
+            "/static/mfr/mfr_pdb/js/GLmol.js",
+        ]
+    }
+
+    return RenderResult(content, assets)

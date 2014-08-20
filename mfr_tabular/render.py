@@ -1,5 +1,4 @@
 import json
-import os
 import mfr
 from .exceptions import TableTooBigException, EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension
@@ -36,23 +35,31 @@ def render_html(fp, src=None):
         writing="",
     )
 
+    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
+
+    css_assets = [
+        "slick.grid.css",
+        "jquery-ui-1.8.16.custom.css",
+        "css/examples.css",
+        "slick-default-theme.css",
+    ]
+
+    js_assets = [
+        "jquery-1.7.min.js",
+        "jquery.event.drag-2.2.js",
+        "slick.core.js",
+        "slick.grid.js",
+    ]
+
     assets = {
-        'css': find_assets('css'),
-        'js': find_assets('js')
+        'css': ['{0}/{1}/{2}'.format(assets_uri_base, 'css', filepath)
+                for filepath in css_assets],
+
+        'js': ['{0}/{1}/{2}'.format(assets_uri_base, 'js', filepath)
+               for filepath in js_assets],
     }
 
     return RenderResult(content=content, assets=assets)
-
-
-def find_assets(asset_type):
-    """Create a list of assets that are in the static directory"""
-
-    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
-    HERE = os.path.dirname(os.path.abspath(__file__))
-    static_path = os.path.join(HERE, "static", asset_type)
-
-    return ['{0}/{1}/{2}'.format(assets_uri_base, asset_type, filepath)
-            for filepath in os.listdir(static_path)]
 
 
 def populate_data(fp):

@@ -1,5 +1,5 @@
 <div>${writing}</div>
-<div id="mfrGrid" style="width: 600px; height: 600px;"></div>
+<div id="mfrGrid" style="width: ${width}px; height: ${height}px;"></div>
 
 <script>
 (function(){

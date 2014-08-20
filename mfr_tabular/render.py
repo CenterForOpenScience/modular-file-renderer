@@ -16,6 +16,8 @@ def render_html(fp, src=None):
     columns, rows = populate_data(fp)
 
     max_size = config.get('max_size')
+    table_width = config.get('table_width')
+    table_height = config.get('table_height')
 
     if len(columns) > max_size or len(rows) > max_size:
         raise TableTooBigException
@@ -26,6 +28,8 @@ def render_html(fp, src=None):
     template = Template(filename='mfr_tabular/templates/tabular.mako')
 
     content = template.render(
+        width=table_width,
+        height=table_height,
         columns=json.dumps(columns),
         rows=json.dumps(rows),
         # TODO(asmacdo) make this a title?
@@ -58,7 +62,7 @@ def populate_data(fp):
     """
 
     ext = get_file_extension(fp.name)
-    function_preference = config['tabular_libraries'].get(ext)
+    function_preference = config['libs'].get(ext)
 
     for function in function_preference:
         try:

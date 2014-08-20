@@ -1,5 +1,6 @@
 import json
 import os
+import mfr
 from .exceptions import TableTooBigException, EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension
 from mako.template import Template
@@ -42,7 +43,8 @@ def render_html(fp, src=None):
 def find_assets(asset_type):
     """Create dictionary of js and css assets"""
 
-    static_dir = "/static/mfr/mfr_tabular"
+    static_dir = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
+
     files = os.listdir("mfr_tabular/static/{asset}".format(asset=asset_type))
 
     return ['{0}/{1}/{2}'.format(static_dir, asset_type, filename)

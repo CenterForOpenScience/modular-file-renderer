@@ -1,12 +1,8 @@
 import json
 import os
 from mfr.core import RenderResult, get_file_extension
-from mako.lookup import TemplateLookup
+from mako.template import Template
 from .configuration import config
-
-template = TemplateLookup(
-    directories=['mfr_tabular/templates']
-).get_template('tabular.mako')
 
 
 def render_html(fp, src=None):
@@ -28,6 +24,8 @@ def render_html(fp, src=None):
 
     if len(columns) < 1 or len(rows) < 1:
         return RenderResult("Table is empty")
+
+    template = Template(filename='mfr_tabular/templates/tabular.mako')
 
     content = template.render(
         columns=json.dumps(columns),

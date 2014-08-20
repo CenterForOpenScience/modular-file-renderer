@@ -1,6 +1,6 @@
 import xlrd
-from .utilities import header_population
-from .compat import range
+from ..utilities import header_population
+from ..compat import range
 
 
 def xlsx_xlrd(fp):

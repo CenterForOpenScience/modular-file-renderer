@@ -1,4 +1,4 @@
-from mfr_tabular import panda_tools
+from mfr_tabular.libs import panda_tools
 
 
 def test_data_from_dateframe():

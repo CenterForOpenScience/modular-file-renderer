@@ -1,4 +1,4 @@
-from mfr_tabular import xlrd_tools
+from mfr_tabular.libs import xlrd_tools
 
 
 def test_xlsx_xlrd():

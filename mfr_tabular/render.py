@@ -43,12 +43,11 @@ def render_html(fp, src=None):
 def find_assets(asset_type):
     """Create dictionary of js and css assets"""
 
-    static_dir = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
+    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
+    static_path = os.path.abspath(os.path.join("mfr_tabular", "static", asset_type))
 
-    files = os.listdir("mfr_tabular/static/{asset}".format(asset=asset_type))
-
-    return ['{0}/{1}/{2}'.format(static_dir, asset_type, filename)
-            for filename in files]
+    return ['{0}/{1}/{2}'.format(assets_uri_base, asset_type, filepath)
+            for filepath in os.listdir(static_path)]
 
 
 def populate_data(fp):

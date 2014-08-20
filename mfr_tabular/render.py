@@ -41,10 +41,11 @@ def render_html(fp, src=None):
 
 
 def find_assets(asset_type):
-    """Create dictionary of js and css assets"""
+    """Create a list of assets that are in the static directory"""
 
     assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
-    static_path = os.path.abspath(os.path.join("mfr_tabular", "static", asset_type))
+    HERE = os.path.dirname(os.path.abspath(__file__))
+    static_path = os.path.join(HERE, "static", asset_type)
 
     return ['{0}/{1}/{2}'.format(assets_uri_base, asset_type, filepath)
             for filepath in os.listdir(static_path)]

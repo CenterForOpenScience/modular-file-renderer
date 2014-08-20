@@ -29,4 +29,17 @@ config = Config(defaults={
     'max_size': 10000,
     'table_width': 600,  # pixels
     'table_height': 600,  # pixels
+    'slick_grid_options': {
+        'small_table': {
+            'enableCellNavigation': True,
+            'enableColumnReorder': False,
+            'forceFitColumns': True,
+            'syncColumnCellResize': True,
+        },
+        'big_table': {
+            'enableCellNavigation': True,
+            'enableColumnReorder': False,
+            'syncColumnCellResize': True,
+        },
+    },
 })

@@ -25,6 +25,8 @@ def render_html(fp, src=None):
         raise EmptyTableException
 
     template = Template(filename='mfr_tabular/templates/tabular.mako')
+    table_size = 'small_table' if len(columns) < 9 else 'big_table'
+    slick_grid_options = config.get('slick_grid_options').get(table_size)
 
     content = template.render(
         width=table_width,
@@ -33,6 +35,7 @@ def render_html(fp, src=None):
         rows=json.dumps(rows),
         # TODO(asmacdo) make this a title?
         writing="",
+        options=json.dumps(slick_grid_options),
     )
 
     assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])

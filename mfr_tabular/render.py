@@ -15,7 +15,7 @@ def render_html(fp, src=None):
         columns, rows = populate_data(fp)
     except TypeError:
         return RenderResult("A matching renderer was not found or render "
-                            + "requirements are not met")
+                            "requirements are not met")
 
     max_size = config.get('max_size')
 

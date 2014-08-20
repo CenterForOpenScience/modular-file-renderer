@@ -7,7 +7,6 @@ template = TemplateLookup(
 
 
 def render_html(fp, **kwargs):
-    print kwargs
     content = template.render(pdb_file=fp.read())
 
     # assets must be loaded in this order

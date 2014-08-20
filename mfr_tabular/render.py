@@ -1,5 +1,6 @@
 import json
 import os
+from .exceptions import TableTooBigException, EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension
 from mako.template import Template
 from .configuration import config
@@ -11,19 +12,15 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    try:
-        columns, rows = populate_data(fp)
-    except TypeError:
-        return RenderResult("A matching renderer was not found or render "
-                            "requirements are not met")
+    columns, rows = populate_data(fp)
 
     max_size = config.get('max_size')
 
     if len(columns) > max_size or len(rows) > max_size:
-        return RenderResult("Table is too large")
+        raise TableTooBigException
 
     if len(columns) < 1 or len(rows) < 1:
-        return RenderResult("Table is empty")
+        raise EmptyTableException
 
     template = Template(filename='mfr_tabular/templates/tabular.mako')
 
@@ -68,3 +65,5 @@ def populate_data(fp):
             return imported(fp)
         except ImportError:
             print("Failed to import " + function.__name__)
+
+    raise MissingRequirementsException('Renderer requirements are not met')

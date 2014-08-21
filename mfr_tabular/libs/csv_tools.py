@@ -1,4 +1,4 @@
-from .utilities import header_population, data_population
+from ..utilities import header_population, data_population
 import csv
 
 

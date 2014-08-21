@@ -19,7 +19,7 @@ def dta_pandas():
 
 
 def sav_pandas():
-    from panda_tools import sav_pandas
+    from .panda_tools import sav_pandas
     return sav_pandas
 
 

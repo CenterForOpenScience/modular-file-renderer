@@ -12,4 +12,3 @@ def render_img_tag(fp, src=None, alt=''):
 
     content = '<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt)
     return RenderResult(content)
-

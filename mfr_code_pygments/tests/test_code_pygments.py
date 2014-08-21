@@ -2,7 +2,7 @@
 import pytest
 import mfr
 from mfr_code_pygments import Handler as CodeFileHandler
-from mfr_code_pygments.render import get_stylesheet
+from mfr_code_pygments.render import get_stylesheet, render_html
 
 from mfr_code_pygments.configuration import config
 
@@ -48,8 +48,13 @@ def test_get_stylesheet():
     assert expected_url == result
 
 
-#TODO(asmacdo) test that assets are included in the RenderResult
-
 def test_configuration_defaults():
     assert config['PYGMENTS_THEME'] == 'default'
     assert config['CSS_CLASS'] == 'codehilite'
+
+
+def test_render_returns_render_result():
+    with open('mfr_code_pygments/tests/test_code_pygments.py') as fp:
+        result = render_html(fp)
+
+    assert type(result) == mfr.core.RenderResult

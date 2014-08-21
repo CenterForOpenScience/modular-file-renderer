@@ -1,0 +1,11 @@
+<div>${writing}</div>
+<div id="mfrGrid" style="width: ${width}px; height: ${height}px;"></div>
+
+<script>
+(function(){
+    var columns = ${columns};
+    var rows = ${rows};
+    var options = ${options}
+    var grid = new Slick.Grid("#mfrGrid", rows, columns, options);
+})();
+</script>

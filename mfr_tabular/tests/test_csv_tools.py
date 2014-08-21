@@ -1,4 +1,4 @@
-from mfr_tabular import csv_tools
+from mfr_tabular.libs import csv_tools
 
 
 def test_csv_csv_returns_headers_and_data():

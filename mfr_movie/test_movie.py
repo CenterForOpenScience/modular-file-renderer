@@ -29,4 +29,4 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 def test_render_movie_tag(fakefile):
     result = render_movie_tag(fakefile, src='/movie.avi')
-    assert "src='/files/movie.avi'" in result
+    assert 'src="/movie.avi"' in result

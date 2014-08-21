@@ -10,3 +10,8 @@ class MFRException(Exception):
 class ConfigurationError(MFRException):
     """Error raised when MFR is improperly configured."""
     pass
+
+
+class RenderError(MFRException):
+    """Base exception for all rendering related errors"""
+    pass

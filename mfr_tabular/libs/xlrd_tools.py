@@ -1,5 +1,6 @@
 import xlrd
-from .utilities import header_population
+from ..utilities import header_population
+from ..compat import range
 
 
 def xlsx_xlrd(fp):
@@ -16,7 +17,7 @@ def xlsx_xlrd(fp):
     fields = sheet.row_values(0) if sheet.nrows else []
 
     data = [dict(zip(fields, sheet.row_values(row_index)))
-            for row_index in xrange(1, sheet.nrows)]
+            for row_index in range(1, sheet.nrows)]
 
     header = header_population(fields)
 

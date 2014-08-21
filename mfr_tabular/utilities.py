@@ -16,9 +16,8 @@ def data_population(in_data, headers=None):
 
     headers = headers or in_data[0]
 
-    out_data = []
-    for n in range(len(in_data)):
-        out_data.append({})
-        for i in range(len(headers)):
-            out_data[n][headers[i]] = str(in_data[n][i])
-    return out_data
+    return [
+                dict([(header, row[cindex])
+                    for cindex, header in enumerate(headers)])
+                for row in in_data
+           ]

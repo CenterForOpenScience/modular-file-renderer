@@ -46,13 +46,13 @@ setup(
     version=__version__,
     description='HTML file renderer for Python',
     long_description=(read("README.rst") + '\n\n' +
-                        read("HISTORY.rst")),
+                      read("HISTORY.rst")),
     author='Center for Open Science',
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/modular-file-renderer',
     packages=find_packages(exclude=("test*", 'previewer')),
     include_package_data=True,
-    # license=read("LICENSE"),
+    license=read("LICENSE"),
     zip_safe=False,
     keywords='mfr',
     classifiers=[
@@ -65,6 +65,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
     ],
     entry_points={
         'console_scripts': [

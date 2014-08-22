@@ -54,7 +54,7 @@ def test_configuration_defaults():
 
 
 def test_render_returns_render_result():
-    with open('mfr_code_pygments/fixtures/test.py') as fp:
+    with open('mfr_code_pygments/tests/test_code_pygments.py') as fp:
         result = render_html(fp)
 
     assert type(result) == mfr.core.RenderResult

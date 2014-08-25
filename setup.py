@@ -50,8 +50,11 @@ setup(
     author='Center for Open Science',
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/modular-file-renderer',
-    packages=find_packages(exclude=("test*", 'previewer')),
+    packages=find_packages(exclude=("test*", "player*")),
     include_package_data=True,
+    package_data={
+        "": ['templates/*', 'static/*/*'],
+    },
     license=read("LICENSE"),
     zip_safe=False,
     keywords='mfr',

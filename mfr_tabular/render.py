@@ -1,9 +1,25 @@
 import json
 import mfr
+import os
 from .exceptions import TableTooBigException, EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension
 from mako.template import Template
 from .configuration import config
+
+JS_ASSETS = [
+    # TODO(asmacdo) remove an asset if requirement is already met
+    "jquery-1.7.min.js",
+    "jquery.event.drag-2.2.js",
+    "slick.core.js",
+    "slick.grid.js",
+]
+
+CSS_ASSETS = [
+    "slick.grid.css",
+    "jquery-ui-1.8.16.custom.css",
+    "slick-default-theme.css",
+    "examples.css",
+]
 
 
 def render_html(fp, src=None):
@@ -24,7 +40,9 @@ def render_html(fp, src=None):
     if len(columns) < 1 or len(rows) < 1:
         raise EmptyTableException
 
-    template = Template(filename='mfr_tabular/templates/tabular.mako')
+    HERE = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(HERE, 'templates', 'tabular.mako')
+    template = Template(filename=filename)
     table_size = 'small_table' if len(columns) < 9 else 'big_table'
     slick_grid_options = config.get('slick_grid_options').get(table_size)
 
@@ -40,26 +58,12 @@ def render_html(fp, src=None):
 
     assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
 
-    css_assets = [
-        "slick.grid.css",
-        "jquery-ui-1.8.16.custom.css",
-        "css/examples.css",
-        "slick-default-theme.css",
-    ]
-
-    js_assets = [
-        "jquery-1.7.min.js",
-        "jquery.event.drag-2.2.js",
-        "slick.core.js",
-        "slick.grid.js",
-    ]
-
     assets = {
         'css': ['{0}/{1}/{2}'.format(assets_uri_base, 'css', filepath)
-                for filepath in css_assets],
+                for filepath in CSS_ASSETS],
 
         'js': ['{0}/{1}/{2}'.format(assets_uri_base, 'js', filepath)
-               for filepath in js_assets],
+               for filepath in JS_ASSETS],
     }
 
     return RenderResult(content=content, assets=assets)

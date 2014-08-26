@@ -2,7 +2,7 @@ import json
 import mfr
 import os
 from .exceptions import TableTooBigException, EmptyTableException, MissingRequirementsException
-from mfr.core import RenderResult, get_file_extension
+from mfr.core import RenderResult, get_file_extension, get_assets_from_list
 from mako.template import Template
 from .configuration import config
 
@@ -57,13 +57,9 @@ def render_html(fp, src=None):
     )
 
     assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
-
     assets = {
-        'css': ['{0}/{1}/{2}'.format(assets_uri_base, 'css', filepath)
-                for filepath in CSS_ASSETS],
-
-        'js': ['{0}/{1}/{2}'.format(assets_uri_base, 'js', filepath)
-               for filepath in JS_ASSETS],
+        'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS),
+        'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),
     }
 
     return RenderResult(content=content, assets=assets)

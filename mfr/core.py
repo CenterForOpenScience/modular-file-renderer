@@ -22,12 +22,14 @@ from mfr.exceptions import ConfigurationError
 logger = logging.getLogger(__name__)
 
 _defaults = {
-    'INCLUDE_STATIC': False
+    'INCLUDE_STATIC': False,
+    'EXCLUDE_LIBS': []
 }
 #: Global mfr configuration object
 config = Config(defaults=_defaults)
 
 config['HANDLERS'] = []
+
 
 
 def register_filehandler(file_handler):
@@ -266,6 +268,7 @@ class FileHandler(object):
             {'css': '/static/myformat/style.css', 'js': '/static/myformat/script.js'}
 
         """
+
         if not self.__assets:
             for asset in self.iterstatic(url=True):
                 ext = get_file_extension(asset).lstrip('.')
@@ -276,6 +279,20 @@ class FileHandler(object):
         if extension:
             return self.__assets[extension]
         return self.__assets
+
+
+def get_assets_from_list(assets_uri_base, ext, asset_list=None):
+    """
+    Generate an assets dictionary from lists of files and their base uri,
+    excluding any files listed in the Config
+    """
+
+    return [
+        '/'.join([assets_uri_base, ext, filepath])
+        for filepath in asset_list
+        if filepath not in config.get('EXCLUDE_LIBS')
+    ]
+
 
 def _get_dir_for_class(cls):
     """Return the absolute directory where a class resides."""

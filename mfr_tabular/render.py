@@ -35,10 +35,10 @@ def render_html(fp, src=None):
     table_height = config.get('table_height')
 
     if len(columns) > max_size or len(rows) > max_size:
-        raise TableTooBigException
+        raise TableTooBigException("Table is too large to render.")
 
     if len(columns) < 1 or len(rows) < 1:
-        raise EmptyTableException
+        raise EmptyTableException("Table is empty or corrupt.")
 
     HERE = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(HERE, 'templates', 'tabular.mako')

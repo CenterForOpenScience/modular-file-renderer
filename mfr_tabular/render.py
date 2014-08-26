@@ -7,7 +7,6 @@ from mako.template import Template
 from .configuration import config
 
 JS_ASSETS = [
-    # TODO(asmacdo) remove an asset if requirement is already met
     "jquery-1.7.min.js",
     "jquery.event.drag-2.2.js",
     "slick.core.js",

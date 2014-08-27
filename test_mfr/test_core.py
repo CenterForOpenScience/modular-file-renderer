@@ -319,10 +319,3 @@ def test_get_assets_from_list_excludes_EXCLUDE_LIBS():
     css_assets = core.get_assets_from_list(asset_uri_base, 'css', css_files)
     assert len(css_assets) == 1
     assert "not_this_one.css" not in css_assets
-
-
-
-
-
-
-

@@ -53,7 +53,7 @@ setup(
     packages=find_packages(exclude=("test*", "player*")),
     include_package_data=True,
     package_data={
-        "": ['templates/*', 'static/*/*'],
+        "": ['templates/*', 'static/*/*', '*.txt'],
     },
     license=read("LICENSE"),
     zip_safe=False,

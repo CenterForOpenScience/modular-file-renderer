@@ -50,7 +50,6 @@ def render_html(fp, src=None):
         height=table_height,
         columns=json.dumps(columns),
         rows=json.dumps(rows),
-        # TODO(asmacdo) make this a title?
         writing="",
         options=json.dumps(slick_grid_options),
     )

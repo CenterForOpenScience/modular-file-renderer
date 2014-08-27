@@ -303,3 +303,26 @@ def test_get_assets_returns_key_error_if_static_url_not_configured():
     with pytest.raises(KeyError) as excinfo:
         handler.get_assets()
     assert 'STATIC_URL is not configured' in str(excinfo)
+
+
+def test_get_assets_from_list():
+    js_files = ["test_file.js"]
+    asset_uri_base = "/server/here/"
+    js_assets = core.get_assets_from_list(asset_uri_base, 'js', js_files)
+    assert js_assets == ["/server/here/js/test_file.js"]
+
+
+def test_get_assets_from_list_excludes_EXCLUDE_LIBS():
+    core.config['EXCLUDE_LIBS'] = ["not_this_one.css"]
+    asset_uri_base = "/server/here/"
+    css_files = ["this_one.css", "not_this_one.css"]
+    css_assets = core.get_assets_from_list(asset_uri_base, 'css', css_files)
+    assert len(css_assets) == 1
+    assert "not_this_one.css" not in css_assets
+
+
+
+
+
+
+

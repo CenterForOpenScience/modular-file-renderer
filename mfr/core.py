@@ -282,12 +282,12 @@ class FileHandler(object):
 
 def get_assets_from_list(assets_uri_base, ext, asset_list=None):
     """
-    Generate an assets dictionary from lists of files and their base uri,
-    excluding any files listed in the Config
+    Generate an list of full uri paths to each assets, excluding any files
+    listed in the Config's EXCLUDE_LIBS
     """
 
     return [
-        '/'.join([assets_uri_base, ext, filepath])
+        os.path.join(assets_uri_base, ext, filepath)
         for filepath in asset_list
         if filepath not in config.get('EXCLUDE_LIBS')
     ]

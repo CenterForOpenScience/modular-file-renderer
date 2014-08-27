@@ -13,7 +13,7 @@ JS_ASSETS = [
 
 def render_html(fp, **kwargs):
     HERE = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(HERE, 'templates', 'tabular.mako')
+    filename = os.path.join(HERE, 'templates', 'pdb.mako')
     template = Template(filename=filename)
 
     content = template.render(pdb_file=fp.read())

@@ -6,7 +6,7 @@ import pytest
 import mock
 
 from mfr import core
-from mfr.exceptions import ConfigurationError
+from mfr.exceptions import ConfigurationError, MFRException
 from test_mfr.fakemodule import Handler as TestHandler
 
 
@@ -62,15 +62,15 @@ def test_export_uses_default_exporter(fakefile):
     assert FakeHandler.exporters['myformat'].called
 
 
-def test_render_raises_value_error_if_renderer_not_found(fakefile):
+def test_render_raises_mfr_exception_if_renderer_not_found(fakefile):
     handler = FakeHandler()
-    with pytest.raises(ValueError):
+    with pytest.raises(MFRException):
         handler.render(fakefile, renderer='notfound')
 
 
-def test_export_raises_value_error_if_exporter_not_found(fakefile):
+def test_export_raises_mfr_exception_if_exporter_not_found(fakefile):
     handler = FakeHandler()
-    with pytest.raises(ValueError):
+    with pytest.raises(MFRException):
         handler.export(fakefile, exporter='notfound')
 
 
@@ -115,7 +115,7 @@ def test_render(fakefile):
 
 
 def test_error_raised_if_renderer_not_found(fakefile):
-    with pytest.raises(ValueError):
+    with pytest.raises(MFRException):
         core.render(fakefile, handler=None)
 
 

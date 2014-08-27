@@ -69,11 +69,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
     ],
-    entry_points={
-        'console_scripts': [
-            "mfr = mfr.cli:main"
-        ]
-    },
     test_suite='tests',
     tests_require=['pytest'],
     cmdclass={'test': PyTest}

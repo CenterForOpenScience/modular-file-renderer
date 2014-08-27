@@ -1,40 +1,10 @@
-##<!DOCTYPE html>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">
 
-<!--  
-   GLmol - Molecular Viewer on WebGL/Javascript 
+<meta charset="utf-8">
 
-   (C) Copyright 2011, biochem_fan
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-    This program uses
-      Three.js 
-         https://github.com/mrdoob/three.js
-         Copyright (c) 2010-2011 three.js Authors. All rights reserved.
-      jQuery
-         http://jquery.org/
-         Copyright (c) 2011 John Resig
--->
-
-
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">
-
-  <meta charset="utf-8">
-
-  <style type="text/css">
-  </style>
+<style type="text/css">
+</style>
 <div id="errorDisp"></div>
 <div id="glmol01" style="width: 500px; height: 400px; background-color: black; display:none;"></div>
 <textarea id="glmol01_src" style="display: none;">

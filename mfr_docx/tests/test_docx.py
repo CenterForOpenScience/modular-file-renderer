@@ -21,7 +21,7 @@ if not sys.version_info >= (3, 0):
         assert handler.detect(fakefile) is False
 
     def test_render_docx():
-        with open('mfr_docx/fixtures/test.docx') as fp:
+        with open('mfr_docx/tests/test.docx') as fp:
             result = render_docx(fp)
 
         assert type(result) == mfr.core.RenderResult

@@ -23,7 +23,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 
 def test_render_rst_returns_render_result():
-    with open('mfr_rst/fixtures/test.rst') as fp:
+    with open('mfr_rst/tests/test.rst') as fp:
         result = mfr_rst.render.render_rst(fp)
 
     assert type(result) == mfr.core.RenderResult

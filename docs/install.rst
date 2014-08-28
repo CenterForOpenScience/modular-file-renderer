@@ -18,7 +18,11 @@ Once you have the source, you can install it into your site-packages with ::
 
     $ python setup.py install
 
-This will install mfr and its core modules. To use a seperate plugin, simply install it into your virtual environment. You will then have to register the new file handler using either a config document (see Examples) or inline (see Quickstart).
+This will install mfr and its core modules. Each module may have its own requirements and they be installed using invoke: ::
+
+    invoke plugin_requirements
+
+To use an external plugin, simply install it into your virtual environment. You will then have to register the new file handler using either a config document (see Examples) or inline (see Quickstart).
 
 .. _Github: https://github.com/CenterForOpenScience/modular-file-renderer
 .. _tarball: https://github.com/CenterForOpenScience/modular-file-renderer/tarball/master

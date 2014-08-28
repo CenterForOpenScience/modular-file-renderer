@@ -17,7 +17,7 @@ import logging
 from collections import defaultdict
 
 from mfr._config import Config
-from mfr.exceptions import ConfigurationError, MFRException
+from mfr.exceptions import ConfigurationError, MFRError
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +110,7 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
     # Get the specified handler, detect it if not given
     handler = handler or detect(fp, many=False, instance=True)
     if not handler:
-        raise MFRException('No available handler that can handle {name!r}.'
+        raise MFRError('No available handler that can handle {name!r}.'
                            .format(name=fp.name))
     return handler.render(fp, renderer=renderer, *args, **kwargs)
 
@@ -126,7 +126,7 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
     # Get the specified handler, detect it if not given
     HandlerClass = handler or detect(fp)
     if not HandlerClass:
-        raise MFRException('No available handler with name {handler}.'
+        raise MFRError('No available handler with name {handler}.'
                            .format(handler=handler))
 
     handler = HandlerClass()
@@ -220,7 +220,7 @@ class FileHandler(object):
         if render_func:
             return render_func(fp, *args, **kwargs)
         else:
-            raise MFRException('`render` method called with no renderer specified and '
+            raise MFRError('`render` method called with no renderer specified and '
                                'no default.')
 
     def export(self, fp, exporter=None, *args, **kwargs):
@@ -233,7 +233,7 @@ class FileHandler(object):
         if export_func:
             return export_func(fp, *args, **kwargs)
         else:
-            raise MFRException('`export` method called with no exporter specified and '
+            raise MFRError('`export` method called with no exporter specified and '
                                'no default.')
 
     def iterstatic(self, url=True):

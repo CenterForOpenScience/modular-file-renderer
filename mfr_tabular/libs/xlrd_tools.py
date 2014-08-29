@@ -1,5 +1,4 @@
 import xlrd
-# from renrenderder import TableTooBigException
 from ..exceptions import TableTooBigException, EmptyTableException
 from ..configuration import config
 from ..utilities import header_population

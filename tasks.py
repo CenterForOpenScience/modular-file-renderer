@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pip
 import os
 import sys
 import shutil
@@ -83,17 +84,12 @@ def docs(clean=False, browse=False):
         browse_docs()
 
 
-@task
 def pip_install(path, filename):
     file_location = (os.path.join(path, filename))
 
     if os.path.isfile(file_location):
         print(file_location)
-        run(
-            'pip install --upgrade -r {0}'.format(
-                file_location
-            )
-        )
+        pip.main(['install', "-r", file_location])
 
 
 @task

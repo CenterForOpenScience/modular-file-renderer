@@ -20,7 +20,13 @@ Once you have the source, you can install it into your site-packages with ::
 
 This will install mfr and its core modules. Each module may have its own requirements and they be installed using invoke: ::
 
+    # install all plugin requirements
     invoke plugin_requirements
+
+    # install requirements for a specific core module
+    invoke plugin_requirements -p mfr_code_pygments
+
+Additionally, ``invoke plugin_requirements [-e | -r]`` installs only exporter or render requirements.
 
 To use an external plugin, simply install it into your virtual environment. You will then have to register the new file handler using either a config document (see Examples) or inline (see Quickstart).
 

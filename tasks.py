@@ -97,9 +97,13 @@ def pip_install(path, filename):
 
 
 @task
-def plugin_requirements(renderers_only=False, exporters_only=False):
-    for directory in os.listdir('.'):
-        path = os.path.join('.', directory)
+def plugin_requirements(renderers_only=False, exporters_only=False, package=None):
+    if package is None:
+        path_list = [os.path.join('.', directory) for directory in os.listdir('.')]
+    else:
+        path_list = [package]
+
+    for path in path_list:
         if os.path.isdir(path):
             if not exporters_only:
                 pip_install(path, "render-requirements.txt")

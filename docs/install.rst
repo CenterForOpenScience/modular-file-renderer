@@ -28,6 +28,8 @@ This will install mfr and its core modules. Each module may have its own require
 
 Additionally, ``invoke plugin_requirements [-e | -r]`` installs only exporter or render requirements.
 
+Note: you will need invoke: ``pip install invoke``
+
 To use an external plugin, simply install it into your virtual environment. You will then have to register the new file handler using either a config document (see Examples) or inline (see Quickstart).
 
 .. _Github: https://github.com/CenterForOpenScience/modular-file-renderer

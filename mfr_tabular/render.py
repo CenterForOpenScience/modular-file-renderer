@@ -3,7 +3,6 @@ import mfr
 import os
 from .exceptions import TableTooBigException, EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
-from mako.template import Template
 from .configuration import config
 
 JS_ASSETS = [
@@ -39,20 +38,21 @@ def render_html(fp, src=None):
     if len(columns) < 1 or len(rows) < 1:
         raise EmptyTableException("Table is empty or corrupt.")
 
-    HERE = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(HERE, 'templates', 'tabular.mako')
-    template = Template(filename=filename)
     table_size = 'small_table' if len(columns) < 9 else 'big_table'
     slick_grid_options = config.get('slick_grid_options').get(table_size)
 
-    content = template.render(
-        width=table_width,
-        height=table_height,
-        columns=json.dumps(columns),
-        rows=json.dumps(rows),
-        writing="",
-        options=json.dumps(slick_grid_options),
-    )
+    HERE = os.path.dirname(os.path.abspath(__file__))
+    filename = os.path.join(HERE, 'templates', 'tabular.html')
+
+    with open(filename) as template:
+        content = template.read().format(
+            width=table_width,
+            height=table_height,
+            columns=json.dumps(columns),
+            rows=json.dumps(rows),
+            writing="",
+            options=json.dumps(slick_grid_options),
+        )
 
     assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
     assets = {

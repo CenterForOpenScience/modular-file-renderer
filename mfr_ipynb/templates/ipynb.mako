@@ -35,4 +35,4 @@ ${ body | n }
 </script>
 
 ## Use secure MathJax CDN to avoid SSL errors
-<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js"></script>
+## <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js"></script>

@@ -42,10 +42,11 @@ def render_html(file_pointer, **kwargs):
     assets = {
         'css': get_stylesheets(
             "mfr_ipynb/css/pygments.css",
-            "mfr_ipynb/css/style.min.css",
-            "mfr_ipynb/css/theme/cdp_1.css",
-            "mfr_ipynb/css/theme/css_linalg.css",
-            )
+            # TODO(asmacdo) Why do these break the page?
+            # "mfr_ipynb/css/style.min.css",
+            # "mfr_ipynb/css/theme/cdp_1.css",
+            # "mfr_ipynb/css/theme/css_linalg.css",
+            ),
     }
 
     return RenderResult(content, assets)

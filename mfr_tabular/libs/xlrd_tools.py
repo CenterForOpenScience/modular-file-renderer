@@ -11,7 +11,7 @@ def xlsx_xlrd(fp):
     :return: tuple of table headers and data
     """
 
-    max_size = config.get('max_size')
+    max_size = config['max_size']
 
     wb = xlrd.open_workbook(fp.name)
 

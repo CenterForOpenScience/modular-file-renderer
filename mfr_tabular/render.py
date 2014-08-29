@@ -28,9 +28,9 @@ def render_html(fp, src=None):
 
     columns, rows = populate_data(fp)
 
-    max_size = config.get('max_size')
-    table_width = config.get('table_width')
-    table_height = config.get('table_height')
+    max_size = config['max_size']
+    table_width = config['table_width']
+    table_height = config['table_height']
 
     if len(columns) > max_size or len(rows) > max_size:
         raise TableTooBigException("Table is too large to render.")

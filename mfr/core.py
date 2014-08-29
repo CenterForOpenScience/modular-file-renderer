@@ -111,7 +111,7 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
     handler = handler or detect(fp, many=False, instance=True)
     if not handler:
         raise MFRError('No available handler that can handle {name!r}.'
-                           .format(name=fp.name))
+                       .format(name=os.path.basename(os.path.normpath(fp.name))))
     return handler.render(fp, renderer=renderer, *args, **kwargs)
 
 

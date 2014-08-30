@@ -1,13 +1,13 @@
 import sys
 import pytest
 import mfr
+
+
+# Pydocx .3.14 does not support python 3
 if not sys.version_info >= (3, 0):
 
     from mfr_docx import Handler as DocxFileHandler
     from mfr_docx.render import render_docx
-
-else:
-    DocxFileHandler = render_docx = None
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 0),

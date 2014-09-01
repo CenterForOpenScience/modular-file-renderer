@@ -3,8 +3,6 @@
 from mfr.core import FileHandler, get_file_extension
 from mfr_ipynb.render import render_html
 
-__version__ = '0.1.0'
-
 EXTENSIONS = [
     '.ipynb'
 ]

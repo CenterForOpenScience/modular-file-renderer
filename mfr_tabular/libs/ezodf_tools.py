@@ -2,7 +2,7 @@
 work consistently, we have disabled this for the moment."""
 
 import ezodf
-from ..utilities import data_population, header_population
+from mfr_tabular.utilities import data_population, header_population
 
 
 def ods_ezodf(fp):

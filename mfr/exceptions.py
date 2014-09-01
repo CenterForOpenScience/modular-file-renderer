@@ -2,16 +2,16 @@
 """Exception classes for the mfr package."""
 
 
-class MFRException(Exception):
+class MFRError(Exception):
     """Base exception from which all MFR-related errors inherit."""
     pass
 
 
-class ConfigurationError(MFRException):
+class ConfigurationError(MFRError):
     """Error raised when MFR is improperly configured."""
     pass
 
 
-class RenderError(MFRException):
+class RenderError(MFRError):
     """Base exception for all rendering related errors"""
     pass

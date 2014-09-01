@@ -6,7 +6,7 @@ import pytest
 import mock
 
 from mfr import core
-from mfr.exceptions import ConfigurationError
+from mfr.exceptions import ConfigurationError, MFRError
 from test_mfr.fakemodule import Handler as TestHandler
 
 
@@ -62,15 +62,15 @@ def test_export_uses_default_exporter(fakefile):
     assert FakeHandler.exporters['myformat'].called
 
 
-def test_render_raises_value_error_if_renderer_not_found(fakefile):
+def test_render_raises_mfr_exception_if_renderer_not_found(fakefile):
     handler = FakeHandler()
-    with pytest.raises(ValueError):
+    with pytest.raises(MFRError):
         handler.render(fakefile, renderer='notfound')
 
 
-def test_export_raises_value_error_if_exporter_not_found(fakefile):
+def test_export_raises_mfr_exception_if_exporter_not_found(fakefile):
     handler = FakeHandler()
-    with pytest.raises(ValueError):
+    with pytest.raises(MFRError):
         handler.export(fakefile, exporter='notfound')
 
 
@@ -115,7 +115,7 @@ def test_render(fakefile):
 
 
 def test_error_raised_if_renderer_not_found(fakefile):
-    with pytest.raises(ValueError):
+    with pytest.raises(MFRError):
         core.render(fakefile, handler=None)
 
 
@@ -303,3 +303,19 @@ def test_get_assets_returns_key_error_if_static_url_not_configured():
     with pytest.raises(KeyError) as excinfo:
         handler.get_assets()
     assert 'STATIC_URL is not configured' in str(excinfo)
+
+
+def test_get_assets_from_list():
+    js_files = ["test_file.js"]
+    asset_uri_base = "/server/here/"
+    js_assets = core.get_assets_from_list(asset_uri_base, 'js', js_files)
+    assert js_assets == ["/server/here/js/test_file.js"]
+
+
+def test_get_assets_from_list_excludes_EXCLUDE_LIBS():
+    core.config['EXCLUDE_LIBS'] = ["not_this_one.css"]
+    asset_uri_base = "/server/here/"
+    css_files = ["this_one.css", "not_this_one.css"]
+    css_assets = core.get_assets_from_list(asset_uri_base, 'css', css_files)
+    assert len(css_assets) == 1
+    assert "not_this_one.css" not in css_assets

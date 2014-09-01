@@ -5,3 +5,8 @@ HANDLERS = [
     mfr_image.Handler,
     # Add additional handlers here
 ]
+
+EXCLUDE_LIBS = [
+    # Do not include these in assets
+    #"jquery-1.7.min.js",
+]

@@ -54,7 +54,6 @@ def render(filename, renderer_name=None):
     src = url_for('render.serve_file', filename=filename)
 
     if renderer is None:
-        #TODO(asmacdo) create a specific template for no handler available
         return ("A matching renderer cannot be found", 400)
 
     return render_template(

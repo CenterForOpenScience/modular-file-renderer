@@ -1,38 +1,37 @@
 <style type="text/css">
-    .imgwrap {
+    .imgwrap {{
         text-align: center;
-    }
-    .input_area {
+    }}
+    .input_area {{
         padding: 0.4em;
-    }
-    div.input_area > div.highlight > pre {
+    }}
+    div.input_area > div.highlight > pre {{
         margin: 0px;
         padding: 0px;
         border: none;
-    }
+    }}
 
 </style>
 <div class="mfr-ipynb-body">
-${ body | n }
+{body}
 </div>
 <script type="text/javascript">
-    (function() {
-    if (window.MathJax) {
+    (function() {{
+    if (window.MathJax) {{
         // MathJax loaded
-        MathJax.Hub.Config({
-            tex2jax: {
+        MathJax.Hub.Config({{
+            tex2jax: {{
                 inlineMath: [ ['$','$'], ["\\(","\\)"] ],
                 displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
-            },
+            }},
             displayAlign: 'left', // Change this to 'center' to center equations.
-            "HTML-CSS": {
-                styles: {'.MathJax_Display': {"margin": 0}}
-            }
-        });
+            "HTML-CSS": {{
+                styles: {{'.MathJax_Display': {{"margin": 0}}}}
+            }}
+        }});
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
-    }
-})();
+    }}
+}})();
 </script>
 
-## Use secure MathJax CDN to avoid SSL errors
 ## <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js"></script>

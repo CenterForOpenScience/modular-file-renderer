@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import pytest
 import mfr
-from mfr_pdf import Handler as CodeFileHandler
-from mfr_pdf.render import is_valid
+from mfr_pdf import Handler as PdfFileHandler
+
 
 def setup_function(func):
-    mfr.register_filehandler(CodeFileHandler)
+    mfr.register_filehandler(PdfFileHandler)
     mfr.config['STATIC_URL'] = '/static'
 
 
@@ -20,7 +20,7 @@ def teardown_function(func):
 ])
 def test_detect_common_extensions(fakefile, filename):
     fakefile.name = filename
-    handler = CodeFileHandler()
+    handler = PdfFileHandler()
     assert handler.detect(fakefile) is True
 
 
@@ -32,13 +32,5 @@ def test_detect_common_extensions(fakefile, filename):
 ])
 def test_does_not_detect_other_extensions(fakefile, filename):
     fakefile.name = filename
-    handler = CodeFileHandler()
+    handler = PdfFileHandler()
     assert handler.detect(fakefile) is False
-
-
-def test_is_valid():
-    result = is_valid('mfr_pdf/tests/test.pdf')
-    assert result == True
-
-
-#TODO(omdaniel) test that assets are included in the RenderResult

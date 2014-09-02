@@ -4,7 +4,7 @@
 
 <div>
     <nobr>
-        <div id="leftDiv" style="display:inline-block;">
+        <div id="leftDiv" class="mfr-pdf-button-container">
             <button unselectable="on" id="previousButton" class="mfr-pdf-button">
                 <img id="leftArrow" class="mfr-pdf-arrow" src="{STATIC_PATH}/mfr_pdf/images/leftarrow.png" style="width: 25px">
             </button>
@@ -12,7 +12,7 @@
 
         <canvas id="the-canvas" style="border:1px solid black"></canvas>
 
-        <div id="rightDiv" style="display:inline-block;">
+        <div id="rightDiv" class="mfr-pdf-button-container">
             <button unselectable="on" id="nextButton" class="mfr-pdf-button">
                 <img id="rightArrow" class="mfr-pdf-arrow" src="{STATIC_PATH}/mfr_pdf/images/rightarrow.png" style="width: 25px;">
             </button>
@@ -50,6 +50,10 @@
 
         pdfDoc.getPage(num).then(function(page) {{
             var viewport = page.getViewport(scale);
+            if (viewport.width > 800) {{
+                adjScale = 800 / viewport.width;
+                viewport = page.getViewport(adjScale);
+            }}
             canvas.height = viewport.height;
             canvas.width = viewport.width;
 
@@ -61,10 +65,9 @@
             }};
 
             var navBarHeight = viewport.height + 2 + "px";
-            var navOffSet = -1 * (viewport.height/2 - 12) + "px";
 
-            $prevButton.css({{"height": navBarHeight, "position": "relative", "top": navOffSet}});
-            $nextButton.css({{"height": navBarHeight, "position": "relative", "top": navOffSet}});
+            $prevButton.css("height", navBarHeight);
+            $nextButton.css("height",navBarHeight);
 
             page.render(renderContext);
       }});

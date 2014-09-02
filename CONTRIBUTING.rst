@@ -8,6 +8,7 @@ In general
 - `PEP 8`_, when sensible.
 - Test ruthlessly. Write docs for new features.
 - Even more important than Test-Driven Development--*Human-Driven Development*.
+- Please update AUTHORS.rst when you contribute.
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 

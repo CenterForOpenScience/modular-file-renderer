@@ -1,5 +1,5 @@
 """Image renderer module."""
-from mfr import RenderResult
+from mfr.core import RenderResult
 
 
 def render_img_tag(fp, src=None, alt=''):

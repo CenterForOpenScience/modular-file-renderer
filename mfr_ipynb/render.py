@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 import os.path
 from IPython.nbformat import current as nbformat
 from IPython.config import Config
@@ -22,11 +21,11 @@ def render_html(file_pointer, **kwargs):
 
     try:
         content = file_pointer.read()
-        nb = parse_json(content)
+        nb = nbformat.reads_json(content)
     except ValueError:
         return RenderResult("Invalid json")
 
-    name, theme = get_metadata(nb)
+    # name, theme = get_metadata(nb)
     body = exporter.from_notebook_node(nb)[0]
 
     HERE = os.path.dirname(os.path.abspath(__file__))
@@ -37,10 +36,10 @@ def render_html(file_pointer, **kwargs):
             body=body,
         )
 
+    # TODO These come from nb viewer, but conflict with the page.
     assets = {
-        'css': get_stylesheets(
+        'css':  get_stylesheets(
             "mfr_ipynb/css/pygments.css",
-            # TODO Thses come from nb viewer, but conflict with the page
             # "mfr_ipynb/css/style.min.css",
             # "mfr_ipynb/css/theme/cdp_1.css",
             # "mfr_ipynb/css/theme/css_linalg.css",
@@ -50,24 +49,21 @@ def render_html(file_pointer, **kwargs):
     return RenderResult(content, assets)
 
 
-def parse_json(content):
-    return nbformat.reads_json(content)
+# Metadata not currently used
+# def get_metadata(nb):
+#     # notebook title
+#     name = nb.get('metadata', {}).get('name', None) or "untitiled.ipynb"
 
+#     if not name.endswith(".ipynb"):
+#         name += ".ipynb"
 
-def get_metadata(nb):
-    # notebook title
-    name = nb.get('metadata', {}).get('name', None) or "untitiled.ipynb"
+#     css_theme = nb.get('metadata', {})\
+#                   .get('_nbviewer', {})\
+#                   .get('css', None)
+#     if css_theme and not re.match('\w', css_theme):
+#         css_theme = None
 
-    if not name.endswith(".ipynb"):
-        name += ".ipynb"
-
-    css_theme = nb.get('metadata', {})\
-                  .get('_nbviewer', {})\
-                  .get('css', None)
-    if css_theme and not re.match('\w', css_theme):
-        css_theme = None
-
-    return name, css_theme
+#     return name, css_theme
 
 
 def get_stylesheets(*args):

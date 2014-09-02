@@ -23,14 +23,6 @@ def get_assets():
     return assets
 
 
-# def is_valid(fp):
-#     try:
-#         PyPDF2.PdfFileReader(fp)
-#         return True
-#     except PyPDF2.utils.PdfReadError:
-#         return False
-
-
 def render_pdf(fp, src=None):
     """A simple pdf renderer.
 
@@ -38,7 +30,6 @@ def render_pdf(fp, src=None):
     """
     src = src or fp.name
 
-    # if is_valid(fp):
     HERE = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(HERE, 'templates', 'pdfpage.html')
 

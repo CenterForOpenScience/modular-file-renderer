@@ -50,27 +50,26 @@ setup(
     author='Center for Open Science',
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/modular-file-renderer',
-    packages=find_packages(exclude=("test*", 'previewer')),
+    packages=find_packages(exclude=("test*", "player*")),
     include_package_data=True,
+    package_data={
+        "": ['templates/*', 'static/*/*', '*.txt'],
+    },
     license=read("LICENSE"),
     zip_safe=False,
     keywords='mfr',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         "Programming Language :: Python :: 2",
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
     ],
-    entry_points={
-        'console_scripts': [
-            "mfr = mfr.cli:main"
-        ]
-    },
     test_suite='tests',
     tests_require=['pytest'],
     cmdclass={'test': PyTest}

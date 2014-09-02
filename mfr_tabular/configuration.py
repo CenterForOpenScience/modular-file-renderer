@@ -27,7 +27,7 @@ config = Config(defaults={
         # '.ods': [ods_ezodf],
     },
     'max_size': 10000,
-    'table_width': 600,  # pixels
+    'table_width': 700,  # pixels
     'table_height': 600,  # pixels
     'slick_grid_options': {
         'small_table': {

@@ -17,12 +17,13 @@ import logging
 from collections import defaultdict
 
 from mfr._config import Config
-from mfr.exceptions import ConfigurationError
+from mfr.exceptions import ConfigurationError, MFRError
 
 logger = logging.getLogger(__name__)
 
 _defaults = {
-    'INCLUDE_STATIC': False
+    'INCLUDE_STATIC': False,
+    'EXCLUDE_LIBS': []
 }
 #: Global mfr configuration object
 config = Config(defaults=_defaults)
@@ -109,8 +110,8 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
     # Get the specified handler, detect it if not given
     handler = handler or detect(fp, many=False, instance=True)
     if not handler:
-        raise ValueError('No available handler that can handle {name!r}.'
-                        .format(name=fp.name))
+        raise MFRError('No available handler that can handle {name!r}.'
+                       .format(name=os.path.basename(os.path.normpath(fp.name))))
     return handler.render(fp, renderer=renderer, *args, **kwargs)
 
 
@@ -125,8 +126,8 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
     # Get the specified handler, detect it if not given
     HandlerClass = handler or detect(fp)
     if not HandlerClass:
-        raise ValueError('No available handler with name {handler}.'
-                        .format(handler=handler))
+        raise MFRError('No available handler with name {handler}.'
+                           .format(handler=handler))
 
     handler = HandlerClass()
     return handler.export(fp, exporter=exporter, *args, **kwargs)
@@ -219,8 +220,8 @@ class FileHandler(object):
         if render_func:
             return render_func(fp, *args, **kwargs)
         else:
-            raise ValueError('`render` method called with no renderer specified and '
-                            'no default.')
+            raise MFRError('`render` method called with no renderer specified and '
+                               'no default.')
 
     def export(self, fp, exporter=None, *args, **kwargs):
         """Export a file to a different format.
@@ -232,8 +233,8 @@ class FileHandler(object):
         if export_func:
             return export_func(fp, *args, **kwargs)
         else:
-            raise ValueError('`export` method called with no exporter specified and '
-                            'no default.')
+            raise MFRError('`export` method called with no exporter specified and '
+                               'no default.')
 
     def iterstatic(self, url=True):
         """Iterates through the static asset files for the filehandler,
@@ -266,6 +267,7 @@ class FileHandler(object):
             {'css': '/static/myformat/style.css', 'js': '/static/myformat/script.js'}
 
         """
+
         if not self.__assets:
             for asset in self.iterstatic(url=True):
                 ext = get_file_extension(asset).lstrip('.')
@@ -276,6 +278,20 @@ class FileHandler(object):
         if extension:
             return self.__assets[extension]
         return self.__assets
+
+
+def get_assets_from_list(assets_uri_base, ext, asset_list=None):
+    """
+    Generate an list of full uri paths to each assets, excluding any files
+    listed in the Config's EXCLUDE_LIBS
+    """
+
+    return [
+        os.path.join(assets_uri_base, ext, filepath)
+        for filepath in asset_list
+        if filepath not in config.get('EXCLUDE_LIBS')
+    ]
+
 
 def _get_dir_for_class(cls):
     """Return the absolute directory where a class resides."""

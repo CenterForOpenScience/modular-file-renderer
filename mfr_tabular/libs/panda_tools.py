@@ -1,5 +1,5 @@
 import pandas
-from ..utilities import header_population
+from mfr_tabular.utilities import header_population
 
 
 def csv_pandas(fp):

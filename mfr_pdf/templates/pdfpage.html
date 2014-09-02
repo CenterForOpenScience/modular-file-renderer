@@ -6,7 +6,7 @@
     <nobr>
         <div id="leftDiv" style="display:inline-block;">
             <button unselectable="on" id="previousButton" class="mfr-pdf-button">
-                <img id="leftArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/mfr_pdf/images/leftarrow.png" style="width: 25px">
+                <img id="leftArrow" class="mfr-pdf-arrow" src="{STATIC_PATH}/mfr_pdf/images/leftarrow.png" style="width: 25px">
             </button>
         </div>
 
@@ -14,7 +14,7 @@
 
         <div id="rightDiv" style="display:inline-block;">
             <button unselectable="on" id="nextButton" class="mfr-pdf-button">
-                <img id="rightArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/mfr_pdf/images/rightarrow.png" style="width: 25px;">
+                <img id="rightArrow" class="mfr-pdf-arrow" src="{STATIC_PATH}/mfr_pdf/images/rightarrow.png" style="width: 25px;">
             </button>
         </div>
     </nobr>
@@ -22,11 +22,10 @@
 
 
 <script type="text/javascript">
-    // TODO: Figure out why we have to do this
 
-(function(){
-    PDFJS.workerSrc = '${STATIC_PATH}/mfr_pdf/js/pdf.worker.js';
-    var url = "${url}";
+(function(){{
+    PDFJS.workerSrc = '{STATIC_PATH}/mfr_pdf/js/pdf.worker.js';
+    var url = "{url}";
     PDFJS.disableWorker = true;
     var pdfDoc = null,
         pageNum = 1,
@@ -46,48 +45,48 @@
     var $rightDiv = $("#rightDiv");
 
 
-    function renderPage(num) {
+    function renderPage(num) {{
         // Using promise to fetch the page
 
-        pdfDoc.getPage(num).then(function(page) {
+        pdfDoc.getPage(num).then(function(page) {{
             var viewport = page.getViewport(scale);
             canvas.height = viewport.height;
             canvas.width = viewport.width;
 
 
             // Render PDF page into canvas context
-            var renderContext = {
+            var renderContext = {{
                 canvasContext: ctx,
                 viewport: viewport
-            };
+            }};
 
             var navBarHeight = viewport.height + 2 + "px";
             var navOffSet = -1 * (viewport.height/2 - 12) + "px";
 
-            $prevButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
-            $nextButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
+            $prevButton.css({{"height": navBarHeight, "position": "relative", "top": navOffSet}});
+            $nextButton.css({{"height": navBarHeight, "position": "relative", "top": navOffSet}});
 
             page.render(renderContext);
-      });
+      }});
 
-    pageNum === 1 ? disableButton($prevButton) : setTimeout(function(){enableButton($prevButton)},1000);
-    pageNum === pdfDoc.numPages ? disableButton($nextButton) : setTimeout(function(){enableButton($nextButton)},1000);
+    pageNum === 1 ? disableButton($prevButton) : setTimeout(function(){{enableButton($prevButton)}},1000);
+    pageNum === pdfDoc.numPages ? disableButton($nextButton) : setTimeout(function(){{enableButton($nextButton)}},1000);
 
 
       // Update page counters
       document.getElementById('pageNum').textContent = pageNum;
       document.getElementById('pageCount').textContent = pdfDoc.numPages;
-    }
+    }}
 
-    function disableButton($elem) {
+    function disableButton($elem) {{
         $elem[0].disabled = true;
         var $arrow = $elem.find('.mfr-pdf-arrow').addClass('disabled');
-    }
+    }}
 
-    function enableButton($elem) {
+    function enableButton($elem) {{
         $elem[0].disabled = false;
         var $arrow = $elem.find('.mfr-pdf-arrow').removeClass('disabled');
-    }
+    }}
 
 
 
@@ -95,40 +94,40 @@
     // Go to previous page
     //
 
-    function goPrevious() {
+    function goPrevious() {{
         if (pageNum <= 1)
             return;
         pageNum--;
 
         renderPage(pageNum);
-    }
+    }}
 
-    $prevButton.click(function(){
+    $prevButton.click(function(){{
         disableButton($(this));
         goPrevious();
-    });
+    }});
 
     //
     // Go to next page
     //
 
-    function goNext() {
+    function goNext() {{
         if (pageNum >= pdfDoc.numPages)
             return;
         pageNum++;
         renderPage(pageNum);
-    }
+    }}
 
-    $nextButton.click(function(){
+    $nextButton.click(function(){{
         goNext();
         disableButton($(this));
-    });
+    }});
 
-    PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {
+    PDFJS.getDocument(url).then(function getPdf(_pdfDoc) {{
       pdfDoc = _pdfDoc;
       renderPage(pageNum);
-    });
+    }});
 
-})();
+}})();
 </script>
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 import mfr
+import mfr_tabular
 from mfr_tabular import Handler as TabularHandler
 
 
@@ -47,3 +48,10 @@ def test_does_not_detect_other_extensions(fakefile, filename):
     fakefile.name = filename
     handler = TabularHandler()
     assert handler.detect(fakefile) is False
+
+
+def test_render_html_returns_render_result():
+    with open('mfr_tabular/tests/fixtures/test.csv') as fp:
+        result = mfr_tabular.render.render_html(fp)
+
+    assert type(result) == mfr.RenderResult

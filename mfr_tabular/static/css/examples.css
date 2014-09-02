@@ -1,49 +1,31 @@
-@import url('/static/tabular/css/slick-default-theme.css');
+@import url('/static/mfr/mfr_tabular/css/slick-default-theme.css');
 
-* {
+.slick-header-column {
+    max-height:17px;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+#mfrGrid > div {
   font-family: arial;
   font-size: 8pt;
 }
-
-body {
-  background: #c7d3cd;
-  padding: 0;
-  margin: 8;
-}
-
-h2 {
-  font-size: 10pt;
-  border-bottom: 1px dotted gray;
-}
-
-ul {
-  margin-left: 0;
-  padding: 0;
-  cursor: default;
-}
-
-li {
-  background: url("/static/tabular/images/arrow_right_spearmint.png") no-repeat center left;
-  padding: 0 0 0 14px;
-
-  list-style: none;
-  margin: 0;
-}
-
-#myGrid {
-  background: white;
-  outline: 0;
-  border: 1px solid gray;
+.slick-header-column.ui-state-default {
+    height: 25px;
+    font-size: 12px;
 }
 
 .grid-header {
   border: 1px solid gray;
   border-bottom: 0;
   border-top: 0;
-  background: url('/static/tabular/images/header-bg.gif') repeat-x center top;
+  background: url('/static/mfr/mfr_tabular/images/header-bg.gif') repeat-x center top;
   color: black;
   height: 24px;
   line-height: 24px;
+  font-family: arial;
+  font-size: 8pt;
 }
 
 .grid-header label {
@@ -106,6 +88,9 @@ li {
   background: #52bd2b;
 }
 
+.slick-column-name{
+    height: 100px;
+}
 .slick-row.selected .cell-move-handle {
   background: #D5DC8D;
 }
@@ -162,7 +147,7 @@ input.editor-percentcomplete {
   display: inline-block;
   width: 16px;
   height: 100%;
-  background: url("/static/tabular/images/pencil.gif") no-repeat center center;
+  background: url("/static/mfr/mfr_tabular/images/pencil.gif") no-repeat center center;
   overflow: visible;
   z-index: 1000;
   float: right;
@@ -173,7 +158,7 @@ input.editor-percentcomplete {
   position: absolute;
   top: -2px;
   left: -9px;
-  background: url("/static/tabular/images/editor-helper-bg.gif") no-repeat top left;
+  background: url("/static/mfr/mfr_tabular/images/editor-helper-bg.gif") no-repeat top left;
   padding-left: 9px;
 
   width: 120px;

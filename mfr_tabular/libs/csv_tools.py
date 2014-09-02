@@ -1,4 +1,4 @@
-from ..utilities import header_population, data_population
+from mfr_tabular.utilities import header_population, data_population
 import csv
 
 

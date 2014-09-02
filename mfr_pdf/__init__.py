@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from mfr_pdf.render import render_pdf_mako
-import PyPDF2
+from mfr_pdf.render import render_pdf
 
 
 EXTENSIONS = ['.pdf']
 
 
 class Handler(FileHandler):
-    """The image file handler."""
+    """The pdf file handler."""
     renderers = {
-        'html': render_pdf_mako,
+        'html': render_pdf,
     }
 
     exporters = {}

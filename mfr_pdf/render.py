@@ -2,6 +2,7 @@
 from mfr.core import RenderResult
 from mako.lookup import TemplateLookup
 from mfr import config as core_config
+import os
 import PyPDF2
 
 template  = TemplateLookup(
@@ -12,7 +13,7 @@ template  = TemplateLookup(
 def get_assets():
     """Creates a dictionary of js and css assets"""
 
-    static_dir = "/static/mfr/mfr_pdf"
+    static_dir = os.path.join('/static', 'mfr', 'mfr_pdf')
 
     js_files = [
         "pdf.js",
@@ -21,7 +22,9 @@ def get_assets():
     ]
 
     assets = {}
-    assets['js'] = [static_dir + '/js/' + filename for filename in js_files]
+    jspath = os.path.join('{static}','js','{fname}')
+    assets['js'] = [jspath.format(static=static_dir, fname=fname)
+                    for fname in js_files]
 
     return assets
 
@@ -33,7 +36,7 @@ def is_valid(fp):
     except PyPDF2.utils.PdfReadError:
         return False
 
-def render_pdf_mako(fp, src=None):
+def render_pdf(fp, src=None):
     """A simple pdf renderer.
 
     :param str:

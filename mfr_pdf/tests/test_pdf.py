@@ -37,7 +37,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 
 def test_is_valid():
-    result = is_valid('mfr_pdf/test.pdf')
+    result = is_valid('mfr_pdf/tests/test.pdf')
     assert result == True
 
 

@@ -1144,3 +1144,8 @@ h1.unavailable {
   max-width: 100%;
   height: auto;
 }
+
+.mfr-pdf-button-container {
+    display: inline-block;
+    vertical-align: top;
+}

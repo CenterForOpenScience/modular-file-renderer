@@ -9,11 +9,11 @@ from setuptools.command.test import test as TestCommand
 EXCLUDE_PLUGINS = {
     "2.6": ['mfr_ipynb'],
     "2.7": [],
-    "3.3": ['mfr_docx'],
-    "3.4": ['mfr_docx'],
+    "3.3": ['mfr_docx', 'mfr_code_pygments'],
+    "3.4": ['mfr_docx', 'mfr_code_pygments'],
 }
 
-SYS_EXCLUDE = EXCLUDE_PLUGINS[sys.version[0:2]]
+SYS_EXCLUDE = EXCLUDE_PLUGINS[sys.version[0:3]]
 
 
 class PyTest(TestCommand):

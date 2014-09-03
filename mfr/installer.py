@@ -15,18 +15,18 @@ def pip_install(path, filename):
         pip.main(['install', "-r", file_location])
 
 
-def plugin_requirements(render, export, modules=None):
-    """Install the requirements of the core modules
+def plugin_requirements(render, export, plugins=None):
+    """Install the requirements of the core plugins
 
     :param render: install only render requirements
     :param export: install only export requirements
-    :param modules: list of modules to install requirements of
+    :param plugins: list of plugins to install requirements of
     """
 
     HERE = os.path.dirname(os.path.abspath(__file__))
     root_path = os.path.join(HERE, "..")
 
-    path_list = modules or [os.path.join(root_path, directory)
+    path_list = plugins or [os.path.join(root_path, directory)
                             for directory in os.listdir(root_path)]
 
     for path in path_list:
@@ -45,12 +45,12 @@ def main():
                         action="store_true")
     parser.add_argument("-r", "--render", help="Install only render requirements",
                         action="store_true")
-    parser.add_argument("packages", nargs="*", help="List of packages to install reqs")
+    parser.add_argument("plugins", nargs="*", help="List of plugins to install reqs")
 
     args = parser.parse_args()
 
     if args.command == 'install':
-        plugin_requirements(args.render, args.export, args.packages)
+        plugin_requirements(args.render, args.export, args.plugins)
 
 if __name__ == "__main__":
 

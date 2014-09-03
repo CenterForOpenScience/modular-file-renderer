@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import pip
+import sys
 import argparse
 
 
@@ -15,7 +16,7 @@ def pip_install(path, filename):
         pip.main(['install', "-r", file_location])
 
 
-def plugin_requirements(render, export, plugins=None):
+def plugin_requirements(render, export, plugins):
     """Install the requirements of the core plugins
 
     :param render: install only render requirements
@@ -26,8 +27,13 @@ def plugin_requirements(render, export, plugins=None):
     HERE = os.path.dirname(os.path.abspath(__file__))
     root_path = os.path.join(HERE, "..")
 
-    path_list = plugins or [os.path.join(root_path, directory)
-                            for directory in os.listdir(root_path)]
+    if plugins == ["all"]:
+        path_list = [os.path.join(root_path, directory)
+                     for directory in os.listdir(root_path)]
+    elif not plugins:
+        sys.exit("Missing required argument: plugins")
+    else:
+        path_list = [os.path.join(root_path, plugin) for plugin in plugins]
 
     for path in path_list:
         if os.path.isdir(path):
@@ -48,7 +54,6 @@ def main():
     parser.add_argument("plugins", nargs="*", help="List of plugins to install reqs")
 
     args = parser.parse_args()
-
     if args.command == 'install':
         plugin_requirements(args.render, args.export, args.plugins)
 

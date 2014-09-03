@@ -63,7 +63,7 @@ setup(
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/modular-file-renderer',
     packages=list(
-        set(find_packages(exclude=("test*", "player*"))) - set(SYS_EXCLUDE)
+        set(find_packages(exclude=("test*", "player*", "*.tests",))) - set(SYS_EXCLUDE)
     ),
     include_package_data=True,
     package_data={

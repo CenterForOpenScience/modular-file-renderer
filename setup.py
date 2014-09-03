@@ -70,6 +70,10 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
+
+    entry_points={
+        'console_scripts': ['mfr_install = mfr.installer:main']
+    },
     test_suite='tests',
     tests_require=['pytest'],
     cmdclass={'test': PyTest}

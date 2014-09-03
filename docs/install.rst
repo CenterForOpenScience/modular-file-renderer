@@ -18,7 +18,7 @@ Once you have the source, you can install it into your site-packages with ::
 
     $ python setup.py install
 
-This will install mfr and its core modules. Each module may have its own requirements and they be installed using the cli::
+This will install mfr and its core modules. Each module may have its own requirements and they be installed using the CLI::
 
     # install all plugin requirements
     mfr_install

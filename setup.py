@@ -72,7 +72,7 @@ setup(
     ],
 
     entry_points={
-        'console_scripts': ['mfr_install = mfr.installer:main']
+        'console_scripts': ['mfr = mfr.installer:main']
     },
     test_suite='tests',
     tests_require=['pytest'],

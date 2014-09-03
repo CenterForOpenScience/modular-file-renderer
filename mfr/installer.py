@@ -40,6 +40,7 @@ def plugin_requirements(render, export, modules=None):
 def main():
 
     parser = argparse.ArgumentParser()
+    parser.add_argument("command")
     parser.add_argument("-e", "--export", help="Install only export requirements",
                         action="store_true")
     parser.add_argument("-r", "--render", help="Install only render requirements",
@@ -47,7 +48,9 @@ def main():
     parser.add_argument("packages", nargs="*", help="List of packages to install reqs")
 
     args = parser.parse_args()
-    plugin_requirements(args.render, args.export, args.packages)
+
+    if args.command == 'install':
+        plugin_requirements(args.render, args.export, args.packages)
 
 if __name__ == "__main__":
 

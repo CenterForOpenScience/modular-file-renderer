@@ -53,11 +53,11 @@ def main():
                         action="store_true")
     parser.add_argument("-r", "--render", help="Install only render requirements",
                         action="store_true")
-    parser.add_argument("plugins", nargs="*", help="List of plugins to install reqs")
+    parser.add_argument("plugin", nargs="*", help="List of plugins to install reqs")
 
     args = parser.parse_args()
     if args.command == 'install':
-        plugin_requirements(args.render, args.export, args.plugins)
+        plugin_requirements(args.render, args.export, args.plugin)
 
 if __name__ == "__main__":
 

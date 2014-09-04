@@ -21,7 +21,7 @@ Once you have the source, you can install it into your site-packages with ::
 This will install mfr and its core modules. Each module may have its own requirements and they be installed using the CLI::
 
     # install all plugin requirements
-    mfr_install
+    mfr_install all
 
     # install requirements for a specific core module
     mfr_install mfr_code_pygments

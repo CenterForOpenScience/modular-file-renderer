@@ -40,7 +40,9 @@ def plugin_requirements(render, export, plugins):
             if not render:
                 pip_install(path, "export-requirements.txt")
         else:
-            print("No directory {path}, skipping.".format(path=path))
+            print('Plugin with name "{plugin}" not found. Skipping...'.format(
+                plugin=os.path.basename(os.path.normpath(path))
+            ))
 
 
 def main():
@@ -59,6 +61,9 @@ def main():
             print('Must provide at least one plugin name to install')
             sys.exit(1)
         plugin_requirements(args.render, args.export, args.plugin)
+    else:
+        print('Invalid subcommand: "{command}"'.format(command=args.command))
+        sys.exit(1)
 
 if __name__ == "__main__":
 

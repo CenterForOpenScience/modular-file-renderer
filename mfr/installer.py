@@ -4,6 +4,9 @@ import pip
 import sys
 import argparse
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+root_path = os.path.join(HERE, "..")
+
 
 def pip_install(path, filename):
     """Use pip to install from a requirements file
@@ -24,9 +27,6 @@ def plugin_requirements(render, export, plugins):
     :param plugins: list of plugins to install requirements of
     """
 
-    HERE = os.path.dirname(os.path.abspath(__file__))
-    root_path = os.path.join(HERE, "..")
-
     if plugins == ["all"]:
         path_list = [os.path.join(root_path, directory)
                      for directory in os.listdir(root_path)]
@@ -41,6 +41,8 @@ def plugin_requirements(render, export, plugins):
                 pip_install(path, "render-requirements.txt")
             if not render:
                 pip_install(path, "export-requirements.txt")
+        else:
+            print("No directory {path}, skipping.".format(path=path))
 
 
 def main():

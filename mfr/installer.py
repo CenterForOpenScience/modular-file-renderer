@@ -5,7 +5,7 @@ import sys
 import argparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-root_path = os.path.join(HERE, "..")
+ROOT_PATH = os.path.join(HERE, "..")
 
 
 def pip_install(path, filename):
@@ -28,12 +28,12 @@ def plugin_requirements(render, export, plugins):
     """
 
     if plugins == ["all"]:
-        path_list = [os.path.join(root_path, directory)
-                     for directory in os.listdir(root_path)]
+        path_list = [os.path.join(ROOT_PATH, directory)
+                     for directory in os.listdir(ROOT_PATH)]
     elif not plugins:
         sys.exit("Missing required argument: plugins")
     else:
-        path_list = [os.path.join(root_path, plugin) for plugin in plugins]
+        path_list = [os.path.join(ROOT_PATH, plugin) for plugin in plugins]
 
     for path in path_list:
         if os.path.isdir(path):

@@ -30,8 +30,6 @@ def plugin_requirements(render, export, plugins):
     if plugins == ["all"]:
         path_list = [os.path.join(ROOT_PATH, directory)
                      for directory in os.listdir(ROOT_PATH)]
-    elif not plugins:
-        sys.exit("Missing required argument: plugins")
     else:
         path_list = [os.path.join(ROOT_PATH, plugin) for plugin in plugins]
 
@@ -57,6 +55,9 @@ def main():
 
     args = parser.parse_args()
     if args.command == 'install':
+        if not args.plugin:
+            print('Must provide at least one plugin name to install')
+            sys.exit(1)
         plugin_requirements(args.render, args.export, args.plugin)
 
 if __name__ == "__main__":

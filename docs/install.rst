@@ -18,19 +18,15 @@ Once you have the source, you can install it into your site-packages with ::
 
     $ python setup.py install
 
-This will install mfr and its core modules. Each module may have its own requirements and they be installed using invoke: ::
+This will install mfr and its core modules. Each module may have its own requirements and they be installed using the CLI::
 
     # install all plugin requirements
-    invoke plugin_requirements
+    mfr_install all
 
     # install requirements for a specific core module
-    invoke plugin_requirements -p mfr_code_pygments
+    mfr_install mfr_code_pygments
 
-Additionally, ``invoke plugin_requirements [-e | -r]`` installs only exporter or render requirements.
-
-Note: you will need invoke: ``pip install invoke``
-
-To use an external plugin, simply install it into your virtual environment. You will then have to register the new file handler using either a config document (see Examples) or inline (see Quickstart).
+Additionally, ``mfr_install [-e | -r]`` installs only exporter or render requirements.
 
 .. _Github: https://github.com/CenterForOpenScience/modular-file-renderer
 .. _tarball: https://github.com/CenterForOpenScience/modular-file-renderer/tarball/master

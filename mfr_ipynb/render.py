@@ -1,11 +1,26 @@
 # -*- coding: utf-8 -*-
 import os.path
+
+import mfr
+
 from IPython.nbformat import current as nbformat
 from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
 
 from mfr import config as core_config, RenderResult
+from mfr.core import get_assets_from_list
 
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE = os.path.join(HERE, 'templates', 'ipynb.html')
+
+# TODO These come from nb viewer, but conflict with the page.
+CSS_ASSETS = [
+    "pygments.css",
+    # "style.min.css",
+    # "theme/cdp_1.css",
+    # "theme/css_linalg.css",
+]
 
 c = Config()
 c.HTMLExporter.template_file = 'basic'
@@ -28,22 +43,15 @@ def render_html(file_pointer, **kwargs):
     # name, theme = get_metadata(nb)
     body = exporter.from_notebook_node(nb)[0]
 
-    HERE = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(HERE, 'templates', 'ipynb.html')
-
-    with open(filename) as template:
+    with open(TEMPLATE) as template:
         content = template.read().format(
             body=body,
         )
 
-    # TODO These come from nb viewer, but conflict with the page.
+    assets_uri_base = '{0}/mfr_ipynb'.format(mfr.config['STATIC_URL'])
+
     assets = {
-        'css':  get_stylesheets(
-            "mfr_ipynb/css/pygments.css",
-            # "mfr_ipynb/css/style.min.css",
-            # "mfr_ipynb/css/theme/cdp_1.css",
-            # "mfr_ipynb/css/theme/css_linalg.css",
-            ),
+        'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS)
     }
 
     return RenderResult(content, assets)

@@ -5,6 +5,17 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 
+# Plugins that will not work with python versions
+EXCLUDE_PLUGINS = {
+    "2.6": ['mfr_ipynb'],
+    "2.7": [],
+    "3.3": ['mfr_docx', 'mfr_code_pygments'],
+    "3.4": ['mfr_docx', 'mfr_code_pygments'],
+}
+
+SYS_EXCLUDE = EXCLUDE_PLUGINS[sys.version[0:3]]
+
+
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -41,6 +52,7 @@ def read(fname):
         content = fp.read()
     return content
 
+
 setup(
     name='mfr',
     version=__version__,
@@ -50,7 +62,9 @@ setup(
     author='Center for Open Science',
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/modular-file-renderer',
-    packages=find_packages(exclude=("test*", "player*")),
+    packages=list(
+        set(find_packages(exclude=("test*", "player*", "*.tests",))) - set(SYS_EXCLUDE)
+    ),
     include_package_data=True,
     package_data={
         "": ['templates/*', 'static/*/*', '*.txt'],
@@ -70,6 +84,10 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
+
+    entry_points={
+        'console_scripts': ['mfr = mfr.cli:main']
+    },
     test_suite='tests',
     tests_require=['pytest'],
     cmdclass={'test': PyTest}

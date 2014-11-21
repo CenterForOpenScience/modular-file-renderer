@@ -1,0 +1,124 @@
+
+</html>
+
+<html>
+
+    <head>
+        <link href="/static/pdf/css/minimal.css" rel="stylesheet" media="screen" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+        <!-- you will need to run "node make generic" first before you can use this -->
+        <script type="text/javascript" src="/static/pdf/js/build/generic/build/pdf.js"></script>
+
+        <!-- These files are viewer components that you will need to get text-selection to work -->
+        <script src="/static/pdf/js/build/generic/web/pdf_find_bar.js"></script>
+        <script src="/static/pdf/js/build/generic/web/pdf_find_controller.js"></script>
+        <script src="/static/pdf/js/build/generic/web/ui_utils.js"></script>
+        <script src="/static/pdf/js/build/generic/web/text_layer_builder.js"></script>
+
+    </head>
+
+    <body>
+        <div id="pdfContainer" class="pdf-content">
+        </div>
+    </body>
+
+
+<script>
+
+// Code modified from the Minimal PDF rendering and text-selection example using pdf.js by Vivin Suresh Paliath (http://vivin.net)
+
+
+    var scale = 1.5; //Set this to whatever you want. This is basically the "zoom" factor for the PDF.
+    var pageNum = 1;
+
+
+    function loadPdf(pdfPath) {
+        var pdf = PDFJS.getDocument(pdfPath);
+        pdf.then(renderPdf);
+    }
+
+    function renderPdf(pdf) {
+        while(pageNum<numPages+1){
+        pdf.getPage(pageNum).then(renderPage);
+            pageNum = pageNum + 1
+        }
+    }
+
+    function renderPage(page) {
+        var viewport = page.getViewport(scale);
+        var $canvas = jQuery("<canvas ></canvas><br></br>");
+
+        //Set the canvas height and width to the height and width of the viewport
+        var canvas = $canvas.get(0);
+        var context = canvas.getContext("2d");
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        //Append the canvas to the pdf container div
+        var $pdfContainer = jQuery("#pdfContainer");
+        $pdfContainer.css("height", canvas.height + "px").css("width", canvas.width + "px");
+        $pdfContainer.append($canvas);
+
+        var canvasOffset = $canvas.offset();
+        var $textLayerDiv = jQuery("<div />")
+            .addClass("textLayer")
+            .css("height", viewport.height + "px")
+            .css("width", viewport.width + "px")
+            .offset({
+                top: canvasOffset.top,
+                left: canvasOffset.left
+            });
+
+        //The following few lines of code set up scaling on the context if we are on a HiDPI display
+        var outputScale = getOutputScale(context);
+        if (outputScale.scaled) {
+            var cssScale = 'scale(' + (1 / outputScale.sx) + ', ' +
+                (1 / outputScale.sy) + ')';
+            CustomStyle.setProp('transform', canvas, cssScale);
+            CustomStyle.setProp('transformOrigin', canvas, '0% 0%');
+
+            if ($textLayerDiv.get(0)) {
+                CustomStyle.setProp('transform', $textLayerDiv.get(0), cssScale);
+                CustomStyle.setProp('transformOrigin', $textLayerDiv.get(0), '0% 0%');
+            }
+        }
+
+        context._scaleX = outputScale.sx;
+        context._scaleY = outputScale.sy;
+        if (outputScale.scaled) {
+            context.scale(outputScale.sx, outputScale.sy);
+        }
+
+        $pdfContainer.append($textLayerDiv);
+
+        page.getTextContent().then(function (textContent) {
+
+            var textLayer = new TextLayerBuilder({
+                textLayerDiv: $textLayerDiv.get(0),
+                pageIndex: 0
+            });
+
+            textLayer.setTextContent(textContent);
+
+            var renderContext = {
+                canvasContext: context,
+                viewport: viewport,
+                textLayer: textLayer
+            };
+
+            page.render(renderContext);
+        });
+
+    }
+
+    loadPdf(url);
+
+</script>
+
+</html>
+
+
+
+
+

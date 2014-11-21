@@ -134,6 +134,7 @@ Renderers are simply callables (functions or methods) that take a file as their 
 Here is a very simple example of function that takes a filepointer and outputs a render result with an HTML image tag.
 
 .. code-block:: python
+    from mfr import RenderResult
 
     def render_img_tag(filepointer):
         filename = filepointer.name

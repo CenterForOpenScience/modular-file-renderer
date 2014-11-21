@@ -33,6 +33,7 @@ def render(filename, renderer_name=None):
 
     try:
         fp = open(os.path.join(current_app.config['FILES_DIR'], filename))
+
     except IOError as err:
         flash(err, 'error')
         abort(404)

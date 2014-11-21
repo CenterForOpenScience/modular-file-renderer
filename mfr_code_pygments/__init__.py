@@ -11,7 +11,9 @@ except ImportError:
     renderers = {}
 
 EXTENSIONS = [
+    '',
     '.rb',
+    '.c',
     '.cs',
     '.ahk',
     '.rs',

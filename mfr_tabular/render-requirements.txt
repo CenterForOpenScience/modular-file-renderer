@@ -1,3 +1,5 @@
 # ezodf==0.2.5
-xlrd>=0.9.3
+#xlrd==0.9.3
+# Development version of xlrd
+git+https://github.com/icereval/xlrd.git
 pandas>=0.14.1

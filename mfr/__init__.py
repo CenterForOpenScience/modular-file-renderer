@@ -25,3 +25,4 @@ from mfr._config import Config
 
 
 PACKAGE_DIR = os.path.abspath(os.path.dirname(__file__))
+# flake8: noqa

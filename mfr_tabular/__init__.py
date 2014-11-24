@@ -15,7 +15,7 @@ EXTENSIONS = [
 
 class Handler(FileHandler):
     renderers = {
-        'html':  render_html
+        'html': render_html
     }
 
     def detect(self, fp):

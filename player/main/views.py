@@ -31,7 +31,8 @@ def index():
         # List of all modules for this file type
         handlers = mfr.detect(fp, many=True)
 
-        renderer_handlers = [mfr.get_namespace(handler) for handler in handlers if handler.renderers]
+        renderer_handlers = [mfr.get_namespace(handler)
+            for handler in handlers if handler.renderers]
         exporter_handlers = [handler for handler in handlers if handler.exporters]
 
         # Generate a list of modules and their file extensions

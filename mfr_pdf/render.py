@@ -5,9 +5,8 @@ from mfr import config as core_config
 import os
 import PyPDF2
 
-template  = TemplateLookup(
-    directories=['mfr_pdf/templates']
-    ).get_template("pdfpage.mako")
+template = TemplateLookup(
+    directories=['mfr_pdf/templates']).get_template("pdfpage.mako")
 
 
 def get_assets():
@@ -22,7 +21,7 @@ def get_assets():
     ]
 
     assets = {}
-    jspath = os.path.join('{static}','js','{fname}')
+    jspath = os.path.join('{static}', 'js', '{fname}')
     assets['js'] = [jspath.format(static=static_dir, fname=fname)
                     for fname in js_files]
 
@@ -44,14 +43,7 @@ def render_pdf(fp, src=None):
     src = src or fp.name
 
     if is_valid(fp):
-        content = template.render(url=src,STATIC_PATH=core_config['STATIC_URL'])
+        content = template.render(url=src, STATIC_PATH=core_config['STATIC_URL'])
         return RenderResult(content, assets=get_assets())
     else:
         return RenderResult("This is not a valid css")
-
-
-
-
-
-
-

@@ -20,7 +20,7 @@ def test_detect_image_extensions(fakefile, filename):
     assert handler.detect(fakefile) is True
 
 
-@pytest.mark.parametrize('filename',[
+@pytest.mark.parametrize('filename', [
     'other.g',
     'otherjpg',
     'other.bump'

@@ -12,6 +12,7 @@ except ImportError:
 
 EXTENSIONS = [
     '.rb',
+    '.c',
     '.cs',
     '.ahk',
     '.rs',

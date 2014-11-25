@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 import os.path
-
 import mfr
-
+from mfr import config as core_config, RenderResult
+from mfr.core import get_assets_from_list
 from IPython.nbformat import current as nbformat
 from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
-
-from mfr import config as core_config, RenderResult
-from mfr.core import get_assets_from_list
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))

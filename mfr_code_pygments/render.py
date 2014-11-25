@@ -27,5 +27,6 @@ def render_html(fp, *args, **kwargs):
 def get_stylesheet():
     """Generate an html link to a stylesheet"""
 
-    return "{static_url}/mfr_code_pygments/css/{theme}.css"\
-        .format(static_url=core_config['STATIC_URL'], theme=module_config['PYGMENTS_THEME'])
+    return "{static_url}/mfr_code_pygments/css/{theme}.css".format(
+        static_url=core_config['STATIC_URL'],
+        theme=module_config['PYGMENTS_THEME'])

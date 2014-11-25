@@ -2,8 +2,10 @@
 import os
 import mfr
 import unittest
+import pytest
+import sys
 from player import create_app
-from flask import url_for
+from flask import url_for  # NOQA
 
 
 class PlayerTest(unittest.TestCase):
@@ -15,6 +17,7 @@ class PlayerTest(unittest.TestCase):
             FILES_DIR=self.FILES_DIR
         ).test_client()
 
+    @pytest.mark.skipif(sys.version_info < (2, 7), reason="requires python2.7+")
     def test_index_request(self):
         index = self.app.get('/')
         assert index.status_code == 200
@@ -25,15 +28,18 @@ class PlayerTest(unittest.TestCase):
             else:
                 assert filename in str(data)
 
+    @pytest.mark.skipif(sys.version_info < (2, 7), reason="requires python2.7+")
     def test_render_request(self):
         for filename in os.listdir(self.FILES_DIR):
             fp = open(os.path.join(self.FILES_DIR, filename))
-            status_code = self.app.get('/render/{filename}'.format(filename=filename)).status_code
+            status_code = self.app.get(
+                '/render/{filename}'.format(filename=filename)).status_code
             if mfr.detect(fp, many=False):
                 assert status_code == 200
             else:
                 assert status_code == 400
 
+    @pytest.mark.skipif(sys.version_info < (2, 7), reason="requires python2.7+")
     def test_render_return_type(self):
         for filename in os.listdir(self.FILES_DIR):
             fp = open(os.path.join(self.FILES_DIR, filename))
@@ -43,6 +49,8 @@ class PlayerTest(unittest.TestCase):
                 result = mfr.render(fp)
                 assert type(result) == mfr.RenderResult
 
+    @pytest.mark.skipif(sys.version_info < (2, 7), reason="requires python2.7+")
     def test_file_serve_request(self):
         for filename in os.listdir(self.FILES_DIR):
-            assert self.app.get('/files/{filename}'.format(filename=filename)).status_code == 200
+            assert self.app.get(
+                '/files/{filename}'.format(filename=filename)).status_code == 200

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-
 from mfr.core import FileHandler, get_file_extension
-from mfr_ipynb.render import render_html
+try:
+    from mfr_ipynb.render import render_html
+except ImportError:
+    render_html = None
 
 EXTENSIONS = [
     '.ipynb'
@@ -9,7 +11,6 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
-
     renderers = {
         'html': render_html,
     }

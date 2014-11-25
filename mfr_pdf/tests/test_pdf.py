@@ -38,7 +38,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 def test_is_valid():
     result = is_valid('mfr_pdf/tests/test.pdf')
-    assert result == True
+    assert result is True
 
 
 #TODO(omdaniel) test that assets are included in the RenderResult

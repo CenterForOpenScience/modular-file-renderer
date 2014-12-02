@@ -3,7 +3,7 @@
 <textarea id="glmol01_src" style="display: none;">{pdb_file}</textarea>
 
 <script type="text/javascript">
-$(document.ready(function(){{
+(function(){{
     try{{
         var glmol01 = new GLmol('glmol01', true);
 
@@ -53,5 +53,5 @@ $(document.ready(function(){{
         $("#glmol01").remove();
         $("#errorDisp").html('File did not render properly. Try finding a current version on the <a href="http://www.rcsb.org/pdb/home/home.do">Protein Data Bank</a>');
     }}
-}}))();
+}})();
 </script>

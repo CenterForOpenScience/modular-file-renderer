@@ -4,9 +4,9 @@ from mfr_movie.render import render_movie_tag
 
 EXTENSIONS = [
     '.mp4',
-    '.avi',
+    #'.avi',
     '.ogv',
-    '.wmv',
+    #'.wmv',
     '.webm',
 ]
 

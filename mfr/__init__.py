@@ -12,6 +12,7 @@ from mfr.core import (
     FileHandler,
     get_file_extension,
     register_filehandler,
+    register_filehandlers,
     export,
     get_file_exporters,
     get_namespace,

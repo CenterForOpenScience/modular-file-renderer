@@ -5,8 +5,9 @@ from mfr import config as core_config
 import os
 import PyPDF2
 
+
 template = TemplateLookup(
-    directories=['mfr_pdf/templates']).get_template("pdfpage.mako")
+    directories=[os.path.join(os.path.dirname(__file__), 'templates')]).get_template("pdfpage.mako")
 
 
 def get_assets():

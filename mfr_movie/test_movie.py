@@ -5,9 +5,9 @@ from mfr_movie.render import render_movie_tag
 
 @pytest.mark.parametrize('filename', [
     'movie.ogv',
-    'movie.avi',
+    #'movie.avi',
     'movie.mp4',
-    'movie.wmv',
+    #'movie.wmv',
     'movie.webm',
 ])
 def test_detect_movie_extensions(fakefile, filename):

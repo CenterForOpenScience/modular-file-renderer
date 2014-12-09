@@ -1,27 +1,11 @@
-<style>
-  #viewer {{
-    position:absolute;
-    top : 0px; 
-    left: 0px;
-    bottom : 0px;
-    right : 0px;
-    margin : 0px;
-    padding:0px;
-    overflow:hidden;
-  }}
-</style>
-<div id="viewer"></div>
+<div id="viewer" style="width: auto; height: 400px; background-color: black;"></div>
 <script>
     $(document).foundation();
     var viewer = pv.Viewer(document.getElementById('viewer'), {{
-      width : 'auto', height: 'auto', antialias : false, outline : true, quality : 'medium', fog : false
+      width : 'auto', height: '400', antialias : false, outline : true, quality : 'medium', fog : false
     }});
 
     document.addEventListener('DOMContentLoaded', load({pdb_file}));
-
-    window.addEventListener('resize', function() {{
-      viewer.fitParent();
-    }});
 
     function cartoon() {{
       viewer.clear();
@@ -32,8 +16,6 @@
 
     function load(url) {{
       $.ajax({{url : url, success : function(data) {{
-        console.log()
-        console.log(data);
         structure = io.pdb(data);
         cartoon();
         viewer.autoZoom();

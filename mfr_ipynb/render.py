@@ -34,8 +34,8 @@ def render_html(file_pointer, **kwargs):
     try:
         content = file_pointer.read()
         nb = nbformat.reads_json(content)
-    except ValueError:
-        return RenderResult("Invalid json")
+    except ValueError as e:
+        return RenderResult("Invalid json: {0}".format(e))
 
     # name, theme = get_metadata(nb)
     body = exporter.from_notebook_node(nb)[0]

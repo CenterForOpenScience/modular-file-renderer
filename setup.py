@@ -67,7 +67,7 @@ setup(
     ),
     include_package_data=True,
     package_data={
-        "": ['templates/*', 'static/*/*/*', '*.txt'],
+        "": ['templates/*', 'static/*/*', '*.js', '*.css', '*.txt'],
     },
     license=read("LICENSE"),
     zip_safe=False,

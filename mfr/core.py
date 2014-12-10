@@ -46,7 +46,10 @@ def register_filehandlers(handlers):
     """Register multiple file handlers.
     Usage: ::
 
-        register_file_handlers([mfr_image.Handler, mfr_movie.Handler, mfr_tabular.Handler])
+        register_file_handlers([
+            mfr_image.Handler,
+            mfr_movie.Handler,
+            mfr_tabular.Handler])
 
     :param list handlers: A list of FileHandler classes.
     """

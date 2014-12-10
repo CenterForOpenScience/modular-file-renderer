@@ -11,7 +11,6 @@ Basic Usage: ::
             html = handler.render(fp)
 """
 import os
-import pdb
 import shutil
 import inspect
 import logging
@@ -36,7 +35,7 @@ def register_filehandler(file_handler):
     """Register a new file handler.
     Usage: ::
 
-        register_filehandler(MovieHandler)
+        register_filehandler(mfr_movie.Handler)
 
     :param FileHandler file_handler: The filehandler class.
     """
@@ -47,7 +46,7 @@ def register_filehandlers(handlers):
     """Register multiple file handlers.
     Usage: ::
 
-        register_file_handlers({'image': ImageFileHandler, 'movie': MovieHandler})
+        register_file_handlers({'image': mfr_image.Handler, 'movie': mfr_movie.Handler})
 
     :param dict handler_dict: A dictionary mapping handler names to handler classes
     """
@@ -103,7 +102,7 @@ def detect(fp, handlers=None, instance=True, many=False, *args, **kwargs):
 def render(fp, handler=None, renderer=None, *args, **kwargs):
     """Core rendering function. Return the rendered HTML for a given file.
 
-    :param File fp: A file-like object to render.
+    :param File fp: A file pointer object to render.
     :param FileHandler: The file handler class to use.
     :param str renderer: The name of the renderer function to use (must be a key in
         in the handler class's `renderers` dictionary)
@@ -119,10 +118,10 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
 def export(fp, handler=None, exporter=None, *args, **kwargs):
     """Core rendering function. Return the rendered HTML for a given file.
 
-    :param File fp: A file-like object to render.
+    :param File fp: A file pointer object to export.
     :param FileHandler: The file handler class to use.
-    :param str renderer: The name of the renderer function to use (must be a key in
-        in the handler class's `renderers` dictionary)
+    :param str exporter: The name of the exporter function to use (must be a key in
+        in the handler class's `exporters` dictionary)
     """
     # Get the specified handler, detect it if not given
     HandlerClass = handler or detect(fp)
@@ -141,6 +140,7 @@ def get_file_extension(path, lower=True):
 
 
 def get_file_exporters(handler):
+    """Get list of exporters for a given file handler."""
     try:
         return handler.exporters.keys()
     except AttributeError:

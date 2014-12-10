@@ -7,7 +7,8 @@ import PyPDF2
 
 
 template = TemplateLookup(
-    directories=[os.path.join(os.path.dirname(__file__), 'templates')]).get_template("pdfpage.mako")
+    directories=[os.path.join(os.path.dirname(__file__),
+        'templates')]).get_template("pdfpage.mako")
 
 
 def get_assets():
@@ -30,6 +31,10 @@ def get_assets():
 
 
 def is_valid(fp):
+    """Tests file pointer for validity
+
+    :return: True if fp is a valid pdf, False if not
+    """
     try:
         PyPDF2.PdfFileReader(fp)
         return True
@@ -39,7 +44,9 @@ def is_valid(fp):
 def render_pdf(fp, src=None):
     """A simple pdf renderer.
 
-    :param str:
+    :param fp: File pointer
+    :param src: Path to file
+    :return: A RenderResult object containing html content and js assets for pdf rendering
     """
     src = src or fp.name
 
@@ -47,4 +54,4 @@ def render_pdf(fp, src=None):
         content = template.render(url=src, STATIC_PATH=core_config['STATIC_URL'])
         return RenderResult(content, assets=get_assets())
     else:
-        return RenderResult("This is not a valid css")
+        return RenderResult("This is not a valid pdf file")

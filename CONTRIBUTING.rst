@@ -209,23 +209,29 @@ A typical directory structure might look like this:
 
 ::
 
-    mfr-something
-    ├── mfr_something
-    │   ├── __init__.py
-    │   ├── configuration.py
-    │   ├── render.py
-    │   ├── export.py
-    │   └── static
-    └── tests
-    │   ├── __init__.py
-    │   └── test_something.py
-    ├── dev-requirements.py
-    ├── export-requirements.py
-    ├── render-requirements.py
-    ├── setup.py
-    ├── README.rst
+	mfr
+	└──mfr-something
+		├── export-requirements.txt
+		├── render-requirements.txt
+		├── __init__.py
+		├── render.py
+		├── export.py
+		├── static
+		│   ├── js
+		│   └── css
+		├── tests
+		│   ├── __init__.py
+		│   └── test_something.py
+		├── templates
+		│   └── something.html
+		├── libs
+		│   ├── __init__.py
+		│   └── something_tools.py
+		├── setup.py
+		├── README.rst
+		└── configuration.py
 
-where "something" is a file format, e.g. "mfr-image", "mfr-video".
+where "something" is a file format, e.g. "mfr_image", "mfr_movie".
 
 .. note::
 

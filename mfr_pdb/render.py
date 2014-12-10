@@ -1,3 +1,5 @@
+"""A molecular renderer module """
+
 import os
 import mfr
 from mfr.core import RenderResult, get_assets_from_list
@@ -28,19 +30,24 @@ JS_ASSETS = [
     'framebuffer.js',
     'slab.js',
     'animation.js',
-    'viewer.js',    
-] 
+    'viewer.js',
+]
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, 'templates', 'pv.html')
 
 
 def render_html(fp, src=None, **kwargs):
+    """ A molecular renderer.
 
+    :param fp: File pointer
+    :param src: Path to source file
+    :return: A RenderResult object containing html content and js assets
+    """
     src = src or fp.name
 
     with open(TEMPLATE) as template:
-        content = template.read().format(pdb_file=  '\'' + src + '\'')
+        content = template.read().format(pdb_file='\'' + src + '\'')
 
     assets_uri_base = '{0}/mfr_pdb'.format(mfr.config['STATIC_URL'])
 

@@ -91,7 +91,7 @@ The above test can be rewritten like so:
 Using the player
 ----------------
 
-The mfr comes with a Flask app for previewing rendered files. Copy the files you want to render to the ``player/files`` directory then run the app from the ``player`` directory with ::
+The mfr comes with a Flask app for previewing rendered files. Create a ``files/`` subdirectory in ``player`` and copy the files you want to render into it. Then run the app from the ``player`` directory with ::
 
     $ invoke player
 

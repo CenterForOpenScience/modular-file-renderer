@@ -1,4 +1,4 @@
-""" ReSruscturedText renderer module """
+""" ReStructuredText renderer module """
 from docutils.core import publish_parts
 from mfr import RenderResult
 

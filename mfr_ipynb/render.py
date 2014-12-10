@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""IPython NoteBook rendering module"""
+"""IPython NoteBook renderer module"""
 import os.path
 import mfr
 from mfr import config as core_config, RenderResult

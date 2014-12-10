@@ -37,7 +37,7 @@ def register_filehandler(file_handler):
 
         register_filehandler(mfr_movie.Handler)
 
-    :param FileHandler file_handler: The filehandler class.
+    :param FileHandler file_handler: A FileHandler class.
     """
     get_registry().append(file_handler)
 
@@ -46,9 +46,9 @@ def register_filehandlers(handlers):
     """Register multiple file handlers.
     Usage: ::
 
-        register_file_handlers({'image': mfr_image.Handler, 'movie': mfr_movie.Handler})
+        register_file_handlers([mfr_image.Handler, mfr_movie.Handler, mfr_tabular.Handler])
 
-    :param dict handler_dict: A dictionary mapping handler names to handler classes
+    :param list handlers: A list of FileHandler classes.
     """
     get_registry().extend(handlers)
 
@@ -67,7 +67,7 @@ def clear_registry():
 
 
 def reset_config():
-    """Reset config defaults and empty the registry of file handlers."""
+    """Reset config defaults and empty the registry of FileHandlers."""
     global config
     config.clear()
     config.update(_defaults)

@@ -9,7 +9,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
-    """The audio file handler."""
+    """FileHandler for audio files."""
 
     renderers = {
         'html': render_audio_tag,

@@ -7,7 +7,7 @@ EXTENSIONS = ['.pdf']
 
 
 class Handler(FileHandler):
-    """The pdf file handler."""
+    """FileHandler for Portable Document Format files."""
     renderers = {
         'html': render_pdf,
     }

@@ -11,6 +11,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
+    """FileHandler for IPython NoteBook files."""
     renderers = {
         'html': render_html,
     }

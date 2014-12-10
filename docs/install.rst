@@ -21,12 +21,20 @@ Once you have the source, you can install it into your site-packages with ::
 This will install mfr and its core modules. Each module may have its own requirements and they be installed using the CLI::
 
     # install all plugin requirements
-    mfr_install all
+    python mfr/cli.py install all
 
     # install requirements for a specific core module
-    mfr_install mfr_code_pygments
+    python mfr/cli.py install mfr_code_pygments
 
-Additionally, ``mfr_install [-e | -r]`` installs only exporter or render requirements.
+Additionally, the ``[-e | -r]`` flags will install only exporter or render requirements, respectively::
+
+    # install all render requirements
+    python mfr/cli.py -r install all
+
+You can alternatively install the requirements by passing the -requirements.txt file to pip::
+	
+	# install render-requirements for specific core module
+	pip install -r /path/to/mfr_code_pygments/render-requirements.txt
 
 .. _Github: https://github.com/CenterForOpenScience/modular-file-renderer
 .. _tarball: https://github.com/CenterForOpenScience/modular-file-renderer/tarball/master

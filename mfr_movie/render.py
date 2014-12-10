@@ -1,4 +1,4 @@
-"""Movie renderer module."""
+"""Video renderer module."""
 from mfr.core import RenderResult
 
 

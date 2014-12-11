@@ -14,6 +14,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
+    """FileHandler for tabular data files."""
     renderers = {
         'html': render_html
     }

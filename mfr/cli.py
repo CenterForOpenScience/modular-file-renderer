@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Command Line tool for the modular file renderer"""
+
 import os
 import pip
 import sys
@@ -10,6 +12,7 @@ ROOT_PATH = os.path.join(HERE, "..")
 
 def pip_install(path, filename):
     """Use pip to install from a requirements file
+
     :param path: location of file
     :param filename: name of requirements file
     """

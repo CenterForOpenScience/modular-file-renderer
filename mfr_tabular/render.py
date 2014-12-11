@@ -1,3 +1,5 @@
+"""Tabular data renderer module"""
+
 import json
 import mfr
 import os
@@ -23,6 +25,7 @@ CSS_ASSETS = [
 
 def render_html(fp, src=None):
     """Render a tabular file to html
+
     :param fp: file pointer object
     :return: RenderResult object containing html and assets
     """
@@ -66,6 +69,7 @@ def render_html(fp, src=None):
 
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns
+
     :param fp: file pointer
     :return: tuple of column headers and row data
     """

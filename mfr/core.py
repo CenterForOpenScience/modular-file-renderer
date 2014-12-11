@@ -35,9 +35,9 @@ def register_filehandler(file_handler):
     """Register a new file handler.
     Usage: ::
 
-        register_filehandler(MovieHandler)
+        register_filehandler(mfr_movie.Handler)
 
-    :param FileHandler file_handler: The filehandler class.
+    :param FileHandler file_handler: A FileHandler class.
     """
     get_registry().append(file_handler)
 
@@ -46,9 +46,12 @@ def register_filehandlers(handlers):
     """Register multiple file handlers.
     Usage: ::
 
-        register_file_handlers({'image': ImageFileHandler, 'movie': MovieHandler})
+        register_file_handlers([
+            mfr_image.Handler,
+            mfr_movie.Handler,
+            mfr_tabular.Handler])
 
-    :param dict handler_dict: A dictionary mapping handler names to handler classes
+    :param list handlers: A list of FileHandler classes.
     """
     get_registry().extend(handlers)
 
@@ -67,7 +70,7 @@ def clear_registry():
 
 
 def reset_config():
-    """Reset config defaults and empty the registry of file handlers."""
+    """Reset config defaults and empty the registry of FileHandlers."""
     global config
     config.clear()
     config.update(_defaults)
@@ -102,7 +105,7 @@ def detect(fp, handlers=None, instance=True, many=False, *args, **kwargs):
 def render(fp, handler=None, renderer=None, *args, **kwargs):
     """Core rendering function. Return the rendered HTML for a given file.
 
-    :param File fp: A file-like object to render.
+    :param File fp: A file pointer object to render.
     :param FileHandler: The file handler class to use.
     :param str renderer: The name of the renderer function to use (must be a key in
         in the handler class's `renderers` dictionary)
@@ -118,10 +121,10 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
 def export(fp, handler=None, exporter=None, *args, **kwargs):
     """Core rendering function. Return the rendered HTML for a given file.
 
-    :param File fp: A file-like object to render.
+    :param File fp: A file pointer object to export.
     :param FileHandler: The file handler class to use.
-    :param str renderer: The name of the renderer function to use (must be a key in
-        in the handler class's `renderers` dictionary)
+    :param str exporter: The name of the exporter function to use (must be a key in
+        in the handler class's `exporters` dictionary)
     """
     # Get the specified handler, detect it if not given
     HandlerClass = handler or detect(fp)
@@ -140,6 +143,7 @@ def get_file_extension(path, lower=True):
 
 
 def get_file_exporters(handler):
+    """Get list of exporters for a given file handler."""
     try:
         return handler.exporters.keys()
     except AttributeError:

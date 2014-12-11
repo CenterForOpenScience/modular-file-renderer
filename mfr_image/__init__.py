@@ -24,7 +24,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
-    """The image file handler."""
+    """FileHandler for image files."""
     renderers = {
         'html': render_img_tag,
     }

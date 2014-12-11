@@ -12,7 +12,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
-    """The movie file handler."""
+    """FileHandler for video files."""
 
     renderers = {
         'html': render_movie_tag,

@@ -113,8 +113,9 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
     # Get the specified handler, detect it if not given
     handler = handler or detect(fp, many=False, instance=True)
     if not handler:
-        raise MFRError('No available handler that can handle {name}.'
-                       .format(name=os.path.basename(os.path.normpath(fp.name))))
+        #raise MFRError('No available handler that can handle {name}.'
+        #               .format(name=os.path.basename(os.path.normpath(fp.name))))
+        raise MFRError('No renderer currently available for this file type.')
     return handler.render(fp, renderer=renderer, *args, **kwargs)
 
 

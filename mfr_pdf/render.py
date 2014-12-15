@@ -51,7 +51,7 @@ def render_pdf(fp, src=None):
     src = src or fp.name
 
     if is_valid(fp):
-        content = template.render(url=src, STATIC_PATH=core_config['STATIC_URL'])
+        content = template.render(url=src, STATIC_PATH=core_config['ASSETS_URL'])
         return RenderResult(content, assets=get_assets())
     else:
         return RenderResult("This is not a valid pdf file")

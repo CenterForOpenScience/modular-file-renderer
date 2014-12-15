@@ -30,9 +30,9 @@ def create_app(**kwargs):
     # update static url and folder
     mfr.config.update({
         # Base URL for static files
-        'STATIC_URL': os.path.join(app.static_url_path, 'mfr'),
+        'ASSETS_URL': os.path.join(app.static_url_path, 'mfr'),
         # Where to save static files
-        'STATIC_FOLDER': os.path.join(app.static_folder, 'mfr'),
+        'ASSETS_FOLDER': os.path.join(app.static_folder, 'mfr'),
     })
     app.logger.debug('Config: {0}'.format(mfr.config))
     app.logger.debug('Registered handlers: {0}'.format(mfr.config['HANDLERS']))

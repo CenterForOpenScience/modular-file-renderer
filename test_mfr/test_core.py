@@ -187,7 +187,7 @@ def test_get_dir_for_class():
 
 def test_get_static_url_for_handler():
     core.config.update({
-        'STATIC_URL': '/static'
+        'ASSETS_URL': '/static'
     })
     url = core.get_static_url_for_handler(TestHandler)
     assert url == '/static/fakemodule'
@@ -212,11 +212,11 @@ def test_collect_static():
 
 def test_collect_static_uses_configuration_value():
     core.register_filehandler(TestHandler)
-    core.config['STATIC_FOLDER'] = os.path.join(HERE, 'static')
+    core.config['ASSETS_FOLDER'] = os.path.join(HERE, 'static')
     core.collect_static()
     expected1 = os.path.join(HERE, 'static', 'fakemodule', 'fakestyle.css')
     assert_file_exists(expected1)
-    shutil.rmtree(core.config['STATIC_FOLDER'])
+    shutil.rmtree(core.config['ASSETS_FOLDER'])
 
 
 def test_collect_static_raises_error_if_no_destination():
@@ -268,7 +268,7 @@ def test_iterstatic_folder():
 
 def test_iterstatic_url():
     core.config.update({
-        'STATIC_URL': '/static'
+        'ASSETS_URL': '/static'
     })
     handler = TestHandler()
     assets = list(handler.iterstatic(url=True))
@@ -279,7 +279,7 @@ def test_iterstatic_url():
 
 def test_get_assets():
     core.config.update({
-        'STATIC_URL': '/static'
+        'ASSETS_URL': '/static'
     })
     handler = TestHandler()
     assets = handler.get_assets()
@@ -290,7 +290,7 @@ def test_get_assets():
 
 def test_get_assets_with_extension():
     core.config.update({
-        'STATIC_URL': '/static'
+        'ASSETS_URL': '/static'
     })
     handler = TestHandler()
     css_assets = handler.get_assets('css')
@@ -302,7 +302,7 @@ def test_get_assets_returns_key_error_if_static_url_not_configured():
     handler = TestHandler()
     with pytest.raises(KeyError) as excinfo:
         handler.get_assets()
-    assert 'STATIC_URL is not configured' in str(excinfo)
+    assert 'ASSETS_URL is not configured' in str(excinfo)
 
 
 def test_get_assets_from_list():

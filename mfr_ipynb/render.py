@@ -50,7 +50,7 @@ def render_html(file_pointer, **kwargs):
             body=body,
         )
 
-    assets_uri_base = '{0}/mfr_ipynb'.format(mfr.config['STATIC_URL'])
+    assets_uri_base = '{0}/mfr_ipynb'.format(mfr.config['ASSETS_URL'])
 
     assets = {
         'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS)
@@ -78,4 +78,4 @@ def render_html(file_pointer, **kwargs):
 
 def get_stylesheets(*args):
     """Generate html links to stylesheets."""
-    return [os.path.join(core_config['STATIC_URL'], path) for path in args]
+    return [os.path.join(core_config['ASSETS_URL'], path) for path in args]

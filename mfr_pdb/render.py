@@ -50,7 +50,7 @@ def render_html(fp, src=None, **kwargs):
     with open(TEMPLATE) as template:
         content = template.read().format(pdb_file='\'' + src + '\'')
 
-    assets_uri_base = '{0}/mfr_pdb'.format(mfr.config['STATIC_URL'])
+    assets_uri_base = '{0}/mfr_pdb'.format(mfr.config['ASSETS_URL'])
 
     assets = {
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS)

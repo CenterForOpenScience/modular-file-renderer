@@ -7,7 +7,7 @@ from mfr_tabular import Handler as TabularHandler
 
 def setup_function(func):
     mfr.register_filehandler(TabularHandler)
-    mfr.config['STATIC_URL'] = '/static'
+    mfr.config['ASSETS_URL'] = '/static'
 
 
 def teardown_function(func):

@@ -116,6 +116,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
+    """FileHandler for code files."""
     renderers = renderers
 
     def detect(self, fp):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""IPython NoteBook renderer module"""
 import os.path
 import mfr
 from mfr import config as core_config, RenderResult
@@ -30,12 +31,16 @@ exporter = HTMLExporter(config=c)
 
 
 def render_html(file_pointer, **kwargs):
+    """A renderer for IPython NoteBooks.
 
+    :param file_pointer: File pointer
+    :return: RenderResult object containing the content html and css assets
+    """
     try:
         content = file_pointer.read()
         nb = nbformat.reads_json(content)
-    except ValueError:
-        return RenderResult("Invalid json")
+    except ValueError as e:
+        return RenderResult("Invalid json: {0}".format(e))
 
     # name, theme = get_metadata(nb)
     body = exporter.from_notebook_node(nb)[0]
@@ -72,4 +77,5 @@ def render_html(file_pointer, **kwargs):
 
 
 def get_stylesheets(*args):
+    """Generate html links to stylesheets."""
     return [os.path.join(core_config['STATIC_URL'], path) for path in args]

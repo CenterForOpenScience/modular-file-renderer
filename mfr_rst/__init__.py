@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""RST support for mfr."""
+"""ReStructuredText support for mfr."""
 
 from mfr.core import FileHandler, get_file_extension
 

@@ -7,7 +7,7 @@ EXTENSIONS = [
 
 
 class Handler(FileHandler):
-    """The pdb file handler"""
+    """FileHandler for Protein Data Bank files."""
 
     renderers = {
         'html': render_html

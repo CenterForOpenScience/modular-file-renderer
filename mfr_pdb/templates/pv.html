@@ -1,0 +1,24 @@
+<div id="viewer" style="width: auto; height: 400px; background-color: black;"></div>
+<script>
+    $(document).foundation();
+    var viewer = pv.Viewer(document.getElementById('viewer'), {{
+      width : 'auto', height: '400', antialias : false, outline : true, quality : 'medium', fog : false
+    }});
+
+    document.addEventListener('DOMContentLoaded', load({pdb_file}));
+
+    function cartoon() {{
+      viewer.clear();
+      viewer.cartoon('structure', structure, {{
+                  color : color.ssSuccession(), showRelated : '1',
+      }});
+    }}
+
+    function load(url) {{
+      $.ajax({{url : url, success : function(data) {{
+        structure = io.pdb(data);
+        cartoon();
+        viewer.autoZoom();
+      }}}});
+    }};
+</script>

@@ -1,4 +1,4 @@
-"""code renderer module."""
+"""Code renderer module."""
 
 import pygments
 import pygments.lexers
@@ -13,7 +13,7 @@ from mfr_code_pygments.configuration import config as module_config
 def render_html(fp, *args, **kwargs):
     """Generate an html representation of the file
 
-    :param fp: filepointer
+    :param fp: File pointer
     :return: RenderResult object containing the content html and its assets
     """
     formatter = pygments.formatters.HtmlFormatter(cssclass=module_config['CSS_CLASS'])

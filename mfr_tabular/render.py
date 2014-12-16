@@ -3,6 +3,7 @@
 import json
 import mfr
 import os
+import re
 from mfr_tabular.configuration import config
 from mfr_tabular.exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
@@ -23,6 +24,8 @@ CSS_ASSETS = [
 ]
 
 
+
+
 def render_html(fp, src=None):
     """Render a tabular file to html
 
@@ -30,7 +33,18 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    columns, rows = populate_data(fp)
+    # Remove commented lines in tabular files that might be commented before rendering
+    tempfilename = '/tmp/tabulartemp.{0}{1}'.format(os.getpid(), get_file_extension(fp.name))
+    if tempfilename.split('.')[2] in ['tsv' , 'csv']:
+        temp = open(tempfilename, 'w+b')
+        data = re.sub('%.*?\n', '', fp.read())
+        temp.write(data)
+        temp.seek(0)
+        columns, rows = populate_data(temp)
+        temp.close()
+        os.remove(tempfilename)
+    else:
+        columns, rows = populate_data(fp)
 
     max_size = config['max_size']
     table_width = config['table_width']

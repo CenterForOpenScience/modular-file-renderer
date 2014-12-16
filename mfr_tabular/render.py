@@ -37,7 +37,7 @@ def render_html(fp, src=None):
     tempfilename = '/tmp/tabulartemp.{0}{1}'.format(os.getpid(), get_file_extension(fp.name))
     if tempfilename.split('.')[2] in ['tsv' , 'csv']:
         temp = open(tempfilename, 'w+b')
-        data = re.sub('%.*?\n', '', fp.read())
+        data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
         temp.write(data)
         temp.seek(0)
         columns, rows = populate_data(temp)

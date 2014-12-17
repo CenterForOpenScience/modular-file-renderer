@@ -120,7 +120,7 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
 
 
 def export(fp, handler=None, exporter=None, *args, **kwargs):
-    """Core rendering function. Return the rendered HTML for a given file.
+    """Core exporting function. Return the requested file.
 
     :param File fp: A file pointer object to export.
     :param FileHandler: The file handler class to use.

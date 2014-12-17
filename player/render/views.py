@@ -125,7 +125,7 @@ def export(export_file_type, filename, exporter_name=None):
     export_name = short_name + '.' + export_file_type
 
     return send_file(
-        StringIO(exported_content),
+        exported_content,
         as_attachment=True,
         attachment_filename=export_name,
     )

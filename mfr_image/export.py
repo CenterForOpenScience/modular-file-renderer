@@ -1,31 +1,36 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 """Image exporter module."""
+import os
+import tempfile
 from PIL import Image
-from cStringIO import StringIO
 
 
 class ImageExporter(object):
 
     def export_png(self, fp):
+        temp = tempfile.NamedTemporaryFile()
         im = Image.open(fp)
-        sio = StringIO()
-        im.save(sio, format='png')
-        return sio.getvalue()
+        im.save(temp, format='png')
+        temp.seek(0)
+        return temp
 
     def export_jpg(self, fp):
+        temp = tempfile.NamedTemporaryFile()
         im = Image.open(fp)
-        sio = StringIO()
-        im.save(sio, format='jpeg')
-        return sio.getvalue()
+        im.save(temp, format='jpg')
+        temp.seek(0)
+        return temp
 
     def export_gif(self, fp):
+        temp = tempfile.NamedTemporaryFile()
         im = Image.open(fp)
-        sio = StringIO()
-        im.save(sio, format='gif')
-        return sio.getvalue()
+        im.save(temp, format='gif')
+        temp.seek(0)
+        return temp
 
     def export_tif(self, fp):
+        temp = tempfile.NamedTemporaryFile()
         im = Image.open(fp)
-        sio = StringIO()
-        im.save(sio, format='tiff')
-        return sio.getvalue()
+        im.save(temp, format='tiff')
+        temp.seek(0)
+        return temp

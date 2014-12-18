@@ -1,6 +1,5 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Image exporter module."""
-import os
 import tempfile
 from PIL import Image
 

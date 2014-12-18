@@ -6,7 +6,7 @@ from mfr.core import RenderResult, get_assets_from_list
 
 # assets must be loaded in this order
 JS_ASSETS = [
-    'jquery-1.7.min.js',
+    #'jquery-1.7.min.js',
     'modernizr.js',
     'foundation-5.4.7.min.js',
     'gl-matrix.js',

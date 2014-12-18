@@ -19,7 +19,7 @@ def get_assets():
     js_files = [
         "pdf.js",
         "compatibility.js",
-        "jquery.min.js",
+        #"jquery.min.js",
     ]
 
     assets = {}

@@ -10,7 +10,7 @@ from mfr_tabular.exceptions import TableTooBigException, \
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
 
 JS_ASSETS = [
-    "jquery-1.7.min.js",
+    #"jquery-1.7.min.js",
     "jquery.event.drag-2.2.js",
     "slick.core.js",
     "slick.grid.js",
@@ -18,7 +18,7 @@ JS_ASSETS = [
 
 CSS_ASSETS = [
     "slick.grid.css",
-    "jquery-ui-1.8.16.custom.css",
+    #"jquery-ui-1.8.16.custom.css",
     "slick-default-theme.css",
     "examples.css",
 ]

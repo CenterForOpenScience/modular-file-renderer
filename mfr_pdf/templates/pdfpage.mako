@@ -2,15 +2,15 @@
 <span>Page: <span id="pageNum"></span> / <span id="pageCount"></span></span><br>
 
 
-<div>
+<div style="width:auto">
     <nobr>
         <div id="leftDiv" style="display:inline-block;">
             <button unselectable="on" id="previousButton" class="mfr-pdf-button">
-                <img id="leftArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/mfr_pdf/images/leftarrow.png" style="width: 25px">
+                <img id="leftArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/mfr_pdf/images/leftarrow.png" style="width: 25px;">
             </button>
         </div>
 
-        <canvas id="the-canvas" style="border:1px solid black"></canvas>
+        <canvas id="the-canvas" style="border:1px solid black; width:95%"></canvas>
 
         <div id="rightDiv" style="display:inline-block;">
             <button unselectable="on" id="nextButton" class="mfr-pdf-button">
@@ -61,8 +61,8 @@
                 viewport: viewport
             };
 
-            var navBarHeight = viewport.height + 2 + "px";
-            var navOffSet = -1 * (viewport.height/2 - 12) + "px";
+            var navBarHeight = (viewport.height * 0.9) + "px";
+            var navOffSet = -1 * (viewport.height/2 - 35) + "px";
 
             $prevButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
             $nextButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});

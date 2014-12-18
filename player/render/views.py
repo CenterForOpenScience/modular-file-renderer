@@ -12,8 +12,6 @@ from __future__ import unicode_literals
 import os
 import mfr
 
-from io import StringIO
-
 from flask import Blueprint, flash, url_for, current_app, send_file, \
     send_from_directory, abort, render_template
 
@@ -125,7 +123,7 @@ def export(export_file_type, filename, exporter_name=None):
     export_name = short_name + '.' + export_file_type
 
     return send_file(
-        StringIO(exported_content),
+        exported_content,
         as_attachment=True,
         attachment_filename=export_name,
     )

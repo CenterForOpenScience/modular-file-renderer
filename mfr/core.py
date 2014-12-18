@@ -120,7 +120,7 @@ def render(fp, handler=None, renderer=None, *args, **kwargs):
 
 
 def export(fp, handler=None, exporter=None, *args, **kwargs):
-    """Core rendering function. Return the rendered HTML for a given file.
+    """Core exporting function. Return the requested file.
 
     :param File fp: A file pointer object to export.
     :param FileHandler: The file handler class to use.
@@ -256,9 +256,9 @@ class FileHandler(object):
                     namespace = get_namespace(self)
                     static_path = os.path.relpath(absolute_path, static_folder)
                     try:
-                        yield os.path.join(config['STATIC_URL'], namespace, static_path)
+                        yield os.path.join(config['ASSETS_URL'], namespace, static_path)
                     except KeyError:
-                        raise KeyError('STATIC_URL is not configured.')
+                        raise KeyError('ASSETS_URL is not configured.')
                 else:
                     yield absolute_path
 
@@ -319,10 +319,10 @@ def get_static_path_for_handler(handler_cls):
     return static_path
 
 def get_static_url_for_handler(handler_cls):
-    if hasattr(handler_cls, 'STATIC_URL'):
-        url = os.path.join(config['STATIC_URL'], handler_cls.STATIC_URL)
+    if hasattr(handler_cls, 'ASSETS_URL'):
+        url = os.path.join(config['ASSETS_URL'], handler_cls.ASSETS_URL)
     else:
-        url = os.path.join(config['STATIC_URL'], get_namespace(handler_cls))
+        url = os.path.join(config['ASSETS_URL'], get_namespace(handler_cls))
     return url
 
 
@@ -354,9 +354,9 @@ def collect_static(dest=None, dry_run=False):
     Files will be copied to ``dest``, if specified, or the STATIC_PATH config
     variable.
     """
-    dest_ = dest or config.get('STATIC_FOLDER')
+    dest_ = dest or config.get('ASSETS_FOLDER')
     if not dest_:
-        raise ConfigurationError('STATIC_FOLDER has not been configured.')
+        raise ConfigurationError('ASSETS_FOLDER has not been configured.')
     for handler_cls in get_registry():
         static_path = get_static_path_for_handler(handler_cls)
         namespaced_destination = os.path.join(dest_, get_namespace(handler_cls))

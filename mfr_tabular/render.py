@@ -3,13 +3,14 @@
 import json
 import mfr
 import os
+import re
 from mfr_tabular.configuration import config
 from mfr_tabular.exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
 
 JS_ASSETS = [
-    "jquery-1.7.min.js",
+    #"jquery-1.7.min.js",
     "jquery.event.drag-2.2.js",
     "slick.core.js",
     "slick.grid.js",
@@ -17,11 +18,10 @@ JS_ASSETS = [
 
 CSS_ASSETS = [
     "slick.grid.css",
-    "jquery-ui-1.8.16.custom.css",
+    #"jquery-ui-1.8.16.custom.css",
     "slick-default-theme.css",
     "examples.css",
 ]
-
 
 def render_html(fp, src=None):
     """Render a tabular file to html
@@ -30,7 +30,19 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    columns, rows = populate_data(fp)
+    # Remove commented lines in tabular files that might be commented before rendering
+    tempfilename = '/tmp/tabulartemp.{0}{1}'.format(os.getpid(),
+        get_file_extension(fp.name))
+    if tempfilename.split('.')[2] in ['tsv', 'csv']:
+        temp = open(tempfilename, 'w+b')
+        data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
+        temp.write(data)
+        temp.seek(0)
+        columns, rows = populate_data(temp)
+        temp.close()
+        os.remove(tempfilename)
+    else:
+        columns, rows = populate_data(fp)
 
     max_size = config['max_size']
     table_width = config['table_width']
@@ -58,7 +70,7 @@ def render_html(fp, src=None):
             options=json.dumps(slick_grid_options),
         )
 
-    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['STATIC_URL'])
+    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
     assets = {
         'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS),
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),

@@ -6,7 +6,7 @@ from mfr_pdf.render import is_valid
 
 def setup_function(func):
     mfr.register_filehandler(CodeFileHandler)
-    mfr.config['STATIC_URL'] = '/static'
+    mfr.config['ASSETS_URL'] = '/static'
 
 
 def teardown_function(func):

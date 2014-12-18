@@ -1,2 +1,2 @@
-PyPDF2==1.20
+PyPDF2>=1.20
 mako

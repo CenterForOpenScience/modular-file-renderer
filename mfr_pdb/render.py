@@ -6,7 +6,7 @@ from mfr.core import RenderResult, get_assets_from_list
 
 # assets must be loaded in this order
 JS_ASSETS = [
-    'jquery-1.7.min.js',
+    #'jquery-1.7.min.js',
     'modernizr.js',
     'foundation-5.4.7.min.js',
     'gl-matrix.js',
@@ -50,7 +50,7 @@ def render_html(fp, src=None, **kwargs):
     with open(TEMPLATE) as template:
         content = template.read().format(pdb_file='\'' + src + '\'')
 
-    assets_uri_base = '{0}/mfr_pdb'.format(mfr.config['STATIC_URL'])
+    assets_uri_base = '{0}/mfr_pdb'.format(mfr.config['ASSETS_URL'])
 
     assets = {
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS)

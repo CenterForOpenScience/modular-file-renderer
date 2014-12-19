@@ -15,5 +15,6 @@ python:
 install:
     - travis_retry pip install -r dev-requirements.txt
     - travis_retry invoke plugin_requirements
+    - travis_retry python mfr/cli.py install all
 
 script: python setup.py test

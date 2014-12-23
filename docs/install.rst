@@ -21,15 +21,15 @@ Once you have the source, you can install it into your site-packages with ::
 This will install mfr and its core modules. Each module may have its own requirements and they be installed using the CLI::
 
     # install all plugin requirements
-    python mfr/cli.py install all
+    mfr install all
 
     # install requirements for a specific core module
-    python mfr/cli.py install mfr_code_pygments
+    mfr install mfr_code_pygments
 
 Additionally, the ``[-e | -r]`` flags will install only exporter or render requirements, respectively::
 
     # install all render requirements
-    python mfr/cli.py -r install all
+    mfr -r install all
 
 You can alternatively install the requirements by passing the -requirements.txt file to pip::
 	

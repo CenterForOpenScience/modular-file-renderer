@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """IPython NoteBook renderer module"""
 import os
-import mfr
-import re
 from mfr import config as core_config
 from mfr import RenderResult
 from mfr.core import get_assets_from_list
@@ -71,15 +69,15 @@ def get_metadata(nb):
     try:
         content = nb.read()
         nb = nbread.parse_json(content)
-        try: 
+        try:
             name = nb['metadata']['name']
-        except KeyError as e:
+        except KeyError:
             pass
         try:
             css_theme = nb['metadata']['nbviewer']['css']
-        except KeyError as e:
+        except KeyError:
             pass
-    except NotJSONError as e:
+    except NotJSONError:
         return 'Unable to parse json', 'No metadata found'
 
     return name, css_theme

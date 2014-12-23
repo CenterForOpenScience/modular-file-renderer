@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 """IPython NoteBook renderer module"""
-import os.path
+import os
 import mfr
-from mfr import config as core_config, RenderResult
+import re
+from mfr import config as core_config
+from mfr import RenderResult
 from mfr.core import get_assets_from_list
 from IPython.nbformat import current as nbformat
+from IPython.nbformat import reader as nbread
+from IPython.nbformat.reader import NotJSONError
 from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
 
@@ -50,7 +54,7 @@ def render_html(file_pointer, **kwargs):
             body=body,
         )
 
-    assets_uri_base = '{0}/mfr_ipynb'.format(mfr.config['ASSETS_URL'])
+    assets_uri_base = '{0}/mfr_ipynb'.format(core_config['ASSETS_URL'])
 
     assets = {
         'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS)
@@ -60,22 +64,22 @@ def render_html(file_pointer, **kwargs):
 
 
 # Metadata not currently used
-# def get_metadata(nb):
-#     # notebook title
-#     name = nb.get('metadata', {}).get('name', None) or "untitiled.ipynb"
+def get_metadata(nb):
+    # notebook title
+    name = 'untitled'
+    css_theme = None
+    try:
+        content = nb.read()
+        nb = nbread.parse_json(content)
+        try: 
+            name = nb['metadata']['name']
+        except KeyError as e:
+            pass
+        try:
+            css_theme = nb['metadata']['nbviewer']['css']
+        except KeyError as e:
+            pass
+    except NotJSONError as e:
+        return 'Unable to parse json', 'No metadata found'
 
-#     if not name.endswith(".ipynb"):
-#         name += ".ipynb"
-
-#     css_theme = nb.get('metadata', {})\
-#                   .get('_nbviewer', {})\
-#                   .get('css', None)
-#     if css_theme and not re.match('\w', css_theme):
-#         css_theme = None
-
-#     return name, css_theme
-
-
-def get_stylesheets(*args):
-    """Generate html links to stylesheets."""
-    return [os.path.join(core_config['ASSETS_URL'], path) for path in args]
+    return name, css_theme

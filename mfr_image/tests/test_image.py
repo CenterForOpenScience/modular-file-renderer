@@ -1,6 +1,7 @@
 import pytest
 import mfr_image
 from mfr_image.render import render_img_tag
+import sys
 
 @pytest.mark.parametrize('filename', [
     'image.jpeg',
@@ -23,8 +24,8 @@ def test_detect_image_extensions(fakefile, filename):
 @pytest.mark.parametrize('filename', [
     'other.g',
     'otherjpg',
-    'other.bump'
-    'other.'
+    'other.bump',
+    'other.',
 ])
 def test_does_not_detect_other_extensions(fakefile, filename):
     fakefile.name = filename
@@ -36,3 +37,20 @@ def test_render_img_tag(fakefile):
     result = render_img_tag(fakefile, src="/my/image.png", alt='My image')
     assert 'src="/my/image.png"' in result
     assert 'alt="My image"' in result
+
+
+def test_export_jpg():
+    handler = mfr_image.Handler()
+    exporter = mfr_image.ImageExporter()
+    with open('mfr_image/tests/test_jpg.jpg') as fp:
+        jpeg_img = exporter.export_jpeg(fp)
+        fp.seek(0)
+        png_img = exporter.export_png(fp)
+        fp.seek(0)
+        tif_img = exporter.export_tif(fp)
+        fp.seek(0)
+        gif_img = exporter.export_gif(fp)
+    assert handler.detect(jpeg_img) is True
+    assert handler.detect(png_img) is True
+    assert handler.detect(tif_img) is True
+    assert handler.detect(gif_img) is True

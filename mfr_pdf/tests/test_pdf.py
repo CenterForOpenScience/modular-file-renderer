@@ -2,7 +2,7 @@
 import pytest
 import mfr
 from mfr_pdf import Handler as CodeFileHandler
-from mfr_pdf.render import is_valid
+from mfr_pdf.render import is_valid, get_assets, render_pdf
 
 def setup_function(func):
     mfr.register_filehandler(CodeFileHandler)
@@ -40,5 +40,22 @@ def test_is_valid():
     result = is_valid('mfr_pdf/tests/test.pdf')
     assert result is True
 
+def test_is_not_valid():
+    result = is_valid('mfr_pdf/tests/invalid.pdf')
+    assert result is False
 
-#TODO(omdaniel) test that assets are included in the RenderResult
+def test_get_assets():
+    assets = get_assets()
+    assert type(assets) is dict
+    assert assets is not None
+
+def test_render_pdf():
+    with open('mfr_pdf/tests/test.pdf') as fp:
+        result = render_pdf(fp)
+    assert result.content is not None
+    assert result.assets is not None
+
+def test_render_invalid_pdf():
+    with open('mfr_pdf/tests/invalid.pdf') as fp:
+        result = render_pdf(fp)
+    assert result.content == "This is not a valid pdf file"

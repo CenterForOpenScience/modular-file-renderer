@@ -15,7 +15,6 @@ EXCLUDE_PLUGINS = {
 
 SYS_EXCLUDE = EXCLUDE_PLUGINS[sys.version[0:3]]
 
-
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -84,7 +83,6 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-
     entry_points={
         'console_scripts': ['mfr = mfr.cli:main']
     },

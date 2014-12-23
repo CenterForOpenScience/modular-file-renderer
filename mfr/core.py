@@ -133,7 +133,7 @@ def export(fp, handler=None, exporter=None, *args, **kwargs):
         raise MFRError('No available handler with name {handler}.'
                            .format(handler=handler))
 
-    handler = HandlerClass()
+    handler = HandlerClass
     return handler.export(fp, exporter=exporter, *args, **kwargs)
 
 

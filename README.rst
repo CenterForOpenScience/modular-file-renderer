@@ -32,7 +32,6 @@ Available modules
 
 There are a number of 3rd-party modules available.
 
-- `mfr-code-pygments <https://github.com/CenterForOpenScience/mfr-code-pygments>`_
 - `mfr_md <https://github.com/TomBaxter/mfr_md>`_
 
 Make your own, then submit a pull request to add it to this list!

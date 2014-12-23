@@ -1,6 +1,4 @@
-import mock
 import mfr
-from mfr import RenderResult
 import pytest
 from mfr_ipynb import Handler as CodeFileHandler
 from mfr_ipynb.render import render_html, get_metadata
@@ -15,7 +13,7 @@ def teardown_function(func):
     mfr.core.reset_config()
 
 
-@pytest.mark.skipif(sys.version_info < (2,7),
+@pytest.mark.skipif(sys.version_info < (2, 7),
                     reason="requires python2.7+")
 def test_detect_correct_extension(fakefile):
     fakefile.name = 'hello.ipynb'

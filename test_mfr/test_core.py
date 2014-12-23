@@ -266,11 +266,13 @@ def test_config_from_envvar():
 def test_configattribute():
     class FakeConfig:
         HANDLERS = [FakeHandler, TestHandler]
-        config = {'confattr':'confattr'}
+        config = {'confattr': 'confattr'}
     fakeconf = FakeConfig()
+
     def return_param(obj):
         return obj
-    confattr = _config.ConfigAttribute(name='confattr',
+    confattr = _config.ConfigAttribute(
+        name='confattr',
         get_converter=return_param
     )
     assert confattr.__get__(obj=None) is confattr

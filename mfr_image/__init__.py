@@ -7,7 +7,7 @@ try:  # Exporter requires PIL
     exporter = ImageExporter()
     exporters = {
         'png': exporter.export_png,
-        'jpg': exporter.export_jpg,
+        'jpeg': exporter.export_jpeg,
         'gif': exporter.export_gif,
         'tif': exporter.export_tif,
     }
@@ -20,6 +20,7 @@ EXTENSIONS = [
     '.png',
     '.bmp',
     '.gif',
+    '.tif',
 ]
 
 

@@ -9,12 +9,11 @@ from setuptools.command.test import test as TestCommand
 EXCLUDE_PLUGINS = {
     "2.6": ['mfr_ipynb'],
     "2.7": [],
-    "3.3": ['mfr_docx', 'mfr_code_pygments'],
-    "3.4": ['mfr_docx', 'mfr_code_pygments'],
+    "3.3": ['mfr_docx', 'mfr_code_pygments', 'mfr_pdf'],
+    "3.4": ['mfr_docx', 'mfr_code_pygments', 'mfr_pdf'],
 }
 
 SYS_EXCLUDE = EXCLUDE_PLUGINS[sys.version[0:3]]
-
 
 class PyTest(TestCommand):
     def finalize_options(self):
@@ -84,7 +83,6 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-
     entry_points={
         'console_scripts': ['mfr = mfr.cli:main']
     },

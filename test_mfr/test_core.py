@@ -5,7 +5,7 @@ import shutil
 import pytest
 import mock
 
-from mfr import core
+from mfr import core, _config
 from mfr.exceptions import ConfigurationError, MFRError
 from test_mfr.fakemodule import Handler as TestHandler
 
@@ -30,6 +30,8 @@ class FakeHandler(core.FileHandler):
     exporters = {'myformat': mock.Mock()}
     default_renderer = 'html'
     default_exporter = 'myformat'
+    EXTENSIONS = ''
+    ASSETS_URL = ''
 
     def detect(self, fp):
         return True
@@ -48,6 +50,12 @@ def test_register_filehandlers():
     assert TestHandler in core.get_registry()
 
 
+def test_get_file_exporters():
+    handler = FakeHandler()
+    handler.exporters = None
+    assert core.get_file_exporters(handler) is None
+
+
 def test_render_uses_default_renderer(fakefile):
     handler = FakeHandler()
     # render called without renderer name specified
@@ -60,6 +68,13 @@ def test_export_uses_default_exporter(fakefile):
     handler = FakeHandler()
     handler.export(fakefile)
     assert FakeHandler.exporters['myformat'].called
+
+def test_default_core_export(fakefile):
+    with pytest.raises(MFRError) as excinfo:
+        core.export(fakefile)
+    assert "No available handler with name" in str(excinfo.value)
+    core.register_filehandler(FakeHandler)
+    assert bool(core.export(fakefile)) is True
 
 
 def test_render_raises_mfr_exception_if_renderer_not_found(fakefile):
@@ -191,6 +206,10 @@ def test_get_static_url_for_handler():
     })
     url = core.get_static_url_for_handler(TestHandler)
     assert url == '/static/fakemodule'
+    fakehandler = FakeHandler()
+    fakehandler.ASSETS_URL = '/static/fakehandler'
+    url = core.get_static_url_for_handler(fakehandler)
+    assert url == '/static/fakehandler'
 
 
 def test_get_static_path_for_handler_from_class_var():
@@ -223,12 +242,43 @@ def test_collect_static_raises_error_if_no_destination():
     with pytest.raises(ConfigurationError):
         core.collect_static()
 
+
 STATIC_PATH = '/my/static/path'
-
-
 def test_config_from_file():
     core.config.from_pyfile(__file__)
     assert core.config['STATIC_PATH'] == STATIC_PATH
+    with pytest.raises(IOError) as excinfo:
+        core.config.from_pyfile('/')
+    assert "Unable to load configuration file" in str(excinfo.value)
+    assert core.config.from_pyfile('/', silent=True) is False
+
+def test_config_from_envvar():
+    env = os.environ
+    os.environ = {}
+    with pytest.raises(RuntimeError) as excinfo:
+        core.config.from_envvar('FOO_SETTINGS')
+    assert "'FOO_SETTINGS' is not set" in str(excinfo.value)
+    assert core.config.from_envvar('FOO_SETTINGS', silent=True) is False
+    os.environ = {'FOO_SETTINGS': __file__.rsplit('.', 1)[0] + '.py'}
+    assert core.config.from_envvar('FOO_SETTINGS') is True
+    os.environ = env
+
+def test_configattribute():
+    class FakeConfig:
+        HANDLERS = [FakeHandler, TestHandler]
+        config = {'confattr': 'confattr'}
+    fakeconf = FakeConfig()
+
+    def return_param(obj):
+        return obj
+    confattr = _config.ConfigAttribute(
+        name='confattr',
+        get_converter=return_param
+    )
+    assert confattr.__get__(obj=None) is confattr
+    assert confattr.__get__(obj=fakeconf) is 'confattr'
+    confattr.__set__(obj=fakeconf, value='newname')
+    assert fakeconf.config['confattr'] == 'newname'
 
 
 def test_get_registry():

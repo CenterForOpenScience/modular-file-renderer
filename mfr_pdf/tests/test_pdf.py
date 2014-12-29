@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 import pytest
 import mfr
+import sys
+
+pytestmark = pytest.mark.skipif(sys.version_info > (3, 0), reason="Python 3.x doesn't support end-relative seeks\
+                                which PyPDF2 uses when rendering")  # noqa
+
 from mfr_pdf import Handler as CodeFileHandler
 from mfr_pdf.render import is_valid, get_assets, render_pdf
 

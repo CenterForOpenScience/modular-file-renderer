@@ -1,8 +1,11 @@
-import mfr
 import pytest
+import sys
+
+pytestmark = pytest.mark.skipif(sys.version_info < (2, 7), reason="requires python2.7+")  # noqa
+
+import mfr
 from mfr_ipynb import Handler as CodeFileHandler
 from mfr_ipynb.render import render_html, get_metadata
-import sys
 
 def setup_function(func):
     mfr.register_filehandler(CodeFileHandler)
@@ -13,8 +16,6 @@ def teardown_function(func):
     mfr.core.reset_config()
 
 
-@pytest.mark.skipif(sys.version_info < (2, 7),
-                    reason="requires python2.7+")
 def test_detect_correct_extension(fakefile):
     fakefile.name = 'hello.ipynb'
     handler = CodeFileHandler()

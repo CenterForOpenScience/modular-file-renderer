@@ -1,2 +1,2 @@
-PyPDF2>=1.20
+git+https://github.com/mstamy2/PyPDF2.git
 mako

@@ -2,6 +2,7 @@
 """Command Line tool for the modular file renderer"""
 
 import os
+import re
 import pip
 import sys
 import argparse
@@ -32,7 +33,10 @@ def plugin_requirements(render, export, plugins):
 
     if plugins == ["all"]:
         path_list = [os.path.join(ROOT_PATH, directory)
-                     for directory in os.listdir(ROOT_PATH)]
+                     for directory in os.listdir(ROOT_PATH)
+                        if bool(re.match('mfr_\w*',
+                            directory.split('/')[len(directory.split('/')) - 1]))]
+
     else:
         path_list = [os.path.join(ROOT_PATH, plugin) for plugin in plugins]
 

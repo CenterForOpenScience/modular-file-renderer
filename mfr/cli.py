@@ -34,8 +34,7 @@ def plugin_requirements(render, export, plugins):
     if plugins == ["all"]:
         path_list = [os.path.join(ROOT_PATH, directory)
                      for directory in os.listdir(ROOT_PATH)
-                        if bool(re.match('mfr_\w*',
-                            directory.split('/')[len(directory.split('/')) - 1]))]
+                        if bool(re.match('mfr_\w*', os.path.basename(directory)))]
 
     else:
         path_list = [os.path.join(ROOT_PATH, plugin) for plugin in plugins]

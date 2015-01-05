@@ -6,7 +6,7 @@ from mfr.core import RenderResult, get_assets_from_list
 
 # assets must be loaded in this order
 JS_ASSETS = [
-    #The OSF has jquery on each page, uncomment if necessary (e.g. for the player)
+    #The OSF has jquery on each page
     #'jquery-1.7.min.js',
     'modernizr.js',
     'foundation-5.4.7.min.js',

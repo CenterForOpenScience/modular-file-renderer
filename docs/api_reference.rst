@@ -91,6 +91,7 @@ mfr_movie
 
 mfr_pdb
 ---------
+**Note**: This module requires jquery on the page in which it is loaded.
 
 .. automodule:: mfr_pdb
     :members:

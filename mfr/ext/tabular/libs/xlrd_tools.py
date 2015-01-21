@@ -1,8 +1,8 @@
 import xlrd
-from mfr_tabular.exceptions import TableTooBigException, EmptyTableException
-from mfr_tabular.configuration import config
-from mfr_tabular.utilities import header_population
-from mfr_tabular.compat import range
+from ..exceptions import TableTooBigException, EmptyTableException
+from ..configuration import config
+from ..utilities import header_population
+from ..compat import range
 
 
 def xlsx_xlrd(fp):

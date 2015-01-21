@@ -1,7 +1,7 @@
 import pandas
 import re
-from mfr_tabular.utilities import header_population
 from tempfile import NamedTemporaryFile
+from ..utilities import header_population
 
 
 def csv_pandas(fp):

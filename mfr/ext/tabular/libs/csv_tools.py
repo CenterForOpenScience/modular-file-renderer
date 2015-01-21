@@ -1,4 +1,4 @@
-from mfr_tabular.utilities import header_population, data_population
+from ..utilities import header_population, data_population
 import csv
 import re
 from tempfile import NamedTemporaryFile

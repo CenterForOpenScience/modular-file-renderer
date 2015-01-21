@@ -62,12 +62,12 @@ def render_html(fp, src=None):
 
 
 def get_assets():
-    ASSETS_URI_BASE = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
-    ASSETS = {
-        'css': get_assets_from_list(ASSETS_URI_BASE, 'css', CSS_ASSETS),
-        'js': get_assets_from_list(ASSETS_URI_BASE, 'js', JS_ASSETS),
+    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
+    assets = {
+        'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS),
+        'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),
     }
-    return ASSETS
+    return assets
 
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns
@@ -82,9 +82,7 @@ def populate_data(fp):
     for function in function_preference:
         try:
             imported = function()
-            #print("Trying " + imported.__name__)
         except ImportError:
-            #print("Failed to import " + function.__name__)
             pass
         else:
             return imported(fp)

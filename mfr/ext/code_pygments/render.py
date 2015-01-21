@@ -7,7 +7,7 @@ import pygments.formatters
 from mfr import config as core_config
 from mfr import RenderResult
 
-from mfr_code_pygments.configuration import config as module_config
+from .configuration import config as module_config
 
 
 def render_html(fp, *args, **kwargs):

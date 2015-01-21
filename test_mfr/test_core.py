@@ -44,10 +44,27 @@ def test_register_filehandler():
     assert FakeHandler in core.get_registry()
 
 
+def test_register_filehandler_idempotence():
+    assert len(core.get_registry()) == 0  # sanity check
+    core.register_filehandler(FakeHandler)
+    assert len(core.get_registry()) == 1  # sanity check
+
+    core.register_filehandler(FakeHandler)
+    assert len(core.get_registry()) == 1
+
 def test_register_filehandlers():
     core.register_filehandlers([FakeHandler, TestHandler])
     assert FakeHandler in core.get_registry()
     assert TestHandler in core.get_registry()
+
+
+def test_register_filehandlers_idempotence():
+    assert len(core.get_registry()) == 0  # sanity check
+    core.register_filehandlers([FakeHandler])
+    assert len(core.get_registry()) == 1  # sanity check
+
+    core.register_filehandlers([FakeHandler])
+    assert len(core.get_registry()) == 1
 
 
 def test_get_file_exporters():

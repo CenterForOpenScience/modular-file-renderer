@@ -39,7 +39,11 @@ def register_filehandler(file_handler):
 
     :param FileHandler file_handler: A FileHandler class.
     """
-    get_registry().append(file_handler)
+    reg = get_registry()
+    if file_handler not in reg:
+        get_registry().append(file_handler)
+        return True
+    return False
 
 
 def register_filehandlers(handlers):
@@ -53,7 +57,8 @@ def register_filehandlers(handlers):
 
     :param list handlers: A list of FileHandler classes.
     """
-    get_registry().extend(handlers)
+    for each in handlers:
+        register_filehandler(each)
 
 
 def get_registry():

@@ -2,8 +2,9 @@
 import json
 import mfr
 import os
-from mfr_tabular.configuration import config
-from mfr_tabular.exceptions import TableTooBigException, \
+import re
+from .configuration import config
+from .exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
 

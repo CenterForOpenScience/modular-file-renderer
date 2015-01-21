@@ -1,18 +1,19 @@
+# -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from mfr_audio.render import render_audio_tag
+try:
+    from .render import render_html
+except ImportError:
+    render_html = None
 
 EXTENSIONS = [
-    '.mp3',
-    '.ogg',
-    '.wav',
+    '.ipynb'
 ]
 
 
 class Handler(FileHandler):
-    """FileHandler for audio files."""
-
+    """FileHandler for IPython NoteBook files."""
     renderers = {
-        'html': render_audio_tag,
+        'html': render_html,
     }
 
     def detect(self, fp):

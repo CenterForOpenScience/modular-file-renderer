@@ -1,14 +1,20 @@
+# -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from mfr_pdb.render import render_html
+from .render import render_html
 
 EXTENSIONS = [
-    '.pdb',
+    '.csv',
+    '.tsv',
+    '.xlsx',
+    '.xls',
+    '.dta',
+    '.sav',
+    # '.ods',
 ]
 
 
 class Handler(FileHandler):
-    """FileHandler for Protein Data Bank files."""
-
+    """FileHandler for tabular data files."""
     renderers = {
         'html': render_html
     }

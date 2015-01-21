@@ -1,24 +1,22 @@
 # -*- coding: utf-8 -*-
-"""ReStructuredText support for mfr."""
 
 from mfr.core import FileHandler, get_file_extension
 
-try:  # requires docutils
-    from mfr_rst.render import render_rst
+try:  # requires pydocx
+    from .render import render_docx
     renderers = {
-        'html': render_rst
+        'html': render_docx,
     }
 except ImportError:
     renderers = {}
 
 EXTENSIONS = [
-    '.rst',
+    '.docx',
 ]
 
 
 class Handler(FileHandler):
-    """FileHandler for reStructuredText files."""
-    # Renderers and exporters can be callables
+    """FileHandler for Microsoft Docx files."""
     renderers = renderers
 
     def detect(self, fp):

@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from mfr_tabular.render import render_html
+from .render import render_movie_tag
 
 EXTENSIONS = [
-    '.csv',
-    '.tsv',
-    '.xlsx',
-    '.xls',
-    '.dta',
-    '.sav',
-    # '.ods',
+    '.mp4',
+    #'.avi',
+    '.ogv',
+    #'.wmv',
+    '.webm',
 ]
 
 
 class Handler(FileHandler):
-    """FileHandler for tabular data files."""
+    """FileHandler for video files."""
+
     renderers = {
-        'html': render_html
+        'html': render_movie_tag,
     }
 
     def detect(self, fp):

@@ -3,7 +3,7 @@
 from mfr import FileHandler, get_file_extension
 
 try:  # requires pygments
-    from mfr_code_pygments.render import render_html
+    from .render import render_html
     renderers = {
         'html': render_html,
     }

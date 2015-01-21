@@ -92,7 +92,7 @@ def populate_data(fp):
     for function in function_preference:
         try:
             imported = function()
-            print("Trying " + imported.__name__)
+            #print("Trying " + imported.__name__)
             return imported(fp)
         except ImportError:
             print("Failed to import " + function.__name__)

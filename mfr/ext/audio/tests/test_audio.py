@@ -1,6 +1,6 @@
 import pytest
-import mfr_audio
 import mfr
+from mfr.ext import audio as mfr_audio
 from mfr_audio.render import render_audio_tag
 
 

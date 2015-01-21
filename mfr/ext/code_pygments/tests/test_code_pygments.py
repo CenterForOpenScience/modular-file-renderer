@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 import mfr
-from mfr_code_pygments import Handler as CodeFileHandler
-from mfr_code_pygments.render import get_stylesheet, render_html
+from mfr.ext.code_pygments import Handler as CodeFileHandler
+from mfr.ext.code_pygments.render import get_stylesheet, render_html
 
 from mfr_code_pygments.configuration import config
 

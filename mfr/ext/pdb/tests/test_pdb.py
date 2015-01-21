@@ -1,6 +1,6 @@
 import pytest
 import mfr
-import mfr_pdb
+from mfr.ext import pdb as mfr_pdb
 
 
 @pytest.mark.parametrize('filename', [

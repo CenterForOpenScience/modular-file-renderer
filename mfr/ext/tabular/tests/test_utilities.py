@@ -1,4 +1,4 @@
-from mfr_tabular import utilities
+from .. import utilities
 
 
 def test_header_population_returns_list_of_dicts():

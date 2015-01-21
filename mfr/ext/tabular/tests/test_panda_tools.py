@@ -1,5 +1,5 @@
 import os
-from mfr_tabular.libs import panda_tools
+from ..libs import panda_tools
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

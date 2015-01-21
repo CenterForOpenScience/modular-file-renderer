@@ -1,5 +1,5 @@
 import os
-from mfr_tabular.libs import csv_tools
+from mfr.ext.tabular.libs import csv_tools
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

@@ -93,8 +93,10 @@ def populate_data(fp):
         try:
             imported = function()
             #print("Trying " + imported.__name__)
-            return imported(fp)
         except ImportError:
-            print("Failed to import " + function.__name__)
+            #print("Failed to import " + function.__name__)
+            pass
+        else:
+            return imported(fp)
 
     raise MissingRequirementsException('Renderer requirements are not met')

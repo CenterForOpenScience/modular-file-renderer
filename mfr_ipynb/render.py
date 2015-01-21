@@ -31,7 +31,6 @@ c.CSSHTMLHeaderTransformer.enabled = False
 c.Exporter.filters = {'strip_files_prefix': lambda s: s}
 exporter = HTMLExporter(config=c)
 
-
 def render_html(file_pointer, **kwargs):
     """A renderer for IPython NoteBooks.
 
@@ -52,14 +51,19 @@ def render_html(file_pointer, **kwargs):
             body=body,
         )
 
-    assets_uri_base = '{0}/mfr_ipynb'.format(core_config['ASSETS_URL'])
-
-    assets = {
-        'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS)
-    }
+    assets = get_assets()
 
     return RenderResult(content, assets)
 
+
+def get_assets():
+    ASSETS_URI_BASE = '{0}/mfr_ipynb'.format(core_config['ASSETS_URL'])
+
+    ASSETS = {
+        'css': get_assets_from_list(ASSETS_URI_BASE, 'css', CSS_ASSETS)
+    }
+
+    return ASSETS
 
 # Metadata not currently used
 def get_metadata(nb):

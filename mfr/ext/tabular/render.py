@@ -62,7 +62,7 @@ def render_html(fp, src=None):
 
 
 def get_assets():
-    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
+    assets_uri_base = '{0}/tabular'.format(mfr.config['ASSETS_URL'])
     assets = {
         'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS),
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),

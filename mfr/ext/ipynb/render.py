@@ -57,7 +57,7 @@ def render_html(file_pointer, **kwargs):
 
 
 def get_assets():
-    assets_uri_base = '{0}/mfr_ipynb'.format(core_config['ASSETS_URL'])
+    assets_uri_base = '{0}/ipynb'.format(core_config['ASSETS_URL'])
 
     assets = {
         'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS)

@@ -21,7 +21,7 @@ def get_assets():
     """Creates a dictionary of js and css assets"""
     assets_uri_base = '{0}/pdf'.format(mfr.config['ASSETS_URL'])
     assets = {}
-    jspath = '{base}/js/{fname}')
+    jspath = '{base}/js/{fname}'
     assets['js'] = [jspath.format(base=assets_uri_base, fname=fname)
                     for fname in JS_ASSETS]
     return assets

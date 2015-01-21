@@ -1,3 +1,5 @@
+import re
+
 def header_population(headers):
     """make column headers from a list
     :param headers: list of column headers

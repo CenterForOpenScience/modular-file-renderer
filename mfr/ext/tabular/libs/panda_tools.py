@@ -1,5 +1,7 @@
 import pandas
-from ..utilities import header_population
+import re
+from tempfile import NamedTemporaryFile
+from ..utilities import header_population, strip_comments
 
 
 def csv_pandas(fp):
@@ -7,7 +9,9 @@ def csv_pandas(fp):
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    dataframe = pandas.read_csv(fp.name)
+    with NamedTemporaryFile(mode='w+b') as temp:
+        strip_comments(fp, temp)
+        dataframe = pandas.read_csv(temp.name)
     return data_from_dataframe(dataframe)
 
 

@@ -1,5 +1,4 @@
 """Tabular data renderer module"""
-
 import json
 import mfr
 import os
@@ -8,6 +7,9 @@ from .configuration import config
 from .exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE = os.path.join(HERE, 'templates', 'tabular.html')
 
 JS_ASSETS = [
     #"jquery-1.7.min.js",
@@ -30,19 +32,7 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    # Remove commented lines in tabular files that might be commented before rendering
-    tempfilename = '/tmp/tabulartemp.{0}{1}'.format(os.getpid(),
-        get_file_extension(fp.name))
-    if tempfilename.split('.')[2] in ['tsv', 'csv']:
-        temp = open(tempfilename, 'w+b')
-        data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
-        temp.write(data)
-        temp.seek(0)
-        columns, rows = populate_data(temp)
-        temp.close()
-        os.remove(tempfilename)
-    else:
-        columns, rows = populate_data(fp)
+    columns, rows = populate_data(fp)
 
     max_size = config['max_size']
     table_width = config['table_width']
@@ -57,27 +47,27 @@ def render_html(fp, src=None):
     table_size = 'small_table' if len(columns) < 9 else 'big_table'
     slick_grid_options = config.get('slick_grid_options').get(table_size)
 
-    HERE = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(HERE, 'templates', 'tabular.html')
-
-    with open(filename) as template:
+    with open(TEMPLATE) as template:
         content = template.read().format(
             width=table_width,
             height=table_height,
             columns=json.dumps(columns),
             rows=json.dumps(rows),
-            writing="",
             options=json.dumps(slick_grid_options),
         )
 
+    assets = get_assets()
+
+    return RenderResult(content=content, assets=assets)
+
+
+def get_assets():
     assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
     assets = {
         'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS),
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),
     }
-
-    return RenderResult(content=content, assets=assets)
-
+    return assets
 
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns
@@ -92,9 +82,9 @@ def populate_data(fp):
     for function in function_preference:
         try:
             imported = function()
-            print("Trying " + imported.__name__)
-            return imported(fp)
         except ImportError:
-            print("Failed to import " + function.__name__)
+            pass
+        else:
+            return imported(fp)
 
     raise MissingRequirementsException('Renderer requirements are not met')

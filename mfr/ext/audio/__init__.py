@@ -1,21 +1,18 @@
-# -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from mfr_movie.render import render_movie_tag
+from .render import render_audio_tag
 
 EXTENSIONS = [
-    '.mp4',
-    #'.avi',
-    '.ogv',
-    #'.wmv',
-    '.webm',
+    '.mp3',
+    '.ogg',
+    '.wav',
 ]
 
 
 class Handler(FileHandler):
-    """FileHandler for video files."""
+    """FileHandler for audio files."""
 
     renderers = {
-        'html': render_movie_tag,
+        'html': render_audio_tag,
     }
 
     def detect(self, fp):

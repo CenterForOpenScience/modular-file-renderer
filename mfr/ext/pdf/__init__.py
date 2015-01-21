@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from mfr_pdf.render import render_pdf
+from .render import render_pdf
 
 
 EXTENSIONS = ['.pdf']

@@ -1,6 +1,5 @@
 from ..utilities import header_population, data_population, strip_comments
 import csv
-import re
 from tempfile import NamedTemporaryFile
 
 
@@ -14,7 +13,7 @@ def csv_csv(fp):
         dialect = csv.Sniffer().sniff((temp).read(1024))
         temp.seek(0)
         reader = csv.reader(temp, dialect)
-    complete_data = [row for row in reader]
+        complete_data = [row for row in reader]
 
     # Assume that the first line is the header, other lines are data
     header = header_population(complete_data[0])

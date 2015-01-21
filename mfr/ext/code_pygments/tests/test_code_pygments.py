@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
 import pytest
+
 import mfr
 from mfr.ext.code_pygments import Handler as CodeFileHandler
 from mfr.ext.code_pygments.render import get_stylesheet, render_html
-
 from mfr.ext.code_pygments.configuration import config
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def setup_function(func):
@@ -44,7 +47,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 def test_get_stylesheet():
     result = get_stylesheet()
-    expected_url = '{0}/mfr_code_pygments/css/default.css'.format(
+    expected_url = '{0}/code_pygments/css/default.css'.format(
         mfr.config['ASSETS_URL'])
     assert expected_url == result
 
@@ -55,7 +58,7 @@ def test_configuration_defaults():
 
 
 def test_render_returns_render_result():
-    with open('mfr_code_pygments/tests/test_code_pygments.py') as fp:
+    with open(os.path.join(HERE, 'test_code_pygments.py')) as fp:
         result = render_html(fp)
 
     assert type(result) == mfr.core.RenderResult

@@ -12,7 +12,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, 'templates', 'tabular.html')
 
 JS_ASSETS = [
-    #"jquery-1.7.min.js",
+    "jquery-1.7.min.js",
     "jquery.event.drag-2.2.js",
     "slick.core.js",
     "slick.grid.js",
@@ -62,7 +62,7 @@ def render_html(fp, src=None):
 
 
 def get_assets():
-    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
+    assets_uri_base = '{0}/tabular'.format(mfr.config['ASSETS_URL'])
     assets = {
         'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS),
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),

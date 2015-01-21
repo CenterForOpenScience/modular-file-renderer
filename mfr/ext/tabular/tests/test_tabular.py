@@ -2,8 +2,8 @@
 import os
 import pytest
 import mfr
-import mfr_tabular
-from mfr_tabular import Handler as TabularHandler
+from ..render import render_html
+from .. import Handler as TabularHandler
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -54,6 +54,6 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 def test_render_html_returns_render_result():
     with open(os.path.join(HERE, 'fixtures', 'test.csv')) as fp:
-        result = mfr_tabular.render.render_html(fp)
+        result = render_html(fp)
 
     assert type(result) == mfr.RenderResult

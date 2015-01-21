@@ -1,6 +1,6 @@
 import pytest
-import mfr_movie
-from mfr_movie.render import render_movie_tag
+from mfr.ext import movie as mfr_movie
+from mfr.ext.movie.render import render_movie_tag
 
 
 @pytest.mark.parametrize('filename', [

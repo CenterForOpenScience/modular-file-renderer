@@ -1,10 +1,14 @@
-import pytest
+import os
 import sys
+
+import pytest
 
 pytestmark = pytest.mark.skipif(sys.version_info < (2, 7), reason="requires python2.7+")  # noqa
 
 import mfr
-from mfr_ipynb import Handler as CodeFileHandler
+from mfr.ext.ipynb import Handler as CodeFileHandler
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 def setup_function(func):
     mfr.register_filehandler(CodeFileHandler)
@@ -34,43 +38,43 @@ def test_detect_other_extensions(fakefile, filename):
 
 
 def test_render_html():
-    from mfr_ipynb.render import render_html
+    from ..render import render_html
     handler = CodeFileHandler()
     mfr.register_filehandler(handler)
-    with open('mfr_ipynb/tests/test.ipynb') as fp:
+    with open(os.path.join(HERE, 'test.ipynb')) as fp:
         result = render_html(fp)
     assert result.content is not None
     assert "pygments" in str(result.assets['css'])
 
 
 def test_invalid_file():
-    from mfr_ipynb.render import render_html
+    from ..render import render_html
     handler = CodeFileHandler()
     mfr.register_filehandler(handler)
-    with open('mfr_ipynb/tests/invalid_json.ipynb') as fp:
+    with open(os.path.join(HERE, 'invalid_json.ipynb')) as fp:
         result = render_html(fp)
     assert 'Invalid json: ' in result.content
 
 
 def test_get_metadata():
-    from mfr_ipynb.render import get_metadata
-    with open('mfr_ipynb/tests/test.ipynb') as fp:
+    from ..render import get_metadata
+    with open(os.path.join(HERE, 'test.ipynb')) as fp:
         name, css = get_metadata(fp)
     assert name == 'zipline pydata12'
     assert css == 'something.css'
 
 
 def test_no_metadata():
-    from mfr_ipynb.render import get_metadata
-    with open('mfr_ipynb/tests/no_metadata.ipynb') as fp:
+    from ..render import get_metadata
+    with open(os.path.join(HERE, 'no_metadata.ipynb')) as fp:
         name, css = get_metadata(fp)
     assert name == 'untitled'
     assert css is None
 
 
 def test_invalid_json_metadata():
-    from mfr_ipynb.render import get_metadata
-    with open('mfr_ipynb/tests/invalid_json.ipynb') as fp:
+    from ..render import get_metadata
+    with open(os.path.join(HERE, 'invalid_json.ipynb')) as fp:
         name, css = get_metadata(fp)
     assert name == 'Unable to parse json'
     assert css == 'No metadata found'

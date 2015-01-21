@@ -56,10 +56,10 @@ def render_html(fp, src=None, **kwargs):
     return RenderResult(content, assets)
 
 def get_assets():
-    assets_uri_base = '{0}/mfr_pdb'.format(mfr.config['ASSETS_URL'])
+    assets_uri_base = '{0}/pdb'.format(mfr.config['ASSETS_URL'])
 
     assets = {
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS)
     }
 
-    return ASSETS
+    return assets

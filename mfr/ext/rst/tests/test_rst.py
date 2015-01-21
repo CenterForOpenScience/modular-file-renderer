@@ -1,6 +1,11 @@
+import os
+
 import pytest
+
 import mfr
-import mfr_rst
+from mfr.ext import rst as mfr_rst
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def test_detect(fakefile):
@@ -23,7 +28,7 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 
 def test_render_rst_returns_render_result():
-    with open('mfr_rst/tests/test.rst') as fp:
+    with open(os.path.join(HERE, 'test.rst')) as fp:
         result = mfr_rst.render.render_rst(fp)
 
     assert type(result) == mfr.core.RenderResult

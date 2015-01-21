@@ -1,6 +1,6 @@
-import mfr_image
+from mfr.ext import image
 
 # Available file handlers
 HANDLERS = [
-    mfr_image.Handler,
+    image.Handler,
 ]

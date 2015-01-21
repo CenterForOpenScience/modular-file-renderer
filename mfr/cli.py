@@ -8,7 +8,7 @@ import sys
 import argparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT_PATH = os.path.join(HERE, "..")
+EXT_PATH = os.path.join(HERE, 'ext')
 
 
 def pip_install(path, filename):
@@ -32,12 +32,13 @@ def plugin_requirements(render, export, plugins):
     """
 
     if plugins == ["all"]:
-        path_list = [os.path.join(ROOT_PATH, directory)
-                     for directory in os.listdir(ROOT_PATH)
-                        if bool(re.match('mfr_\w*', os.path.basename(directory)))]
-
+        path_list = [
+            os.path.join(EXT_PATH, directory)
+            for directory in os.listdir(EXT_PATH)
+            if os.path.isdir(os.path.join(EXT_PATH, directory))
+        ]
     else:
-        path_list = [os.path.join(ROOT_PATH, plugin) for plugin in plugins]
+        path_list = [os.path.join(EXT_PATH, plugin) for plugin in plugins]
 
     for path in path_list:
         if os.path.isdir(path):

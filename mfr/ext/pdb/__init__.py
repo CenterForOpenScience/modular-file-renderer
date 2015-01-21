@@ -1,19 +1,16 @@
-# -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-try:
-    from mfr_ipynb.render import render_html
-except ImportError:
-    render_html = None
+from .render import render_html
 
 EXTENSIONS = [
-    '.ipynb'
+    '.pdb',
 ]
 
 
 class Handler(FileHandler):
-    """FileHandler for IPython NoteBook files."""
+    """FileHandler for Protein Data Bank files."""
+
     renderers = {
-        'html': render_html,
+        'html': render_html
     }
 
     def detect(self, fp):

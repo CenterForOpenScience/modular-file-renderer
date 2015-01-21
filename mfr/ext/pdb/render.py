@@ -62,4 +62,4 @@ def get_assets():
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS)
     }
 
-    return ASSETS
+    return assets

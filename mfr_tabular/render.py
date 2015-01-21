@@ -7,6 +7,8 @@ from mfr_tabular.exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
 
+HERE = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE = os.path.join(HERE, 'templates', 'tabular.html')
 
 JS_ASSETS = [
     #"jquery-1.7.min.js",
@@ -44,16 +46,12 @@ def render_html(fp, src=None):
     table_size = 'small_table' if len(columns) < 9 else 'big_table'
     slick_grid_options = config.get('slick_grid_options').get(table_size)
 
-    HERE = os.path.dirname(os.path.abspath(__file__))
-    filename = os.path.join(HERE, 'templates', 'tabular.html')
-
-    with open(filename) as template:
+    with open(TEMPLATE) as template:
         content = template.read().format(
             width=table_width,
             height=table_height,
             columns=json.dumps(columns),
             rows=json.dumps(rows),
-            writing="",
             options=json.dumps(slick_grid_options),
         )
 

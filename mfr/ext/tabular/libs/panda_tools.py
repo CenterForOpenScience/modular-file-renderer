@@ -1,7 +1,7 @@
 import pandas
 import re
 from tempfile import NamedTemporaryFile
-from ..utilities import header_population
+from ..utilities import header_population, strip_comments
 
 
 def csv_pandas(fp):
@@ -10,9 +10,7 @@ def csv_pandas(fp):
     :return: tuple of table headers and data
     """
     with NamedTemporaryFile(mode='w+b') as temp:
-        data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
-        temp.write(data)
-        temp.seek(0)
+        strip_comments(fp, temp)
         dataframe = pandas.read_csv(temp.name)
     return data_from_dataframe(dataframe)
 

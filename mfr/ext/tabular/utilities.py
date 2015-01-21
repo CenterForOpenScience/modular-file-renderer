@@ -21,3 +21,8 @@ def data_population(in_data, headers=None):
             for cindex, header in enumerate(headers)])
         for row in in_data
     ]
+
+def strip_comments(src, dest):
+    data = re.sub('%.*?\n', '', src.read()).encode('ascii', 'ignore')
+    dest.write(data)
+    dest.seek(0)

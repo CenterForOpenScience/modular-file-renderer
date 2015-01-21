@@ -1,4 +1,5 @@
 """PDF renderer module."""
+import mfr
 from mfr.core import RenderResult
 from mako.lookup import TemplateLookup
 from mfr import config as core_config

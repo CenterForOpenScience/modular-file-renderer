@@ -2,7 +2,6 @@
 """Command Line tool for the modular file renderer"""
 
 import os
-import re
 import pip
 import sys
 import argparse

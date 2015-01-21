@@ -56,14 +56,18 @@ def render_html(fp, src=None):
             options=json.dumps(slick_grid_options),
         )
 
-    assets_uri_base = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
-    assets = {
-        'css': get_assets_from_list(assets_uri_base, 'css', CSS_ASSETS),
-        'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),
-    }
+    assets = get_assets()
 
     return RenderResult(content=content, assets=assets)
 
+
+def get_assets():
+    ASSETS_URI_BASE = '{0}/mfr_tabular'.format(mfr.config['ASSETS_URL'])
+    ASSETS = {
+        'css': get_assets_from_list(ASSETS_URI_BASE, 'css', CSS_ASSETS),
+        'js': get_assets_from_list(ASSETS_URI_BASE, 'js', JS_ASSETS),
+    }
+    return ASSETS
 
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns

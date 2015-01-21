@@ -1,5 +1,7 @@
 import pandas
+import re
 from mfr_tabular.utilities import header_population
+from tempfile import NamedTemporaryFile
 
 
 def csv_pandas(fp):
@@ -7,7 +9,11 @@ def csv_pandas(fp):
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    dataframe = pandas.read_csv(fp.name)
+    with NamedTemporaryFile(mode='w+b') as temp:
+        data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
+        temp.write(data)
+        temp.seek(0)
+        dataframe = pandas.read_csv(temp.name)
     return data_from_dataframe(dataframe)
 
 

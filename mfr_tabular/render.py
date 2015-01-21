@@ -2,12 +2,11 @@
 import json
 import mfr
 import os
-import re
 from mfr_tabular.configuration import config
 from mfr_tabular.exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
-from tempfile import NamedTemporaryFile
+
 
 JS_ASSETS = [
     #"jquery-1.7.min.js",
@@ -30,15 +29,7 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    # Remove commented lines in tabular files before rendering
-    if get_file_extension(fp.name) in ['.tsv', '.csv']:
-        with NamedTemporaryFile(mode='w+b') as temp:
-            data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
-            temp.write(data)
-            temp.seek(0)
-            columns, rows = populate_data(temp)
-    else:
-        columns, rows = populate_data(fp)
+    columns, rows = populate_data(fp)
 
     max_size = config['max_size']
     table_width = config['table_width']

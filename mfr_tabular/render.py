@@ -1,5 +1,4 @@
 """Tabular data renderer module"""
-
 import json
 import mfr
 import os
@@ -8,6 +7,7 @@ from mfr_tabular.configuration import config
 from mfr_tabular.exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
+from tempfile import NamedTemporaryFile
 
 JS_ASSETS = [
     #"jquery-1.7.min.js",
@@ -30,17 +30,13 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    # Remove commented lines in tabular files that might be commented before rendering
-    tempfilename = '/tmp/tabulartemp.{0}{1}'.format(os.getpid(),
-        get_file_extension(fp.name))
-    if tempfilename.split('.')[2] in ['tsv', 'csv']:
-        temp = open(tempfilename, 'w+b')
-        data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
-        temp.write(data)
-        temp.seek(0)
-        columns, rows = populate_data(temp)
-        temp.close()
-        os.remove(tempfilename)
+    # Remove commented lines in tabular files before rendering
+    if get_file_extension(fp.name) in ['.tsv', '.csv']:
+        with NamedTemporaryFile(mode='w+b') as temp:
+            data = re.sub('%.*?\n', '', fp.read()).encode('ascii', 'ignore')
+            temp.write(data)
+            temp.seek(0)
+            columns, rows = populate_data(temp)
     else:
         columns, rows = populate_data(fp)
 

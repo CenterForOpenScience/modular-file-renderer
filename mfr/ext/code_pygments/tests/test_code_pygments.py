@@ -4,7 +4,7 @@ import mfr
 from mfr.ext.code_pygments import Handler as CodeFileHandler
 from mfr.ext.code_pygments.render import get_stylesheet, render_html
 
-from mfr_code_pygments.configuration import config
+from mfr.ext.code_pygments.configuration import config
 
 
 def setup_function(func):

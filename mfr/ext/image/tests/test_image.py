@@ -43,7 +43,7 @@ def test_render_img_tag(fakefile):
 def test_export_jpg():
     handler = mfr_image.Handler()
     exporter = mfr_image.ImageExporter()
-    with open('mfr_image/tests/test_jpg.jpg') as fp:
+    with open('image/tests/test_jpg.jpg') as fp:
         jpeg_img = exporter.export_jpeg(fp)
         fp.seek(0)
         png_img = exporter.export_png(fp)

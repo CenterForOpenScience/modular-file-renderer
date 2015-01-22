@@ -1,4 +1,5 @@
 import markdown
+from mfr import RenderResult
 
 def render_html(fp, **kwargs):
-    return(markdown.markdown(fp.read()))
+    return RenderResult(markdown.markdown(fp.read()))

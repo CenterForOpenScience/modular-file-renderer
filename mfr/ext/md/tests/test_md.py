@@ -1,7 +1,8 @@
 from mfr.ext.md import Handler, render
+from mock import MagicMock
 
-
-def test_render_html(fakefile):
+def test_render_html():
+    fakefile = MagicMock(spec=file)
     fakefile.read.return_value = '# foo'
     assert render.render_html(fakefile) == '<h1>foo</h1>'
     fakefile.read.return_value = '_italic_'

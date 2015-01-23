@@ -11,6 +11,7 @@ Basic Usage: ::
             html = handler.render(fp)
 """
 import os
+import re
 import shutil
 import inspect
 import logging
@@ -370,3 +371,26 @@ def collect_static(dest=None, dry_run=False):
                 .format(**locals()))
         else:
             copy_dir(static_path, namespaced_destination)
+            template_path = os.path.join(namespaced_destination, 'templates/')
+            # If there are templated static files that once had hard-coded dependencies
+            if os.path.isdir(template_path):
+                for dirpath, dirnames, filenames in os.walk(template_path):
+                    # Walk through each template
+                    for template in filenames:
+                        with open(os.path.join(template_path, template)) as src:
+                            # Resolve the dependency
+                            data = re.sub('{{STATIC_PATH}}',
+                                '/static'+namespaced_destination.split('static')[-1],
+                                 src.read())
+                        directory = os.path.join(namespaced_destination,
+                            get_file_extension(template).lstrip('.'))
+                        if not os.path.exists(directory):
+                            # Ensure the new file will have a place to live
+                            os.makedirs(directory)
+                        file_path = os.path.join(directory, template)
+                        with open(file_path, 'w+b') as temp:
+                            # Create the file
+                            temp.write(data)
+                        os.remove(os.path.join(template_path, template))
+                    # Clean up
+                os.rmdir(template_path)

@@ -39,11 +39,11 @@ def test_render_img_tag(fakefile):
     assert 'alt="My image"' in result
 
 
-@pytest.mark.skipif(sys.version_info > (2, 7), reason="requires python2.7 or less")
+@pytest.mark.skipif(sys.version_info[0] > 2, reason="requires python2.7 or less")
 def test_export_jpg():
     handler = mfr_image.Handler()
     exporter = mfr_image.ImageExporter()
-    with open('mfr_image/tests/test_jpg.jpg') as fp:
+    with open('mfr/ext/image/tests/test_jpg.jpg') as fp:
         jpeg_img = exporter.export_jpeg(fp)
         fp.seek(0)
         png_img = exporter.export_png(fp)

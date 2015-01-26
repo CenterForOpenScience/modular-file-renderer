@@ -15,6 +15,17 @@ def csv_pandas(fp):
     return data_from_dataframe(dataframe)
 
 
+def tsv_pandas(fp):
+    """Read and convert a tsv file to JSON format using the pandas library
+    :param fp: File pointer object
+    :return: tuple of table headers and data
+    """
+    with NamedTemporaryFile(mode='w+b') as temp:
+        strip_comments(fp, temp)
+        dataframe = pandas.read_csv(temp.name, sep='\t')
+    return data_from_dataframe(dataframe)
+
+
 def dta_pandas(fp):
     """Read and convert a dta file to JSON format using the pandas library
     :param fp: File pointer object

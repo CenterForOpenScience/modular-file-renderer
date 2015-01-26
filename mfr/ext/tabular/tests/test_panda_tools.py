@@ -19,6 +19,15 @@ def test_csv_pandas():
     assert data[0] == {'one': 'a', 'two': 'b', 'three': 'c'}
 
 
+def test_tsv_pandas():
+    with open(os.path.join(HERE, 'fixtures', 'test.tsv')) as fp:
+        headers, data = panda_tools.csv_pandas(fp)
+
+    assert headers[0] == {'field': 'one\ttwo\tthree', 'id': 'one\ttwo\tthree', 'name': 'one\ttwo\tthree'}
+    assert data[0] == {'one\ttwo\tthree': 'a\tb\tc'}
+
+
+
 # def test_dta_pandas():
 #     with open('mfr_tabular/tests/fixtures/test.dta') as fp:
 #         headers, data = panda_tools.dta_pandas(fp)

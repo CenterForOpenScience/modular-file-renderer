@@ -1,25 +1,23 @@
 
 <span>Page: <span id="pageNum"></span> / <span id="pageCount"></span></span><br>
 
-
-<div style="width:auto">
-    <nobr>
-        <div id="leftDiv" style="display:inline-block;">
-            <button unselectable="on" id="previousButton" class="mfr-pdf-button">
-                <img id="leftArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/pdf/images/leftarrow.png" style="width: 25px;">
-            </button>
-        </div>
-
-        <canvas id="the-canvas" style="border:1px solid black; width:95%"></canvas>
-
-        <div id="rightDiv" style="display:inline-block;">
-            <button unselectable="on" id="nextButton" class="mfr-pdf-button">
-                <img id="rightArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/pdf/images/rightarrow.png" style="width: 25px;">
-            </button>
-        </div>
-    </nobr>
+<div >
+    <table style"width:inherit">
+        <tr>
+            <td style="width: 25px">
+                <button unselectable="on" id="previousButton" class="mfr-pdf-button">
+                    <img src="${STATIC_PATH}/pdf/images/leftarrow.png" style="width: 25px;">
+                </button>
+            </td>
+            <td><canvas id="the-canvas" style="border:1px solid black;"></canvas></td>
+            <td style="width: 25px">
+                <button unselectable="on" id="nextButton" class="mfr-pdf-button">
+                    <img src="${STATIC_PATH}/pdf/images/rightarrow.png" style="width: 25px;">
+                </button>
+            </td>
+        </tr>
+    </table>
 </div>
-
 
 <script type="text/javascript">
     // TODO: Figure out why we have to do this
@@ -30,7 +28,7 @@
     PDFJS.disableWorker = true;
     var pdfDoc = null,
         pageNum = 1,
-        scale = 1.25,
+        scale = 1.15,
         canvas = document.getElementById('the-canvas'),
         ctx = canvas.getContext('2d');
 
@@ -40,10 +38,6 @@
 
     var $prevButton = $('#previousButton');
     var $nextButton = $("#nextButton");
-    var $rightArrow = $("#rightArrow");
-    var $leftArrow = $("#leftArrow");
-    var $leftDiv = $("#leftDiv");
-    var $rightDiv = $("#rightDiv");
 
 
     function renderPage(num) {
@@ -61,17 +55,16 @@
                 viewport: viewport
             };
 
-            var navBarHeight = (viewport.height * 0.9) + "px";
-            var navOffSet = -1 * (viewport.height/2 - 35) + "px";
+            var navBarHeight = viewport.height;
 
-            $prevButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
-            $nextButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
+            $prevButton.css({"height": navBarHeight});
+            $nextButton.css({"height": navBarHeight});
 
             page.render(renderContext);
       });
 
-    pageNum === 1 ? disableButton($prevButton) : setTimeout(function(){enableButton($prevButton)},1000);
-    pageNum === pdfDoc.numPages ? disableButton($nextButton) : setTimeout(function(){enableButton($nextButton)},1000);
+    pageNum === 1 ? disableButton($prevButton) : setTimeout(function(){enableButton($prevButton)},250);
+    pageNum === pdfDoc.numPages ? disableButton($nextButton) : setTimeout(function(){enableButton($nextButton)},250);
 
 
       // Update page counters
@@ -81,14 +74,13 @@
 
     function disableButton($elem) {
         $elem[0].disabled = true;
-        var $arrow = $elem.find('.mfr-pdf-arrow').addClass('disabled');
+        var $arrow = $elem.find('.mfr-pdf-button').addClass('disabled');
     }
 
     function enableButton($elem) {
         $elem[0].disabled = false;
-        var $arrow = $elem.find('.mfr-pdf-arrow').removeClass('disabled');
+        var $arrow = $elem.find('.mfr-pdf-button').removeClass('disabled');
     }
-
 
 
     //

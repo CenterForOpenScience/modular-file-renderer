@@ -3,14 +3,14 @@ function name to be passed without initializing its module and without breaking
 if the module's requirements are not met. """
 
 
-def csv_csv():
-    from ..libs.csv_tools import csv_csv
-    return csv_csv
-
-
 def csv_pandas():
     from ..libs.panda_tools import csv_pandas
     return csv_pandas
+
+
+def tsv_pandas():
+    from ..libs.panda_tools import tsv_pandas
+    return tsv_pandas
 
 
 def dta_pandas():

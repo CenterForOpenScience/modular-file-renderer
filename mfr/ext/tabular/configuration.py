@@ -2,8 +2,8 @@
 """Configuration object for the mfr_tabular module."""
 
 from .libs import (
-    csv_csv,
     csv_pandas,
+    tsv_pandas,
     dta_pandas,
     sav_pandas,
     xlsx_xlrd
@@ -18,8 +18,8 @@ requirements. Max size is the largest number of columns or rows allowed in a
 single table"""
 config = Config(defaults={
     'libs': {
-        '.csv': [csv_pandas, csv_csv],
-        '.tsv': [csv_csv],
+        '.csv': [csv_pandas],
+        '.tsv': [tsv_pandas],
         '.xlsx': [xlsx_xlrd],
         '.xls': [xlsx_xlrd],
         '.dta': [dta_pandas],

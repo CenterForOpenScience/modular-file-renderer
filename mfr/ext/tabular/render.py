@@ -1,8 +1,12 @@
-"""Tabular data renderer module"""
+"""Tabular data renderer module.
+
+.. note::
+
+    jQuery must be included on the page for this renderer to work properly.
+"""
 import json
 import mfr
 import os
-import re
 from .configuration import config
 from .exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException
@@ -12,7 +16,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, 'templates', 'tabular.html')
 
 JS_ASSETS = [
-    "jquery-1.7.min.js",
     "jquery.event.drag-2.2.js",
     "slick.core.js",
     "slick.grid.js",
@@ -20,10 +23,10 @@ JS_ASSETS = [
 
 CSS_ASSETS = [
     "slick.grid.css",
-    #"jquery-ui-1.8.16.custom.css",
     "slick-default-theme.css",
     "examples.css",
 ]
+
 
 def render_html(fp, src=None):
     """Render a tabular file to html
@@ -68,6 +71,7 @@ def get_assets():
         'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS),
     }
     return assets
+
 
 def populate_data(fp):
     """Determine the appropriate library and use it to populate rows and columns

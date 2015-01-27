@@ -19,6 +19,7 @@ from mfr.core import get_registry
 
 mod = Blueprint('render', __name__)
 
+
 @mod.route('/render/<filename>', methods=['GET'])
 @mod.route('/render/<renderer_name>/<filename>', methods=['GET'])
 def render(filename, renderer_name=None):

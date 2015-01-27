@@ -2,7 +2,6 @@
 
 """Docx renderer module."""
 import sys
-import bleach
 
 if not sys.version_info >= (3, 0):
     from pydocx.parsers import Docx2Html
@@ -14,8 +13,5 @@ if not sys.version_info >= (3, 0):
         :param fp: File pointer
         :return: RenderResult object containing the content html
         """
-        bleach.ALLOWED_TAGS.append(u'h1')
-        bleach.ALLOWED_TAGS.append(u'span')
         content = Docx2Html(fp).parsed_without_head
-        content = bleach.clean(content, styles=None, strip=True)
         return RenderResult(content=content.encode('ascii', 'ignore'), assets={})

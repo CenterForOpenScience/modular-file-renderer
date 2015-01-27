@@ -1,25 +1,6 @@
 <span>Page: <span id="pageNum"></span> / <span id="pageCount"></span></span><br>
 
 
-##<div>
-##    <nobr>
-##        <div id="leftDiv" class="mfr-pdf-button-container">
-##            <button unselectable="on" id="previousButton" class="mfr-pdf-button">
-##                <img id="leftArrow" class="mfr-pdf-arrow" src="/static/mfr/pdf/images/leftarrow.png" style="width: 25px">
-##            </button>
-##        </div>
-##
-##        <canvas id="the-canvas" style="border:1px solid black"></canvas>
-##
-##        <div id="rightDiv" class="mfr-pdf-button-container">
-##            <button unselectable="on" id="nextButton" class="mfr-pdf-button">
-##                <img id="rightArrow" class="mfr-pdf-arrow" src="/static/mfr/pdf/images/rightarrow.png" style="width: 25px;">
-##            </button>
-##        </div>
-##    </nobr>
-##</div>
-
-
 <div style="width:auto">
     <nobr>
         <div id="leftDiv" style="display:inline-block; vertical-align: top;">

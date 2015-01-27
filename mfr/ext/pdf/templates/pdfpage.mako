@@ -1,10 +1,9 @@
-
 <span>Page: <span id="pageNum"></span> / <span id="pageCount"></span></span><br>
 
 
 <div style="width:auto">
     <nobr>
-        <div id="leftDiv" style="display:inline-block;">
+        <div id="leftDiv" style="display:inline-block; vertical-align: top;">
             <button unselectable="on" id="previousButton" class="mfr-pdf-button">
                 <img id="leftArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/pdf/images/leftarrow.png" style="width: 25px;">
             </button>
@@ -12,7 +11,7 @@
 
         <canvas id="the-canvas" style="border:1px solid black; width:95%"></canvas>
 
-        <div id="rightDiv" style="display:inline-block;">
+        <div id="rightDiv" style="display:inline-block; vertical-align: top;">
             <button unselectable="on" id="nextButton" class="mfr-pdf-button">
                 <img id="rightArrow" class="mfr-pdf-arrow" src="${STATIC_PATH}/pdf/images/rightarrow.png" style="width: 25px;">
             </button>
@@ -45,38 +44,59 @@
     var $leftDiv = $("#leftDiv");
     var $rightDiv = $("#rightDiv");
 
+    // Obtain a graphics context on the
+    // canvas element for drawing.
+    var context = canvas.getContext('2d');
+
+    // Register an event listener to
+    // call the resizeCanvas() function each time
+    // the window is resized.
+    window.addEventListener('resize', resizeCanvas, false);
+
+    // Draw canvas border for the first time.
+    resizeCanvas();
+
+    // Runs each time the DOM window resize event fires.
+    // Resets the canvas dimensions to match window,
+    // then draws the new borders accordingly.
+    function resizeCanvas() {
+        var canvasHeight = $(canvas).height();
+        var navBarHeight = canvasHeight + 2 + "px";
+        $prevButton.css("height", navBarHeight);
+        $nextButton.css("height",navBarHeight);
+    }
 
     function renderPage(num) {
         // Using promise to fetch the page
-
+        // TODO: Think of better approach for max size
         pdfDoc.getPage(num).then(function(page) {
             var viewport = page.getViewport(scale);
+            if (viewport.width > 800) {
+                adjScale = 800 / viewport.width;
+                viewport = page.getViewport(adjScale);
+            }
             canvas.height = viewport.height;
             canvas.width = viewport.width;
-
-
             // Render PDF page into canvas context
             var renderContext = {
                 canvasContext: ctx,
                 viewport: viewport
             };
-
-            var navBarHeight = (viewport.height * 0.9) + "px";
-            var navOffSet = -1 * (viewport.height/2 - 35) + "px";
-
-            $prevButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
-            $nextButton.css({"height": navBarHeight, "position": "relative", "top": navOffSet});
-
+            var navBarHeight = viewport.height + 2 + "px";
+            $prevButton.css("height", navBarHeight);
+            $nextButton.css("height",navBarHeight);
             page.render(renderContext);
-      });
-
-    pageNum === 1 ? disableButton($prevButton) : setTimeout(function(){enableButton($prevButton)},1000);
-    pageNum === pdfDoc.numPages ? disableButton($nextButton) : setTimeout(function(){enableButton($nextButton)},1000);
+            resizeCanvas();
+        });
 
 
-      // Update page counters
-      document.getElementById('pageNum').textContent = pageNum;
-      document.getElementById('pageCount').textContent = pdfDoc.numPages;
+        pageNum === 1 ? disableButton($prevButton) : setTimeout(function(){enableButton($prevButton)},1000);
+        pageNum === pdfDoc.numPages ? disableButton($nextButton) : setTimeout(function(){enableButton($nextButton)},1000);
+
+
+        // Update page counters
+        document.getElementById('pageNum').textContent = pageNum;
+        document.getElementById('pageCount').textContent = pdfDoc.numPages;
     }
 
     function disableButton($elem) {
@@ -131,4 +151,3 @@
 
 })();
 </script>
-

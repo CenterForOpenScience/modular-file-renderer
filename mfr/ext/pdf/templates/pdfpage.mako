@@ -86,6 +86,7 @@
             $prevButton.css("height", navBarHeight);
             $nextButton.css("height",navBarHeight);
             page.render(renderContext);
+            resizeCanvas();
         });
 
 

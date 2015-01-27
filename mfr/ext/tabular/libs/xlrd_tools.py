@@ -26,7 +26,7 @@ def xlsx_xlrd(fp):
 
     fields = sheet.row_values(0) if sheet.nrows else []
 
-    fields = [str(value) or 'Unnamed: {0}'.format(index+1) for index, value in enumerate(fields)]
+    fields = [str(value).encode('ascii', 'ignore') or 'Unnamed: {0}'.format(index+1) for index, value in enumerate(fields)]
 
     data = [dict(zip(fields, sheet.row_values(row_index)))
         for row_index in range(1, sheet.nrows)]

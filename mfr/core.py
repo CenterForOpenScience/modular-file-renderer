@@ -338,8 +338,8 @@ def copy_dir(src, dest):
     except shutil.Error as err:
         logger.warn(err)
     except OSError as err:
-        if os.path.exists(src):
-            logger.debug('Skipping {src} (already exists)'.format(src=src))
+        if os.path.exists(dest):
+            logger.debug('Skipping {dest} (already exists)'.format(dest=dest))
         else:
             raise err
 

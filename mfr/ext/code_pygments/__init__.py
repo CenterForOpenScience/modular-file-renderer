@@ -398,6 +398,7 @@ EXTENSIONS = [
     '.tt',
     '.twig',
     '.txt',
+    '.md',
     '.u',
     '.v',
     '.vala',

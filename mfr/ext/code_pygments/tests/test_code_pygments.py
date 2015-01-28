@@ -26,6 +26,7 @@ def teardown_function(func):
     'script.PY',
     'script.RB',
     'script.JS',
+    'script.md',
 ])
 def test_detect_common_extensions(fakefile, filename):
     fakefile.name = filename
@@ -59,6 +60,12 @@ def test_configuration_defaults():
 
 def test_render_returns_render_result():
     with open(os.path.join(HERE, 'test_code_pygments.py')) as fp:
+        result = render_html(fp)
+
+    assert type(result) == mfr.core.RenderResult
+
+def test_renders_md():
+    with open(os.path.join(HERE, 'foo.md')) as fp:
         result = render_html(fp)
 
     assert type(result) == mfr.core.RenderResult

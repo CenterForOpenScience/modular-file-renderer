@@ -26,9 +26,10 @@ def xlsx_xlrd(fp):
 
     fields = sheet.row_values(0) if sheet.nrows else []
 
-    fields = [value or 'Unnamed: {0}'.format(index+1) for index, value in enumerate(fields)]
-
-    fields = [str(value).encode('ascii', 'ignore') for index, value in enumerate(fields) if type(value)!=str]
+    for index, value in enumerate(fields):
+        fields[index] = value or 'Unnamed: {0}'.format(index+1)
+        if not isinstance(fields[index], basestring):
+            fields[index] = str(value)
 
     data = [dict(zip(fields, sheet.row_values(row_index)))
         for row_index in range(1, sheet.nrows)]

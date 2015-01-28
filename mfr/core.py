@@ -372,4 +372,5 @@ def collect_static(dest=None, dry_run=False):
             print('Pretending to copy {static_path} to {namespaced_destination}.'
                 .format(**locals()))
         else:
-            copy_dir(static_path, namespaced_destination)
+            if os.path.exists(static_path):
+                copy_dir(static_path, namespaced_destination)

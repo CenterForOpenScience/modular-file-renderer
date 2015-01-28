@@ -338,7 +338,10 @@ def copy_dir(src, dest):
     except shutil.Error as err:
         logger.warn(err)
     except OSError as err:
-        logger.debug('Skipping {src} (already exists)'.format(src=src))
+        if os.path.exists(dest):
+            logger.debug('Skipping {dest} (already exists)'.format(dest=dest))
+        else:
+            raise err
 
 
 def get_namespace(handler_cls):
@@ -369,4 +372,5 @@ def collect_static(dest=None, dry_run=False):
             print('Pretending to copy {static_path} to {namespaced_destination}.'
                 .format(**locals()))
         else:
-            copy_dir(static_path, namespaced_destination)
+            if os.path.exists(static_path):
+                copy_dir(static_path, namespaced_destination)

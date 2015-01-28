@@ -2,7 +2,7 @@ import xlrd
 from ..exceptions import TableTooBigException, EmptyTableException
 from ..configuration import config
 from ..utilities import header_population
-from ..compat import range
+from mfr.compat import range, basestring
 
 
 def xlsx_xlrd(fp):
@@ -26,7 +26,12 @@ def xlsx_xlrd(fp):
 
     fields = sheet.row_values(0) if sheet.nrows else []
 
-    fields = [value or 'Unnamed: {0}'.format(index+1) for index, value in enumerate(fields)]
+    fields = [
+        str(value)
+        if not isinstance(value, basestring) and value is not None
+        else value or 'Unnamed: {0}'.format(index+1)
+        for index, value in enumerate(fields)
+    ]
 
     data = [dict(zip(fields, sheet.row_values(row_index)))
         for row_index in range(1, sheet.nrows)]

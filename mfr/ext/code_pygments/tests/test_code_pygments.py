@@ -27,6 +27,7 @@ def teardown_function(func):
     'script.RB',
     'script.JS',
     'script.md',
+    'script',
 ])
 def test_detect_common_extensions(fakefile, filename):
     fakefile.name = filename
@@ -36,7 +37,6 @@ def test_detect_common_extensions(fakefile, filename):
 
 @pytest.mark.parametrize('filename', [
     'other.y',
-    'otherpy',
     'other.bump',
     'other.',
 ])

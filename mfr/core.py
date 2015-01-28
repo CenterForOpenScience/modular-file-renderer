@@ -338,7 +338,10 @@ def copy_dir(src, dest):
     except shutil.Error as err:
         logger.warn(err)
     except OSError as err:
-        logger.debug('Skipping {src} (already exists)'.format(src=src))
+        if os.path.exists(src):
+            logger.debug('Skipping {src} (already exists)'.format(src=src))
+        else:
+            raise err
 
 
 def get_namespace(handler_cls):

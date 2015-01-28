@@ -2,7 +2,7 @@ import xlrd
 from ..exceptions import TableTooBigException, EmptyTableException
 from ..configuration import config
 from ..utilities import header_population
-from ..compat import range
+from mfr.compat import range, string_types
 
 
 def xlsx_xlrd(fp):
@@ -28,7 +28,7 @@ def xlsx_xlrd(fp):
 
     for index, value in enumerate(fields):
         fields[index] = value or 'Unnamed: {0}'.format(index+1)
-        if not isinstance(fields[index], basestring):
+        if not isinstance(fields[index], string_types):
             fields[index] = str(value)
 
     data = [dict(zip(fields, sheet.row_values(row_index)))

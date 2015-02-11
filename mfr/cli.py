@@ -8,6 +8,7 @@ import argparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXT_PATH = os.path.join(HERE, 'ext')
+WHEELHOUSE_PATH = os.environ.get('WHEELHOUSE')
 
 
 def pip_install(path, filename):
@@ -17,12 +18,11 @@ def pip_install(path, filename):
     :param filename: name of requirements file
     """
     file_location = (os.path.join(path, filename))
-    wheelhouse_path = os.environ.get('WHEELHOUSE')
 
     if os.path.isfile(file_location):
         pip_args = ['install', '-r', file_location]
-        if wheelhouse_path:
-            pip_args.extend(['--use-wheel', '--find-links', wheelhouse_path])
+        if WHEELHOUSE_PATH:
+            pip_args.extend(['--use-wheel', '--find-links', WHEELHOUSE_PATH])
         pip.main(pip_args)
 
 

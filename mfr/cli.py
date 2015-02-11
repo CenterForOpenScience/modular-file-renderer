@@ -8,6 +8,7 @@ import argparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXT_PATH = os.path.join(HERE, 'ext')
+WHEELHOUSE_PATH = os.environ.get('WHEELHOUSE')
 
 
 def pip_install(path, filename):
@@ -19,7 +20,10 @@ def pip_install(path, filename):
     file_location = (os.path.join(path, filename))
 
     if os.path.isfile(file_location):
-        pip.main(['install', "-r", file_location])
+        pip_args = ['install', '-r', file_location]
+        if WHEELHOUSE_PATH:
+            pip_args.extend(['--use-wheel', '--find-links', WHEELHOUSE_PATH])
+        pip.main(pip_args)
 
 
 def plugin_requirements(render, export, plugins):
@@ -30,7 +34,7 @@ def plugin_requirements(render, export, plugins):
     :param plugins: list of plugins to install requirements of
     """
 
-    if plugins == ["all"]:
+    if plugins == ['all']:
         path_list = [
             os.path.join(EXT_PATH, directory)
             for directory in os.listdir(EXT_PATH)
@@ -42,9 +46,9 @@ def plugin_requirements(render, export, plugins):
     for path in path_list:
         if os.path.isdir(path):
             if not export:
-                pip_install(path, "render-requirements.txt")
+                pip_install(path, 'render-requirements.txt')
             if not render:
-                pip_install(path, "export-requirements.txt")
+                pip_install(path, 'export-requirements.txt')
         else:
             print('Plugin with name "{plugin}" not found. Skipping...'.format(
                 plugin=os.path.basename(os.path.normpath(path))
@@ -52,14 +56,13 @@ def plugin_requirements(render, export, plugins):
 
 
 def main():
-
     parser = argparse.ArgumentParser()
-    parser.add_argument("command")
-    parser.add_argument("-e", "--export", help="Install only export requirements",
-                        action="store_true")
-    parser.add_argument("-r", "--render", help="Install only render requirements",
-                        action="store_true")
-    parser.add_argument("plugin", nargs="*", help="List of plugins to install reqs")
+    parser.add_argument('command')
+    parser.add_argument('-e', '--export', help='Install only export requirements',
+                        action='store_true')
+    parser.add_argument('-r', '--render', help='Install only render requirements',
+                        action='store_true')
+    parser.add_argument('plugin', nargs='*', help='List of plugins to install reqs')
 
     args = parser.parse_args()
     if args.command == 'install':

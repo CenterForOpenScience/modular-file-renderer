@@ -10,22 +10,23 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 EXT_PATH = os.path.join(HERE, 'ext')
 
 
-def pip_install(path, filename, wheelhouse=None):
+def pip_install(path, filename):
     """Use pip to install from a requirements file
 
     :param path: location of file
     :param filename: name of requirements file
     """
     file_location = (os.path.join(path, filename))
+    wheelhouse_path = os.environ.get('WHEELHOUSE')
 
     if os.path.isfile(file_location):
         pip_args = ['install', '-r', file_location]
-        if wheelhouse:
-            pip_args.extend(['--use-wheel', '--find-links', wheelhouse])
+        if wheelhouse_path:
+            pip_args.extend(['--use-wheel', '--find-links', wheelhouse_path])
         pip.main(pip_args)
 
 
-def plugin_requirements(render, export, plugins, wheelhouse=None):
+def plugin_requirements(render, export, plugins):
     """Install the requirements of the core plugins
 
     :param render: install only render requirements
@@ -45,9 +46,9 @@ def plugin_requirements(render, export, plugins, wheelhouse=None):
     for path in path_list:
         if os.path.isdir(path):
             if not export:
-                pip_install(path, 'render-requirements.txt', wheelhouse=wheelhouse)
+                pip_install(path, 'render-requirements.txt')
             if not render:
-                pip_install(path, 'export-requirements.txt', wheelhouse=wheelhouse)
+                pip_install(path, 'export-requirements.txt')
         else:
             print('Plugin with name "{plugin}" not found. Skipping...'.format(
                 plugin=os.path.basename(os.path.normpath(path))
@@ -61,7 +62,6 @@ def main():
                         action='store_true')
     parser.add_argument('-r', '--render', help='Install only render requirements',
                         action='store_true')
-    parser.add_argument('-w', '--wheelhouse', default=None, help='Wheelhouse directory')
     parser.add_argument('plugin', nargs='*', help='List of plugins to install reqs')
 
     args = parser.parse_args()
@@ -69,7 +69,7 @@ def main():
         if not args.plugin:
             print('Must provide at least one plugin name to install')
             sys.exit(1)
-        plugin_requirements(args.render, args.export, args.plugin, args.wheelhouse)
+        plugin_requirements(args.render, args.export, args.plugin)
     else:
         print('Invalid subcommand: "{command}"'.format(command=args.command))
         sys.exit(1)

@@ -19,7 +19,7 @@ def pip_install(path, filename, wheelhouse=None):
     file_location = (os.path.join(path, filename))
 
     if os.path.isfile(file_location):
-        pip_args = ['install', '-r', file_location, '-']
+        pip_args = ['install', '-r', file_location]
         if wheelhouse:
             pip_args.extend(['--use-wheel', '--find-links', wheelhouse])
         pip.main(pip_args)

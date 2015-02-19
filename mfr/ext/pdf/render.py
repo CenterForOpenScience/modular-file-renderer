@@ -28,7 +28,7 @@ def render_pdf(fp, src=None):
 
     if is_valid(fp):
         content = (
-            '<iframe src="/static/mfr/pdf/web/viewer.html?file={src}" width="100%" height="600px"/>'
+            '<iframe src="/static/mfr/pdf/web/viewer.html?file={src}" width="100%" height="600px"></iframe>'
         ).format(src = url_encoded_src)
         return RenderResult(content)
     else:

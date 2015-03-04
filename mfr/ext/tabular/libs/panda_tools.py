@@ -1,5 +1,4 @@
 import pandas
-import re
 from tempfile import NamedTemporaryFile
 from ..utilities import header_population, strip_comments
 

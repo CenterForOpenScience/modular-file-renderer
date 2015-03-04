@@ -2,13 +2,17 @@
 
 import pygments
 import pygments.lexers
+import pygments.lexers.special
 import pygments.formatters
+from pygments.util import ClassNotFound
 
 from mfr import config as core_config
 from mfr import RenderResult
 
 from .configuration import config as module_config
 
+
+DEFAULT_LEXER = pygments.lexers.special.TextLexer
 
 def render_html(fp, *args, **kwargs):
     """Generate an html representation of the file
@@ -18,7 +22,10 @@ def render_html(fp, *args, **kwargs):
     """
     formatter = pygments.formatters.HtmlFormatter(cssclass=module_config['CSS_CLASS'])
     content = fp.read()
-    lexer = pygments.lexers.guess_lexer_for_filename(fp.name, content)
+    try:
+        lexer = pygments.lexers.guess_lexer_for_filename(fp.name, content)
+    except ClassNotFound:
+        lexer = DEFAULT_LEXER()
     content = pygments.highlight(content, lexer, formatter)
     assets = {"css": [get_stylesheet()]}
     return RenderResult(content=content, assets=assets)

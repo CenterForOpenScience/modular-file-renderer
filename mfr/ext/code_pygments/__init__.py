@@ -11,6 +11,7 @@ except ImportError:
     renderers = {}
 
 EXTENSIONS = [
+    '',
     '.6pl',
     '.6pm',
     '.ASM',
@@ -398,6 +399,7 @@ EXTENSIONS = [
     '.tt',
     '.twig',
     '.txt',
+    '.md',
     '.u',
     '.v',
     '.vala',

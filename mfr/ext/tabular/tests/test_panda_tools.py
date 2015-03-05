@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 from ..libs import panda_tools
 
@@ -16,7 +18,7 @@ def test_csv_pandas():
         headers, data = panda_tools.csv_pandas(fp)
 
     assert headers[0] == {'field': 'one', 'id': 'one', 'name': 'one'}
-    assert data[0] == {'one': 'a', 'two': 'b', 'three': 'c'}
+    assert data[0] == {'one': 'à', 'two': 'b', 'three': 'c'}
 
 
 def test_tsv_pandas():

@@ -7,7 +7,6 @@ import mfr
 
 def is_valid(fp):
     """Tests file pointer for validity
-
     :return: True if fp is a valid pdf, False if not
     """
     try:
@@ -19,7 +18,6 @@ def is_valid(fp):
 
 def render_pdf(fp, src=None):
     """A simple pdf renderer.
-
     :param fp: File pointer
     :param src: Path to file
     :return: A RenderResult object containing html content and js assets for pdf rendering
@@ -36,5 +34,3 @@ def render_pdf(fp, src=None):
         return RenderResult(content)
     else:
         return RenderResult("This is not a valid pdf file")
-
-

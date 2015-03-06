@@ -21,4 +21,3 @@ Contributors
 - Lyndsy Simon `@lyndsysimon <https://github.com/lyndsysimon>`_
 - Jeffrey Spies `@JeffSpies <https://github.com/JeffSpies>`_
 - Matt Frazier `@mfraezz <https://github.com/mfraezz>`_
-- Casey Rollins `@caseyrollins <https://github.com/caseyrollins>`_

@@ -1,4 +1,5 @@
 """PDF renderer module."""
+import mfr
 from mfr.core import RenderResult
 import PyPDF2
 import urllib
@@ -25,7 +26,7 @@ def render_pdf(fp, src=None):
     :return: A RenderResult object containing html content and js assets for pdf rendering
     """
     src = src or fp.name
-    url_encoded_src = urllib.quote_plus(src)
+    url_encoded_src = urllib.quote_plus(sr)
 
     assets_uri_base = '{0}/pdf'.format(mfr.config['ASSETS_URL'])
 
@@ -34,7 +35,6 @@ def render_pdf(fp, src=None):
             '<iframe src="{base}/web/viewer.html?file={src}" width="100%" height="600px"></iframe>'
         ).format(src=url_encoded_src, base=assets_uri_base)
         return RenderResult(content)
+
     else:
         return RenderResult("This is not a valid pdf file")
-
-

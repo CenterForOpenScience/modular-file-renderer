@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import re
+
+from mfr import compat
+
 
 def header_population(headers):
     """make column headers from a list
@@ -15,7 +20,6 @@ def data_population(in_data, headers=None):
     :param fields: column headers
     :return: JSON representation of rows
     """
-
     headers = headers or in_data[0]
 
     return [
@@ -24,7 +28,12 @@ def data_population(in_data, headers=None):
         for row in in_data
     ]
 
+
 def strip_comments(src, dest):
-    data = re.sub('%.*?\n', '', src.read()).encode('ascii', 'ignore')
+    data = re.sub('%.*?\n', '', src.read())
+    # Destination temp file is opened in binary mode; must cast contents to
+    # bytes before writing.
+    if isinstance(data, compat.unicode):
+        data = data.encode('utf-8', 'ignore')
     dest.write(data)
     dest.seek(0)

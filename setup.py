@@ -7,7 +7,7 @@ from setuptools.command.test import test as TestCommand
 
 # Plugins that will not work with python versions
 EXCLUDE_PLUGINS = {
-    "2.6": ['mfr_ipynb'],
+    "2.6": ['mfr_ipynb', 'mfr_md'],
     "2.7": [],
     "3.3": ['mfr_docx', 'mfr_code_pygments', 'mfr_pdf'],
     "3.4": ['mfr_docx', 'mfr_code_pygments', 'mfr_pdf'],

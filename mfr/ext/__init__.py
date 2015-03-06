@@ -11,7 +11,6 @@ from mfr.ext import (
     pdf,
     rst,
     tabular,
-    md,
 )
 
 ALL_HANDLERS = [
@@ -25,5 +24,4 @@ ALL_HANDLERS = [
     pdf.Handler,
     rst.Handler,
     tabular.Handler,
-    md.Handler,
 ]

@@ -14,4 +14,4 @@ if not sys.version_info >= (3, 0):
         :return: RenderResult object containing the content html
         """
         content = Docx2Html(fp).parsed_without_head
-        return RenderResult(content=content.encode('ascii', 'ignore'), assets={})
+        return RenderResult(content=content)

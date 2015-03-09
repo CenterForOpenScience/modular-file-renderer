@@ -9,7 +9,8 @@ import mfr
 import os
 from .configuration import config
 from .exceptions import TableTooBigException, \
-    EmptyTableException, MissingRequirementsException
+    EmptyTableException, MissingRequirementsException, \
+    UnexpectedFormattingException
 from mfr.core import RenderResult, get_file_extension, get_assets_from_list
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +36,10 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    columns, rows = populate_data(fp)
+    try:
+        columns, rows = populate_data(fp)
+    except KeyError:
+        raise UnexpectedFormattingException()
 
     max_size = config['max_size']
     table_width = config['table_width']
@@ -50,12 +54,18 @@ def render_html(fp, src=None):
     table_size = 'small_table' if len(columns) < 9 else 'big_table'
     slick_grid_options = config.get('slick_grid_options').get(table_size)
 
+    try:
+        columns = json.dumps(columns),
+        rows = json.dumps(rows),
+    except UnicodeDecodeError:
+        raise UnexpectedFormattingException()
+
     with open(TEMPLATE) as template:
         content = template.read().format(
             width=table_width,
             height=table_height,
-            columns=json.dumps(columns),
-            rows=json.dumps(rows),
+            columns=columns,
+            rows=rows,
             options=json.dumps(slick_grid_options),
         )
 

@@ -55,8 +55,8 @@ def render_html(fp, src=None):
     slick_grid_options = config.get('slick_grid_options').get(table_size)
 
     try:
-        columns = json.dumps(columns),
-        rows = json.dumps(rows),
+        columns = json.dumps(columns)
+        rows = json.dumps(rows)
     except UnicodeDecodeError:
         raise UnexpectedFormattingException()
 

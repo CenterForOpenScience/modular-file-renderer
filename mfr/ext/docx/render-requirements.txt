@@ -1,2 +1,2 @@
-git+https://github.com/mfraezz/pydocx.git
+git+https://github.com/CenterForOpenScience/pydocx.git
 git+https://github.com/jsocol/bleach.git

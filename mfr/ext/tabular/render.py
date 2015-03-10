@@ -36,10 +36,7 @@ def render_html(fp, src=None):
     :return: RenderResult object containing html and assets
     """
 
-    try:
-        columns, rows = populate_data(fp)
-    except KeyError:
-        raise UnexpectedFormattingException()
+    columns, rows = populate_data(fp)
 
     max_size = config['max_size']
     table_width = config['table_width']
@@ -99,6 +96,9 @@ def populate_data(fp):
         except ImportError:
             pass
         else:
-            return imported(fp)
+            try:
+                return imported(fp)
+            except KeyError:
+                raise UnexpectedFormattingException()
 
     raise MissingRequirementsException('Renderer requirements are not met')

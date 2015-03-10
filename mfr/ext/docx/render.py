@@ -7,7 +7,7 @@ if not sys.version_info >= (3, 0):
     from pydocx.parsers import Docx2Html
     from mfr import RenderResult
 
-    class OSFDocx2HtmlParser(Docx2Html):
+    class MFRDocx2HtmlParser(Docx2Html):
         def head(self):
             return ''
 
@@ -20,5 +20,5 @@ if not sys.version_info >= (3, 0):
         :param fp: File pointer
         :return: RenderResult object containing the content html
         """
-        content = OSFDocx2HtmlParser(fp).parsed
+        content = MFRDocx2HtmlParser(fp).parsed
         return RenderResult(content=content)

@@ -68,15 +68,15 @@ setup(
     include_package_data=True,
     package_data={
         "mfr.ext.code_pygments": ['static/css/*'],
-        "mfr.ext.ipynb": ['static/css/*', 'static/js/*', 'templates/*'],
+        "mfr.ext.ipynb": ['static/*/*', 'templates/*'],
+        "mfr.ext.pdb": ['static/*/*', 'templates/*']
         "mfr.ext.pdf": ['static/build/*',
                         'static/web/*.*'
                         'static/web/cmaps/*',
                         'static/web/images/*',
                         'static/web/locale/locale.properties',
                         'static/web/locale/*/*.properties'],
-        "mfr.ext.tabular": ['static/css/*', 'static/images/*',
-                            'static/js/*', 'static/templates/*'],
+        "mfr.ext.tabular": ['static/*/*', 'templates/*'],
     },
     license=read("LICENSE"),
     zip_safe=False,

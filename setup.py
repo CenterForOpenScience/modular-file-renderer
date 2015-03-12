@@ -69,7 +69,7 @@ setup(
     package_data={
         "mfr.ext.code_pygments": ['static/css/*'],
         "mfr.ext.ipynb": ['static/*/*', 'templates/*'],
-        "mfr.ext.pdb": ['static/*/*', 'templates/*']
+        "mfr.ext.pdb": ['static/*/*', 'templates/*'],
         "mfr.ext.pdf": ['static/build/*',
                         'static/web/*.*',
                         'static/web/cmaps/*',

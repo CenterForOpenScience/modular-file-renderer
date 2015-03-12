@@ -1,16 +1,12 @@
 """PDF renderer module."""
-import mfr
 from mfr.core import RenderResult
-from mako.lookup import TemplateLookup
-from mfr import config as core_config
-import os
 import PyPDF2
 import urllib
 import mfr
 
+
 def is_valid(fp):
     """Tests file pointer for validity
-
     :return: True if fp is a valid pdf, False if not
     """
     try:
@@ -19,14 +15,15 @@ def is_valid(fp):
     except PyPDF2.utils.PdfReadError:
         return False
 
+
 def render_pdf(fp, src=None):
     """A simple pdf renderer.
-
     :param fp: File pointer
     :param src: Path to file
     :return: A RenderResult object containing html content and js assets for pdf rendering
     """
     src = src or fp.name
+    url_encoded_src = urllib.quote_plus(src)
 
     assets_uri_base = '{0}/pdf'.format(mfr.config['ASSETS_URL'])
 

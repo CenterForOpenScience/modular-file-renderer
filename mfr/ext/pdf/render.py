@@ -5,28 +5,8 @@ from mako.lookup import TemplateLookup
 from mfr import config as core_config
 import os
 import PyPDF2
-
-
-template = TemplateLookup(
-    directories=[os.path.join(os.path.dirname(__file__),
-        'templates')]).get_template("pdfpage.mako")
-
-JS_ASSETS = [
-    "pdf.js",
-    "compatibility.js",
-    #"jquery.min.js",
-]
-
-
-def get_assets():
-    """Creates a dictionary of js and css assets"""
-    assets_uri_base = '{0}/pdf'.format(mfr.config['ASSETS_URL'])
-    assets = {}
-    jspath = '{base}/js/{fname}'
-    assets['js'] = [jspath.format(base=assets_uri_base, fname=fname)
-                    for fname in JS_ASSETS]
-    return assets
-
+import urllib
+import mfr
 
 def is_valid(fp):
     """Tests file pointer for validity
@@ -48,8 +28,12 @@ def render_pdf(fp, src=None):
     """
     src = src or fp.name
 
+    assets_uri_base = '{0}/pdf'.format(mfr.config['ASSETS_URL'])
+
     if is_valid(fp):
-        content = template.render(url=src, STATIC_PATH=core_config['ASSETS_URL'])
-        return RenderResult(content, assets=get_assets())
+        content = (
+            '<iframe src="{base}/web/viewer.html?file={src}" width="100%" height="600px"></iframe>'
+        ).format(src=url_encoded_src, base=assets_uri_base)
+        return RenderResult(content)
     else:
         return RenderResult("This is not a valid pdf file")

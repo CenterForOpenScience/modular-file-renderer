@@ -15,6 +15,7 @@ EXCLUDE_PLUGINS = {
 
 SYS_EXCLUDE = EXCLUDE_PLUGINS[sys.version[0:3]]
 
+
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -66,7 +67,16 @@ setup(
     ),
     include_package_data=True,
     package_data={
-        "": ['templates/*', 'static/*./*', '*.js', '*.css', '*.txt'],
+        "mfr.ext.code_pygments": ['static/css/*'],
+        "mfr.ext.ipynb": ['static/css/*', 'static/js/*', 'templates/*'],
+        "mfr.ext.pdf": ['static/build/*',
+                        'static/web/*.*'
+                        'static/web/cmaps/*',
+                        'static/web/images/*',
+                        'static/web/locale/locale.properties',
+                        'static/web/locale/*/*.properties'],
+        "mfr.ext.tabular": ['static/css/*', 'static/images/*',
+                            'static/js/*', 'static/templates/*'],
     },
     license=read("LICENSE"),
     zip_safe=False,

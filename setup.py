@@ -66,6 +66,7 @@ setup(
     ),
     include_package_data=True,
     package_data={
+        "": ["*.txt"],
         "mfr.ext.code_pygments": ['static/css/*'],
         "mfr.ext.ipynb": ['static/*/*', 'templates/*'],
         "mfr.ext.pdb": ['static/*/*', 'templates/*'],

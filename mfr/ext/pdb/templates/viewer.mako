@@ -1,7 +1,7 @@
-<div id="viewer" style="width: auto; height: 400px; background-color: black;"></div>
+<div id="mfrViewer" style="width: auto; height: 400px; background-color: black;"></div>
 <script>
 (function () {
-    var viewer = pv.Viewer($('#viewer')[0], {
+    var viewer = pv.Viewer($('#mfrViewer')[0], {
         width: 'auto',
         height: '400',
         antialias: false,

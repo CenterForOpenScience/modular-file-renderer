@@ -1,8 +1,8 @@
-<div id="viewer"></div>
+<div id="mfrViewer"></div>
 <script>
     (function () {
         function render(url) {
-            $('#viewer').html(
+            $('#mfrViewer').html(
                 '<iframe src="${base}/web/viewer.html?file=' + encodeURIComponent(url) + '" width="100%" height="600px"></iframe>'
             );
         }

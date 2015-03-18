@@ -13,14 +13,12 @@ TEMPLATE = TemplateLookup(
         'templates')]).get_template('viewer.mako')
 
 
-def render_html(fp, src=None):
+def render_html(fp, src):
     """A simple pdf renderer.
     :param fp: File pointer
     :param src: Path to file
     :return: A RenderResult object containing html content and js assets for pdf rendering
     """
-    assert src, 'src is required'
-
     base = '{0}/pdf'.format(mfr.config['ASSETS_URL'])
 
     content = TEMPLATE.render(base=base, url=src)

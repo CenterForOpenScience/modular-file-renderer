@@ -43,15 +43,13 @@ JS_ASSETS = [
 ]
 
 
-def render_html(fp, src=None, **kwargs):
+def render_html(fp, src, **kwargs):
     """ A molecular renderer.
 
     :param fp: File pointer
     :param src: Path to source file
     :return: A RenderResult object containing html content and js assets
     """
-    assert src, 'src is required'
-
     content = TEMPLATE.render(url=src)
     assets = get_assets()
 

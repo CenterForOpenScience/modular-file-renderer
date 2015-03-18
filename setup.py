@@ -72,6 +72,7 @@ setup(
         "mfr.ext.ipynb": ['static/*/*', 'templates/*'],
         "mfr.ext.pdb": ['static/*/*', 'templates/*'],
         "mfr.ext.pdf": ['static/build/*',
+                        'templates/*',
                         'static/web/*.*',
                         'static/web/cmaps/*',
                         'static/web/images/*',

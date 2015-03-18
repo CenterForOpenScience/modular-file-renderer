@@ -33,7 +33,10 @@ def test_does_not_detect_other_extensions(fakefile, filename):
 
 def test_render_html_returns_render_result():
     mfr.config['ASSETS_URL'] = "fake/url"
+    src = 'http://www.cos.io/test.pdb'
+    encoded_src = src.replace("'", "\\'")
     with open(os.path.join(HERE, 'test.pdb')) as fp:
-        result = mfr_pdb.render_html(fp)
+        result = mfr_pdb.render_html(fp,src)
 
     assert type(result) == mfr.core.RenderResult
+    assert encoded_src in result.content

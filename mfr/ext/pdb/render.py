@@ -2,7 +2,14 @@
 #Uses PV: https://github.com/biasmv/pv
 import os
 import mfr
+
+from mako.lookup import TemplateLookup
 from mfr.core import RenderResult, get_assets_from_list
+
+
+TEMPLATE = TemplateLookup(
+    directories=[os.path.join(os.path.dirname(__file__),
+        'templates')]).get_template('viewer.mako')
 
 # assets must be loaded in this order
 JS_ASSETS = [
@@ -35,9 +42,6 @@ JS_ASSETS = [
     'viewer.js',
 ]
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-TEMPLATE = os.path.join(HERE, 'templates', 'pv.html')
-
 
 def render_html(fp, src=None, **kwargs):
     """ A molecular renderer.
@@ -46,14 +50,13 @@ def render_html(fp, src=None, **kwargs):
     :param src: Path to source file
     :return: A RenderResult object containing html content and js assets
     """
-    src = src or fp.name
+    assert src, 'src is required'
 
-    with open(TEMPLATE) as template:
-        content = template.read().format(pdb_file='\'' + src + '\'')
-
+    content = TEMPLATE.render(url=src)
     assets = get_assets()
 
     return RenderResult(content, assets)
+
 
 def get_assets():
     assets_uri_base = '{0}/pdb'.format(mfr.config['ASSETS_URL'])

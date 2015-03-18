@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from mfr.core import FileHandler, get_file_extension
-from .render import render_pdf
+from .render import render_html
 
 
 EXTENSIONS = ['.pdf']
@@ -9,7 +9,7 @@ EXTENSIONS = ['.pdf']
 class Handler(FileHandler):
     """FileHandler for Portable Document Format files."""
     renderers = {
-        'html': render_pdf,
+        'html': render_html,
     }
 
     exporters = {}

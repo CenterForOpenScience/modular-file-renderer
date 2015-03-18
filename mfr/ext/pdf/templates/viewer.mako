@@ -3,7 +3,7 @@
     (function () {
         function render(url) {
             $('#mfrViewer').html(
-                '<iframe src="${base}/web/viewer.html?file=' + encodeURIComponent(url) + '" width="100%" height="600px"></iframe>'
+                '<iframe src="${base}/web/viewer.html?file=' + encodeURIComponent(url) + '" width="100%" height="600px" frameborder="0"></iframe>'
             );
         }
 

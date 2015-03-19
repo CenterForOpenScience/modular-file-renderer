@@ -11,3 +11,7 @@ class EmptyTableException(RenderError):
 
 class TableTooBigException(RenderError):
     pass
+
+
+class UnexpectedFormattingException(RenderError):
+    pass

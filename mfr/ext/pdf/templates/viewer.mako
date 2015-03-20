@@ -1,9 +1,9 @@
-<div id="mfrViewer"></div>
+<div id="mfrViewer" class="embed-responsive" style="padding-bottom: 125%; border-bottom: solid 10px;"></div>
 <script>
     (function () {
         function render(url) {
             $('#mfrViewer').html(
-                '<iframe src="${base}/web/viewer.html?file=' + encodeURIComponent(url) + '" width="100%" height="600px" frameborder="0" allowfullscreen webkitallowfullscreen></iframe>'
+                '<iframe class="embed-responsive-item" src="${base}/web/viewer.html?file=' + encodeURIComponent(url) + '#zoom=page-fit" frameborder="0" allowfullscreen webkitallowfullscreen></iframe>'
             );
         }
 

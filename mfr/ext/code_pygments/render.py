@@ -14,6 +14,7 @@ from .configuration import config as module_config
 
 DEFAULT_LEXER = pygments.lexers.special.TextLexer
 
+
 def render_html(fp, *args, **kwargs):
     """Generate an html representation of the file
 
@@ -22,6 +23,8 @@ def render_html(fp, *args, **kwargs):
     """
     formatter = pygments.formatters.HtmlFormatter(cssclass=module_config['CSS_CLASS'])
     content = fp.read()
+    if not is_printable(content):
+        content = content.decode('utf-8', 'ignore')
     try:
         lexer = pygments.lexers.guess_lexer_for_filename(fp.name, content)
     except ClassNotFound:
@@ -37,3 +40,18 @@ def get_stylesheet():
     return "{static_url}/code_pygments/css/{theme}.css".format(
         static_url=core_config['ASSETS_URL'],
         theme=module_config['PYGMENTS_THEME'])
+
+
+def is_printable(s):
+    """Checks string s for characters that need to be decoded before rendering"""
+    LITERALS = [
+        '\\',
+        '\a',
+        '\b',
+        '\f',
+        '\n',
+        '\r',
+        '\t',
+        '\v',
+    ]
+    return all([ord(c) >= 0x20 and ord(c) <= 0x7E for c in set(s) - set(LITERALS)])

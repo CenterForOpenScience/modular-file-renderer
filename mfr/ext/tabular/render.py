@@ -39,7 +39,6 @@ def render_html(fp, src=None):
     columns, rows = populate_data(fp)
 
     max_size = config['max_size']
-    table_width = config['table_width']
     table_height = config['table_height']
 
     if len(columns) > max_size or len(rows) > max_size:
@@ -59,7 +58,6 @@ def render_html(fp, src=None):
 
     with open(TEMPLATE) as template:
         content = template.read().format(
-            width=table_width,
             height=table_height,
             columns=columns,
             rows=rows,

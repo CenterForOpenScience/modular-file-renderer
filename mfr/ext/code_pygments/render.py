@@ -44,7 +44,8 @@ def get_stylesheet():
 
 def is_printable(s):
     """Checks string s for characters that need to be decoded before rendering"""
-    LITERALS = {
+    LITERALS = [
+        '\\',
         '\a',
         '\b',
         '\f',
@@ -52,5 +53,5 @@ def is_printable(s):
         '\r',
         '\t',
         '\v',
-    }
-    return all([ord(c) >= 0x20 and ord(c) <= 0x7E for c in set(s) - LITERALS])
+    ]
+    return all([ord(c) >= 0x20 and ord(c) <= 0x7E for c in set(s) - set(LITERALS)])

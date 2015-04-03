@@ -45,7 +45,6 @@ def get_stylesheet():
 def is_printable(s):
     """Checks string s for characters that need to be decoded before rendering"""
     LITERALS = {
-        '\\',
         '\a',
         '\b',
         '\f',

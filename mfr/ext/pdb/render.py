@@ -4,7 +4,7 @@ import os
 import mfr
 
 from mako.lookup import TemplateLookup
-from mfr.core import RenderResult, get_assets_from_list
+from mfr.core_methods import RenderResult, get_assets_from_list
 
 
 TEMPLATE = TemplateLookup(
@@ -64,3 +64,8 @@ def get_assets():
     }
 
     return assets
+
+class PdbProvider:
+
+    def __new__():
+        pass

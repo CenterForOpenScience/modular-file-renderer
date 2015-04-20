@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ReStructuredText support for mfr."""
 
-from mfr.core import FileHandler, get_file_extension
+from mfr.core_methods import FileHandler, get_file_extension
 
 try:  # requires docutils
     from .render import render_rst

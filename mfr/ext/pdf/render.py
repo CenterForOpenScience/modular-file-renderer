@@ -1,10 +1,9 @@
 """PDF renderer module."""
-from mfr.core import RenderResult
 import os
 
 import mfr
 
-from mfr.core import RenderResult
+from mfr.core_methods import RenderResult
 from mako.lookup import TemplateLookup
 
 
@@ -23,3 +22,8 @@ def render_html(fp, src):
 
     content = TEMPLATE.render(base=base, url=src)
     return RenderResult(content)
+
+class PdfProvider:
+
+    def __new__():
+        pass

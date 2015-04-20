@@ -124,3 +124,8 @@ def publish(test=False):
         run('python setup.py register -r test sdist bdist_wheel upload -r test')
     else:
         run("python setup.py register sdist bdist_wheel upload")
+
+@task
+def server():
+    from mfr.server.app import serve
+    serve()

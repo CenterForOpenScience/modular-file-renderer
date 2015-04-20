@@ -1,5 +1,5 @@
 """Video renderer module."""
-from mfr.core import RenderResult
+from mfr.core_methods import RenderResult
 
 
 def render_movie_tag(fp, src=None):
@@ -19,3 +19,8 @@ def render_movie_tag(fp, src=None):
               </video>
               '''.format(file_path=src)
     return RenderResult(content=content)
+
+class MovieProvider:
+
+    def __new__():
+        pass

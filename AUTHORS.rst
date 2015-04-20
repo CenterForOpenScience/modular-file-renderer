@@ -22,3 +22,4 @@ Contributors
 - Jeffrey Spies `@JeffSpies <https://github.com/JeffSpies>`_
 - Matt Frazier `@mfraezz <https://github.com/mfraezz>`_
 - Casey Rollins `@caseyrollins <https://github.com/caseyrollins>`_
+- Michael Haselton `@icereval <https://github.com/icereval>`_

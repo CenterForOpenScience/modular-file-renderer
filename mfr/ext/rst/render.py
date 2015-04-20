@@ -11,3 +11,8 @@ def render_rst(fp, *args, **kwargs):
     """
     htmlstring = publish_parts(fp.read(), writer_name='html')['html_body']
     return RenderResult(htmlstring)
+
+class RstProvider:
+
+    def __new__():
+        pass

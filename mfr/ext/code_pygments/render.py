@@ -37,3 +37,8 @@ def get_stylesheet():
     return "{static_url}/code_pygments/css/{theme}.css".format(
         static_url=core_config['ASSETS_URL'],
         theme=module_config['PYGMENTS_THEME'])
+
+class Code_PygmentsProvider:
+
+    def __new__():
+        pass

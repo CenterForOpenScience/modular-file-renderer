@@ -11,7 +11,7 @@ from .configuration import config
 from .exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException, \
     UnexpectedFormattingException
-from mfr.core import RenderResult, get_file_extension, get_assets_from_list
+from mfr.core_methods import RenderResult, get_file_extension, get_assets_from_list
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, 'templates', 'tabular.html')
@@ -102,3 +102,8 @@ def populate_data(fp):
                 raise UnexpectedFormattingException()
 
     raise MissingRequirementsException('Renderer requirements are not met')
+
+class TablularProvider:
+
+    def __new__():
+        pass

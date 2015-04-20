@@ -3,7 +3,7 @@
 import os
 from mfr import config as core_config
 from mfr import RenderResult
-from mfr.core import get_assets_from_list
+from mfr.core_methods import get_assets_from_list
 from IPython.nbformat import current as nbformat
 from IPython.nbformat import reader as nbread
 from IPython.nbformat.reader import NotJSONError
@@ -85,3 +85,8 @@ def get_metadata(nb):
         return 'Unable to parse json', 'No metadata found'
 
     return name, css_theme
+
+class IpynbProvider:
+
+    def __new__():
+        pass

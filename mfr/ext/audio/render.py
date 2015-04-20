@@ -1,5 +1,5 @@
 """Audio renderer module."""
-from mfr.core import RenderResult
+from mfr.core_methods import RenderResult
 
 
 def render_audio_tag(fp, src=None):
@@ -17,3 +17,8 @@ def render_audio_tag(fp, src=None):
     )
 
     return RenderResult(content)
+
+class AudioProvider:
+
+    def __new__():
+        pass

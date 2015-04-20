@@ -6,7 +6,7 @@ __version__ = '0.1.0-alpha'
 __author__ = 'Center for Open Science'
 
 
-from mfr.core import (
+from mfr.core_methods import (
     render,
     detect,
     FileHandler,

@@ -24,3 +24,8 @@ if not sys.version_info >= (3, 0):
         content = MFRDocx2Html(fp).parsed
         return RenderResult(content=content)
 # TODO: Raise error if on py3
+
+class DocxProvider:
+
+    def __new__():
+        pass

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from mfr.core import FileHandler, get_file_extension
+from mfr.core_methods import FileHandler, get_file_extension
 from .render import render_movie_tag
 
 EXTENSIONS = [

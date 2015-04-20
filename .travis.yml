@@ -5,8 +5,9 @@ language: python
 sudo: false
 
 python:
-  - "2.6"
-  - "2.7"
+  # remove? incompatable with asyncio.coroutine
+  #- "2.6"
+  #- "2.7"
   - "3.3"
   - "3.4"
   # TODO(asmacdo)

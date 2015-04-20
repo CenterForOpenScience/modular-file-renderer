@@ -1,5 +1,5 @@
 """Image renderer module."""
-from mfr.core import RenderResult
+from mfr.core_methods import RenderResult
 
 
 def render_img_tag(fp, src=None, alt=''):
@@ -15,3 +15,8 @@ def render_img_tag(fp, src=None, alt=''):
 
     content = '<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt)
     return RenderResult(content)
+
+class ImageProvider:
+
+    def __new__():
+        pass

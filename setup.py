@@ -56,6 +56,7 @@ def read(fname):
 setup(
     name='mfr',
     version=__version__,
+    #namespace_packages=['mfr, mfr.providers'],
     description='HTML file renderer for Python',
     long_description=(read("README.rst") + '\n\n' +
                       read("HISTORY.rst")),
@@ -65,6 +66,7 @@ setup(
     packages=list(
         set(find_packages(exclude=["test*", "player*", "*.tests"])) - set(SYS_EXCLUDE)
     ),
+    package_dir={'mfr': 'mfr'},
     include_package_data=True,
     package_data={
         "": ["*.txt"],
@@ -95,8 +97,23 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
+    provides=[
+        'mfr.providers',
+    ],
     entry_points={
-        'console_scripts': ['mfr = mfr.cli:main']
+        'console_scripts': ['mfr = mfr.cli:main'],
+        'mfr.providers': [
+            'audio = mfr.ext.audio:AudioProvider',
+            'code_pygments = mfr.ext.code_pygments:Code_PygmentsProvider',
+            'docx = mfr.ext.docx:DocxProvider',
+            'image = mfr.ext.image:ImageProvider',
+            'ipynb = mfr.ext.ipynb:IpynbProvider',
+            'movie = mfr.ext.movie:MovieProvider',
+            'pdb = mfr.ext.pdb.PdbProvider',
+            'pdf = mfr.ext.pdf:PdfProvider',
+            'rst = mfr.ext.rst:RstProvider',
+            'tabular = mfr.ext.tabular.TabularProvider',
+        ]
     },
     test_suite='tests',
     tests_require=['pytest'],

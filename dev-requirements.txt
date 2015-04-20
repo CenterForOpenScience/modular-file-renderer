@@ -7,6 +7,14 @@ invoke
 # Docs
 sphinx
 
+# Server
+aiohttp==0.14.1
+tornado==4.0.2
+furl==0.4.2
+stevedore==1.2.0
+git+https://github.com/jmcarp/raven-python
+mako
+
 # Testing
 mock
 pytest

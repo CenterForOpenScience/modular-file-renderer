@@ -1,11 +1,14 @@
-from mfr.server import utils
-from mfr.server.handlers import core
-from mfr.core_methods import render
-from mfr.server.settings import code_extensions
-from mfr.tasks import core
-from mfr.settings import defaults
+import os
+import asyncio
 
-import codecs
+from mfr.core import utils as core_utils
+from mfr.core.streams.base import StringStream
+
+from mfr.server import utils
+from mfr.server import settings
+from mfr.server.handlers import core
+
+from mfr.core.streams import FileStreamReader
 
 class RenderHandler(core.BaseHandler):
 
@@ -20,28 +23,47 @@ class RenderHandler(core.BaseHandler):
     @utils.coroutine
     def get(self):
         """Render a file with the extension"""
-        encoding = None
-        if get_file_extensions(self.arguments['file_path']) in code_extensions:
-            encoding = 'urf-8'
-        with codecs.open(self.arguments['file_path'], encoding=encoding):
-        try:
-            pass
+        cached_file_path = os.path.join('/tmp', 'mfr', 'files', self.unique_key)
+        cached_rendition_path = os.path.join('/tmp', 'mfr', 'rendition', self.unique_key)
 
-        # if file is cached
-        #    stream back to client
-        # if file is not cached
-        #    download file from waterbutler
-        #    pass to renderer
-        #    cache result
-        #    stream back to client
+        os.makedirs(os.path.dirname(cached_file_path), exist_ok=True)
+        os.makedirs(os.path.dirname(cached_rendition_path), exist_ok=True)
 
-        result = yield from self.ext.render(**self.arguments)
+        self.extension = core_utils.make_extension(
+            self.ext_name,
+            self.url,
+            cached_file_path,
+            '{}://{}/assets'.format(self.request.protocol, self.request.host),
+        )
 
-        if defaults.USE_CELERY:
-            pass
-                #rendered_result = build_html(result).delay
-        else:
-            rendered_result = build_html(result)
-        self.write({'data': result})
+        # TODO: Remove after changed to write to temp folder then move to final destination
+        if os.path.exists(cached_rendition_path):
+            os.remove(cached_rendition_path)
 
+        if not os.path.exists(cached_rendition_path):
+            if os.path.exists(cached_file_path):
+                os.remove(cached_file_path)
 
+            file_stream = yield from self.provider.download()
+            with open(cached_file_path, 'wb') as file_pointer:
+                chunk = yield from file_stream.read(settings.CHUNK_SIZE)
+                while chunk:
+                    file_pointer.write(chunk)
+                    chunk = yield from file_stream.read(settings.CHUNK_SIZE)
+
+            loop = asyncio.get_event_loop()
+            rendition = (yield from loop.run_in_executor(None, self.extension.render))
+            rendition_stream = StringStream(rendition)
+            with open(cached_rendition_path, 'wb') as file_pointer:
+                chunk = yield from rendition_stream.read(settings.CHUNK_SIZE)
+                while chunk:
+                    file_pointer.write(chunk)
+                    chunk = yield from rendition_stream.read(settings.CHUNK_SIZE)
+
+        with open(cached_rendition_path, 'rb') as file_pointer:
+            file_stream = FileStreamReader(file_pointer)
+            chunk = yield from file_stream.read(settings.CHUNK_SIZE)
+            while chunk:
+                self.write(chunk)
+                yield from utils.future_wrapper(self.flush())
+                chunk = yield from file_stream.read(settings.CHUNK_SIZE)

@@ -23,3 +23,5 @@ tox>=1.5.0
 
 # Previewer dependencies
 Flask
+
+-r requirements.txt

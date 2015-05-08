@@ -1,0 +1,18 @@
+import abc
+
+
+class BaseRenderer(metaclass=abc.ABCMeta):
+
+    def __init__(self, url, file_path, assets_url):
+        self.url = url
+        self.file_path = file_path
+        self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
+
+    @abc.abstractmethod
+    def render(self):
+        pass
+
+    def _get_module_name(self):
+        return self.__module__ \
+            .replace('mfr.extensions.', '', 1) \
+            .replace('.render', '', 1)

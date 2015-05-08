@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from mfr.core_methods import FileHandler, get_file_extension
 from .render import render_img_tag
+from .render import ImageProvider
 
 try:  # Exporter requires PIL
     from .export import ImageExporter

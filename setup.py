@@ -105,7 +105,7 @@ setup(
         'mfr.providers': [
             'audio = mfr.ext.audio:AudioProvider',
             'code_pygments = mfr.ext.code_pygments:Code_PygmentsProvider',
-            'docx = mfr.ext.docx:DocxProvider',
+            'docx = mfr.ext.docx:MFRDocx2Html',
             'image = mfr.ext.image:ImageProvider',
             'ipynb = mfr.ext.ipynb:IpynbProvider',
             'movie = mfr.ext.movie:MovieProvider',

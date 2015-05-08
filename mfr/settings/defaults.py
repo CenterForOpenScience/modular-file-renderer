@@ -3,12 +3,30 @@ import json
 import logging
 import logging.config
 
+os_env = os.environ
 
-PROJECT_NAME = 'modular-file-renderer'
-PROJECT_CONFIG_PATH = '~/.cos'
+SENTRY_DSN = None
 
 WATERBUTLER_URL = 'http://localhost:7777'
 WATERBUTLER_ADDRS = ['127.0.0.1']
+
+# Use Celery for file rendering
+USE_CELERY = True
+
+##### Celery #####
+## Default RabbitMQ broker
+BROKER_URL = 'amqp://'
+
+# Default RabbitMQ backend
+CELERY_RESULT_BACKEND = 'amqp://'
+
+# Modules to import when celery launches
+CELERY_IMPORTS = (
+    'tasks'
+)
+
+PROJECT_NAME = 'modular-file-renderer'
+PROJECT_CONFIG_PATH = '~/.mfr'
 
 DEFAULT_LOGGING_CONFIG = {
     'version': 1,
@@ -42,7 +60,6 @@ DEFAULT_LOGGING_CONFIG = {
     }
 }
 
-
 try:
     config_path = os.environ['{}_CONFIG'.format(PROJECT_NAME.upper())]
 except KeyError:
@@ -61,7 +78,6 @@ else:
 
 def get(key, default):
     return config.get(key, default)
-
 
 logging_config = get('LOGGING', DEFAULT_LOGGING_CONFIG)
 logging.config.dictConfig(logging_config)

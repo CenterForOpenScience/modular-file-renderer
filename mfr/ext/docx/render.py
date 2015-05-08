@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """Docx renderer module."""
 import sys
+import abc
+from mfr.tasks import app
+
 
 if not sys.version_info >= (3, 0):
     from pydocx.parsers import Docx2Html
@@ -23,9 +26,8 @@ if not sys.version_info >= (3, 0):
         """
         content = MFRDocx2Html(fp).parsed
         return RenderResult(content=content)
-# TODO: Raise error if on py3
 
-class DocxProvider:
+class DocxProvider(metaclass=abc.ABCMeta):
 
-    def __new__():
-        pass
+    def __init__(self):
+        self.name = 'name'

@@ -3,11 +3,12 @@ import functools
 import asyncio
 
 from mfr import settings
+from mfr.tasks import app
 
 from stevedore import driver
 from raven.contrib.tornado import AsyncSentryClient
 
-sentry_dns = settings.get('SENTRY_DSN', None)
+sentry_dns = settings.SENTRY_DSN
 
 class AioSentryClient(AsyncSentryClient):
 
@@ -27,8 +28,8 @@ if sentry_dns:
 else:
     client = None
 
-
-def make_provider(name, auth, credentials, settings):
+@app.task
+def make_provider(name):
     """Returns an instance of :class:`waterbutler.core.provider.BaseProvider`
 
     :param str name: The name of the provider to instantiate. (s3, box, etc)
@@ -42,7 +43,7 @@ def make_provider(name, auth, credentials, settings):
         namespace='mfr.providers',
         name=name,
         invoke_on_load=True,
-        invoke_args=(auth, credentials, settings),
+        #invoke_args=(),
     )
     return manager.driver
 

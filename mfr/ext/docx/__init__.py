@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from mfr.core_methods import FileHandler, get_file_extension
+from .render import DocxProvider
 
 try:  # requires pydocx
     from .render import render_docx

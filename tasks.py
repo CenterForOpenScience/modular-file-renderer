@@ -125,6 +125,18 @@ def publish(test=False):
     else:
         run("python setup.py register sdist bdist_wheel upload")
 
+
+@task
+def celery():
+    from waterbutler.tasks.app import app
+    app.worker_main(['worker'])
+
+
+@task
+def rabbitmq():
+    run('rabbitmq-server', pty=True)
+
+
 @task
 def server():
     from mfr.server.app import serve

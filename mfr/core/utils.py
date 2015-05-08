@@ -2,13 +2,15 @@ import os
 import functools
 import asyncio
 
-from mfr import settings
-from mfr.tasks import app
+import aiohttp
 
 from stevedore import driver
 from raven.contrib.tornado import AsyncSentryClient
 
-sentry_dns = settings.SENTRY_DSN
+from mfr import settings
+
+sentry_dns = settings.get('SENTRY_DSN', None)
+
 
 class AioSentryClient(AsyncSentryClient):
 
@@ -28,22 +30,39 @@ if sentry_dns:
 else:
     client = None
 
-@app.task
-def make_provider(name):
-    """Returns an instance of :class:`waterbutler.core.provider.BaseProvider`
+def make_provider(name, url):
+    """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 
     :param str name: The name of the provider to instantiate. (s3, box, etc)
     :param dict auth:
     :param dict credentials:
     :param dict settings:
 
-    :rtype: :class:`waterbutler.core.provider.BaseProvider`
+    :rtype: :class:`mfr.core.provider.BaseProvider`
     """
     manager = driver.DriverManager(
         namespace='mfr.providers',
         name=name,
         invoke_on_load=True,
-        #invoke_args=(),
+        invoke_args=(url, ),
+    )
+    return manager.driver
+
+def make_extension(name, url, file_path, assets_url):
+    """Returns an instance of :class:`mfr.core.ext.BaseProvider`
+
+    :param str name: The name of the provider to instantiate. (s3, box, etc)
+    :param dict auth:
+    :param dict credentials:
+    :param dict settings:
+
+    :rtype: :class:`mfr.core.provider.BaseProvider`
+    """
+    manager = driver.DriverManager(
+        namespace='mfr.extensions',
+        name=name,
+        invoke_on_load=True,
+        invoke_args=(url, file_path, assets_url),
     )
     return manager.driver
 

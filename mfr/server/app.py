@@ -9,6 +9,7 @@ from mfr.core.utils import AioSentryClient
 from mfr.server.handlers import render
 from mfr.server.handlers import status
 from mfr.server import settings as server_settings
+from mfr.server.handlers.core import ExtensionsStaticFileHandler
 
 
 def make_app(debug):
@@ -16,6 +17,7 @@ def make_app(debug):
         [
             (r'/render', render.RenderHandler),
             (r'/status', status.StatusHandler),
+            (r'/assets/(.*?)/(.*\..*)', ExtensionsStaticFileHandler),
         ],
         debug=debug,
     )

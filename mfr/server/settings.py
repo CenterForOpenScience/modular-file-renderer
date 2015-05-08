@@ -27,3 +27,5 @@ IDENTITY_API_URL = config.get('IDENTITY_API_URL', 'http://127.0.0.1:5001/api/v1/
 
 HMAC_ALGORITHM = getattr(hashlib, config.get('HMAC_ALGORITHM', 'sha256'))
 HMAC_SECRET = config.get('HMAC_SECRET', 'changeme').encode('utf-8')
+
+PROVIDER_NAME = config.get('PROVIDER_NAME', 'osf')

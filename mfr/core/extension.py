@@ -12,6 +12,10 @@ class BaseRenderer(metaclass=abc.ABCMeta):
     def render(self):
         pass
 
+    @abc.abstractproperty
+    def requires_file(self):
+        pass
+
     def _get_module_name(self):
         return self.__module__ \
             .replace('mfr.extensions.', '', 1) \

@@ -41,15 +41,16 @@ class RenderHandler(core.BaseHandler):
             os.remove(cached_rendition_path)
 
         if not os.path.exists(cached_rendition_path):
-            if os.path.exists(cached_file_path):
-                os.remove(cached_file_path)
+            if self.extension.requires_file:
+                if os.path.exists(cached_file_path):
+                    os.remove(cached_file_path)
 
-            file_stream = yield from self.provider.download()
-            with open(cached_file_path, 'wb') as file_pointer:
-                chunk = yield from file_stream.read(settings.CHUNK_SIZE)
-                while chunk:
-                    file_pointer.write(chunk)
+                file_stream = yield from self.provider.download()
+                with open(cached_file_path, 'wb') as file_pointer:
                     chunk = yield from file_stream.read(settings.CHUNK_SIZE)
+                    while chunk:
+                        file_pointer.write(chunk)
+                        chunk = yield from file_stream.read(settings.CHUNK_SIZE)
 
             loop = asyncio.get_event_loop()
             rendition = (yield from loop.run_in_executor(None, self.extension.render))

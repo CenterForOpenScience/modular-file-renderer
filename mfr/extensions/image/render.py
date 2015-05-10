@@ -1,6 +1,5 @@
 """Image renderer module."""
-from mfr.core_methods import RenderResult
-
+from mfr.core import extension
 
 def render_img_tag(fp, src=None, alt=''):
     """A simple image tag renderer.
@@ -11,12 +10,13 @@ def render_img_tag(fp, src=None, alt=''):
     :return: RenderResult object containing the content html
     """
     # Default src to the filename
-    src = src or fp.name
+   # src = src or fp.name
 
-    content = '<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt)
-    return RenderResult(content)
+   # content = '<img src="{src}" alt="{alt}" />'.format(src=src, alt=alt)
 
-class ImageProvider:
 
-    def __new__():
-        pass
+class ImageRenderer(extension.BaseRenderer):
+
+    def render(self):
+        return '<img src="{src}" />'.format(src=self.url)
+

@@ -1,6 +1,6 @@
 """ ReStructuredText renderer module """
 from docutils.core import publish_parts
-from mfr import RenderResult
+from mfr.core import extension
 
 def render_rst(fp, *args, **kwargs):
     """A simple reStructuredText renderer
@@ -10,9 +10,8 @@ def render_rst(fp, *args, **kwargs):
 
     """
     htmlstring = publish_parts(fp.read(), writer_name='html')['html_body']
-    return RenderResult(htmlstring)
 
-class RstProvider:
+class RstRenderer(extension.BaseRenderer):
 
-    def __new__():
-        pass
+    def render(self):
+        return '<html>'

@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 """Docx renderer module."""
 import sys
-import abc
-from mfr.tasks import app
 
+from mfr.core import extension
 
 if not sys.version_info >= (3, 0):
     from pydocx.parsers import Docx2Html
-    from mfr import RenderResult
 
     # Workaround to remove default stylesheet and inlined styles
     # see: https://github.com/CenterForOpenScience/pydocx/issues/102
@@ -25,9 +23,8 @@ if not sys.version_info >= (3, 0):
         :return: RenderResult object containing the content html
         """
         content = MFRDocx2Html(fp).parsed
-        return RenderResult(content=content)
 
-class DocxProvider(metaclass=abc.ABCMeta):
+class DocxRenderer(extension.BaseRenderer):
 
-    def __init__(self):
-        self.name = 'name'
+    def render(self):
+        pass

@@ -4,7 +4,7 @@ import os
 import mfr
 
 from mako.lookup import TemplateLookup
-from mfr.core_methods import RenderResult, get_assets_from_list
+from mfr.core import extension
 
 
 TEMPLATE = TemplateLookup(
@@ -53,19 +53,19 @@ def render_html(fp, src, **kwargs):
     content = TEMPLATE.render(url=src)
     assets = get_assets()
 
-    return RenderResult(content, assets)
+    #return RenderResult(content, assets)
 
 
 def get_assets():
     assets_uri_base = '{0}/pdb'.format(mfr.config['ASSETS_URL'])
 
     assets = {
-        'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS)
+  #      'js': get_assets_from_list(assets_uri_base, 'js', JS_ASSETS)
     }
 
     return assets
 
-class PdbProvider:
+class PdbRenderer(extension.BaseRenderer):
 
-    def __new__():
-        pass
+    def render(self):
+        return '<some html>'

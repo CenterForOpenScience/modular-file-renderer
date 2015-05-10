@@ -1,24 +1,11 @@
 """Audio renderer module."""
-from mfr.core_methods import RenderResult
+from mfr.core import extension
 
 
-def render_audio_tag(fp, src=None):
-    """Create a simple audio tag for a static audio file
+class AudioRenderer(extension.BaseRenderer):
 
-    :param fp: File pointer.
-    :param src: The path to the audio file.
-    :return: RenderResult object containing html audio tag for given file"""
-
-    src = src or fp.name
-
-    content = '<audio controls>{file_name} <source src="{file_path}">'.format(
-        file_path=src,
-        file_name=fp.name
-    )
-
-    return RenderResult(content)
-
-class AudioProvider:
-
-    def __new__():
-        pass
+    def render(self):
+        return '<audio controls>{file_name} <source src="{file_path}">'.format(
+        file_path=self.file_path,
+        file_name=self.url
+        )

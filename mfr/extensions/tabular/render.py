@@ -103,7 +103,7 @@ def populate_data(fp):
 
     raise MissingRequirementsException('Renderer requirements are not met')
 
-class TablularProvider:
+class TabularRenderer:
 
-    def __new__():
+    def render(self):
         pass

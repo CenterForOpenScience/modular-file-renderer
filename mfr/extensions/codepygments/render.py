@@ -6,8 +6,8 @@ import pygments.lexers.special
 import pygments.formatters
 from pygments.util import ClassNotFound
 
-from mfr import config as core_config
-from mfr import RenderResult
+#from mfr import config as core_config
+
 
 from .configuration import config as module_config
 
@@ -38,7 +38,7 @@ def get_stylesheet():
         static_url=core_config['ASSETS_URL'],
         theme=module_config['PYGMENTS_THEME'])
 
-class Code_PygmentsProvider:
+class CodePygmentsRenderer:
 
-    def __new__():
+    def render(self):
         pass

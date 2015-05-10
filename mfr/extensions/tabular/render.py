@@ -107,3 +107,7 @@ class TabularRenderer:
 
     def render(self):
         pass
+
+    @property
+    def requires_file(self):
+        return False

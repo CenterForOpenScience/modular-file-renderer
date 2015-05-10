@@ -17,7 +17,7 @@ def render_mfr_error(err):
 
 
 # TODO only allow one task at a time
-@app.task(ignore_result=True, timeout=settings.MFR_TIMEOUT)
+
 def _build_rendered_html(download_url, cache_path, temp_path, public_download_url):
     """
     :param str download_url: The url to download the file to be rendered
@@ -97,15 +97,6 @@ def old_build_rendered_html(file_path, cache_dir, cache_file_name, download_url)
     return True
 
 
-if settings.USE_CELERY:
-    build_rendered_html = _build_rendered_html.delay
-    old_build_rendered_html = _old_build_rendered_html.delay
-else:
-    #Expose render function
-    build_rendered_html = _build_rendered_html
-    old_build_rendered_html = _old_build_rendered_html
-
-
 def _build_css_asset(css_uri):
     """Wrap a css asset so it can be included on an html page"""
     return '<link rel="stylesheet" href="{uri}" />'.format(uri=css_uri)
@@ -116,15 +107,15 @@ def _build_js_asset(js_uri):
     return '<script src="{uri}"></script>'.format(uri=js_uri)
 
 
-def _build_html(render_result):
+def build_html(render_result, assets):
     """Build all of the assets and content into an html page"""
-    if render_result.assets:
-        css_list = render_result.assets.get('css') or []
+    if assets:
+        css_list = assets.get('css') or []
         css_assets = u'\n'.join(
             [_build_css_asset(css_uri) for css_uri in css_list]
         )
 
-        js_list = render_result.assets.get('js') or []
+        js_list = assets.get('js') or []
         js_assets = u'\n'.join(
             [_build_js_asset(js_uri) for js_uri in js_list]
         )

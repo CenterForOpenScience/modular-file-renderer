@@ -1,5 +1,6 @@
 """Video renderer module."""
 from mfr.core import extension
+from mfr.core.tasks import build_html
 
 class MovieRenderer(extension.BaseRenderer):
 
@@ -11,3 +12,8 @@ class MovieRenderer(extension.BaseRenderer):
               </video>
               '''.format(file_path=self.file_path)
         return content
+        # return build_html(content, self.assets_url)
+
+    @property
+    def requires_file(self):
+        return True

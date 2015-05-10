@@ -502,7 +502,7 @@ setup(
             #'.vimrc' = mfr.extensions.codepygments:CodePygmentsRenderer',
 
             # docx
-            '.docx = mfr.extensions.docx:MFRDocx2HtmlRenderer',
+            '.docx = mfr.extensions.docx:DocxRenderer',
 
             # image
             '.jpeg = mfr.extensions.image:ImageRenderer',

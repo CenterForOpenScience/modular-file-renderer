@@ -33,10 +33,8 @@ else:
 def make_provider(name, url):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 
-    :param str name: The name of the provider to instantiate. (s3, box, etc)
-    :param dict auth:
-    :param dict credentials:
-    :param dict settings:
+    :param str name: The name of the provider to instantiate. (osf)
+    :param dict url:
 
     :rtype: :class:`mfr.core.provider.BaseProvider`
     """
@@ -51,12 +49,12 @@ def make_provider(name, url):
 def make_extension(name, url, file_path, assets_url):
     """Returns an instance of :class:`mfr.core.ext.BaseProvider`
 
-    :param str name: The name of the provider to instantiate. (s3, box, etc)
-    :param dict auth:
-    :param dict credentials:
-    :param dict settings:
+    :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
+    :param dict url:
+    :param dict file_path:
+    :param dict assets_url:
 
-    :rtype: :class:`mfr.core.provider.BaseProvider`
+    :rtype: :class:`mfr.core.extension.BaseExtension`
     """
     manager = driver.DriverManager(
         namespace='mfr.extensions',

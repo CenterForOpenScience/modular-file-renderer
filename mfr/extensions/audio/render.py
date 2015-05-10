@@ -9,3 +9,7 @@ class AudioRenderer(extension.BaseRenderer):
         file_path=self.file_path,
         file_name=self.url
         )
+
+    @property
+    def requires_file(self):
+        return True

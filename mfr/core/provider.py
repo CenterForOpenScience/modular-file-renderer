@@ -1,9 +1,5 @@
-import os
 import abc
-import asyncio
 
-import furl
-import aiohttp
 
 class BaseProvider(metaclass=abc.ABCMeta):
 

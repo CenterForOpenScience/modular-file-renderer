@@ -1,5 +1,5 @@
 try:
-    from waterbutler import settings
+    from mfr import settings
 except ImportError:
     settings = {}
 

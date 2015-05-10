@@ -9,9 +9,16 @@ def render_rst(fp, *args, **kwargs):
     :return: A RenderResult containing html content for rst rendering
 
     """
-    htmlstring = publish_parts(fp.read(), writer_name='html')['html_body']
+    pass
 
 class RstRenderer(extension.BaseRenderer):
 
     def render(self):
-        return '<html>'
+        #need to append base
+        with open(self.file_path, 'r') as fp:
+            return publish_parts(fp.read(), writer_name='html')['html_body']
+
+    @property
+    def requires_file(self):
+        return False
+

@@ -20,19 +20,19 @@ class IpynbRenderer(extension.BaseRenderer):
             with open(self.file_path, 'r') as file_pointer:
                 notebook = nbformat.reads(file_pointer.read(), as_version=4)
         except ValueError as e:
-            # TODO: Generate proper exception
+            # TODO: Generate application specific exception
             raise Exception('Invalid json: {}'.format(e))
 
         exporter = HTMLExporter(config=Config({
             'HTMLExporter': {
-                'default_template': 'basic',
+                'template_file': 'basic',
             },
             'CSSHtmlHeaderTransformer': {
                 'enabled': False,
-            }
+            },
         }))
         (body, _) = exporter.from_notebook_node(notebook)
-        return self.TEMPLATE.render(body=body)
+        return self.TEMPLATE.render(body=body, base=self.assets_url)
 
     @property
     def requires_file(self):

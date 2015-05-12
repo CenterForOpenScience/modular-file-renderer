@@ -14,14 +14,18 @@ Requirements
 - Python >= 3.3
 
 
-### startup commands
+Startup Commands
+================
 
-```bash
-# Make sure that you are using >= python3.3
+
+- Make sure that you are using >= python3.3
+
 pip install -U -r requirements.txt
+
 python setup.py develop
+
 invoke server
-```
+
 
 Available modules
 =================

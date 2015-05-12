@@ -11,7 +11,6 @@ from .configuration import config
 from .exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException, \
     UnexpectedFormattingException
-from mfr.core_methods import RenderResult, get_file_extension, get_assets_from_list
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, 'templates', 'tabular.html')

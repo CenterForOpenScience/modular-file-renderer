@@ -9,13 +9,13 @@ from .libs import (
     xlsx_xlrd
 )
 
-from mfr import Config
+from mfr import _config
 
 
 """Defines a list of functions that can handle a particular file type. The
 functions will be attempted in order, failing if they do not have the
 requirements. Max size is the largest number of columns or rows allowed in a
-single table"""
+single table
 config = Config(defaults={
     'libs': {
         '.csv': [csv_pandas],
@@ -42,4 +42,4 @@ config = Config(defaults={
             'syncColumnCellResize': True,
         },
     },
-})
+}) """

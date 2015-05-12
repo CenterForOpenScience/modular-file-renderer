@@ -10,7 +10,7 @@ class MovieRenderer(extension.BaseRenderer):
               <source src="{file_path}">
               Your browser does not support the video tag.
               </video>
-              '''.format(file_path=self.file_path)
+              '''.format(file_path=self.url)
         return content
         # return build_html(content, self.assets_url)
 

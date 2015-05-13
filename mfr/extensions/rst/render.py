@@ -2,23 +2,13 @@
 from docutils.core import publish_parts
 from mfr.core import extension
 
-def render_rst(fp, *args, **kwargs):
-    """A simple reStructuredText renderer
-
-    :param fp: File pointer
-    :return: A RenderResult containing html content for rst rendering
-
-    """
-    pass
-
 class RstRenderer(extension.BaseRenderer):
 
     def render(self):
-        #need to append base
         with open(self.file_path, 'r') as fp:
             return publish_parts(fp.read(), writer_name='html')['html_body']
 
     @property
     def requires_file(self):
-        return False
+        return True
 

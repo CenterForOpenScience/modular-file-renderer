@@ -72,4 +72,4 @@ class PdbRenderer(extension.BaseRenderer):
 
     @property
     def requires_file(self):
-        return False
+        return True

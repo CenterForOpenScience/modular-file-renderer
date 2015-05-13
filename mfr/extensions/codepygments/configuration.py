@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Configuration object for the mfr_code_pygments module."""
-from mfr import Config
+from mfr import _config as Config
 
 
 config = Config(defaults={

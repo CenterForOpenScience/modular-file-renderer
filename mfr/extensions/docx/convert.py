@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-"""Docx renderer module."""
 import sys
-
-from mfr.core import extension
 
 if not sys.version_info >= (3, 0):
     from pydocx.parsers import Docx2Html
@@ -23,8 +19,7 @@ if not sys.version_info >= (3, 0):
         :return: RenderResult object containing the content html
         """
         content = MFRDocx2Html(fp).parsed
-
-class DocxRenderer(extension.BaseRenderer):
-
-    def render(self):
-        pass
+        return content
+else:
+    def render_docx(fp, *args, **kwargs):
+        return '<Unable to render>'

@@ -7,7 +7,7 @@
 import json
 import mfr
 import os
-from .configuration import config
+#from .configuration import config
 from .exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException, \
     UnexpectedFormattingException
@@ -105,8 +105,10 @@ def populate_data(fp):
 class TabularRenderer:
 
     def render(self):
+        with open(self.file_path, 'r') as fp:
+            return render_html(fp)
         pass
 
     @property
     def requires_file(self):
-        return False
+        return True

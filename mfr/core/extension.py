@@ -3,10 +3,11 @@ import abc
 
 class BaseRenderer(metaclass=abc.ABCMeta):
 
-    def __init__(self, url, file_path, assets_url):
+    def __init__(self, url, file_path, assets_url, ext):
         self.url = url
         self.file_path = file_path
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
+        self.ext = ext
 
     @abc.abstractmethod
     def render(self):

@@ -16,13 +16,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, 'templates', 'tabular.html')
 
 
-def render_html(fp, assets_path):
+def render_html(fp, assets_path, ext):
     """Render a tabular file to html
     :param fp: file pointer object
     :return: RenderResult object containing html and assets
     """
-    #TODO need to make design decision about saving file ext in base
-    columns, rows = populate_data(fp, '.xlsx')
+    columns, rows = populate_data(fp, ext)
 
     #TODO add into config
     max_size = 10000
@@ -82,7 +81,7 @@ class TabularRenderer(extension.BaseRenderer):
 
     def render(self):
         with open(self.file_path, 'r') as fp:
-            return render_html(fp, self.assets_url)
+            return render_html(fp, self.assets_url, self.ext)
 
     @property
     def requires_file(self):

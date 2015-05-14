@@ -12,49 +12,10 @@ TEMPLATE = TemplateLookup(
         'templates')]).get_template('viewer.mako')
 
 # assets must be loaded in this order
-JS_ASSETS = [
+#JS_ASSETS = [
     #The OSF has jquery on each page
     #'jquery-1.7.min.js',
-    'modernizr.js',
-    'foundation-5.4.7.min.js',
-    'gl-matrix.js',
-    'core.js',
-    'geom.js',
-    'trace.js',
-    'symmetry.js',
-    'mol.js',
-    'io.js',
-    'vert-assoc.js',
-    'buffer-allocators.js',
-    'vertex-array-base.js',
-    'indexed-vertex-array.js',
-    'vertex-array.js',
-    'chain-data.js',
-    'geom-builders.js',
-    'scene.js',
-    'render.js',
-    'shade.js',
-    'cam.js',
-    'shaders.js',
-    'framebuffer.js',
-    'slab.js',
-    'animation.js',
-    'viewer.js',
-]
-
-
-def render_html(fp, src, **kwargs):
-    """ A molecular renderer.
-
-    :param fp: File pointer
-    :param src: Path to source file
-    :return: A RenderResult object containing html content and js assets
-    """
-    content = TEMPLATE.render(url=src)
-    assets = get_assets()
-
-    #return RenderResult(content, assets)
-
+#]
 
 def get_assets():
     assets_uri_base = '{0}/pdb'.format(mfr.config['ASSETS_URL'])
@@ -68,7 +29,8 @@ def get_assets():
 class PdbRenderer(extension.BaseRenderer):
 
     def render(self):
-        return TEMPLATE.render(url=self.url)
+        return TEMPLATE.render(url=self.url, base=self.assets_url)
+        #TEMPLATE.render(url=self.file_path)
 
     @property
     def requires_file(self):

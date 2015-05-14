@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="${base}/css/${color}">
+<link rel="stylesheet" href="${base}/css/default.css">
 
 <div class="mfr-ipynb-body">
-${body | n}
+${body}
 </div>
+

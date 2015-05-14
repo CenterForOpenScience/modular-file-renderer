@@ -46,13 +46,15 @@ def make_provider(name, url):
     )
     return manager.driver
 
-def make_extension(name, url, file_path, assets_url):
+
+def make_extension(name, url, file_path, assets_url, ext):
     """Returns an instance of :class:`mfr.core.ext.BaseProvider`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
     :param dict url:
     :param dict file_path:
     :param dict assets_url:
+    :param dict ext
 
     :rtype: :class:`mfr.core.extension.BaseExtension`
     """
@@ -62,7 +64,7 @@ def make_extension(name, url, file_path, assets_url):
         namespace='mfr.extensions',
         name=name,
         invoke_on_load=True,
-        invoke_args=(url, file_path, assets_url,),
+        invoke_args=(url, file_path, assets_url, ext, ),
     )
     return manager.driver
 

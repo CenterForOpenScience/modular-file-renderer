@@ -5,8 +5,7 @@ mako
 
 
 #CodePygments
-# TODO: Resolve incompatibilities with 2.0
-Pygments==1.6
+Pygments
 
 #Docx - is this necessary
 git+https://github.com/jsocol/bleach.git

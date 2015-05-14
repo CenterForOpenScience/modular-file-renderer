@@ -12,28 +12,21 @@ from mfr.core import extension
 
 DEFAULT_LEXER = pygments.lexers.special.TextLexer
 
-def render_html(fp, *args, **kwargs):
+def render_html(fp, ext, *args, **kwargs):
     """Generate an html representation of the file
 
     :param fp: File pointer
     :return: RenderResult object containing the content html and its assets
     """
-    formatter = pygments.formatters.HtmlFormatter(cssclass='default.css')
+    formatter = pygments.formatters.HtmlFormatter(cssclass='codehilite')
     content = fp.read()
     try:
-        lexer = pygments.lexers.guess_lexer_for_filename(fp.name, content)
+        lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
     except ClassNotFound:
         lexer = DEFAULT_LEXER()
     content = pygments.highlight(content, lexer, formatter)
-    assets = {"css": [get_stylesheet()]}
-    print(assets)
+    print(repr(content))
     return content
-
-def get_stylesheet():
-    """Generate an html link to a stylesheet"""
-    return "{static_url}/code_pygments/css/{theme}.css".format(
-        static_url='/static/public/mfr/code_pygments/css/default.css',
-        theme='default')
 
 
 class CodePygmentsRenderer(extension.BaseRenderer):
@@ -45,7 +38,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
 
     def render(self):
         with open(self.file_path) as fp:
-            content = render_html(fp)
+            content = render_html(fp, self.ext)
             return self.TEMPLATE.render(base=self.assets_url, color='default.css', body=content)
 
     @property

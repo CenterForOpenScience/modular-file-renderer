@@ -12,6 +12,7 @@
 <script src='${base}/js/buffer-allocators.js'></script>
 <script src='${base}/js/vertex-array-base.js'></script>
 <script src='${base}/js/indexed-vertex-array.js'></script>
+<script src='${base}/js/vertex-array.js'></script>
 <script src='${base}/js/chain-data.js'></script>
 <script src='${base}/js/geom-builders.js'></script>
 <script src='${base}/js/scene.js'></script>
@@ -26,7 +27,7 @@
 
 <link rel="stylesheet" href="${base}/css/foundation.css">
 <link rel="stylesheet" href="${base}/css/jquery-ui.min.css">
-<link rel="stylesheet" href="${base}/css/quint.css">
+<link rel="stylesheet" href="${base}/css/qunit.css">
 
 <div id="mfrViewer" style="width: auto; height: 400px; background-color: black;"></div>
 <script>

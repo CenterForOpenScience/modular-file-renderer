@@ -56,11 +56,13 @@ def make_extension(name, url, file_path, assets_url):
 
     :rtype: :class:`mfr.core.extension.BaseExtension`
     """
+    print(url)
+    print(file_path)
     manager = driver.DriverManager(
         namespace='mfr.extensions',
         name=name,
         invoke_on_load=True,
-        invoke_args=(url, file_path, assets_url),
+        invoke_args=(url, file_path, assets_url,),
     )
     return manager.driver
 

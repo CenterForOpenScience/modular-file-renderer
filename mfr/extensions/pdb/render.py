@@ -68,7 +68,7 @@ def get_assets():
 class PdbRenderer(extension.BaseRenderer):
 
     def render(self):
-        return TEMPLATE.render(url=self.file_path)
+        return TEMPLATE.render(url=self.url)
 
     @property
     def requires_file(self):

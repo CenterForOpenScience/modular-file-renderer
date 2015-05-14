@@ -12,8 +12,7 @@ class MovieRenderer(extension.BaseRenderer):
               </video>
               '''.format(file_path=self.url)
         return content
-        # return build_html(content, self.assets_url)
 
     @property
     def requires_file(self):
-        return True
+        return False

@@ -2,4 +2,4 @@ furl
 jsonschema
 ipython
 mako
-pydocx>=0.5.0
+pydocx

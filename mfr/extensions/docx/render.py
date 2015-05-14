@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """Docx renderer module."""
 from mfr.core import extension
-from mfr.extensions.docx.convert import render_docx
+from pydocx.export import PyDocXHTMLExporter
 
 class DocxRenderer(extension.BaseRenderer):
 
     def render(self):
-        with open(self.file_path, 'r') as fp:
-            return render_docx(fp)
+        exporter = PyDocXHTMLExporter(self.file_path)
+        html = exporter.parsed
+        return html
 
     @property
     def requires_file(self):
-        return True
+        return False

@@ -12,4 +12,4 @@ class AudioRenderer(extension.BaseRenderer):
 
     @property
     def requires_file(self):
-        return True
+        return False

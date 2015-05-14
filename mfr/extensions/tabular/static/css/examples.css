@@ -1,5 +1,3 @@
-@import url('/static/mfr/tabular/css/slick-default-theme.css');
-
 .slick-header-column {
     max-height:17px;
     -webkit-box-sizing: content-box;
@@ -20,7 +18,7 @@
   border: 1px solid gray;
   border-bottom: 0;
   border-top: 0;
-  background: url('/static/mfr/tabular/images/header-bg.gif') repeat-x center top;
+  background: url('../images/header-bg.gif') repeat-x center top;
   color: black;
   height: 24px;
   line-height: 24px;
@@ -147,7 +145,7 @@ input.editor-percentcomplete {
   display: inline-block;
   width: 16px;
   height: 100%;
-  background: url("/static/mfr/tabular/images/pencil.gif") no-repeat center center;
+  background: url('../images/pencil.gif') no-repeat center center;
   overflow: visible;
   z-index: 1000;
   float: right;
@@ -158,7 +156,7 @@ input.editor-percentcomplete {
   position: absolute;
   top: -2px;
   left: -9px;
-  background: url("/static/mfr/tabular/images/editor-helper-bg.gif") no-repeat top left;
+  background: url('../images/editor-helper-bg.gif') no-repeat top left;
   padding-left: 9px;
 
   width: 120px;

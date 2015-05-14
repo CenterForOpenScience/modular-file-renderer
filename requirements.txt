@@ -2,4 +2,22 @@ furl
 jsonschema
 ipython
 mako
+
+
+#CodePygments
+# TODO: Resolve incompatibilities with 2.0
+Pygments==1.6
+
+#Docx - is this necessary
+git+https://github.com/jsocol/bleach.git
 pydocx
+
+#Rst
+Docutils>=0.11
+
+#Tabular
+pandas>=0.14.1
+git+https://github.com/icereval/xlrd.git
+
+
+

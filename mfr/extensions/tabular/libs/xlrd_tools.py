@@ -1,6 +1,6 @@
 import xlrd
 from ..exceptions import TableTooBigException, EmptyTableException
-from ..configuration import config
+#from ..configuration import _config
 from ..utilities import header_population
 from mfr.compat import range, basestring
 
@@ -10,8 +10,8 @@ def xlsx_xlrd(fp):
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-
-    max_size = config['max_size']
+    max_size = 10000
+    #config['max_size']
 
     wb = xlrd.open_workbook(fp.name)
 
@@ -33,8 +33,10 @@ def xlsx_xlrd(fp):
         for index, value in enumerate(fields)
     ]
 
-    data = [dict(zip(fields, sheet.row_values(row_index)))
-        for row_index in range(1, sheet.nrows)]
+    data = [
+        dict(zip(fields, sheet.row_values(row_index)))
+        for row_index in range(1, sheet.nrows)
+    ]
 
     header = header_population(fields)
 

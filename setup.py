@@ -532,12 +532,12 @@ setup(
             '.rst = mfr.extensions.rst:RstRenderer',
 
             # tabular
-            #'.csv = mfr.extensions.tabular:TabularRenderer',
-            #'.tsv = mfr.extensions.tabular:TabularRenderer',
+            '.csv = mfr.extensions.tabular:TabularRenderer',
+            '.tsv = mfr.extensions.tabular:TabularRenderer',
             '.xlsx = mfr.extensions.tabular:TabularRenderer',
             '.xls = mfr.extensions.tabular:TabularRenderer',
             #'.dta = mfr.extensions.tabular:TabularRenderer',
-            #'.sav = mfr.extensions.tabular:TabularRenderer',
+            '.sav = mfr.extensions.tabular:TabularRenderer',
             #'.ods = mfr.extensions.tabular:TabularRenderer',
         ]
     },

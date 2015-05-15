@@ -55,7 +55,7 @@ def docs(clean=False, browse=False):
     if browse:
         browse_docs()
 
-
+@task
 def pip_install(path, filename):
     file_location = (os.path.join(path, filename))
 
@@ -82,7 +82,7 @@ def publish(test=False):
     else:
         run("python setup.py register sdist bdist_wheel upload")
 
-
+@task
 def server():
     from mfr.server.app import serve
     serve()

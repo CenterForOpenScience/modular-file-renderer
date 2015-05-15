@@ -13,6 +13,7 @@ from .libs import (
 functions will be attempted in order, failing if they do not have the
 requirements. Max size is the largest number of columns or rows allowed in a
 single table """
+#TODO: fix .dta and build .ods extensions
 defaults={
     'libs': {
         '.csv': [csv_pandas],

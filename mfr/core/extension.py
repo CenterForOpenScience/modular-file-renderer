@@ -7,7 +7,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         self.url = url
         self.file_path = file_path
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
-        self.ext = ext
+        self.extension = ext
 
     @abc.abstractmethod
     def render(self):

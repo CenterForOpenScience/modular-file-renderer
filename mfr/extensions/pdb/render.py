@@ -1,5 +1,4 @@
 """Molecule renderer module """
-#Uses PV: https://github.com/biasmv/pv
 import os
 
 from mako.lookup import TemplateLookup

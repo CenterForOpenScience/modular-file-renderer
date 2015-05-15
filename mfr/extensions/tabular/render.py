@@ -81,7 +81,7 @@ class TabularRenderer(extension.BaseRenderer):
 
     def render(self):
         with open(self.file_path, 'r') as fp:
-            return render_html(fp, self.assets_url, self.ext)
+            return render_html(fp, self.assets_url, self.extension)
 
     @property
     def requires_file(self):

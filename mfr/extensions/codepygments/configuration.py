@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """Configuration object for the mfr_code_pygments module."""
-from mfr import _config as Config
 
-
-config = Config(defaults={
-    'PYGMENTS_THEME': 'default',
+defaults = {
+    'PYGMENTS_THEME': 'default.css',
     'CSS_CLASS': 'codehilite'
-})
+}

@@ -7,7 +7,7 @@ mako
 #CodePygments
 Pygments
 
-#Docx - is this necessary
+#Docx
 git+https://github.com/jsocol/bleach.git
 pydocx
 

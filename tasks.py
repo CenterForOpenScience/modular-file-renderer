@@ -2,7 +2,7 @@
 import pip
 import os
 import sys
-import shutil
+
 
 from invoke import task, run
 
@@ -11,34 +11,6 @@ build_dir = os.path.join(docs_dir, '_build')
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))
-
-
-@task
-def init_player():
-    src = os.path.join(HERE, 'player', 'mfr_config_local.py.example')
-    dest = os.path.join(HERE, 'player', 'mfr_config_local.py')
-    if not os.path.exists(dest):
-        print('Copying {src} to {dest}'.format(**locals()))
-        shutil.copy(src, dest)
-
-
-@task
-def clean_player():
-    """Remove mfr assets from the player's static folder."""
-    player_static_dir = os.path.join(HERE, 'player', 'static', 'mfr')
-    print('Removing player static directory')
-    shutil.rmtree(player_static_dir)
-
-
-@task
-def player(clean=False):
-    """Run the player app."""
-    init_player()
-    if clean:
-        clean_player()
-    from player import create_app
-    app = create_app()
-    app.run(host=app.config.get('HOST'), port=app.config.get('PORT'))
 
 
 @task
@@ -93,21 +65,6 @@ def pip_install(path, filename):
 
 
 @task
-def plugin_requirements(renderers_only=False, exporters_only=False, package=None):
-    if package is None:
-        path_list = [os.path.join('.', directory) for directory in os.listdir('.')]
-    else:
-        path_list = [package]
-
-    for path in path_list:
-        if os.path.isdir(path):
-            if not exporters_only:
-                pip_install(path, "render-requirements.txt")
-            if not renderers_only:
-                pip_install(path, "export-requirements.txt")
-
-
-@task
 def readme(browse=False):
     run('rst2html.py README.rst > README.html')
 
@@ -126,18 +83,6 @@ def publish(test=False):
         run("python setup.py register sdist bdist_wheel upload")
 
 
-@task
-def celery():
-    from waterbutler.tasks.app import app
-    app.worker_main(['worker'])
-
-
-@task
-def rabbitmq():
-    run('rabbitmq-server', pty=True)
-
-
-@task
 def server():
     from mfr.server.app import serve
     serve()

@@ -2,7 +2,7 @@
 
 import re
 
-from mfr import compat
+from mfr.extensions.tabular import compat
 
 
 def header_population(headers):

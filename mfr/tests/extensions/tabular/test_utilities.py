@@ -1,4 +1,4 @@
-from .. import utilities
+from mfr.extensions.tabular import utilities
 
 
 def test_header_population_returns_list_of_dicts():

@@ -2,8 +2,8 @@
 import os
 import pytest
 import mfr
-from ..render import render_html
-from .. import Handler as TabularHandler
+from mfr.extensions.tabular.render import render_html
+from mfr.extensions.tabular import Handler as TabularHandler
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

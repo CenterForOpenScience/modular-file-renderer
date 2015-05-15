@@ -1,8 +1,10 @@
 import xlrd
+
 from ..exceptions import TableTooBigException, EmptyTableException
+
 #from ..configuration import _config
 from ..utilities import header_population
-from mfr.compat import range, basestring
+from mfr.extensions.tabular.compat import range, basestring
 
 
 def xlsx_xlrd(fp):

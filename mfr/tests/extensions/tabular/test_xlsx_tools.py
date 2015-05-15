@@ -1,6 +1,6 @@
 import os
 
-from ..libs import xlrd_tools
+from mfr.extensions.tabular.libs import xlrd_tools
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

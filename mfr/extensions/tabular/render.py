@@ -7,7 +7,7 @@
 import json
 import os
 from mfr.core import extension
-from .configuration import defaults
+from .configuration import defaults, MAX_SIZE, TABLE_HEIGHT, TABLE_WIDTH
 from .exceptions import TableTooBigException, \
     EmptyTableException, MissingRequirementsException, \
     UnexpectedFormattingException
@@ -23,10 +23,9 @@ def render_html(fp, assets_path, ext):
     """
     columns, rows = populate_data(fp, ext)
 
-    #TODO add into config
-    max_size = 10000
-    table_width = 700
-    table_height = 600
+    max_size = MAX_SIZE
+    table_width = TABLE_WIDTH
+    table_height = TABLE_HEIGHT
 
     if len(columns) > max_size or len(rows) > max_size:
         raise TableTooBigException("Table is too large to render.")
@@ -59,6 +58,7 @@ def render_html(fp, assets_path, ext):
 def populate_data(fp, ext):
     """Determine the appropriate library and use it to populate rows and columns
     :param fp: file pointer
+    :param ext: file extension
     :return: tuple of column headers and row data
     """
     function_preference = defaults['libs'].get(ext)

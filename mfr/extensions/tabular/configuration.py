@@ -41,3 +41,6 @@ defaults={
     },
 }
 
+MAX_SIZE = 10000
+TABLE_WIDTH = 700
+TABLE_HEIGHT = 600

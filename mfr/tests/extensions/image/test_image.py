@@ -1,7 +1,7 @@
 import pytest
 import sys
 from mfr.ext import image as mfr_image
-from ..render import render_img_tag
+from mfr.extensions.image.render import render_img_tag
 
 @pytest.mark.parametrize('filename', [
     'image.jpeg',

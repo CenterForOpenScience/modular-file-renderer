@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from ..libs import panda_tools
+from mfr.extensions.tabular.libs import panda_tools
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

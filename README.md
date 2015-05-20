@@ -1,50 +1,23 @@
-***
-mfr
-***
-.. image:: https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=dev
-    :target: https://travis-ci.org/CenterForOpenScience/modular-file-renderer
+#MFR
 
 **WARNING: mfr is in a very alpha stage of development. As such, it's API is in constant flux. Expect many breaking changes.**
 
 **mfr** (short for "modular file renderer") is a Python package for rendering files to HTML.
 
-Requirements
-============
+### startup commands
 
-- Python >= 3.3
-
-
-Startup Commands
-================
-
-
-- Make sure that you are using >= python3.3
-
+```bash
+# Make sure that you are using >= python3.3
 pip install -U -r requirements.txt
-
 python setup.py develop
-
 invoke server
+```
 
+### Create your own module
 
-Available modules
-=================
+Interested in adding support for a new provider or file format? Check out the CONTRIBUTING.rst docs.
 
-There are a number of 3rd-party modules available.
-
-- `mfr_md <https://github.com/TomBaxter/mfr_md>`_
-
-Make your own, then submit a pull request to add it to this list!
-
-
-Create your own module
-======================
-
-Interested in adding support for a new file format? Check out the CONTRIBUTING.rst docs.
-
-
-License
-=======
+### License 
 
 Copyright 2013-2015 Center for Open Science
 

@@ -37,12 +37,11 @@ Install the development dependencies.
     $ pip install -r dev-requirements.txt
 
 
-
-
 Lastly, install mfr in development mode. ::
 
     $ python setup.py develop
 
+    $ invoke server
 
 Running tests
 -------------
@@ -59,7 +58,7 @@ You can also use pytest directly. ::
 Writing tests
 -------------
 
-Unit tests should be written for all rendering, exporting, and detection code.
+Unit tests should be written for all rendering code.
 
 Tests can be written as functions, like so:
 
@@ -88,34 +87,6 @@ The above test can be rewritten like so:
 
 .. _pytest fixtures: https://pytest.org/latest/fixture.html
 
-Using the player
-----------------
-
-The mfr comes with a Flask app for previewing rendered files. Create a ``files/`` subdirectory in ``player`` and copy the files you want to render into it. Then run the app from the ``player`` directory with ::
-
-    $ invoke player
-
-Then browse to ``localhost:5000`` in your browser.
-
-Configuring the player
-++++++++++++++++++++++
-
-You will likely want to add additional filehandler modules to the player. The first time you run ``invoke player``, a file is created at ``player/mfr_config_local.py``. You can add additional handlers to the ``HANDLERS`` list and add any additional configuration here.
-
-.. code-block:: python
-
-    # in player/mfr_config_local.py
-
-    import mfr_image
-    import mfr_code_pygments
-
-    # Add additional handlers here
-    HANDLERS = [
-        mfr_image.Handler,
-        mfr_code_pygments.Handler,
-    ]
-
-
 
 Writing A File Format Package
 -----------------------------
@@ -126,15 +97,14 @@ There are two main pieces of a file format package are
 - Your :class:`FileHandler <mfr.core.FileHandler>`
 
 
-Rendering/Exporting Code
+Rendering Code
 ++++++++++++++++++++++++
 
-Renderers are simply callables (functions or methods) that take a file as their first argument and return a :class:`RenderResult <mfr.core.RenderResult>` which contains content(a string of the rendered HTML) and assets (a dictionary that points to lists of javascript or css sources).
+Renderers are simply callables (functions or methods) that take a file as their first argument and return
 
 Here is a very simple example of function that takes a filepointer and outputs a render result with an HTML image tag.
 
 .. code-block:: python
-    from mfr import RenderResult
 
     def render_img_tag(filepointer):
         filename = filepointer.name
@@ -236,20 +206,6 @@ where "something" is a file format, e.g. "mfr_image", "mfr_movie".
 .. note::
 
     You may decide to make subdirectories for rendering and exporting code if single files start to become very large.
-
-
-Use a template
-++++++++++++++
-
-The fastest way to get started on a module is to use `cookiecutter template`_ for mfr modules. This will create the directory structure above.
-
-::
-
-    $ pip install cookiecutter
-    $ cookiecutter https://github.com/CenterForOpenScience/cookiecutter-mfr.git
-
-.. _cookiecutter template: https://github.com/CenterForOpenScience/cookiecutter-mfr
-
 
 
 Documentation

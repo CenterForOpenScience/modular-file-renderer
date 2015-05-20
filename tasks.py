@@ -65,11 +65,6 @@ def pip_install(path, filename):
 
 
 @task
-def readme(browse=False):
-    run('rst2html.py README.rst > README.html')
-
-
-@task
 def publish(test=False):
     """Publish to the cheeseshop."""
     try:

@@ -7,6 +7,14 @@ class MFRError(Exception):
     pass
 
 
+class URLError(MFRError):
+    """Error raised when a url is not provided"""
+    pass
+
+class ProviderError(MFRError):
+    """Error raise when a provider's metadata is not available"""
+    pass
+
 class ConfigurationError(MFRError):
     """Error raised when MFR is improperly configured."""
     pass

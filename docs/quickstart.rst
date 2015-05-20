@@ -4,18 +4,7 @@
 Quickstart
 **********
 
-Before we start rendering, we need to enable a file format's module. To do this, use :func:`mfr.register_filehandler <mfr.core.register_filehandler>`, passing in a :class:`FileHandler <mfr.core.FileHandler>`.
-
-Let's use the ``mfr_code_pygments`` module as an example.
-
-.. code-block:: python
-
-    import mfr
-    import mfr_code_pygments
-
-    # Enable the module's Handler
-    mfr.register_filehandler(mfr_code_pygments.Handler)
-
+Before we start rendering, we need to enable a file format's module.
 
 Then call :func:`mfr.detect <mfr.core.detect>` with a file object, which returns an instance of a handler that can handle the file, or ``None`` if no valid handler is registered.
 
@@ -97,30 +86,7 @@ Configuration is stored on a ``mfr.config``, which can be modified like a dictio
 Using Static Files
 ==================
 
-Many renderers require static files (e.g. CSS and Javascript). To retrieve the static files for a file handler, call its :meth:`get_assets <mfr.core.FileHandler.get_assets>` method. This will return a dictionary which maps file extensions to a list of paths.
-
-.. code-block:: python
-
-    import mfr
-    import mfr_code_pygments
-
-    mfr.config['STATIC_URL'] = '/static'
-    handler = mfr_code_pygments.Handler()
-    handler.get_assets()['css']
-    # ['/static/mfr_code_pygments/css/autumn.css',
-    #  '/static/mfr_code_pygments/css/borland.css', ...
-
-Copying Static Assets
----------------------
-
-To copy all necessary static assets to your app's static folder, use :func:`collect_static <mfr.core.collect_static>`.
-
-.. code-block:: python
-
-    # Static assets will be copied here
-    mfr.config['STATIC_FOLDER'] = '/app/static'
-    mfr.collect_static()  # Copies static files to STATIC_FOLDER
-
+Many renderers require static files (e.g. CSS and Javascript). To retrieve the static files for a file renderer, the object has a 'assets_url' that serves as the base path.
 
 Next Steps
 ==========

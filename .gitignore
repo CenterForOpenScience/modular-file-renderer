@@ -18,8 +18,6 @@ Thumbs.db
 # Python
 #######################
 *.py[cod]
-*.so
-*.py[cod]
 **/*.pyc
 
 # C extensions

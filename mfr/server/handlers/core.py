@@ -45,53 +45,6 @@ class BaseHandler(tornado.web.RequestHandler, SentryMixin):
 
         self.ext_name, self.unique_key = yield from self.provider.metadata()
 
-    # def write_error(self, status_code, exc_info):
-    #     self.captureException(exc_info)
-    #     etype, exc, _ = exc_info
-    #
-    #     if issubclass(etype, exceptions.ProviderError):
-    #         self.set_status(exc.code)
-    #         if exc.data:
-    #             self.finish(exc.data)
-    #         else:
-    #             self.finish({
-    #                 'code': exc.code,
-    #                 'message': exc.message
-    #             })
-    #     else:
-    #         self.finish({
-    #             'code': status_code,
-    #             'message': self._reason,
-    #         })
-    #
-    # def set_status(self, code, reason=None):
-    #     return super().set_status(code, reason or HTTP_REASONS.get(code))
-    #
-    # def options(self):
-    #     self.set_status(204)
-    #     self.set_header('Access-Control-Allow-Methods', 'PUT, DELETE'),
-
-    # @utils.async_retry(retries=5, backoff=5)
-    # def _send_hook(self, action, metadata):
-    #     payload = {
-    #         'action': action,
-    #         'provider': self.arguments['provider'],
-    #         'metadata': metadata,
-    #         'auth': self.payload['auth'],
-    #         'time': time.time() + 60
-    #     }
-    #     message, signature = signer.sign_payload(payload)
-    #     resp = aiohttp.request(
-    #         'PUT',
-    #         self.payload['callback_url'],
-    #         data=json.dumps({
-    #             'payload': message.decode(),
-    #             'signature': signature,
-    #         }),
-    #         headers={'Content-Type': 'application/json'},
-    #     )
-    #     return resp
-
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler):
     """Extensions static path definitions

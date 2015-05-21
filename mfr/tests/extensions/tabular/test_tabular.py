@@ -1,59 +1,33 @@
-# -*- coding: utf-8 -*-
-import os
 import pytest
-import mfr
-from mfr.extensions.tabular.render import render_html
-from mfr.extensions.tabular import Handler as TabularHandler
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-
-def setup_function(func):
-    mfr.register_filehandler(TabularHandler)
-    mfr.config['ASSETS_URL'] = '/static'
+from mfr.extensions.tabular import TabularRenderer
 
 
-def teardown_function(func):
-    mfr.core.reset_config()
+@pytest.fixture
+def url():
+    return {}
 
 
-# Some ods files work, but it is very inconsistent. Turning off for now.
-@pytest.mark.parametrize('filename', [
-    'sheet.csv',
-    'sheet.tsv',
-    'sheet.CSV',
-    'sheet.TSV',
-    'sheet.xlsx',
-    'sheet.XLSX',
-    'sheet.xls',
-    'sheet.XLS',
-    'sheet.dta',
-    'sheet.DTA',
-    'sheet.sav',
-    'sheet.SAV',
-    # 'sheet.ods',
-    # 'sheet.ODS',
-])
-def test_detect_extensions(fakefile, filename):
-    fakefile.name = filename
-    handler = TabularHandler()
-    assert handler.detect(fakefile) is True
+@pytest.fixture
+def file_path():
+    return 'test.rst'
 
 
-@pytest.mark.parametrize('filename', [
-    'sheet.py',
-    'sheet.invalid',
-    'sheet',
-    '',
-    'sheet.',
-])
-def test_does_not_detect_other_extensions(fakefile, filename):
-    fakefile.name = filename
-    handler = TabularHandler()
-    assert handler.detect(fakefile) is False
+@pytest.fixture
+def assets_url():
+    return {}
 
 
-def test_render_html_returns_render_result():
-    with open(os.path.join(HERE, 'fixtures', 'test.csv')) as fp:
-        result = render_html(fp)
+@pytest.fixture
+def extension():
+    return {}
 
-    assert type(result) == mfr.RenderResult
+
+@pytest.fixture
+def provider(url, file_path, assets_url, extension):
+    return TabularRenderer(url, file_path, assets_url, extension)
+
+class TestTabular:
+
+    def test_render_tabular(self, provider):
+        html = provider.render()

@@ -1,47 +1,34 @@
-import os
-import sys
-
 import pytest
 
-import mfr
+from mfr.extensions.docx import DocxRenderer
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-
-# Pydocx .3.14 does not support python 3
-if not sys.version_info >= (3, 0):
-
-    from mfr.ext.docx import Handler as DocxFileHandler
-    from mfr.ext.docx.render import render_docx
+@pytest.fixture
+def url():
+    return {}
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 0),
-                    reason="pydocx 0.3.14 does not support py3")
-def setup_function(func):
-    mfr.register_filehandler(DocxFileHandler)
+@pytest.fixture
+def file_path():
+    return 'test.docx'
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 0),
-                    reason="pydocx 0.3.14 does not support py3")
-def test_detect_docx(fakefile):
-    # set file's name
-    fakefile.name = 'mydoc.docx'
-    handler = DocxFileHandler()
-
-    assert handler.detect(fakefile) is True
+@pytest.fixture
+def assets_url():
+    return {}
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 0),
-                    reason="pydocx 0.3.14 does not support py3")
-def test_detect_nondocx(fakefile):
-    fakefile.name = 'not_doc.odt'
-    handler = DocxFileHandler()
-    assert handler.detect(fakefile) is False
+@pytest.fixture
+def extension():
+    return {}
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 0),
-                    reason="pydocx 0.3.14 does not support py3")
-def test_render_docx():
-    with open(os.path.join(HERE, 'test.docx')) as fp:
-        result = render_docx(fp)
+@pytest.fixture
+def provider(url, file_path, assets_url, extension):
+    return DocxRenderer(url, file_path, assets_url, extension)
 
-    assert type(result) == mfr.core.RenderResult
+
+class TestDocx:
+
+    def test_render_docx(self, provider):
+        result = provider.render()
+

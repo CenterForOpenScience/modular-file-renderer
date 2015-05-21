@@ -1,34 +1,33 @@
-import os
-
 import pytest
 
-import mfr
-from mfr.ext import rst as mfr_rst
-
-HERE = os.path.dirname(os.path.abspath(__file__))
+from mfr.extensions.rst import RstRenderer
 
 
-def test_detect(fakefile):
-    # set filename to have .rst extension
-    fakefile.name = 'mydoc.rst'
-    handler = mfr_rst.Handler()
-    assert handler.detect(fakefile) is True
+@pytest.fixture
+def url():
+    return {}
 
 
-@pytest.mark.parametrize('filename', [
-    'other.rs',
-    'otherrst',
-    'other',
-    'other.',
-])
-def test_does_not_detect_other_extensions(fakefile, filename):
-    fakefile.name = filename
-    handler = mfr_rst.Handler()
-    assert handler.detect(fakefile) is False
+@pytest.fixture
+def file_path():
+    return 'test.rst'
 
 
-def test_render_rst_returns_render_result():
-    with open(os.path.join(HERE, 'test.rst')) as fp:
-        result = mfr_rst.render.render_rst(fp)
+@pytest.fixture
+def assets_url():
+    return {}
 
-    assert type(result) == mfr.core.RenderResult
+
+@pytest.fixture
+def extension():
+    return {}
+
+
+@pytest.fixture
+def provider(url, file_path, assets_url, extension):
+    return RstRenderer(url, file_path, assets_url, extension)
+
+class TestRst:
+
+    def test_render_rst(self, provider):
+        html = provider.render()

@@ -4,9 +4,6 @@
 Quickstart
 **********
 
-Before we start rendering, we need to enable a file format's module.
-
-Then call :func:`mfr.detect <mfr.core.detect>` with a file object, which returns an instance of a handler that can handle the file, or ``None`` if no valid handler is registered.
 
 .. code-block:: python
 

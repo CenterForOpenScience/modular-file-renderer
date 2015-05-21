@@ -1,11 +1,10 @@
 import pytest
 
-from mfr.extensions.audio import AudioRenderer
-
+from mfr.extensions.movie import MovieRenderer
 
 @pytest.fixture
 def url():
-    return 'test.mp3'
+    return {}
 
 
 @pytest.fixture
@@ -25,9 +24,10 @@ def extension():
 
 @pytest.fixture
 def provider(url, file_path, assets_url, extension):
-    return AudioRenderer(url, file_path, assets_url, extension)
+    return MovieRenderer(url, file_path, assets_url, extension)
 
-class TestAudio:
 
-    def test_render_audio(self, provider):
-        html = provider.render()
+class TestMovie:
+
+    def test_render_movie(self, provider):
+        result = provider.render()

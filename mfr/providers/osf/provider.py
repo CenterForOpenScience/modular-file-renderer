@@ -32,15 +32,16 @@ class OsfProvider(provider.BaseProvider):
         # e.g.,
         # metadata = {'data': {
         #     'name': 'blah.pdf',
+        #     'etag': 'ABCD123456...',
         #     'extra': {
-        #         'revisionId': '1234',
+        #         ...
         #     },
         # }}
-        _, ext = os.path.splitext(metadata['data']['name'])
-        # TODO: Add UniqueKey to WaterButler metadata, currently extra data varies per provider ('revisionId', 'version', etc)
-        unique_key = u'{}+{}'.format(self.url, metadata['data']['extra']['version'])
-        unique_key_hash = hashlib.sha256(unique_key.encode('utf-8')).hexdigest()
-        return ext, unique_key_hash
+        # TODO: hack while etag is being included in waterbutler
+        metadata['data']['etag'] = 'ABCD123456'
+        _, ext = os.path.splitext(metadata['data']['name']) # or content type?
+        unique_key = metadata['data']['etag']
+        return ext, unique_key
 
     @asyncio.coroutine
     def download(self):

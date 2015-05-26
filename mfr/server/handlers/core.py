@@ -49,6 +49,10 @@ class BaseHandler(tornado.web.RequestHandler, SentryMixin):
 
         self.ext, self.unique_key = yield from self.provider.metadata()
 
+    def options(self):
+        self.set_status(204)
+        self.set_header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE'),
+
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler):
     """Extensions static path definitions

@@ -12,6 +12,7 @@ from mfr.server import settings
 CORS_ACCEPT_HEADERS = [
     'Range',
     'Content-Type',
+    'Authorization',
     'Cache-Control',
     'X-Requested-With',
 ]

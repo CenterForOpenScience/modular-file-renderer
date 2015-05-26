@@ -36,6 +36,9 @@ class BaseHandler(tornado.web.RequestHandler, SentryMixin):
 
     @asyncio.coroutine
     def prepare(self):
+        if self.request.method == 'OPTIONS':
+            return
+
         self.url = self.request.query_arguments['url'][0].decode('utf-8')
 
         self.provider = utils.make_provider(

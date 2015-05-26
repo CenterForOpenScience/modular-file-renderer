@@ -3,6 +3,8 @@ jsonschema
 ipython
 mako
 
+#WaterButler
+git+https://github.com/CenterForOpenScience/waterbutler.git@release/0.5.0
 
 #CodePygments
 Pygments
@@ -17,6 +19,3 @@ Docutils>=0.11
 #Tabular
 pandas>=0.14.1
 git+https://github.com/icereval/xlrd.git
-
-
-

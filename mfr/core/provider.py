@@ -3,7 +3,8 @@ import abc
 
 class BaseProvider(metaclass=abc.ABCMeta):
 
-    def __init__(self, url):
+    def __init__(self, request, url):
+        self.request = request
         self.url = url
 
     @abc.abstractmethod

@@ -40,10 +40,11 @@ class BaseHandler(tornado.web.RequestHandler, SentryMixin):
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
-            self.url,
+            self.request,
+            self.url
         )
 
-        self.ext_name, self.unique_key = yield from self.provider.metadata()
+        self.ext, self.unique_key = yield from self.provider.metadata()
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler):

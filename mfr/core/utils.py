@@ -30,7 +30,8 @@ if sentry_dns:
 else:
     client = None
 
-def make_provider(name, url):
+
+def make_provider(name, request, url):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 
     :param str name: The name of the provider to instantiate. (osf)
@@ -42,7 +43,7 @@ def make_provider(name, url):
         namespace='mfr.providers',
         name=name,
         invoke_on_load=True,
-        invoke_args=(url, ),
+        invoke_args=(request, url, ),
     )
     return manager.driver
 
@@ -67,6 +68,7 @@ def make_extension(name, url, file_path, assets_url, ext):
         invoke_args=(url, file_path, assets_url, ext, ),
     )
     return manager.driver
+
 
 def as_task(func):
     if not asyncio.iscoroutinefunction(func):

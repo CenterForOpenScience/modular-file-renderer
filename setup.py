@@ -37,6 +37,7 @@ setup(
     ],
     entry_points={
         'mfr.providers': [
+            'http = mfr.providers.http:HttpProvider',
             'osf = mfr.providers.osf:OsfProvider',
         ],
         'mfr.extensions': [

@@ -29,11 +29,11 @@ class RenderHandler(core.BaseHandler):
         os.makedirs(os.path.dirname(cached_file_path), exist_ok=True)
         os.makedirs(os.path.dirname(cached_rendition_path), exist_ok=True)
         self.extension = core_utils.make_extension(
-            self.ext_name,
+            self.ext,
             self.url,
             cached_file_path,
             '{}://{}/assets'.format(self.request.protocol, self.request.host),
-            self.ext_name,
+            self.ext,
         )
 
         # TODO: Remove after changed to write to temp folder then move to final destination

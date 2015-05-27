@@ -1,25 +1,33 @@
 # Distribution
-wheel
+# wheel
+# colorlog==2.5.0
 
 # Task runner
-invoke
+# invoke
 
 # Docs
-sphinx
+# sphinx
 
 # Server
-aiohttp==0.14.1
-tornado==4.0.2
-stevedore==1.2.0
-git+https://github.com/jmcarp/raven-python
-celery==3.1.17
+# aiohttp==0.14.1
+# tornado==4.0.2
+# stevedore==1.2.0
+# git+https://github.com/jmcarp/raven-python
+# celery==3.1.17
 
 # Testing
-mock
-pytest
-tox>=1.5.0
+# mock
+# pytest
+# tox>=1.5.0
 
-# Previewer dependencies
-Flask
-
+decorator==3.4.0
+flake8==2.3.0
+ipdb==0.8
+ipython==2.3.1
+jinja2==2.7.3
+pytest==2.6.4
+pytest-cov==1.8.1
+pyzmq==14.4.1
+colorlog==2.5.0
+-e git+https://github.com/centerforopenscience/aiohttpretty.git#egg=aiohttpretty
 -r requirements.txt

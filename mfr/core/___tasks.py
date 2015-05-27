@@ -10,5 +10,3 @@ def render_mfr_error(err):
            <p>{msg}</p>
            </div>
         """.format(**locals())
-
-

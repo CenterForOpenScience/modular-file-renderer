@@ -5,8 +5,9 @@ from urllib.parse import urlparse
 
 import aiohttp
 
+from waterbutler.core import streams
+
 from mfr.core import provider
-from mfr.core import streams
 
 
 class HttpProvider(provider.BaseProvider):

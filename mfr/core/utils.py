@@ -1,5 +1,3 @@
-import os
-import functools
 import asyncio
 
 import aiohttp
@@ -8,6 +6,7 @@ from stevedore import driver
 from raven.contrib.tornado import AsyncSentryClient
 
 from mfr import settings
+
 
 sentry_dns = settings.get('SENTRY_DSN', None)
 
@@ -48,8 +47,27 @@ def make_provider(name, request, url):
     return manager.driver
 
 
-def make_extension(name, url, file_path, assets_url, ext):
-    """Returns an instance of :class:`mfr.core.ext.BaseProvider`
+def make_exporter(name, file_path, ext, type):
+    """Returns an instance of :class:`mfr.core.extension.BaseExporter`
+
+    :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
+    :param dict file_path:
+    :param dict ext:
+    :param dict type: The exported file type
+
+    :rtype: :class:`mfr.core.extension.BaseExporter`
+    """
+    manager = driver.DriverManager(
+        namespace='mfr.exporters',
+        name=name or '<none>',
+        invoke_on_load=True,
+        invoke_args=(file_path, ext, type),
+    )
+    return manager.driver
+
+
+def make_renderer(name, url, file_path, assets_url, ext):
+    """Returns an instance of :class:`mfr.core.extension.BaseRenderer`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
     :param dict url:
@@ -57,59 +75,12 @@ def make_extension(name, url, file_path, assets_url, ext):
     :param dict assets_url:
     :param dict ext
 
-    :rtype: :class:`mfr.core.extension.BaseExtension`
+    :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
-    print(url)
-    print(file_path)
     manager = driver.DriverManager(
-        namespace='mfr.extensions',
-        name=name,
+        namespace='mfr.renderers',
+        name=name or '<none>',
         invoke_on_load=True,
         invoke_args=(url, file_path, assets_url, ext, ),
     )
     return manager.driver
-
-
-def as_task(func):
-    if not asyncio.iscoroutinefunction(func):
-        func = asyncio.coroutine(func)
-
-    @functools.wraps(func)
-    def wrapped(*args, **kwargs):
-        return asyncio.async(func(*args, **kwargs))
-
-    return wrapped
-
-
-def async_retry(retries=5, backoff=1, exceptions=(Exception, ), raven=client):
-
-    def _async_retry(func):
-
-        @as_task
-        @functools.wraps(func)
-        def wrapped(*args, __retries=0, **kwargs):
-            try:
-                return (yield from asyncio.coroutine(func)(*args, **kwargs))
-            except exceptions as e:
-                if __retries < retries:
-                    wait_time = backoff * __retries
-                    logger.warning('Task {0} failed, {1} / {2} retries. Waiting {3} seconds before retrying'.format(func, __retries, retries, wait_time))
-
-                    yield from asyncio.sleep(wait_time)
-                    return wrapped(*args, __retries=__retries + 1, **kwargs)
-                else:
-                    # Logs before all things
-                    logger.error('Task {0} failed with exception {1}'.format(func, e))
-
-                    if raven:
-                        # Only log if a raven client exists
-                        client.captureException()
-
-                    # If anything happens to be listening
-                    raise e
-
-        # Retries must be 0 to start with
-        # functools partials dont preserve docstrings
-        return wrapped
-
-    return _async_retry

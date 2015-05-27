@@ -40,14 +40,23 @@ setup(
             'http = mfr.providers.http:HttpProvider',
             'osf = mfr.providers.osf:OsfProvider',
         ],
-        'mfr.extensions': [
+        'mfr.exporters': [
+            # image
+            '.jpeg = mfr.extensions.image:ImageExporter',
+            '.jpg = mfr.extensions.image:ImageExporter',
+            '.png = mfr.extensions.image:ImageExporter',
+            '.bmp = mfr.extensions.image:ImageExporter',
+            '.gif = mfr.extensions.image:ImageExporter',
+            '.tif = mfr.extensions.image:ImageExporter',
+        ],
+        'mfr.renderers': [
             # audio
             '.mp3 = mfr.extensions.audio:AudioRenderer',
             '.ogg = mfr.extensions.audio:AudioRenderer',
             '.wav = mfr.extensions.audio:AudioRenderer',
 
             # code pygments
-            '<blank> = mfr.extensions.codepygments:CodePygmentsRenderer',
+            '<none> = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.6pm = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.6pl = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rd = mfr.extensions.codepygments:CodePygmentsRenderer',

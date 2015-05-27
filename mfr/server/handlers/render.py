@@ -20,6 +20,15 @@ class RenderHandler(core.BaseHandler):
     def prepare(self):
         yield from super().prepare()
 
+    @asyncio.coroutine
+    def write_stream(self, stream):
+        while True:
+            chunk = yield from stream.read(settings.CHUNK_SIZE)
+            if not chunk:
+                break
+            self.write(chunk)
+            yield from utils.future_wrapper(self.flush())
+
     @utils.coroutine
     def get(self):
         """Render a file with the extension"""

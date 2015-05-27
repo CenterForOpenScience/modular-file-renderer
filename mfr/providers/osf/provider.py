@@ -36,11 +36,8 @@ class OsfProvider(provider.BaseProvider):
         #         ...
         #     },
         # }}
-        # TODO: hack while etag is being included in waterbutler
-        metadata['data']['etag'] = 'ABCD123456'
-        _, ext = os.path.splitext(metadata['data']['name']) # or content type?
-        unique_key = metadata['data']['etag']
-        return ext, unique_key
+        _, ext = os.path.splitext(metadata['data']['name'])  # or content type?
+        return ext, metadata['data']['etag']
 
     @asyncio.coroutine
     def download(self):

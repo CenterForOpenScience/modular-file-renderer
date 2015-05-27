@@ -29,3 +29,9 @@ HMAC_ALGORITHM = getattr(hashlib, config.get('HMAC_ALGORITHM', 'sha256'))
 HMAC_SECRET = config.get('HMAC_SECRET', 'changeme').encode('utf-8')
 
 PROVIDER_NAME = config.get('PROVIDER_NAME', 'osf')
+
+CHUNK_SIZE = config.get('CHUNK_SIZE', 65536)  # 64KB
+
+CACHE_PROVIDER_NAME = config.get('CACHE_PROVIDER_NAME', 'filesystem')
+CACHE_PROVIDER_SETTINGS = config.get('CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfr/'})
+CACHE_PROVIDER_CREDENTIALS = config.get('CACHE_PROVIDER_CREDENTIALS', {})

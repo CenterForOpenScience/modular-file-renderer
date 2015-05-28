@@ -4,7 +4,7 @@ ipython
 mako
 
 #WaterButler
-git+https://github.com/CenterForOpenScience/waterbutler.git@release/0.5.0
+git+https://github.com/CenterForOpenScience/waterbutler.git@release/0.5.4
 
 #CodePygments
 Pygments

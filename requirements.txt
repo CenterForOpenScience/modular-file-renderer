@@ -6,7 +6,7 @@ invoke==0.9.0
 stevedore==1.2.0
 tornado==4.0.2
 
-#WaterButler
+# WaterButler
 git+https://github.com/CenterForOpenScience/waterbutler.git@develop
 
 # CodePygments

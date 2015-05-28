@@ -96,9 +96,10 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     """
 
     def initialize(self):
-        namespace = 'mfr.extensions'
+        namespace = 'mfr.renderers'
+        module_path = 'mfr.extensions'
         self.modules = {
-            ep.module_name.replace(namespace + '.', ''): os.path.join(ep.dist.location, 'mfr', 'extensions', ep.module_name.replace(namespace + '.', ''), 'static')
+            ep.module_name.replace(module_path + '.', ''): os.path.join(ep.dist.location, 'mfr', 'extensions', ep.module_name.replace(module_path + '.', ''), 'static')
             for ep in list(pkg_resources.iter_entry_points(namespace))
         }
 

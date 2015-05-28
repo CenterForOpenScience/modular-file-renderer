@@ -3,12 +3,15 @@ import asyncio
 import pkg_resources
 
 import tornado.web
-import waterbutler.core.utils
 from raven.contrib.tornado import SentryMixin
+
+import waterbutler.core.utils
+import waterbutler.server.utils
+import waterbutler.core.exceptions
 
 from mfr.core import utils
 from mfr.server import settings
-from mfr.server import exceptions
+from mfr.core import exceptions
 
 
 CORS_ACCEPT_HEADERS = [
@@ -41,7 +44,6 @@ class CorsMixin:
 
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
-    ACTION_MAP = {}
 
     @asyncio.coroutine
     def prepare(self):
@@ -65,16 +67,24 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             settings.CACHE_PROVIDER_SETTINGS
         )
 
-        self.local_cache_provider = waterbutler.core.utils.make_provider('filesystem', {}, {}, {'folder': '/tmp/mfrlocalcache/'})
+        self.local_cache_provider = waterbutler.core.utils.make_provider(
+            'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
+        )
 
-        self.unique_path = yield from self.cache_provider.validate_path('/' + self.unique_key)
-        self.local_cache_path = yield from self.local_cache_provider.validate_path('/' + self.unique_key)
+    @asyncio.coroutine
+    def write_stream(self, stream):
+        while True:
+            chunk = yield from stream.read(settings.CHUNK_SIZE)
+            if not chunk:
+                break
+            self.write(chunk)
+            yield from waterbutler.server.utils.future_wrapper(self.flush())
 
     def write_error(self, status_code, exc_info):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
         etype, exc, _ = exc_info
 
-        if issubclass(etype, exceptions.MFRHTTPError):
+        if issubclass(etype, waterbutler.core.exceptions.PluginError):
             self.set_status(exc.status_code)
             self.finish(exc.as_html())
         else:

@@ -6,8 +6,9 @@ import tornado.platform.asyncio
 
 from mfr import settings
 from mfr.core.utils import AioSentryClient
-from mfr.server.handlers import render
-from mfr.server.handlers import status
+from mfr.server.handlers.export import ExportHandler
+from mfr.server.handlers.render import RenderHandler
+from mfr.server.handlers.status import StatusHandler
 from mfr.server import settings as server_settings
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
 
@@ -15,9 +16,10 @@ from mfr.server.handlers.core import ExtensionsStaticFileHandler
 def make_app(debug):
     app = tornado.web.Application(
         [
-            (r'/render', render.RenderHandler),
-            (r'/status', status.StatusHandler),
             (r'/assets/(.*?)/(.*\..*)', ExtensionsStaticFileHandler),
+            (r'/export', ExportHandler),
+            (r'/render', RenderHandler),
+            (r'/status', StatusHandler),
         ],
         debug=debug,
     )

@@ -4,9 +4,10 @@ import hashlib
 
 import aiohttp
 
+from waterbutler.core import streams
+
 from mfr.core import exceptions
 from mfr.core import provider
-from mfr.core import streams
 
 
 class OsfProvider(provider.BaseProvider):

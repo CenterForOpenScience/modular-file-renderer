@@ -59,7 +59,7 @@ def make_exporter(name, file_path, ext, type):
     """
     manager = driver.DriverManager(
         namespace='mfr.exporters',
-        name=name or '<none>',
+        name=name or 'none',
         invoke_on_load=True,
         invoke_args=(file_path, ext, type),
     )
@@ -79,7 +79,7 @@ def make_renderer(name, url, file_path, assets_url, ext):
     """
     manager = driver.DriverManager(
         namespace='mfr.renderers',
-        name=name or '<none>',
+        name=name or 'none',
         invoke_on_load=True,
         invoke_args=(url, file_path, assets_url, ext, ),
     )

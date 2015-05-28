@@ -56,7 +56,7 @@ setup(
             '.wav = mfr.extensions.audio:AudioRenderer',
 
             # code pygments
-            '<none> = mfr.extensions.codepygments:CodePygmentsRenderer',
+            'none = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.6pm = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.6pl = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rd = mfr.extensions.codepygments:CodePygmentsRenderer',

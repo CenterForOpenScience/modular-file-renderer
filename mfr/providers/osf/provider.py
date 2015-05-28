@@ -1,5 +1,6 @@
 import os
 import asyncio
+import hashlib
 
 import aiohttp
 
@@ -37,7 +38,7 @@ class OsfProvider(provider.BaseProvider):
         #     },
         # }}
         _, ext = os.path.splitext(metadata['data']['name'])  # or content type?
-        return ext, metadata['data']['etag']
+        return ext, hashlib.sha256((metadata['data']['etag'] + download_url).encode('utf-8')).hexdigest()
 
     @asyncio.coroutine
     def download(self):

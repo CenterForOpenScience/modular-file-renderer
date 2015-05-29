@@ -6,6 +6,7 @@ from stevedore import driver
 from raven.contrib.tornado import AsyncSentryClient
 
 from mfr import settings
+from mfr.core import exceptions
 
 
 sentry_dns = settings.get('SENTRY_DSN', None)
@@ -57,13 +58,15 @@ def make_exporter(name, file_path, ext, type):
 
     :rtype: :class:`mfr.core.extension.BaseExporter`
     """
-    manager = driver.DriverManager(
-        namespace='mfr.exporters',
-        name=name or 'none',
-        invoke_on_load=True,
-        invoke_args=(file_path, ext, type),
-    )
-    return manager.driver
+    try:
+        return driver.DriverManager(
+            namespace='mfr.exporters',
+            name=name or 'none',
+            invoke_on_load=True,
+            invoke_args=(file_path, ext, type),
+        ).driver
+    except RuntimeError:
+        raise exceptions.RendererError('No exporter could be found for the file type requested.', code=400)
 
 
 def make_renderer(name, url, file_path, assets_url, ext):
@@ -77,10 +80,12 @@ def make_renderer(name, url, file_path, assets_url, ext):
 
     :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
-    manager = driver.DriverManager(
-        namespace='mfr.renderers',
-        name=name or 'none',
-        invoke_on_load=True,
-        invoke_args=(url, file_path, assets_url, ext, ),
-    )
-    return manager.driver
+    try:
+        return driver.DriverManager(
+            namespace='mfr.renderers',
+            name=name or 'none',
+            invoke_on_load=True,
+            invoke_args=(url, file_path, assets_url, ext, ),
+        ).driver
+    except RuntimeError:
+        raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)

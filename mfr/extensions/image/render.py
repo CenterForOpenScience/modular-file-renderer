@@ -5,7 +5,7 @@ from mfr.core import extension
 class ImageRenderer(extension.BaseRenderer):
 
     def render(self):
-        return '<img src="{src}" />'.format(src=self.url)
+        return '<img src="{}" />'.format(self.url)
 
     @property
     def requires_file(self):

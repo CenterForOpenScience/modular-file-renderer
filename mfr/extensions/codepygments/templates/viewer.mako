@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="${base}/css/default.css">
 
-<div class="mfr-ipynb-body">
+<div class="mfrViewer">
 ${body}
 </div>

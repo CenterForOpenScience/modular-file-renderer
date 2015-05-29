@@ -84,8 +84,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
         etype, exc, _ = exc_info
 
-        if issubclass(etype, waterbutler.core.exceptions.PluginError):
-            self.set_status(exc.status_code)
+        if issubclass(etype, exceptions.PluginError):
+            self.set_status(exc.code)
             self.finish(exc.as_html())
         else:
             super().write_error(status_code)

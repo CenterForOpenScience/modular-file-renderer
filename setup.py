@@ -266,6 +266,7 @@ setup(
             '.liquid = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.lisp = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.ll = mfr.extensions.codepygments:CodePygmentsRenderer',
+            '.log = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.logtalk = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.ls = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.lsl = mfr.extensions.codepygments:CodePygmentsRenderer',
@@ -516,11 +517,12 @@ setup(
             '.docx = mfr.extensions.docx:DocxRenderer',
 
             # image
-            '.jpeg = mfr.extensions.image:ImageRenderer',
-            '.jpg = mfr.extensions.image:ImageRenderer',
-            '.png = mfr.extensions.image:ImageRenderer',
             '.bmp = mfr.extensions.image:ImageRenderer',
+            '.jpg = mfr.extensions.image:ImageRenderer',
+            '.jpeg = mfr.extensions.image:ImageRenderer',
             '.gif = mfr.extensions.image:ImageRenderer',
+            '.ico = mfr.extensions.image:ImageRenderer',
+            '.png = mfr.extensions.image:ImageRenderer',
             '.tif = mfr.extensions.image:ImageRenderer',
 
             # ipynb
@@ -541,6 +543,9 @@ setup(
 
             # rst
             # '.rst = mfr.extensions.rst:RstRenderer',
+
+            # svg
+            # '.svg = mfr.extensions.svg:SvgRenderer',
 
             # tabular
             '.csv = mfr.extensions.tabular:TabularRenderer',

@@ -23,7 +23,7 @@ Pillow>=2.3.0
 ipython==3.1.0
 
 # Pptx
-python-pptx==0.5.7
+# python-pptx==0.5.7
 
 # Rst
 Docutils>=0.11

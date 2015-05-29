@@ -248,6 +248,7 @@ setup(
             '.json = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.jsonld = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.jsp = mfr.extensions.codepygments:CodePygmentsRenderer',
+            '.jsx = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.kal = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.kid = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.kk = mfr.extensions.codepygments:CodePygmentsRenderer',

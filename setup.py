@@ -381,6 +381,7 @@ setup(
             '.rq = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rql = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rs = mfr.extensions.codepygments:CodePygmentsRenderer',
+            '.rst = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rsl = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rss = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rvt = mfr.extensions.codepygments:CodePygmentsRenderer',
@@ -539,7 +540,7 @@ setup(
             '.pdf = mfr.extensions.pdf:PdfRenderer',
 
             # rst
-            '.rst = mfr.extensions.rst:RstRenderer',
+            # '.rst = mfr.extensions.rst:RstRenderer',
 
             # tabular
             '.csv = mfr.extensions.tabular:TabularRenderer',

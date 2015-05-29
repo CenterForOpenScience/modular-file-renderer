@@ -1,5 +1,6 @@
 """Image exporter module."""
 from PIL import Image
+
 from mfr.core import extension
 
 

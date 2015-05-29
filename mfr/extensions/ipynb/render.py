@@ -1,11 +1,12 @@
 import os
 
-from mfr.core import extension
-from mako.lookup import TemplateLookup
-
 from IPython import nbformat
 from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
+from mako.lookup import TemplateLookup
+
+from mfr.core import extension
+from mfr.extensions.ipynb import exceptions
 
 
 class IpynbRenderer(extension.BaseRenderer):
@@ -19,9 +20,8 @@ class IpynbRenderer(extension.BaseRenderer):
         try:
             with open(self.file_path, 'r') as file_pointer:
                 notebook = nbformat.reads(file_pointer.read(), as_version=4)
-        except ValueError as e:
-            # TODO: Generate application specific exception
-            raise Exception('Invalid json: {}'.format(e))
+        except ValueError:
+            raise exceptions.InvalidFormat('Could not read ipython notebook file.')
 
         exporter = HTMLExporter(config=Config({
             'HTMLExporter': {

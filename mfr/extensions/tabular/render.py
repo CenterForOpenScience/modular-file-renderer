@@ -20,8 +20,8 @@ class TabularRenderer(extension.BaseRenderer):
             columns, rows = self._render_grid(fp, self.extension)
             return self.TEMPLATE.render(
                 base=self.assets_url,
-                # width=settings.TABLE_WIDTH,
-                # height=settings.TABLE_HEIGHT,
+                width=settings.TABLE_WIDTH,
+                height=settings.TABLE_HEIGHT,
                 columns=json.dumps(columns),
                 rows=json.dumps(rows),
                 options=json.dumps(settings.SMALL_TABLE if len(columns) < 9 else settings.BIG_TABLE),

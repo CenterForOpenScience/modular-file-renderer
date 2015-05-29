@@ -1,6 +1,8 @@
 """ ReStructuredText renderer module """
 from docutils.core import publish_parts
+
 from mfr.core import extension
+
 
 class RstRenderer(extension.BaseRenderer):
 
@@ -10,4 +12,4 @@ class RstRenderer(extension.BaseRenderer):
 
     @property
     def requires_file(self):
-        return False
+        return True

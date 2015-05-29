@@ -1,15 +1,24 @@
-# -*- coding: utf-8 -*-
 """Docx renderer module."""
+import pydocx.export
+
 from mfr.core import extension
-from pydocx.export import PyDocXHTMLExporter
+
 
 class DocxRenderer(extension.BaseRenderer):
 
+    # Workaround to remove default stylesheet and inlined styles
+    # see: https://github.com/CenterForOpenScience/pydocx/issues/102
+    class _PyDocXHTMLExporter(pydocx.export.PyDocXHTMLExporter):
+
+        def style(self):
+            return ''
+
+        def indent(self, text, *args, **kwargs):
+            return text
+
     def render(self):
-        exporter = PyDocXHTMLExporter(self.file_path)
-        html = exporter.parsed
-        return html
+        return self._PyDocXHTMLExporter(self.file_path).parsed
 
     @property
     def requires_file(self):
-        return False
+        return True

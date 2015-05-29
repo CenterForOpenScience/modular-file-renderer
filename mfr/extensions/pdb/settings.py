@@ -5,6 +5,7 @@ except ImportError:
 
 config = settings.get('PDB_EXTENSION_CONFIG', {})
 
+
 OPTIONS = config.get('OPTIONS', {
     'width': 'auto',
     'height': 'auto',

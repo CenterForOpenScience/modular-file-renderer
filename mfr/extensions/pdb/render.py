@@ -3,8 +3,8 @@ import os
 import json
 
 from mako.lookup import TemplateLookup
-from mfr.core import extension
 
+from mfr.core import extension
 from mfr.extensions.pdb import settings
 
 

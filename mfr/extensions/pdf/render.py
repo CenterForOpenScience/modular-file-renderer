@@ -1,7 +1,8 @@
 import os
 
-from mfr.core import extension
 from mako.lookup import TemplateLookup
+
+from mfr.core import extension
 
 
 class PdfRenderer(extension.BaseRenderer):

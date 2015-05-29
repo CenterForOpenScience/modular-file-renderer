@@ -1,7 +1,8 @@
 <link rel="stylesheet" href="${base}/css/slick.grid.css">
 <link rel="stylesheet" href="${base}/css/slick-default-theme.css">
+<link rel="stylesheet" href="${base}/css/examples.css">
 
-<div id="mfrGrid" style="width: 100%; height: 100%;"></div>
+<div id="mfrGrid" style="min-height: ${height}px;"></div>
 
 <script>
     function getScripts(files, callback) {

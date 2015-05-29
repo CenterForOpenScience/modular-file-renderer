@@ -22,6 +22,7 @@ Pillow>=2.3.0
 # IPython
 ipython==3.1.0
 jsonschema==2.4.0
+jinja2==2.7.3
 
 # Pptx
 # python-pptx==0.5.7

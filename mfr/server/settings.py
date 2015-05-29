@@ -30,6 +30,7 @@ HMAC_SECRET = config.get('HMAC_SECRET', 'changeme').encode('utf-8')
 
 PROVIDER_NAME = config.get('PROVIDER_NAME', 'osf')
 
+CACHE_ENABLED = config.get('CACHE_ENABLED', False)
 CACHE_PROVIDER_NAME = config.get('CACHE_PROVIDER_NAME', 'filesystem')
 CACHE_PROVIDER_SETTINGS = config.get('CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfr/'})
 CACHE_PROVIDER_CREDENTIALS = config.get('CACHE_PROVIDER_CREDENTIALS', {})

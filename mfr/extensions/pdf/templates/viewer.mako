@@ -1,5 +1,3 @@
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-
 <div id="mfrViewer" class="embed-responsive" style="padding-bottom: 95%; border-bottom: solid 1px #404040;"></div>
 <script>
     (function () {

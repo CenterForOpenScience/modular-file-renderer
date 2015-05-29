@@ -5,9 +5,9 @@ import waterbutler.core.streams
 import waterbutler.server.utils
 import waterbutler.core.exceptions
 
+from mfr.server import settings
 from mfr.core import utils as utils
 from mfr.server.handlers import core
-
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +25,8 @@ class RenderHandler(core.BaseHandler):
         self.local_cache_path = yield from self.local_cache_provider.validate_path('/render/' + self.unique_key)
 
         try:
+            if not settings.CACHE_ENABLED:
+                raise waterbutler.core.exceptions.DownloadError('', code=404)
             cached_stream = yield from self.cache_provider.download(self.unique_path)
         except waterbutler.core.exceptions.DownloadError as e:
             assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
@@ -52,6 +54,8 @@ class RenderHandler(core.BaseHandler):
         rendition = (yield from loop.run_in_executor(None, self.extension.render))
 
         # TODO Spin off current request
-        yield from self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.unique_path)
+        if settings.CACHE_ENABLED:
+            yield from self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.unique_path)
+
         # TODO: Set Content Disposition Header
         yield from self.write_stream(waterbutler.core.streams.StringStream(rendition))

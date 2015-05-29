@@ -3,4 +3,3 @@
 <div class="mfr-ipynb-body">
 ${body}
 </div>
-

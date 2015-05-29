@@ -1,17 +1,17 @@
-from mfr.exceptions import RenderError
+from mfr.core.exceptions import RendererError
 
 
-class MissingRequirementsException(RenderError):
+class MissingRequirementsException(RendererError):
     pass
 
 
-class EmptyTableException(RenderError):
+class EmptyTableException(RendererError):
     pass
 
 
-class TableTooBigException(RenderError):
+class TableTooBigException(RendererError):
     pass
 
 
-class UnexpectedFormattingException(RenderError):
+class UnexpectedFormattingException(RendererError):
     pass

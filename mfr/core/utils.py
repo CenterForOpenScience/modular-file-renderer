@@ -41,7 +41,7 @@ def make_provider(name, request, url):
     """
     manager = driver.DriverManager(
         namespace='mfr.providers',
-        name=name,
+        name=name.lower(),
         invoke_on_load=True,
         invoke_args=(request, url, ),
     )
@@ -61,7 +61,7 @@ def make_exporter(name, file_path, ext, type):
     try:
         return driver.DriverManager(
             namespace='mfr.exporters',
-            name=name or 'none',
+            name=(name and name.lower()) or 'none',
             invoke_on_load=True,
             invoke_args=(file_path, ext, type),
         ).driver
@@ -83,7 +83,7 @@ def make_renderer(name, url, file_path, assets_url, ext):
     try:
         return driver.DriverManager(
             namespace='mfr.renderers',
-            name=name or 'none',
+            name=(name and name.lower()) or 'none',
             invoke_on_load=True,
             invoke_args=(url, file_path, assets_url, ext, ),
         ).driver

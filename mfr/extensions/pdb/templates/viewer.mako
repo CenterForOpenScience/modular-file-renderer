@@ -1,4 +1,4 @@
-<div id="mfrViewer" style="width: 100%; height: 100%;"></div>
+<div id="mfrViewer" style="min-width: ${min_width}; min-height: ${min_height};"></div>
 
 <script>
     function getScripts(files, callback) {

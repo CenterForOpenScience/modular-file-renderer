@@ -88,7 +88,11 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             self.set_status(exc.code)
             self.finish(exc.as_html())
         else:
-            super().write_error(status_code)
+            self.finish('''
+                <div class="alert alert-warning" role="alert">
+                    Unable to render the requested file, please try again later.
+                </div>
+                ''')
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):

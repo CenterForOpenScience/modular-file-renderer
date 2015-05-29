@@ -1,4 +1,11 @@
-<div id="mfrViewer" style="min-width: ${min_width}; min-height: ${min_height};"></div>
+<style>
+    #mfrViewer > canvas {
+      width: 100%;
+      height: auto;
+    }
+</style>
+
+<div id="mfrViewer"></div>
 
 <script>
     function getScripts(files, callback) {

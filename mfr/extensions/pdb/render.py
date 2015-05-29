@@ -19,8 +19,6 @@ class PdbRenderer(extension.BaseRenderer):
         return self.TEMPLATE.render(
             url=self.url,
             base=self.assets_url,
-            min_height=settings.MIN_HEIGHT,
-            min_width=settings.MIN_WIDTH,
             options=json.dumps(settings.OPTIONS),
         )
 

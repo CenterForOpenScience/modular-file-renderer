@@ -24,6 +24,8 @@ class OsfProvider(provider.BaseProvider):
             self.token = authorization[7:].decode('utf')
         elif 'token' in self.request.arguments:
             self.token = self.request.arguments['token'][0].decode('utf-8')
+        else:
+            self.token = None
 
     @asyncio.coroutine
     def metadata(self):

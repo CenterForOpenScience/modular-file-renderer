@@ -1,4 +1,4 @@
-import hashlib
+import os
 
 try:
     from mfr import settings
@@ -6,7 +6,10 @@ except ImportError:
     settings = {}
 
 config = settings.get('SERVER_CONFIG', {})
+base_path = os.path.dirname(os.path.dirname(__file__))
 
+
+ASSETS_PATH = config.get('ASSETS_PATH', os.path.join(base_path, 'assets'))
 
 ADDRESS = config.get('ADDRESS', '127.0.0.1')
 PORT = config.get('PORT', 7778)
@@ -21,12 +24,6 @@ CORS_ALLOW_ORIGIN = config.get('CORS_ALLOW_ORIGIN', '*')
 
 CHUNK_SIZE = config.get('CHUNK_SIZE', 65536)  # 64KB
 MAX_BUFFER_SIZE = config.get('MAX_BUFFER_SIZE', 1024 * 1024 * 100)  # 100MB
-
-IDENTITY_METHOD = config.get('IDENTITY_METHOD', 'rest')
-IDENTITY_API_URL = config.get('IDENTITY_API_URL', 'http://127.0.0.1:5001/api/v1/files/auth/')
-
-HMAC_ALGORITHM = getattr(hashlib, config.get('HMAC_ALGORITHM', 'sha256'))
-HMAC_SECRET = config.get('HMAC_SECRET', 'changeme').encode('utf-8')
 
 PROVIDER_NAME = config.get('PROVIDER_NAME', 'osf')
 

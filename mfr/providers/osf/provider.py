@@ -21,9 +21,9 @@ class OsfProvider(provider.BaseProvider):
         # capture request authorization
         authorization = self.request.headers.get('Authorization')
         if authorization and authorization.startswith('Bearer '):
-            self.token = authorization[7:]
+            self.token = authorization[7:].decode('utf')
         elif 'token' in self.request.arguments:
-            self.token = self.request.arguments['token'][0]
+            self.token = self.request.arguments['token'][0].decode('utf-8')
 
     @asyncio.coroutine
     def metadata(self):

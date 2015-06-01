@@ -1,11 +1,19 @@
-"""Image renderer module."""
+import os
+
+from mako.lookup import TemplateLookup
+
 from mfr.core import extension
 
 
 class ImageRenderer(extension.BaseRenderer):
 
+    TEMPLATE = TemplateLookup(
+        directories=[
+            os.path.join(os.path.dirname(__file__), 'templates')
+        ]).get_template('viewer.mako')
+
     def render(self):
-        return '<img src="{}" />'.format(self.url)
+        return self.TEMPLATE.render(base=self.assets_url, url=self.url)
 
     @property
     def requires_file(self):

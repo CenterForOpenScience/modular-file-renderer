@@ -90,6 +90,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         else:
             self.set_status(400)
             self.finish('''
+                <link rel="stylesheet" href="/static/css/bootstrap.min.css">
                 <div class="alert alert-warning" role="alert">
                     Unable to render the requested file, please try again later.
                 </div>
@@ -114,10 +115,10 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             super().initialize(self.modules[module_name])
             return (yield from waterbutler.server.utils.future_wrapper(super().get(path)))
         except Exception:
-            pass
+            self.set_status(404)
 
         try:
-            super().initialize(settings.ASSETS_PATH)
+            super().initialize(settings.STATIC_PATH)
             return (yield from waterbutler.server.utils.future_wrapper(super().get(path)))
         except Exception:
             self.set_status(404)

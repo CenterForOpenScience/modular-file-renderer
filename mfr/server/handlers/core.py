@@ -58,7 +58,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             self.url
         )
 
-        self.ext, self.unique_key = yield from self.provider.metadata()
+        self.ext, self.unique_key, self.download_url = yield from self.provider.metadata()
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,

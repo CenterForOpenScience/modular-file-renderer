@@ -39,6 +39,7 @@ class RenderHandler(core.BaseHandler):
         self.extension = utils.make_renderer(
             self.ext,
             self.url,
+            self.download_url,
             self.local_cache_path.full_path,
             '{}://{}/assets'.format(self.request.protocol, self.request.host),
             self.ext

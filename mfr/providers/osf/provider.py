@@ -2,6 +2,7 @@ import os
 import asyncio
 import hashlib
 
+import furl
 import aiohttp
 
 from waterbutler.core import streams
@@ -20,9 +21,9 @@ class OsfProvider(provider.BaseProvider):
         # capture request authorization
         authorization = self.request.headers.get('Authorization')
         if authorization and authorization.startswith('Bearer '):
-            self.headers['Authorization'] = authorization
+            self.token = authorization[7:]
         elif 'token' in self.request.arguments:
-            self.headers['Authorization'] = 'Bearer ' + self.request.arguments['token'][0]
+            self.token = self.request.arguments['token'][0]
 
     @asyncio.coroutine
     def metadata(self):
@@ -39,7 +40,8 @@ class OsfProvider(provider.BaseProvider):
         #     },
         # }}
         _, ext = os.path.splitext(metadata['data']['name'])  # or content type?
-        return ext, hashlib.sha256((metadata['data']['etag'] + download_url).encode('utf-8')).hexdigest()
+        unique_key = hashlib.sha256((metadata['data']['etag'] + download_url).encode('utf-8')).hexdigest()
+        return ext, unique_key, download_url
 
     @asyncio.coroutine
     def download(self):
@@ -70,5 +72,6 @@ class OsfProvider(provider.BaseProvider):
     def _make_request(self, method, url, *args, **kwargs):
         if 'headers' not in kwargs:
             kwargs['headers'] = {}
-        kwargs['headers'].update(self.headers)
+        if self.token:
+            kwargs['headers']['Authorization'] = 'Bearer ' + self.token
         return (yield from aiohttp.request(method, url, *args, **kwargs))

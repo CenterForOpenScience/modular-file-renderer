@@ -17,7 +17,7 @@ class HttpProvider(provider.BaseProvider):
         path = urlparse(self.url).path
         _, ext = os.path.splitext(os.path.split(path)[-1])
         unique_key = hashlib.sha256(self.url.encode('utf-8')).hexdigest()
-        return ext, unique_key
+        return ext, unique_key, self.url
 
     @asyncio.coroutine
     def download(self):

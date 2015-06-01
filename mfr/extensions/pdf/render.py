@@ -1,5 +1,7 @@
 import os
 
+from urllib import parse
+
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
@@ -13,7 +15,7 @@ class PdfRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        return self.TEMPLATE.render(base=self.assets_url, url=self.url)
+        return self.TEMPLATE.render(base=self.assets_url, url=parse.quote(self.download_url))
 
     @property
     def requires_file(self):

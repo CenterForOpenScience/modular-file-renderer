@@ -6,10 +6,9 @@ except ImportError:
     settings = {}
 
 config = settings.get('SERVER_CONFIG', {})
-base_path = os.path.dirname(os.path.dirname(__file__))
 
 
-ASSETS_PATH = config.get('ASSETS_PATH', os.path.join(base_path, 'assets'))
+STATIC_PATH = config.get('STATIC_PATH', os.path.join(os.path.dirname(__file__), 'static'))
 
 ADDRESS = config.get('ADDRESS', '127.0.0.1')
 PORT = config.get('PORT', 7778)

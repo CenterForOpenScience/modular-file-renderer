@@ -5,6 +5,7 @@ class PluginError(waterbutler.core.exceptions.PluginError):
 
     def as_html(self):
         return '''
+            <link rel="stylesheet" href="/static/css/bootstrap.min.css">
             <div class="alert alert-warning" role="alert">{}</div>
             '''.format(self.message)
 

@@ -43,7 +43,7 @@
      * @param {String} url The url of the iframe source.
      * @param {Object} config Configuration to override the default settings.
      */
-    lib.Render = function(id, url, config) {
+    lib.Render = function (id, url, config) {
         var self = this;
         self.pymParent = new pym.Parent(id, url, config);
         self.pymParent.iframe.setAttribute('allowfullscreen', '');

@@ -8,7 +8,7 @@ config = settings.get('PDB_EXTENSION_CONFIG', {})
 
 OPTIONS = config.get('OPTIONS', {
     'width': 'auto',
-    'height': '600',
+    'height': '400',
     'antialias': True,
     'outline': True,
     'quality': 'medium',

@@ -4,25 +4,18 @@
 
 <div id="mfrViewer" style="min-height: ${height}px;"></div>
 
+<script src="/static/js/jquery-1.11.3.min.js"></script>
+<script src="${base}/js/jquery.event.drag-2.2.js"></script>
+<script src="${base}/js/slick.core.js"></script>
+<script src="${base}/js/slick.grid.js"></script>
 <script>
-    (function () {
-        function getScripts(files, callback) {
-            $.getScript(files.shift(), function () {
-                files.length ? getScripts(files, callback) : callback();
-            });
-        }
-
-        $(function () {
-            getScripts([
-                '${base}/js/jquery.event.drag-2.2.js',
-                '${base}/js/slick.core.js',
-                '${base}/js/slick.grid.js'
-            ], function () {
-                var columns = ${columns};
-                var rows = ${rows};
-                var options = ${options};
-                var grid = new Slick.Grid("#mfrViewer", rows, columns, options);
-            });
-        });
-    })();
+    $(function () {
+        var columns = ${columns};
+        var rows = ${rows};
+        var options = ${options};
+        new Slick.Grid("#mfrViewer", rows, columns, options);
+    });
 </script>
+
+<script src="/static/js/pym.min.js"></script>
+<script src="/static/js/mfr.child.js"></script>

@@ -35,6 +35,17 @@
         return el;
     }
 
+    function _removeClass(el, className) {
+        if (el.classList) {
+            el.classList.remove(className);
+        } else {
+            var classes = el.className.split(' ');
+            classes.splice(classes.indexOf(className), 1);
+            el.className = classes.join(' ');
+        }
+        return el;
+    }
+
     /**
      * The Render file iframe widget
      *
@@ -48,6 +59,11 @@
         self.pymParent = new pym.Parent(id, url, config);
         self.pymParent.iframe.setAttribute('allowfullscreen', '');
         self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
+
+        _addClass(self.pymParent.el, 'mfr-loading');
+        $(self.pymParent.iframe).load(function () {
+            _removeClass(self.pymParent.el, 'mfr-loading');
+        });
 
         self.reload = function () {
             self.pymParent.sendMessage('reload', 'x');

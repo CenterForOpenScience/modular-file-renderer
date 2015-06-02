@@ -1,3 +1,9 @@
+/* COS logo spin */
+
+.mfr-loading {
+    background:url(../images/loading.png) center center no-repeat;
+}
+
 .embed-responsive-pdf {
     padding-bottom: 95%;
 }

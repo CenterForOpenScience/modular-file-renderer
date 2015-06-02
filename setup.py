@@ -439,6 +439,7 @@ setup(
             '.twig = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.txt = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.md = mfr.extensions.codepygments:CodePygmentsRenderer',
+            '.rmd = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.u = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.v = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.vala = mfr.extensions.codepygments:CodePygmentsRenderer',

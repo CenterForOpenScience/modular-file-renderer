@@ -33,7 +33,11 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractproperty
-    def requires_file(self):
+    def file_required(self):
+        pass
+
+    @abc.abstractproperty
+    def cache_result(self):
         pass
 
     def _get_module_name(self):

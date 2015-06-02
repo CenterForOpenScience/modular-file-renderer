@@ -28,7 +28,11 @@ class TabularRenderer(extension.BaseRenderer):
             )
 
     @property
-    def requires_file(self):
+    def file_required(self):
+        return True
+
+    @property
+    def cache_result(self):
         return True
 
     def _render_grid(self, fp, ext, *args, **kwargs):  #assets_path, ext):

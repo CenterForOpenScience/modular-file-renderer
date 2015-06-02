@@ -17,5 +17,9 @@ class SvgRenderer(extension.BaseRenderer):
         return self.TEMPLATE.render(base=self.assets_url, url=self.url)
 
     @property
-    def requires_file(self):
+    def file_required(self):
+        return False
+
+    @property
+    def cache_result(self):
         return False

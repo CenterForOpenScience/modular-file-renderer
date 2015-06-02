@@ -19,5 +19,9 @@ class RstRenderer(extension.BaseRenderer):
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 
     @property
-    def requires_file(self):
+    def file_required(self):
+        return True
+
+    @property
+    def cache_result(self):
         return True

@@ -23,19 +23,6 @@ class RenderHandler(core.BaseHandler):
         """Render a file with the extension"""
         self.unique_path = yield from self.cache_provider.validate_path('/render/' + self.unique_key)
         self.local_cache_path = yield from self.local_cache_provider.validate_path('/render/' + self.unique_key)
-
-        try:
-            if not settings.CACHE_ENABLED:
-                raise waterbutler.core.exceptions.DownloadError('', code=404)
-            cached_stream = yield from self.cache_provider.download(self.unique_path)
-        except waterbutler.core.exceptions.DownloadError as e:
-            assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
-            logger.info('No cached file found; Starting render')
-        else:
-            logger.info('Cached file found; Sending downstream')
-            # TODO: Set Content Disposition Header
-            return (yield from self.write_stream(cached_stream))
-
         self.extension = utils.make_renderer(
             self.ext,
             self.url,
@@ -45,7 +32,18 @@ class RenderHandler(core.BaseHandler):
             self.ext
         )
 
-        if self.extension.requires_file:
+        if self.extension.cache_result and settings.CACHE_ENABLED:
+            try:
+                cached_stream = yield from self.cache_provider.download(self.unique_path)
+            except waterbutler.core.exceptions.DownloadError as e:
+                assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
+                logger.info('No cached file found; Starting render')
+            else:
+                logger.info('Cached file found; Sending downstream')
+                # TODO: Set Content Disposition Header
+                return (yield from self.write_stream(cached_stream))
+
+        if self.extension.file_required:
             yield from self.local_cache_provider.upload(
                 (yield from self.provider.download()),
                 self.local_cache_path
@@ -55,7 +53,7 @@ class RenderHandler(core.BaseHandler):
         rendition = (yield from loop.run_in_executor(None, self.extension.render))
 
         # TODO Spin off current request
-        if settings.CACHE_ENABLED:
+        if self.extension.cache_result and settings.CACHE_ENABLED:
             yield from self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.unique_path)
 
         # TODO: Set Content Disposition Header

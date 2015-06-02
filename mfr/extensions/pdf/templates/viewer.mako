@@ -336,7 +336,7 @@ http://sourceforge.net/adobe/cmap/wiki/License/
              border-bottom: solid 1px #404040;
         }
     </style>
-    <script src="/static/js/pym.min.js"></script>
+    <script src="/static/js/mfr.js"></script>
     <script src="/static/js/mfr.child.js"></script>
     <script>
         var DEFAULT_URL = '${url}';

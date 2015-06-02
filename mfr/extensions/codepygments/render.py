@@ -1,4 +1,3 @@
-"""Code renderer module."""
 import os
 
 import pygments
@@ -23,8 +22,8 @@ class CodePygmentsRenderer(extension.BaseRenderer):
 
     def render(self):
         with open(self.file_path) as fp:
-            content = self._render_html(fp, self.extension)
-            return self.TEMPLATE.render(base=self.assets_url, color=settings.PYGMENTS_THEME, body=content)
+            body = self._render_html(fp, self.extension)
+            return self.TEMPLATE.render(base=self.assets_url, color=settings.PYGMENTS_THEME, body=body)
 
     @property
     def requires_file(self):

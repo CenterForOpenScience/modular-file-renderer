@@ -32,7 +32,7 @@ class IpynbRenderer(extension.BaseRenderer):
             },
         }))
         (body, _) = exporter.from_notebook_node(notebook)
-        return self.TEMPLATE.render(body=body, base=self.assets_url)
+        return self.TEMPLATE.render(base=self.assets_url, body=body)
 
     @property
     def requires_file(self):

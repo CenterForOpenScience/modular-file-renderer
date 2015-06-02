@@ -5,8 +5,8 @@
     ${body | n}
 </div>
 
-##<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
-<script src="/static/js/pym.min.js"></script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script src="/static/js/mfr.js"></script>
 <script src="/static/js/mfr.child.js"></script>
 <script>
     (function () {

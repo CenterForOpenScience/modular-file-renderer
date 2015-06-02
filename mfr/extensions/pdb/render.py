@@ -23,5 +23,9 @@ class PdbRenderer(extension.BaseRenderer):
         )
 
     @property
-    def requires_file(self):
-        return True
+    def file_required(self):
+        return False
+
+    @property
+    def cache_result(self):
+        return False

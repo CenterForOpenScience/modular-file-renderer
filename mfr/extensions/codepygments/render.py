@@ -26,7 +26,11 @@ class CodePygmentsRenderer(extension.BaseRenderer):
             return self.TEMPLATE.render(base=self.assets_url, color=settings.PYGMENTS_THEME, body=body)
 
     @property
-    def requires_file(self):
+    def file_required(self):
+        return True
+
+    @property
+    def cache_result(self):
         return True
 
     def _render_html(self, fp, ext, *args, **kwargs):

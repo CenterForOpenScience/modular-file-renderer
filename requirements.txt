@@ -10,7 +10,7 @@ tornado==4.0.2
 git+https://github.com/CenterForOpenScience/waterbutler.git@develop
 
 # CodePygments
-Pygments
+Pygments==2.0.2
 
 # Docx
 #git+https://github.com/jsocol/bleach.git

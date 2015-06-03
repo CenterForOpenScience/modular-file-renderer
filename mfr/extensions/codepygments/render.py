@@ -1,6 +1,5 @@
 import os
 
-import pygments
 import pygments.lexers
 import pygments.lexers.special
 import pygments.formatters
@@ -8,7 +7,6 @@ from pygments.util import ClassNotFound
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
-from mfr.extensions.codepygments import settings
 
 
 class CodePygmentsRenderer(extension.BaseRenderer):
@@ -23,7 +21,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
     def render(self):
         with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.extension)
-            return self.TEMPLATE.render(base=self.assets_url, color=settings.PYGMENTS_THEME, body=body)
+            return self.TEMPLATE.render(base=self.assets_url, body=body)
 
     @property
     def file_required(self):
@@ -38,9 +36,8 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         :param fp: File pointer
         :return: Content html
         """
-        formatter = pygments.formatters.HtmlFormatter(cssclass=settings.CSS_CLASS)
+        formatter = pygments.formatters.HtmlFormatter()
         content = fp.read().decode('utf-16')
-
         try:
             lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
         except ClassNotFound:

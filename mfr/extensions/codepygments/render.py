@@ -37,7 +37,12 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         :return: Content html
         """
         formatter = pygments.formatters.HtmlFormatter()
-        content = fp.read().decode('utf-16')
+
+        try:
+            content = fp.read().decode('utf-8')
+        except UnicodeDecodeError:
+            content = fp.read().decode('utf-16')
+
         try:
             lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
         except ClassNotFound:

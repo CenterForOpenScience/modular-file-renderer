@@ -1,7 +1,68 @@
-/* COS logo spin */
+.logo-spin {
+    -webkit-animation: spin 3s infinite linear, opacity 3s infinite linear;
+    animation: spin 3s infinite linear, opacity 3s infinite linear;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: -1;
+}
 
-.mfr-loading {
-    background:url(../images/loading.png) center center no-repeat;
+@-moz-keyframes spin {
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes opacity {
+    0% {
+        opacity : 0.1
+    }
+    50% {
+        opacity: 1
+    }
+    100% {
+        opacity: 0.1
+    }
+}
+@-webkit-keyframes opacity {
+    0% {
+        opacity : 0.1
+    }
+    50% {
+        opacity: 1
+    }
+    100% {
+        opacity: 0.1
+    }
+}
+@keyframes opacity {
+    0% {
+        opacity : 0.1
+    }
+    50% {
+        opacity: 1
+    }
+    100% {
+        opacity: 0.1
+    }
 }
 
 .embed-responsive-pdf {

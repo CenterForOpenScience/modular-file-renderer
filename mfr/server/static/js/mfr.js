@@ -46,6 +46,18 @@
         return el;
     }
 
+    function _createSpinner(url) {
+        var parser = document.createElement('a');
+        parser.href = url;
+
+        var spinner = document.createElement('div');
+        var img = document.createElement('img');
+        spinner.setAttribute('class', 'logo-spin text-center');
+        img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/loading.png');
+        spinner.appendChild(img);
+        return spinner
+    }
+
     /**
      * The Render file iframe widget
      *
@@ -60,9 +72,10 @@
         self.pymParent.iframe.setAttribute('allowfullscreen', '');
         self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
 
-        _addClass(self.pymParent.el, 'mfr-loading');
+        self.spinner = _createSpinner(url);
+        self.pymParent.el.appendChild(self.spinner);
         $(self.pymParent.iframe).load(function () {
-            _removeClass(self.pymParent.el, 'mfr-loading');
+            self.pymParent.el.removeChild(self.spinner);
         });
 
         self.reload = function () {

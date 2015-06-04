@@ -19,7 +19,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        with open(self.file_path) as fp:
+        with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.extension)
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 
@@ -37,7 +37,12 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         :return: Content html
         """
         formatter = pygments.formatters.HtmlFormatter()
-        content = fp.read()
+
+        try:
+            content = fp.read().decode('utf-8')
+        except UnicodeDecodeError:
+            content = fp.read().decode('utf-16')
+
         try:
             lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
         except ClassNotFound:

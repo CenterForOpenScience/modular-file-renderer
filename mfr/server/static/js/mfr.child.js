@@ -6,6 +6,10 @@
         window.pymChild.sendHeight();
     };
 
+    window.onresize = function() {
+        window.pymChild.sendHeight();
+    };
+
     window.pymChild.onMessage('reload', function () {
         window.location.reload();
     });

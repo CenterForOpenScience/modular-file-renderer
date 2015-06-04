@@ -39,7 +39,7 @@ class RenderHandler(core.BaseHandler):
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting render')
             else:
-                logger.info('Cached file found; Sending downstream')
+                logger.info('Catimeoutched file found; Sending downstream')
                 # TODO: Set Content Disposition Header
                 return (yield from self.write_stream(cached_stream))
 
@@ -52,9 +52,11 @@ class RenderHandler(core.BaseHandler):
         loop = asyncio.get_event_loop()
         rendition = (yield from loop.run_in_executor(None, self.extension.render))
 
-        # TODO Spin off current request
+        # Spin off upload into non-blocking operation
         if self.extension.cache_result and settings.CACHE_ENABLED:
-            yield from self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.unique_path)
+            loop.call_soon(
+                asyncio.async,
+                self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.unique_path)
+            )
 
-        # TODO: Set Content Disposition Header
         yield from self.write_stream(waterbutler.core.streams.StringStream(rendition))

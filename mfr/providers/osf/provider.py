@@ -13,7 +13,7 @@ from mfr.core import provider
 
 class OsfProvider(provider.BaseProvider):
 
-    UNNEEDED_URL_PARAMS = ('token', 'action', 'mode', 'displayName')
+    UNNEEDED_URL_PARAMS = ('_', 'token', 'action', 'mode', 'displayName')
 
     def __init__(self, request, url):
         super().__init__(request, url)

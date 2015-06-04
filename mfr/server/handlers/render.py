@@ -39,7 +39,7 @@ class RenderHandler(core.BaseHandler):
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting render')
             else:
-                logger.info('Catimeoutched file found; Sending downstream')
+                logger.info('Cached file found; Sending downstream')
                 # TODO: Set Content Disposition Header
                 return (yield from self.write_stream(cached_stream))
 

@@ -9,4 +9,8 @@
     window.pymChild.onMessage('reload', function () {
         window.location.reload();
     });
+
+    window.pymChild.onMessage('resize', function () {
+        window.pymChild.sendHeight();
+    });
 })();

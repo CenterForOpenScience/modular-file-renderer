@@ -69,6 +69,10 @@
             self.pymParent.sendMessage('reload', 'x');
         };
 
+        self.resize = function () {
+            self.pymParent.sendMessage('resize', 'x');
+        };
+
         self.pymParent.onMessage('embed', function(message) {
             _addClass(self.pymParent.el, 'embed-responsive');
             _addClass(self.pymParent.el, message);

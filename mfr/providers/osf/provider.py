@@ -13,6 +13,8 @@ from mfr.core import provider
 
 class OsfProvider(provider.BaseProvider):
 
+    UNNEEDED_URL_PARAMS = ('token', 'action', 'mode', 'displayName')
+
     def __init__(self, request, url):
         super().__init__(request, url)
         self.download_url = None
@@ -42,7 +44,10 @@ class OsfProvider(provider.BaseProvider):
         #     },
         # }}
         _, ext = os.path.splitext(metadata['data']['name'])  # or content type?
-        unique_key = hashlib.sha256((metadata['data']['etag'] + download_url).encode('utf-8')).hexdigest()
+        cleaned_url = furl.furl(download_url)
+        for unneeded in OsfProvider.UNNEEDED_URL_PARAMS:
+            cleaned_url.args.pop(unneeded, None)
+        unique_key = hashlib.sha256((metadata['data']['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
         return ext, unique_key, download_url
 
     @asyncio.coroutine

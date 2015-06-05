@@ -5,7 +5,7 @@ from mako.lookup import TemplateLookup
 from mfr.core import extension
 
 
-class MovieRenderer(extension.BaseRenderer):
+class VideoRenderer(extension.BaseRenderer):
 
     TEMPLATE = TemplateLookup(
         directories=[

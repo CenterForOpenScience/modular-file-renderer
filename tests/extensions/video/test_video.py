@@ -1,26 +1,26 @@
 import pytest
 
-from mfr.extensions.audio import AudioRenderer
+from mfr.extensions.video import VideoRenderer
 
 
 @pytest.fixture
 def url():
-    return 'http://osf.io/file/audio.mp3'
+    return 'http://osf.io/file/video.mp4'
 
 
 @pytest.fixture
 def download_url():
-    return 'http://wb.osf.io/file/audio.mp3?token=1234'
+    return 'http://wb.osf.io/file/video.mp4?token=1234'
 
 
 @pytest.fixture
 def file_path():
-    return '/tmp/audio.mp3'
+    return '/tmp/video.mp4'
 
 
 @pytest.fixture
 def assets_url():
-    return 'http://mfr.osf.io/assets/audio/'
+    return 'http://mfr.osf.io/assets/video/'
 
 
 @pytest.fixture
@@ -30,14 +30,14 @@ def extension():
 
 @pytest.fixture
 def renderer(url, download_url, file_path, assets_url, extension):
-    return AudioRenderer(url, download_url, file_path, assets_url, extension)
+    return VideoRenderer(url, download_url, file_path, assets_url, extension)
 
 
-class TestRenderAudio:
+class TestRenderVideo:
 
-    def test_render_audio(self, renderer, url):
+    def test_render_video(self, renderer, url):
         body = renderer.render()
-        assert '<audio controls>' in body
+        assert '<video controls' in body
         assert 'src="{}"'.format(url) in body
 
     def test_render_audio_file_required(self, renderer):

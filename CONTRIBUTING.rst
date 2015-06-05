@@ -201,7 +201,7 @@ A typical directory structure might look like this:
 		├── README.rst
 		└── configuration.py
 
-where "something" is a file format, e.g. "mfr_image", "mfr_movie".
+where "something" is a file format, e.g. "mfr_image", "mfr_video".
 
 .. note::
 

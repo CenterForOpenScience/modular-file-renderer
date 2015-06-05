@@ -533,13 +533,6 @@ setup(
             # ipynb
             '.ipynb = mfr.extensions.ipynb:IpynbRenderer',
 
-            # movie
-            '.mp4 = mfr.extensions.movie:MovieRenderer',
-            #'.avi = mfr.extensions.movie:MovieRenderer',
-            '.ogv = mfr.extensions.movie:MovieRenderer',
-            #'.wmv = mfr.extensions.movie:MovieRenderer',
-            '.webm = mfr.extensions.movie:MovieRenderer',
-
             # pdb
             '.pdb = mfr.extensions.pdb:PdbRenderer',
 
@@ -560,6 +553,13 @@ setup(
             #'.dta = mfr.extensions.tabular:TabularRenderer',
             '.sav = mfr.extensions.tabular:TabularRenderer',
             #'.ods = mfr.extensions.tabular:TabularRenderer',
+
+            # video
+            '.mp4 = mfr.extensions.video:VideoRenderer',
+            #'.avi = mfr.extensions.video:VideoRenderer',
+            '.ogv = mfr.extensions.video:VideoRenderer',
+            #'.wmv = mfr.extensions.video:VideoRenderer',
+            '.webm = mfr.extensions.video:VideoRenderer',
         ]
     },
 )

@@ -40,8 +40,8 @@ class TestRenderVideo:
         assert '<video controls' in body
         assert 'src="{}"'.format(url) in body
 
-    def test_render_audio_file_required(self, renderer):
+    def test_render_video_file_required(self, renderer):
         assert renderer.file_required is False
 
-    def test_render_audio_cache_result(self, renderer):
+    def test_render_video_cache_result(self, renderer):
         assert renderer.cache_result is False

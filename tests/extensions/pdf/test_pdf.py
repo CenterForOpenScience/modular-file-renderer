@@ -2,32 +2,41 @@ import pytest
 
 from mfr.extensions.pdf import PdfRenderer
 
+
 @pytest.fixture
 def url():
-    return 'files/test.pdf'
+    return 'http://osf.io/file/document.pdf'
+
+
+@pytest.fixture
+def download_url():
+    return 'http://wb.osf.io/file/document.pdf?token=1234'
 
 
 @pytest.fixture
 def file_path():
-    return {}
+    return '/tmp/document.pdf'
 
 
 @pytest.fixture
 def assets_url():
-    return 'insert path'
+    return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
 def extension():
-    return {}
+    return '.pdf'
 
 
 @pytest.fixture
-def provider(url, file_path, assets_url, extension):
-    return PdfRenderer(url, file_path, assets_url, extension)
+def renderer(url, download_url, file_path, assets_url, extension):
+    return PdfRenderer(url, download_url, file_path, assets_url, extension)
 
 
-class TestPdf:
+class TestRenderPdf:
 
-    def test_render_pdf(self, provider):
-        result = provider.render()
+    def test_render_pdf(self, renderer, download_url, assets_url):
+        body = renderer.render()
+        assert '<base href="{}/{}/web/">'.format(assets_url, 'pdf') in body
+        assert '<div id="viewer" class="pdfViewer"></div>' in body
+        assert 'DEFAULT_URL = \'{}\''.format(download_url) in body

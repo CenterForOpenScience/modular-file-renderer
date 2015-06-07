@@ -20,7 +20,7 @@ def file_path():
 
 @pytest.fixture
 def assets_url():
-    return 'http://mfr.osf.io/assets/audio/'
+    return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture

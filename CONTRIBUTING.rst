@@ -34,7 +34,7 @@ Install the development dependencies.
 
 ::
 
-    $ pip install -r dev-requirements.txt
+    $ pip install -U -r dev-requirements.txt
 
 
 Lastly, install mfr in development mode. ::
@@ -60,13 +60,14 @@ Writing tests
 
 Unit tests should be written for all rendering code.
 
-Tests can be written as functions, like so:
+Tests should be encapsulated within a class and written as functions, like so:
 
 .. code-block:: python
 
     # in test_myformat.py
 
     from mfr_something import render
+
 
     def test_render_html():
         with open('testfile.mp4') as fp:
@@ -175,37 +176,38 @@ Each package has its own directory. At a minimum, your package should include:
 
 Apart from those files, you  are free to organize your rendering and export code however you want.
 
-A typical directory structure might look like this:
+A typical extension plugin directory structure might look like this:
 
 ::
 
-	mfr
-	└──mfr-something
-		├── export-requirements.txt
-		├── render-requirements.txt
-		├── __init__.py
-		├── render.py
-		├── export.py
-		├── static
-		│   ├── js
-		│   └── css
-		├── tests
-		│   ├── __init__.py
-		│   └── test_something.py
-		├── templates
-		│   └── something.html
-		├── libs
-		│   ├── __init__.py
-		│   └── something_tools.py
-		├── setup.py
-		├── README.rst
-		└── configuration.py
-
-where "something" is a file format, e.g. "mfr_image", "mfr_video".
-
-.. note::
-
-    You may decide to make subdirectories for rendering and exporting code if single files start to become very large.
+	modular-file-renderer
+	├──mfr
+	│	├── __init__.py
+	│	└──extensions
+	│		├── __init__.py
+	│		└──custom-plugin
+	│			├── __init__.py
+	│			├── render.py
+	│			├── export.py
+	│			├── settings.py
+	│			├── static
+	│			│	├── css
+	│			│	└── js
+	│			├── templates
+	│			│	└── viewer.mako
+	│			└── libs
+	│				├── __init__.py
+	│				└── tools.py
+	├──tests
+	│	├── __init__.py
+	│	└──extnesions
+	│		├── __init__.py
+	│		└──custom-plugin
+	│			├── __init__.py
+	│			└── test_custom_plugin_render.py
+	├── setup.py
+	├── README.md
+	└── requirements.py
 
 
 Documentation

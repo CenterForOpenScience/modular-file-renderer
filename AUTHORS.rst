@@ -24,3 +24,4 @@ Contributors
 - Casey Rollins `@caseyrollins <https://github.com/caseyrollins>`_
 - Michael Haselton `@icereval <https://github.com/icereval>`_
 - Megan Kelly `@megankelly <https://github.com/megankelly>`_
+- Chris Seto `@chrisseto <https://github.com/chrisseto>`_

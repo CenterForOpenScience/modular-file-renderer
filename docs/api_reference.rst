@@ -77,12 +77,12 @@ mfr_ipynb
     :inherited-members:
 
 
-.. currentmodule:: mfr_movie
+.. currentmodule:: mfr_video
 
-mfr_movie
+mfr_video
 ---------
 
-.. automodule:: mfr_movie
+.. automodule:: mfr_video
     :members:
     :inherited-members:
 

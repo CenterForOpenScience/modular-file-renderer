@@ -7,7 +7,7 @@ stevedore==1.2.0
 tornado==4.0.2
 
 # WaterButler
-git+https://github.com/CenterForOpenScience/waterbutler.git@master
+git+https://github.com/CenterForOpenScience/waterbutler.git@develop
 
 # CodePygments
 Pygments==2.0.2

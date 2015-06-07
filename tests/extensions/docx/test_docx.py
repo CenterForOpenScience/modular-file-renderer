@@ -1,34 +1,58 @@
+import os
 import pytest
 
 from mfr.extensions.docx import DocxRenderer
+from pydocx.exceptions import MalformedDocxException
+
 
 @pytest.fixture
 def url():
-    return {}
+    return 'http://osf.io/file/file.docx'
+
+
+@pytest.fixture
+def download_url():
+    return 'http://wb.osf.io/file/file.docx?token=1234'
 
 
 @pytest.fixture
 def file_path():
-    return 'test.docx'
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'file.docx')
+
+
+@pytest.fixture
+def bad_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'bad.docx')
 
 
 @pytest.fixture
 def assets_url():
-    return {}
+    return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
 def extension():
-    return {}
+    return '.docx'
 
 
 @pytest.fixture
-def provider(url, file_path, assets_url, extension):
-    return DocxRenderer(url, file_path, assets_url, extension)
+def renderer(url, download_url, file_path, assets_url, extension):
+    return DocxRenderer(url, download_url, file_path, assets_url, extension)
 
 
-class TestDocx:
+class TestDocxRenderer:
 
-    def test_render_docx(self, provider):
-        result = provider.render()
+    def test_render_docx(self, renderer, url):
+        body = renderer.render()
+        assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
 
+    def test_render_docx_exception(self, url, download_url, bad_file_path, assets_url, extension):
+        renderer = DocxRenderer(url, download_url, bad_file_path, assets_url, extension)
+        with pytest.raises(MalformedDocxException):
+            renderer.render()
+
+    def test_render_docx_file_required(self, renderer):
+        assert renderer.file_required is True
+
+    def test_render_docx_cache_result(self, renderer):
+        assert renderer.cache_result is True

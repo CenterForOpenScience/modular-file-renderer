@@ -15,8 +15,8 @@ def download_url():
 
 
 @pytest.fixture
-def good_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'good.xml')
+def file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'file.xml')
 
 
 @pytest.fixture
@@ -35,8 +35,8 @@ def extension():
 
 
 @pytest.fixture
-def renderer(url, download_url, good_file_path, assets_url, extension):
-    return CodePygmentsRenderer(url, download_url, good_file_path, assets_url, extension)
+def renderer(url, download_url, file_path, assets_url, extension):
+    return CodePygmentsRenderer(url, download_url, file_path, assets_url, extension)
 
 
 class TestCodePygmentsRenderer:

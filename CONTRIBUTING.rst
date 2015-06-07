@@ -204,7 +204,7 @@ A typical extension plugin directory structure might look like this:
 	│		├── __init__.py
 	│		└──custom-plugin
 	│			├── __init__.py
-	│			└── test_custom_plugin_render.py
+	│			└── test_custom_plugin.py
 	├── setup.py
 	├── README.md
 	└── requirements.py

@@ -33,7 +33,7 @@ def renderer(url, download_url, file_path, assets_url, extension):
     return PdfRenderer(url, download_url, file_path, assets_url, extension)
 
 
-class TestRenderPdf:
+class TestPdfRenderer:
 
     def test_render_pdf(self, renderer, download_url, assets_url):
         body = renderer.render()

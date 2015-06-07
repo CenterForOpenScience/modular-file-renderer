@@ -33,7 +33,7 @@ def renderer(url, download_url, file_path, assets_url, extension):
     return AudioRenderer(url, download_url, file_path, assets_url, extension)
 
 
-class TestRenderAudio:
+class TestAudioRenderer:
 
     def test_render_audio(self, renderer, url):
         body = renderer.render()

@@ -33,7 +33,7 @@ def renderer(url, download_url, file_path, assets_url, extension):
     return VideoRenderer(url, download_url, file_path, assets_url, extension)
 
 
-class TestRenderVideo:
+class TestVideoRenderer:
 
     def test_render_video(self, renderer, url):
         body = renderer.render()

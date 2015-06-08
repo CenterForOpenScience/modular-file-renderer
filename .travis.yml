@@ -18,7 +18,7 @@ install:
     - travis_retry invoke install --develop
 
 env:
-  - WATERBUTLER_CONFIG=./travis-config.json
+  - MFR_CONFIG=./travis-config.json
 
 script:
   - invoke test

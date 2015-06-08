@@ -1,2 +1,0 @@
-# TODO: Resolve incompatibilities with 2.0
-Pygments==1.6

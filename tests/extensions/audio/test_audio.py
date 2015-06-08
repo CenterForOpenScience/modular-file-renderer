@@ -5,17 +5,17 @@ from mfr.extensions.audio import AudioRenderer
 
 @pytest.fixture
 def url():
-    return 'http://osf.io/file/audio.mp3'
+    return 'http://osf.io/file/test.mp3'
 
 
 @pytest.fixture
 def download_url():
-    return 'http://wb.osf.io/file/audio.mp3?token=1234'
+    return 'http://wb.osf.io/file/test.mp3?token=1234'
 
 
 @pytest.fixture
 def file_path():
-    return '/tmp/audio.mp3'
+    return '/tmp/test.mp3'
 
 
 @pytest.fixture

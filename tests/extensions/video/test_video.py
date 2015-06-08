@@ -5,17 +5,17 @@ from mfr.extensions.video import VideoRenderer
 
 @pytest.fixture
 def url():
-    return 'http://osf.io/file/video.mp4'
+    return 'http://osf.io/file/test.mp4'
 
 
 @pytest.fixture
 def download_url():
-    return 'http://wb.osf.io/file/video.mp4?token=1234'
+    return 'http://wb.osf.io/file/test.mp4?token=1234'
 
 
 @pytest.fixture
 def file_path():
-    return '/tmp/video.mp4'
+    return '/tmp/test.mp4'
 
 
 @pytest.fixture

@@ -5,17 +5,17 @@ from mfr.extensions.pdf import PdfRenderer
 
 @pytest.fixture
 def url():
-    return 'http://osf.io/file/document.pdf'
+    return 'http://osf.io/file/test.pdf'
 
 
 @pytest.fixture
 def download_url():
-    return 'http://wb.osf.io/file/document.pdf?token=1234'
+    return 'http://wb.osf.io/file/test.pdf?token=1234'
 
 
 @pytest.fixture
 def file_path():
-    return '/tmp/document.pdf'
+    return '/tmp/test.pdf'
 
 
 @pytest.fixture

@@ -5,31 +5,36 @@ from mfr.extensions.pdb import PdbRenderer
 
 @pytest.fixture
 def url():
-    return 'http://www.cos.io/test.pdb'
+    return 'http://osf.io/file/test.pdb'
+
+
+@pytest.fixture
+def download_url():
+    return 'http://wb.osf.io/file/test.pdb?token=1234'
 
 
 @pytest.fixture
 def file_path():
-    return {}
+    return '/tmp/test.pdb'
 
 
 @pytest.fixture
 def assets_url():
-    return 'insert path here'
+    return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
 def extension():
-    return {}
+    return '.pdb'
 
 
 @pytest.fixture
-def provider(url, file_path, assets_url, extension):
-    return PdbRenderer(url, file_path, assets_url, extension)
-
-class TestPdb:
-
-    def test_render_pdb(self, provider):
-        html = provider.render()
+def renderer(url, download_url, file_path, assets_url, extension):
+    return PdbRenderer(url, download_url, file_path, assets_url, extension)
 
 
+class TestPdbRenderer:
+
+    def test_render_pdb(self, renderer):
+        body = renderer.render()
+        assert '<div id="mfrViewer"></div>' in body

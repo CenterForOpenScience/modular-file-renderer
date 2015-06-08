@@ -16,13 +16,13 @@ def download_url():
 
 
 @pytest.fixture
-def file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'file.docx')
+def test_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'test.docx')
 
 
 @pytest.fixture
-def bad_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'bad.docx')
+def invalid_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'invalid.docx')
 
 
 @pytest.fixture
@@ -36,8 +36,8 @@ def extension():
 
 
 @pytest.fixture
-def renderer(url, download_url, file_path, assets_url, extension):
-    return DocxRenderer(url, download_url, file_path, assets_url, extension)
+def renderer(url, download_url, test_file_path, assets_url, extension):
+    return DocxRenderer(url, download_url, test_file_path, assets_url, extension)
 
 
 class TestDocxRenderer:
@@ -46,8 +46,8 @@ class TestDocxRenderer:
         body = renderer.render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
 
-    def test_render_docx_exception(self, url, download_url, bad_file_path, assets_url, extension):
-        renderer = DocxRenderer(url, download_url, bad_file_path, assets_url, extension)
+    def test_render_docx_invalid(self, url, download_url, invalid_file_path, assets_url, extension):
+        renderer = DocxRenderer(url, download_url, invalid_file_path, assets_url, extension)
         with pytest.raises(MalformedDocxException):
             renderer.render()
 

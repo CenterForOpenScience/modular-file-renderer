@@ -15,13 +15,13 @@ def download_url():
 
 
 @pytest.fixture
-def file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'file.xml')
+def test_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'test.xml')
 
 
 @pytest.fixture
-def bad_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'bad.xml')
+def invalid_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'invalid.xml')
 
 
 @pytest.fixture
@@ -35,8 +35,8 @@ def extension():
 
 
 @pytest.fixture
-def renderer(url, download_url, file_path, assets_url, extension):
-    return CodePygmentsRenderer(url, download_url, file_path, assets_url, extension)
+def renderer(url, download_url, test_file_path, assets_url, extension):
+    return CodePygmentsRenderer(url, download_url, test_file_path, assets_url, extension)
 
 
 class TestCodePygmentsRenderer:
@@ -45,8 +45,8 @@ class TestCodePygmentsRenderer:
         body = renderer.render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
 
-    def test_render_codepygments_exception(self, url, download_url, bad_file_path, assets_url, extension):
-        renderer = CodePygmentsRenderer(url, download_url, bad_file_path, assets_url, extension)
+    def test_render_codepygments_invalid(self, url, download_url, invalid_file_path, assets_url, extension):
+        renderer = CodePygmentsRenderer(url, download_url, invalid_file_path, assets_url, extension)
         with pytest.raises(UnicodeDecodeError):
             renderer.render()
 

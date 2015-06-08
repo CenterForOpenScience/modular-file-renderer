@@ -1,1 +1,1 @@
-from .render import IpynbRenderer
+from .render import IpynbRenderer  # noqa

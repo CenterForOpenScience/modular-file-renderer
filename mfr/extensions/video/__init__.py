@@ -1,2 +1,1 @@
-from .render import VideoRenderer
-
+from .render import VideoRenderer  # noqa

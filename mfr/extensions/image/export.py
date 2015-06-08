@@ -1,4 +1,3 @@
-"""Image exporter module."""
 from PIL import Image
 
 from mfr.core import extension
@@ -14,4 +13,3 @@ class ImageExporter(extension.BaseExporter):
                 image.save(self.dest_file, format=self.export_ext)
         except UnicodeDecodeError as e:
             return "Unable to export: {0}".format(e)
-

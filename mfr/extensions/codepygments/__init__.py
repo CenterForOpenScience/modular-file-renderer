@@ -1,1 +1,1 @@
-from .render import CodePygmentsRenderer
+from .render import CodePygmentsRenderer  # noqa

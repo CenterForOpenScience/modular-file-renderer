@@ -1,1 +1,1 @@
-from .render import PdbRenderer
+from .render import PdbRenderer  # noqa

@@ -35,7 +35,7 @@ class TabularRenderer(extension.BaseRenderer):
     def cache_result(self):
         return True
 
-    def _render_grid(self, fp, ext, *args, **kwargs):  #assets_path, ext):
+    def _render_grid(self, fp, ext, *args, **kwargs):  # assets_path, ext):
         """Render a tabular file to html
         :param fp: file pointer object
         :return: RenderResult object containing html and assets

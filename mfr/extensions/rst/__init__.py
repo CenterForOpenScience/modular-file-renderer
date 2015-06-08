@@ -1,1 +1,1 @@
-from .render import RstRenderer
+from .render import RstRenderer  # noqa

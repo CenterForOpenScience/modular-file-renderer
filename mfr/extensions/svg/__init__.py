@@ -1,1 +1,1 @@
-from .render import SvgRenderer
+from .render import SvgRenderer  # noqa

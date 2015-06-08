@@ -31,7 +31,7 @@ def xlsx_xlrd(fp):
     fields = [
         str(value)
         if not isinstance(value, basestring) and value is not None
-        else value or 'Unnamed: {0}'.format(index+1)
+        else value or 'Unnamed: {0}'.format(index + 1)
         for index, value in enumerate(fields)
     ]
 

@@ -1,15 +1,20 @@
-#MFR
+# MFR (Modular File Renderer)
 
-**WARNING: mfr is in a very alpha stage of development. As such, it's API is in constant flux. Expect many breaking changes.**
+`master` Build Status: [![Build Status](https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=master)](https://travis-ci.org/CenterForOpenScience/modular-file-renderer)
 
-**mfr** (short for "modular file renderer") is a Python package for rendering files to HTML.
+`develop` Build Status: [![Build Status](https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=develop)](https://travis-ci.org/CenterForOpenScience/modular-file-renderer)
 
-### startup commands
+A Python package for rendering files to HTML via an embeddable iframe.
+
+### Startup commands
 
 ```bash
-# Make sure that you are using >= python3.3
-pip install -U -r requirements.txt
-python setup.py develop
+# MacOSX: Install the latest version of python3
+brew install python3
+pip install virtualenv
+pip install virtualenvwrapper
+mkvirtualenv --python `which python3` mfr
+invoke install --develop
 invoke server
 ```
 

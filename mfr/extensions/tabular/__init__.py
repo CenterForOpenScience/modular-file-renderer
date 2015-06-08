@@ -1,1 +1,1 @@
-from .render import TabularRenderer
+from .render import TabularRenderer  # noqa

@@ -1,7 +1,5 @@
 import os
 
-from urllib import parse
-
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension

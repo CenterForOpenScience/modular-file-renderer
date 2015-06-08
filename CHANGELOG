@@ -1,0 +1,13 @@
+*********
+ChangeLog
+*********
+
+
+0.1.0 (2015-06-07)
+==================
+
+- service oriented architecture (SOA)
+- plugin system for providers (file resources)
+- plugin system for extensions (renderers and exporters)
+- embeddable rendering via iframe widget
+- initial unit tests

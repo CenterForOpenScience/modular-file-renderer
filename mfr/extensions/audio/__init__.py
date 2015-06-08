@@ -1,1 +1,1 @@
-from .render import AudioRenderer
+from .render import AudioRenderer  # noqa

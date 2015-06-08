@@ -1,1 +1,1 @@
-from .render import DocxRenderer
+from .render import DocxRenderer  # noqa

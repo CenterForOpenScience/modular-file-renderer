@@ -92,6 +92,10 @@
             _addClass(self.pymParent.iframe, 'embed-responsive-item');
         });
 
+        self.pymParent.onMessage('location', function(message) {
+            window.location = message;
+        });
+
         return self;
     };
 

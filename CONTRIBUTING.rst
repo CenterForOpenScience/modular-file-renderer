@@ -181,11 +181,11 @@ A typical extension plugin directory structure might look like this:
 ::
 
 	modular-file-renderer
-	├──mfr
+	├── mfr
 	│	├── __init__.py
-	│	└──extensions
+	│	└── extensions
 	│		├── __init__.py
-	│		└──custom-plugin
+	│		└── custom-plugin
 	│			├── __init__.py
 	│			├── render.py
 	│			├── export.py
@@ -198,11 +198,11 @@ A typical extension plugin directory structure might look like this:
 	│			└── libs
 	│				├── __init__.py
 	│				└── tools.py
-	├──tests
+	├── tests
 	│	├── __init__.py
-	│	└──extnesions
+	│	└── extnesions
 	│		├── __init__.py
-	│		└──custom-plugin
+	│		└── custom-plugin
 	│			├── __init__.py
 	│			└── test_custom_plugin.py
 	├── setup.py

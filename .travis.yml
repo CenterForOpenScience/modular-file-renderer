@@ -26,6 +26,7 @@ script:
 before_cache:
   # exclude python requirements from github repo's
   - rm -f $HOME/wheelhouse/raven-*.whl
+  - rm -f $HOME/wheelhouse/xlrd-*.whl
 
 notifications:
   flowdock: 0221882cdda034c0e9ac2a0e766053dd

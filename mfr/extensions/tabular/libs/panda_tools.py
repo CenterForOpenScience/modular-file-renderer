@@ -1,3 +1,4 @@
+import numpy
 import pandas
 from tempfile import NamedTemporaryFile
 from ..utilities import header_population, strip_comments
@@ -51,8 +52,17 @@ def data_from_dataframe(dataframe):
 
     fields = dataframe.keys()
     header = header_population(fields)
-    data = [data.to_dict() for _, data in dataframe.iterrows()]
-
+    # iterate over the dataframe using `numpy.asscalar` to ensure we have native
+    # python types, this prevents issues with serialization later on.
+    data = []
+    for _, frame_row in dataframe.iterrows():
+        data_row = {}
+        for name, value in frame_row.iteritems():
+            try:
+                data_row[name] = numpy.asscalar(value)
+            except AttributeError:
+                data_row[name] = value
+        data.append(data_row)
     return header, data
 
 

@@ -3,6 +3,11 @@ function name to be passed without initializing its module and without breaking
 if the module's requirements are not met. """
 
 
+def csv_stdlib():
+    from ..libs.stdlib_tools import csv_stdlib
+    return csv_stdlib
+
+
 def csv_pandas():
     from ..libs.panda_tools import csv_pandas
     return csv_pandas

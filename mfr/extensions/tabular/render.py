@@ -43,10 +43,10 @@ class TabularRenderer(extension.BaseRenderer):
         columns, rows = self._populate_data(fp, ext)
 
         if len(columns) > settings.MAX_SIZE or len(rows) > settings.MAX_SIZE:
-            raise exceptions.TableTooBigException("Table is too large to render.")
+            raise exceptions.TableTooBigException("Table is too large to render.", code=400)
 
         if len(columns) < 1 or len(rows) < 1:
-            raise exceptions.EmptyTableException("Table is empty or corrupt.")
+            raise exceptions.EmptyTableException("Table is empty or corrupt.", code=400)
 
         return columns, rows
 

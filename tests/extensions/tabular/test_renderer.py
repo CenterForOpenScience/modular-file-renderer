@@ -3,6 +3,7 @@ import pytest
 
 from mfr.extensions.tabular import settings
 from mfr.extensions.tabular import TabularRenderer
+from mfr.extensions.tabular import exceptions
 from pandas.parser import CParserError
 from xlrd.biffh import XLRDError
 
@@ -75,7 +76,7 @@ class TestTabularCsvRenderer:
 
     def test_render_tabular_csv_invalid(self, url, download_url, invalid_csv_file_path, assets_url, extension='.csv'):
         renderer = TabularRenderer(url, download_url, invalid_csv_file_path, assets_url, extension)
-        with pytest.raises(CParserError):
+        with pytest.raises(exceptions.EmptyTableException):
             renderer.render()
 
 
@@ -88,7 +89,7 @@ class TestTabularTsvRenderer:
 
     def test_render_tabular_tsv_invalid(self, url, download_url, invalid_tsv_file_path, assets_url, extension='.tsv'):
         renderer = TabularRenderer(url, download_url, invalid_tsv_file_path, assets_url, extension)
-        with pytest.raises(ValueError):
+        with pytest.raises(exceptions.EmptyTableException):
             renderer.render()
 
 

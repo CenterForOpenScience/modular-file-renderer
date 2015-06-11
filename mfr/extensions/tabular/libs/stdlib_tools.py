@@ -19,7 +19,7 @@ def csv_stdlib(fp):
             'field': fieldname,
             'name': fieldname,
         }
-        for fieldname in reader.fieldnames
+        for fieldname in reader.fieldnames or []
     ]
     rows = [row for row in reader]
     return columns, rows

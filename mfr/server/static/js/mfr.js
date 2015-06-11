@@ -79,6 +79,8 @@
         });
 
         self.reload = function () {
+            self.spinner = _createSpinner(url);
+            self.pymParent.el.appendChild(self.spinner);
             self.pymParent.sendMessage('reload', 'x');
         };
 

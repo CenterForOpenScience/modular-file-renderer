@@ -14,8 +14,8 @@ TABLE_WIDTH = config.get('TABLE_WIDTH', 700)
 TABLE_HEIGHT = config.get('TABLE_HEIGHT', 600)
 
 LIBS = config.get('LIBS', {
-    '.csv': [libs.csv_pandas],
-    '.tsv': [libs.tsv_pandas],
+    '.csv': [libs.csv_stdlib],
+    '.tsv': [libs.csv_stdlib],
     '.xlsx': [libs.xlsx_xlrd],
     '.xls': [libs.xlsx_xlrd],
     '.dta': [libs.dta_pandas],

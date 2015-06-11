@@ -68,35 +68,45 @@
      */
     lib.Render = function (id, url, config) {
         var self = this;
-        self.pymParent = new pym.Parent(id, url, config);
-        self.pymParent.iframe.setAttribute('allowfullscreen', '');
-        self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
-
+        self.id = id;
+        self.url = url;
+        self.config = config;
         self.spinner = _createSpinner(url);
-        self.pymParent.el.appendChild(self.spinner);
-        $(self.pymParent.iframe).load(function () {
-            self.pymParent.el.removeChild(self.spinner);
-        });
+
+        self.init = function () {
+            self.pymParent = new pym.Parent(self.id, self.url, self.config);
+            self.pymParent.iframe.setAttribute('allowfullscreen', '');
+            self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
+
+            self.pymParent.el.appendChild(self.spinner);
+            $(self.pymParent.iframe).load(function () {
+                self.pymParent.el.removeChild(self.spinner);
+            });
+
+            self.pymParent.onMessage('embed', function(message) {
+                _addClass(self.pymParent.el, 'embed-responsive');
+                _addClass(self.pymParent.el, message);
+                _addClass(self.pymParent.iframe, 'embed-responsive-item');
+            });
+
+            self.pymParent.onMessage('location', function(message) {
+                window.location = message;
+            });
+        };
+
+        self.init();
 
         self.reload = function () {
-            self.spinner = _createSpinner(url);
-            self.pymParent.el.appendChild(self.spinner);
-            self.pymParent.sendMessage('reload', 'x');
+            while (self.pymParent.el.firstChild) {
+                self.pymParent.el.removeChild(self.pymParent.el.firstChild);
+            }
+
+            self.init();
         };
 
         self.resize = function () {
             self.pymParent.sendMessage('resize', 'x');
         };
-
-        self.pymParent.onMessage('embed', function(message) {
-            _addClass(self.pymParent.el, 'embed-responsive');
-            _addClass(self.pymParent.el, message);
-            _addClass(self.pymParent.iframe, 'embed-responsive-item');
-        });
-
-        self.pymParent.onMessage('location', function(message) {
-            window.location = message;
-        });
 
         return self;
     };

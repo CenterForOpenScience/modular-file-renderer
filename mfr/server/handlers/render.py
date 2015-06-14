@@ -1,3 +1,5 @@
+import os
+import uuid
 import asyncio
 import logging
 
@@ -22,7 +24,7 @@ class RenderHandler(core.BaseHandler):
     def get(self):
         """Render a file with the extension"""
         self.unique_path = yield from self.cache_provider.validate_path('/render/' + self.unique_key)
-        self.local_cache_path = yield from self.local_cache_provider.validate_path('/render/' + self.unique_key)
+        self.local_cache_path = yield from self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
         self.extension = utils.make_renderer(
             self.ext,
             self.url,
@@ -51,6 +53,12 @@ class RenderHandler(core.BaseHandler):
 
         loop = asyncio.get_event_loop()
         rendition = (yield from loop.run_in_executor(None, self.extension.render))
+
+        if self.extension.file_required:
+            try:
+                os.remove(self.local_cache_path.full_path)
+            except FileNotFoundError:
+                pass
 
         # Spin off upload into non-blocking operation
         if self.extension.cache_result and settings.CACHE_ENABLED:

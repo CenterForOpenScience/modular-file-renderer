@@ -17,7 +17,7 @@ Pygments==2.0.2
 pydocx==0.7.0
 
 # Image
-Pillow>=2.3.0
+Pillow==2.8.2
 
 # IPython
 ipython==3.1.0
@@ -28,8 +28,8 @@ jinja2==2.7.3
 # python-pptx==0.5.7
 
 # Rst
-Docutils>=0.11
+docutils==0.12
 
 # Tabular
-pandas>=0.14.1
+pandas==0.16.1
 git+https://github.com/icereval/xlrd.git

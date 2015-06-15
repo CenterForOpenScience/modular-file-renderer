@@ -7,7 +7,7 @@ class BaseExporter(metaclass=abc.ABCMeta):
         self.url = url
         self.file_path = file_path
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
-        self.extension = ext
+        self.ext = ext
 
     @abc.abstractmethod
     def export(self):
@@ -26,7 +26,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         self.download_url = download_url
         self.file_path = file_path
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
-        self.extension = ext
+        self.ext = ext
 
     @abc.abstractmethod
     def render(self):

@@ -17,7 +17,7 @@ class TabularRenderer(extension.BaseRenderer):
 
     def render(self):
         with open(self.file_path) as fp:
-            columns, rows = self._render_grid(fp, self.extension)
+            columns, rows = self._render_grid(fp, self.ext)
             return self.TEMPLATE.render(
                 base=self.assets_url,
                 width=settings.TABLE_WIDTH,

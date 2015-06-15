@@ -554,6 +554,10 @@ setup(
             '.sav = mfr.extensions.tabular:TabularRenderer',
             #'.ods = mfr.extensions.tabular:TabularRenderer',
 
+            # uniconv
+            '.ppt = mfr.extensions.unoconv:UnoconvRenderer',
+            '.pptx = mfr.extensions.unoconv:UnoconvRenderer',
+
             # video
             '.mp4 = mfr.extensions.video:VideoRenderer',
             #'.avi = mfr.extensions.video:VideoRenderer',

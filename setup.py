@@ -520,6 +520,8 @@ setup(
 
             # docx
             '.docx = mfr.extensions.docx:DocxRenderer',
+            # 9/10 times gdocs will be exported as docx files
+            '.gdoc = mfr.extensions.docx:DocxRenderer',
 
             # image
             '.bmp = mfr.extensions.image:ImageRenderer',

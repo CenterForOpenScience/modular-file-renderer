@@ -8,8 +8,8 @@ except ImportError:
 config = settings.get('UNOCONV_EXTENSION_CONFIG', {})
 
 
-ADDRESS = config.get('SERVER', os.environ.get('UNOCONV_PORT_2002_TCP_ADDR', ''))
-PORT = config.get('PORT', os.environ.get('UNOCONV_PORT_2002_TCP_PORT', ''))
+ADDRESS = config.get('SERVER', os.environ.get('UNOCONV_PORT_2002_TCP_ADDR', '127.0.0.1'))
+PORT = config.get('PORT', os.environ.get('UNOCONV_PORT_2002_TCP_PORT', '2002'))
 
 SHARED_PATH = config.get('SHARED_PATH', '/tmp/mfrunoconvshared')
 

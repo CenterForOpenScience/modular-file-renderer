@@ -42,7 +42,7 @@ class UnoconvRenderer(extension.BaseRenderer):
 
         try:
             connection_string = 'socket,host={},port={};urp;StarOffice.ComponentContext'.format(settings.ADDRESS, settings.PORT)
-            subprocess.check_call(['/usr/bin/unoconv', '-n', '-c', '"' + connection_string + '"', '-f', map['format'], '-o', converted_file_path, '-d', map['doctype'], shared_file_path])
+            subprocess.check_call(['/usr/bin/unoconv', '-n', '-c', '"' + connection_string + '"', '-f', map['format'], '-o', converted_file_path, '-d', map['doctype'], '-vvv', shared_file_path])
         except subprocess.CalledProcessError:
             raise exceptions.RendererError('Unable to render the requested file, please try again later.', code=400)
 

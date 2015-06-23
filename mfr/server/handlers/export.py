@@ -35,7 +35,7 @@ class ExportHandler(core.BaseHandler):
             # TODO: Set Content Disposition Header
             return (yield from self.write_stream(cached_stream))
 
-        self.extension = utils.make_exporter(
+        self.exporter = utils.make_exporter(
             self.ext,
             self.local_cache_path.full_path,
             self.ext,
@@ -48,7 +48,7 @@ class ExportHandler(core.BaseHandler):
         )
 
         loop = asyncio.get_event_loop()
-        rendition = (yield from loop.run_in_executor(None, self.extension.export))
+        rendition = (yield from loop.run_in_executor(None, self.exporter.export))
 
         # TODO Spin off current request
         yield from self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), unique_path)

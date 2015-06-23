@@ -25,7 +25,7 @@ class RenderHandler(core.BaseHandler):
         """Render a file with the extension"""
         self.unique_path = yield from self.cache_provider.validate_path('/render/' + self.unique_key)
         self.local_cache_path = yield from self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
-        self.extension = utils.make_renderer(
+        self.renderer = utils.make_renderer(
             self.ext,
             self.url,
             self.download_url,
@@ -34,7 +34,7 @@ class RenderHandler(core.BaseHandler):
             self.ext
         )
 
-        if self.extension.cache_result and settings.CACHE_ENABLED:
+        if self.renderer.cache_result and settings.CACHE_ENABLED:
             try:
                 cached_stream = yield from self.cache_provider.download(self.unique_path)
             except waterbutler.core.exceptions.DownloadError as e:
@@ -45,23 +45,23 @@ class RenderHandler(core.BaseHandler):
                 # TODO: Set Content Disposition Header
                 return (yield from self.write_stream(cached_stream))
 
-        if self.extension.file_required:
+        if self.renderer.file_required:
             yield from self.local_cache_provider.upload(
                 (yield from self.provider.download()),
                 self.local_cache_path
             )
 
         loop = asyncio.get_event_loop()
-        rendition = (yield from loop.run_in_executor(None, self.extension.render))
+        rendition = (yield from loop.run_in_executor(None, self.renderer.render))
 
-        if self.extension.file_required:
+        if self.renderer.file_required:
             try:
                 os.remove(self.local_cache_path.full_path)
             except FileNotFoundError:
                 pass
 
         # Spin off upload into non-blocking operation
-        if self.extension.cache_result and settings.CACHE_ENABLED:
+        if self.renderer.cache_result and settings.CACHE_ENABLED:
             loop.call_soon(
                 asyncio.async,
                 self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.unique_path)

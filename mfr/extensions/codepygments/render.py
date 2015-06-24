@@ -39,10 +39,16 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         formatter = pygments.formatters.HtmlFormatter()
         data = fp.read()
 
-        try:
-            content = data.decode('utf-8')
-        except UnicodeDecodeError:
-            content = data.decode('utf-16')
+        content, exception = None, None
+        for encoding in ['windows-1252', 'utf-8', 'utf-16', 'ISO-8859-2']:
+            try:
+                content = data.decode(encoding)
+                break
+            except UnicodeDecodeError as e:
+                exception = e
+        if content is None:
+            assert exception is not None, 'Got not content or exception'
+            raise exception
 
         try:
             lexer = pygments.lexers.guess_lexer_for_filename(ext, content)

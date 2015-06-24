@@ -11,42 +11,39 @@ from mfr.extensions.unoconv import settings
 
 class UnoconvRenderer(extension.BaseRenderer):
 
-    def __init__(self, metadata, url, file_path, assets_url):
-        super().__init__(metadata, url, file_path, assets_url)
-        self.base_assets_url = assets_url
+    def __init__(self, metadata, file_path, url, assets_url, export_url):
+        super().__init__(metadata, file_path, url, assets_url, export_url)
 
         try:
-            map = settings.RENDER_MAP[self.metadata.ext]
+            self.map = settings.RENDER_MAP[self.metadata.ext]
         except KeyError:
             raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)
 
-        self.export_file_path = self.file_path + map['renderer']
+        self.export_file_path = self.file_path + self.map['renderer']
 
-        export_url = furl.furl(self.base_assets_url.replace('/assets', '/export'))  # TODO: need to pass proper export url
-        export_url.args['url'] = self.url
-        export_url.args['format'] = map['format']
-        export_metadata = self.metadata
-        export_metadata.download_url = export_url.url
+        exported_url = furl.furl(export_url)
+        exported_url.args['format'] = map['format']
+        exported_metadata = self.metadata
+        exported_metadata.download_url = exported_url.url
 
         self.renderer = utils.make_renderer(
-            map['renderer'],
-            self.metadata,
-            export_url.url,
+            self.map['renderer'],
+            exported_metadata,
             self.export_file_path,
-            self.base_assets_url
-        )
-
-        self.exporter = utils.make_exporter(
-            self.metadata.ext,
-            self.metadata,
-            self.file_path,
-            self.export_file_path,
-            map['format']
+            exported_url.url,
+            assets_url,
+            export_url
         )
 
     def render(self):
         if self.renderer.file_required:
-            self.exporter.export()
+            exporter = utils.make_exporter(
+                self.metadata.ext,
+                self.file_path,
+                self.export_file_path,
+                self.map['format']
+            )
+            exporter.export()
 
         rendition = self.renderer.render()
 

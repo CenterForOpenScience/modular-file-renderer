@@ -16,4 +16,3 @@ RENDER_MAP = config.get('RENDER_MAP', {
     '.ppt': {'renderer': '.pdf', 'format': 'pdf'},
     '.pptx': {'renderer': '.pdf', 'format': 'pdf'},
 })
-

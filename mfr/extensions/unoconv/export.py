@@ -16,7 +16,6 @@ class UnoconvExporter(extension.BaseExporter):
                 '-c', 'socket,host={},port={};urp;StarOffice.ComponentContext'.format(settings.ADDRESS, settings.PORT),
                 '-f', self.format,
                 '-o', self.output_file_path,
-                # '-d', map['doctype'],
                 '-vvv',
                 self.source_file_path
             ])

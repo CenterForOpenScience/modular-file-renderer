@@ -34,9 +34,10 @@ class RenderHandler(core.BaseHandler):
         renderer = utils.make_renderer(
             self.metadata.ext,
             self.metadata,
-            self.url,
             self.source_file_path.full_path,
-            '{}://{}/assets'.format(self.request.protocol, self.request.host)
+            self.url,
+            '{}://{}/assets'.format(self.request.protocol, self.request.host),
+            self.request.uri.replace('/render?', '/export?', 1)
         )
 
         if renderer.cache_result and settings.CACHE_ENABLED:

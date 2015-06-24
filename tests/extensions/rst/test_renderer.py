@@ -1,17 +1,14 @@
 import os
 import pytest
 
+from mfr.core.provider import ProviderMetadata
+
 from mfr.extensions.rst import RstRenderer
 
 
 @pytest.fixture
-def url():
-    return 'http://osf.io/file/test.rst'
-
-
-@pytest.fixture
-def download_url():
-    return 'http://wb.osf.io/file/test.rst?token=1234'
+def metadata():
+    return ProviderMetadata('test', '.rst', 'text/plain', '1234', 'http://wb.osf.io/file/test.rst?token=1234')
 
 
 @pytest.fixture
@@ -25,18 +22,23 @@ def invalid_file_path():
 
 
 @pytest.fixture
+def url():
+    return 'http://osf.io/file/test.rst'
+
+
+@pytest.fixture
 def assets_url():
     return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
-def extension():
-    return '.rst'
+def export_url():
+    return 'http://mfr.osf.io/export?url=' + url()
 
 
 @pytest.fixture
-def renderer(url, download_url, test_file_path, assets_url, extension):
-    return RstRenderer(url, download_url, test_file_path, assets_url, extension)
+def renderer(metadata, test_file_path, url, assets_url, export_url):
+    return RstRenderer(metadata, test_file_path, url, assets_url, export_url)
 
 
 class TestRstRenderer:
@@ -45,8 +47,8 @@ class TestRstRenderer:
         body = renderer.render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
 
-    def test_render_rst_invalid(self, url, download_url, invalid_file_path, assets_url, extension):
-        renderer = RstRenderer(url, download_url, invalid_file_path, assets_url, extension)
+    def test_render_rst_invalid(self, metadata, invalid_file_path, url, assets_url, export_url):
+        renderer = RstRenderer(metadata, invalid_file_path, url, assets_url, export_url)
         with pytest.raises(UnicodeDecodeError):
             renderer.render()
 

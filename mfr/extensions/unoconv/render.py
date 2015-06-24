@@ -22,7 +22,7 @@ class UnoconvRenderer(extension.BaseRenderer):
         self.export_file_path = self.file_path + self.map['renderer']
 
         exported_url = furl.furl(export_url)
-        exported_url.args['format'] = map['format']
+        exported_url.args['format'] = self.map['format']
         exported_metadata = self.metadata
         exported_metadata.download_url = exported_url.url
 

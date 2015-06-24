@@ -1,6 +1,4 @@
 import os
-import shutil
-import subprocess
 
 from mfr.core import utils
 from mfr.core import extension
@@ -11,47 +9,54 @@ from mfr.extensions.unoconv import settings
 
 class UnoconvRenderer(extension.BaseRenderer):
 
-    def __init__(self, url, download_url, file_path, assets_url, ext):
-        super().__init__(url, download_url, file_path, assets_url, ext)
-        self.base_assets_url = assets_url
-        os.makedirs(settings.SHARED_PATH, exist_ok=True)
+    def __init__(self, metadata, url, file_path, assets_url):
+        super().__init__(metadata, url, file_path, assets_url)
+        self.export_url = self.url + 'export'  # FIX
 
     def render(self):
         try:
-            map = settings.RENDER_MAP[self.ext]
+            map = settings.RENDER_MAP[self.metadata.ext]
         except KeyError:
-            raise exceptions.RendererError('No exporter could be found for the file type requested.', code=400)
+            raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)
 
-        _, file_name = os.path.split(self.file_path)
-        shared_file_path = os.path.join(settings.SHARED_PATH, file_name)
-        converted_file_ext = '.' + map['format']
-        converted_file_path = shared_file_path + converted_file_ext
+        export_metadata = self.metadata
+        export_metadata.download_url = self.export_url
+        export_file_path = self.file_path + map['renderer']
 
-        extension = utils.make_renderer(
-            converted_file_ext,
+        self.renderer = utils.make_renderer(
+            map['renderer'],
+            export_metadata,
             self.url,
-            self.download_url,
-            converted_file_path,
-            self.base_assets_url,
-            converted_file_ext
+            export_file_path,
+            self.assets_url
         )
 
-        # Due to cross volume movement in unix we leverage shutil.move which properly handles this case.
-        # http://bytes.com/topic/python/answers/41652-errno-18-invalid-cross-device-link-using-os-rename#post157964
-        shutil.move(self.file_path, shared_file_path)
+        self.exporter = utils.make_exporter(
+            map['renderer'],
+            export_metadata,
+            self.file_path,
+            export_file_path,
+            map['format']
+        )
 
-        try:
-            connection_string = 'socket,host={},port={};urp;StarOffice.ComponentContext'.format(settings.ADDRESS, settings.PORT)
-            subprocess.check_call(['/usr/bin/unoconv', '-n', '-c', connection_string, '-f', map['format'], '-o', converted_file_path, '-d', map['doctype'], '-vvv', shared_file_path])
-        except subprocess.CalledProcessError:
-            raise exceptions.RendererError('Unable to render the requested file, please try again later.', code=400)
+        if self.renderer.file_required:
+            self.exporter.export()
 
-        return extension.render()
+        rendition = self.renderer.render()
+
+        if self.renderer.file_required:
+            try:
+                os.remove(export_file_path)
+            except FileNotFoundError:
+                pass
+
+        return rendition
 
     @property
     def file_required(self):
-        return True
+        # Always false, if we do require the file we will download it in its exported final format.
+        return False
 
     @property
     def cache_result(self):
-        return True
+        return self.renderer.cache_result

@@ -45,7 +45,7 @@ class TabularRenderer(extension.BaseRenderer):
         if len(columns) > settings.MAX_SIZE or len(rows) > settings.MAX_SIZE:
             raise exceptions.TableTooBigException("Table is too large to render.", code=400)
 
-        if len(columns) < 1 or len(rows) < 1:
+        if not columns and not rows:
             raise exceptions.EmptyTableException("Table is empty or corrupt.", code=400)
 
         return columns, rows

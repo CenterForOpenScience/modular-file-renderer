@@ -42,12 +42,17 @@ setup(
         ],
         'mfr.exporters': [
             # image
-            '.jpeg = mfr.extensions.image:ImageExporter',
             '.jpg = mfr.extensions.image:ImageExporter',
+            '.jpeg = mfr.extensions.image:ImageExporter',
             '.png = mfr.extensions.image:ImageExporter',
             '.bmp = mfr.extensions.image:ImageExporter',
             '.gif = mfr.extensions.image:ImageExporter',
             '.tif = mfr.extensions.image:ImageExporter',
+
+            # unoconv
+            '.csv = mfr.extensions.unoconv:UnoconvExporter',
+            '.ppt = mfr.extensions.unoconv:UnoconvExporter',
+            '.pptx = mfr.extensions.unoconv:UnoconvExporter',
         ],
         'mfr.renderers': [
             # audio
@@ -554,7 +559,7 @@ setup(
             '.sav = mfr.extensions.tabular:TabularRenderer',
             #'.ods = mfr.extensions.tabular:TabularRenderer',
 
-            # uniconv
+            # unoconv
             '.ppt = mfr.extensions.unoconv:UnoconvRenderer',
             '.pptx = mfr.extensions.unoconv:UnoconvRenderer',
 

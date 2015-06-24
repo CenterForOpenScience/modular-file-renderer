@@ -1,5 +1,7 @@
 import os
 
+import furl
+
 from mfr.core import utils
 from mfr.core import extension
 from mfr.core import exceptions
@@ -11,7 +13,7 @@ class UnoconvRenderer(extension.BaseRenderer):
 
     def __init__(self, metadata, url, file_path, assets_url):
         super().__init__(metadata, url, file_path, assets_url)
-        self.export_url = self.url + 'export'  # FIX
+        self.base_assets_url = assets_url
 
     def render(self):
         try:
@@ -19,21 +21,24 @@ class UnoconvRenderer(extension.BaseRenderer):
         except KeyError:
             raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)
 
+        export_url = furl.furl(self.base_assets_url.replace('/assets', '/export'))  # TODO: need to pass proper export url
+        export_url.args['url'] = self.url
+        export_url.args['format'] = map['format']
         export_metadata = self.metadata
-        export_metadata.download_url = self.export_url
+        export_metadata.download_url = export_url.url
         export_file_path = self.file_path + map['renderer']
 
         self.renderer = utils.make_renderer(
             map['renderer'],
-            export_metadata,
-            self.url,
+            self.metadata,
+            export_metadata.url,
             export_file_path,
             self.assets_url
         )
 
         self.exporter = utils.make_exporter(
             map['renderer'],
-            export_metadata,
+            self.metadata,
             self.file_path,
             export_file_path,
             map['format']
@@ -54,8 +59,7 @@ class UnoconvRenderer(extension.BaseRenderer):
 
     @property
     def file_required(self):
-        # Always false, if we do require the file we will download it in its exported final format.
-        return False
+        return self.renderer.file_required
 
     @property
     def cache_result(self):

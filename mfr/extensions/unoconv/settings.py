@@ -12,7 +12,10 @@ UNOCONV_BIN = config.get('UNOCONV_BIN', '/usr/bin/unoconv')
 ADDRESS = config.get('SERVER', os.environ.get('UNOCONV_PORT_2002_TCP_ADDR', '127.0.0.1'))
 PORT = config.get('PORT', os.environ.get('UNOCONV_PORT_2002_TCP_PORT', '2002'))
 
+CHUNK_SIZE = config.get('CHUNK_SIZE', 65536)  # 64KB
+
 RENDER_MAP = config.get('RENDER_MAP', {
     '.ppt': {'renderer': '.pdf', 'format': 'pdf'},
     '.pptx': {'renderer': '.pdf', 'format': 'pdf'},
 })
+

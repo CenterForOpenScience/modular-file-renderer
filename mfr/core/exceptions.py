@@ -2,6 +2,9 @@ import waterbutler.core.exceptions
 
 
 class PluginError(waterbutler.core.exceptions.PluginError):
+    """The MFR related errors raised from a plugin
+    should inherit from PluginError
+    """
 
     def as_html(self):
         return '''
@@ -10,10 +13,24 @@ class PluginError(waterbutler.core.exceptions.PluginError):
             '''.format(self.message)
 
 
-class RendererError(PluginError):
+class ExtensionError(PluginError):
     """The MFR related errors raised
-    from a :class:`mfr.core.renderer` should
-    inherit from RendererError
+    from a :class:`mfr.core.extension` should
+    inherit from ExtensionError
+    """
+
+
+class RendererError(ExtensionError):
+    """The MFR related errors raised
+    from a :class:`mfr.core.extension` and relating
+    to rendering should inherit from RendererError
+    """
+
+
+class ExporterError(ExtensionError):
+    """The MFR related errors raised
+    from a :class:`mfr.core.extension` and relating
+    to exporting should inherit from ExporterError
     """
 
 
@@ -25,8 +42,14 @@ class ProviderError(PluginError):
 
 
 class DownloadError(ProviderError):
-    pass
+    """The MFR related errors raised
+    from a :class:`mfr.core.provider` and relating
+    to downloads should inherit from DownloadError
+    """
 
 
 class MetadataError(ProviderError):
-    pass
+    """The MFR related errors raised
+    from a :class:`mfr.core.provider` and relating
+    to metadata should inherit from MetadataError
+    """

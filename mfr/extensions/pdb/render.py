@@ -18,7 +18,7 @@ class PdbRenderer(extension.BaseRenderer):
     def render(self):
         return self.TEMPLATE.render(
             base=self.assets_url,
-            url=self.download_url,
+            url=self.metadata.download_url,
             options=json.dumps(settings.OPTIONS),
         )
 

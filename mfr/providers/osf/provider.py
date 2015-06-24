@@ -1,6 +1,7 @@
 import os
 import asyncio
 import hashlib
+import mimetypes
 
 import furl
 import aiohttp
@@ -37,18 +38,20 @@ class OsfProvider(provider.BaseProvider):
         metadata = yield from metadata_request.json()
         # e.g.,
         # metadata = {'data': {
-        #     'name': 'blah.pdf',
+        #     'name': 'blah.png',
+        #     'contentType': 'image/png',
         #     'etag': 'ABCD123456...',
         #     'extra': {
         #         ...
         #     },
         # }}
-        _, ext = os.path.splitext(metadata['data']['name'])  # or content type?
+        name, ext = os.path.splitext(metadata['data']['name'])
+        content_type = metadata['data']['contentType'] or mimetypes.guess_type(metadata['data']['name'])[0]
         cleaned_url = furl.furl(download_url)
         for unneeded in OsfProvider.UNNEEDED_URL_PARAMS:
             cleaned_url.args.pop(unneeded, None)
         unique_key = hashlib.sha256((metadata['data']['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
-        return ext, unique_key, download_url
+        return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url)
 
     @asyncio.coroutine
     def download(self):

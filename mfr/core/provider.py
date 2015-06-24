@@ -14,3 +14,13 @@ class BaseProvider(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def download(self):
         pass
+
+
+class ProviderMetadata:
+
+    def __init__(self, name, ext, content_type, unique_key, download_url):
+        self.name = name
+        self.ext = ext
+        self.content_type = content_type
+        self.unique_key = unique_key
+        self.download_url = download_url

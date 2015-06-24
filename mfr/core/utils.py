@@ -48,13 +48,13 @@ def make_provider(name, request, url):
     return manager.driver
 
 
-def make_exporter(name, file_path, ext, type):
+def make_exporter(name, source_file_path, output_file_path, format):
     """Returns an instance of :class:`mfr.core.extension.BaseExporter`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
-    :param dict file_path:
-    :param dict ext:
-    :param dict type: The exported file type
+    :param str source_file_path:
+    :param str output_file_path:
+    :param str format:
 
     :rtype: :class:`mfr.core.extension.BaseExporter`
     """
@@ -63,20 +63,21 @@ def make_exporter(name, file_path, ext, type):
             namespace='mfr.exporters',
             name=(name and name.lower()) or 'none',
             invoke_on_load=True,
-            invoke_args=(file_path, ext, type),
+            invoke_args=(source_file_path, output_file_path, format),
         ).driver
     except RuntimeError:
         raise exceptions.RendererError('No exporter could be found for the file type requested.', code=400)
 
 
-def make_renderer(name, url, download_url, file_path, assets_url, ext):
+def make_renderer(name, metadata, file_path, url, assets_url, export_url):
     """Returns an instance of :class:`mfr.core.extension.BaseRenderer`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
-    :param dict url:
-    :param dict file_path:
-    :param dict assets_url:
-    :param dict ext
+    :param :class:`mfr.core.provider.ProviderMetadata` metadata:
+    :param str file_path:
+    :param str url:
+    :param str assets_url:
+    :param str export_url:
 
     :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
@@ -85,7 +86,7 @@ def make_renderer(name, url, download_url, file_path, assets_url, ext):
             namespace='mfr.renderers',
             name=(name and name.lower()) or 'none',
             invoke_on_load=True,
-            invoke_args=(url, download_url, file_path, assets_url, ext, ),
+            invoke_args=(metadata, file_path, url, assets_url, export_url),
         ).driver
     except RuntimeError:
         raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)

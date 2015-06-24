@@ -62,7 +62,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             self.url
         )
 
-        self.ext, self.unique_key, self.download_url = yield from self.provider.metadata()
+        self.metadata = yield from self.provider.metadata()
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -98,7 +98,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 <div class="alert alert-warning" role="alert">
                     Unable to render the requested file, please try again later.
                 </div>
-                ''')
+            ''')
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):

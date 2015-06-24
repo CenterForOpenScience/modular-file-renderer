@@ -1,16 +1,13 @@
 import pytest
 
+from mfr.core.provider import ProviderMetadata
+
 from mfr.extensions.audio import AudioRenderer
 
 
 @pytest.fixture
-def url():
-    return 'http://osf.io/file/test.mp3'
-
-
-@pytest.fixture
-def download_url():
-    return 'http://wb.osf.io/file/test.mp3?token=1234'
+def metadata():
+    return ProviderMetadata('test', '.mp3', 'text/plain', '1234', 'http://wb.osf.io/file/test.mp3?token=1234')
 
 
 @pytest.fixture
@@ -19,18 +16,23 @@ def file_path():
 
 
 @pytest.fixture
+def url():
+    return 'http://osf.io/file/test.mp3'
+
+
+@pytest.fixture
 def assets_url():
     return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
-def extension():
-    return '.mp3'
+def export_url():
+    return 'http://mfr.osf.io/export?url=' + url()
 
 
 @pytest.fixture
-def renderer(url, download_url, file_path, assets_url, extension):
-    return AudioRenderer(url, download_url, file_path, assets_url, extension)
+def renderer(metadata, file_path, url, assets_url, export_url):
+    return AudioRenderer(metadata, file_path, url, assets_url, export_url)
 
 
 class TestAudioRenderer:

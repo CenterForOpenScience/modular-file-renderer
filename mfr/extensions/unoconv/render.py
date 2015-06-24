@@ -33,7 +33,7 @@ class UnoconvRenderer(extension.BaseRenderer):
             self.metadata,
             export_url.url,
             self.export_file_path,
-            self.assets_url
+            self.base_assets_url
         )
 
         self.exporter = utils.make_exporter(

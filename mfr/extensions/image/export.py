@@ -1,15 +1,16 @@
 from PIL import Image
 
 from mfr.core import extension
+from mfr.core import exceptions
 
 
 class ImageExporter(extension.BaseExporter):
 
     def export(self):
-        # return '<img src="{src}" />'.format(src=self.url)
+        # Pillow will not recognize the jpg extension
+        format = 'jpeg' if self.format.lower() == 'jpg' else self.format
         try:
-            with open(self.file_path, 'w') as fp:
-                image = Image.open(fp)
-                image.save(self.dest_file, format=self.export_ext)
-        except UnicodeDecodeError as e:
-            return "Unable to export: {0}".format(e)
+            image = Image.open(self.source_file_path)
+            image.save(self.output_file_path, format=format)
+        except UnicodeDecodeError:
+            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400)

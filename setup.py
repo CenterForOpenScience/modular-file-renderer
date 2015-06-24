@@ -64,6 +64,7 @@ setup(
             '.fodp = mfr.extensions.unoconv:UnoconvExporter',
             '.fods = mfr.extensions.unoconv:UnoconvExporter',
             '.fodt = mfr.extensions.unoconv:UnoconvExporter',
+            '.gdoc = mfr.extensions.unoconv:UnoconvExporter',
             # '.gif = mfr.extensions.unoconv:UnoconvExporter',
             # '.html = mfr.extensions.unoconv:UnoconvExporter',
             # '.jpg = mfr.extensions.unoconv:UnoconvExporter',
@@ -630,6 +631,7 @@ setup(
 
             # tabular
             '.csv = mfr.extensions.tabular:TabularRenderer',
+            '.gsheet = mfr.extensions.tabular:TabularRenderer',
             '.tsv = mfr.extensions.tabular:TabularRenderer',
             '.xls = mfr.extensions.tabular:TabularRenderer',
             '.xlsx = mfr.extensions.tabular:TabularRenderer',

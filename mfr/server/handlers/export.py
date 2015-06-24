@@ -53,7 +53,6 @@ class ExportHandler(core.BaseHandler):
 
         exporter = utils.make_exporter(
             self.metadata.ext,
-            self.metadata,
             self.source_file_path.full_path,
             self.output_file_path.full_path,
             self.format

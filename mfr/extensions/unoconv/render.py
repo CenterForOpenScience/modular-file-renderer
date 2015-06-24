@@ -4,7 +4,6 @@ import furl
 
 from mfr.core import utils
 from mfr.core import extension
-from mfr.core import exceptions
 
 from mfr.extensions.unoconv import settings
 

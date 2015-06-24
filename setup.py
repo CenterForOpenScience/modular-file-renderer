@@ -601,6 +601,7 @@ setup(
 
             # docx
             # '.docx = mfr.extensions.docx:DocxRenderer',
+            # '.gdoc = mfr.extensions.docx:DocxRenderer',
 
             # image
             '.bmp = mfr.extensions.image:ImageRenderer',
@@ -650,6 +651,7 @@ setup(
             '.fodp = mfr.extensions.unoconv:UnoconvRenderer',
             '.fods = mfr.extensions.unoconv:UnoconvRenderer',
             '.fodt = mfr.extensions.unoconv:UnoconvRenderer',
+            '.gdoc = mfr.extensions.unoconv:UnoconvRenderer',  # google will default export as docx
             # '.gif = mfr.extensions.unoconv:UnoconvRenderer',
             # '.html = mfr.extensions.unoconv:UnoconvRenderer',
             # '.jpg = mfr.extensions.unoconv:UnoconvRenderer',

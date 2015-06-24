@@ -31,7 +31,7 @@ class UnoconvRenderer(extension.BaseRenderer):
         self.renderer = utils.make_renderer(
             map['renderer'],
             self.metadata,
-            export_metadata.url,
+            export_url.url,
             self.export_file_path,
             self.assets_url
         )

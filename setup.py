@@ -51,6 +51,7 @@ setup(
             '.tiff = mfr.extensions.image:ImageExporter',
 
             # unoconv
+            '.docx = mfr.extensions.unoconv:UnoconvExporter',
             # '.bmp = mfr.extensions.unoconv:UnoconvExporter',
             '.emf = mfr.extensions.unoconv:UnoconvExporter',
             '.eps = mfr.extensions.unoconv:UnoconvExporter',
@@ -564,7 +565,7 @@ setup(
             #'.vimrc' = mfr.extensions.codepygments:CodePygmentsRenderer',
 
             # docx
-            '.docx = mfr.extensions.docx:DocxRenderer',
+            # '.docx = mfr.extensions.docx:DocxRenderer',
 
             # image
             '.bmp = mfr.extensions.image:ImageRenderer',
@@ -601,6 +602,7 @@ setup(
             #'.ods = mfr.extensions.tabular:TabularRenderer',
 
             # unoconv
+            '.docx = mfr.extensions.unoconv:UnoconvRenderer',
             # '.bmp = mfr.extensions.unoconv:UnoconvRenderer',
             '.emf = mfr.extensions.unoconv:UnoconvRenderer',
             '.eps = mfr.extensions.unoconv:UnoconvRenderer',

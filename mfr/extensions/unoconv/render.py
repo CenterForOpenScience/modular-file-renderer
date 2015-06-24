@@ -15,24 +15,24 @@ class UnoconvRenderer(extension.BaseRenderer):
         super().__init__(metadata, url, file_path, assets_url)
         self.base_assets_url = assets_url
 
-    def render(self):
         try:
             map = settings.RENDER_MAP[self.metadata.ext]
         except KeyError:
             raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)
+
+        self.export_file_path = self.file_path + map['renderer']
 
         export_url = furl.furl(self.base_assets_url.replace('/assets', '/export'))  # TODO: need to pass proper export url
         export_url.args['url'] = self.url
         export_url.args['format'] = map['format']
         export_metadata = self.metadata
         export_metadata.download_url = export_url.url
-        export_file_path = self.file_path + map['renderer']
 
         self.renderer = utils.make_renderer(
             map['renderer'],
             self.metadata,
             export_metadata.url,
-            export_file_path,
+            self.export_file_path,
             self.assets_url
         )
 
@@ -40,10 +40,11 @@ class UnoconvRenderer(extension.BaseRenderer):
             map['renderer'],
             self.metadata,
             self.file_path,
-            export_file_path,
+            self.export_file_path,
             map['format']
         )
 
+    def render(self):
         if self.renderer.file_required:
             self.exporter.export()
 
@@ -51,7 +52,7 @@ class UnoconvRenderer(extension.BaseRenderer):
 
         if self.renderer.file_required:
             try:
-                os.remove(export_file_path)
+                os.remove(self.export_file_path)
             except FileNotFoundError:
                 pass
 

@@ -17,7 +17,7 @@ class UnoconvRenderer(extension.BaseRenderer):
         try:
             self.map = settings.RENDER_MAP[self.metadata.ext]
         except KeyError:
-            raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)
+            self.map = settings.DEFAULT_RENDER
 
         self.export_file_path = self.file_path + self.map['renderer']
 

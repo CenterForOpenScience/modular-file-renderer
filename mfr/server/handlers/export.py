@@ -42,7 +42,6 @@ class ExportHandler(core.BaseHandler):
                 logger.info('No cached file found; Starting export')
             else:
                 logger.info('Cached file found; Sending downstream')
-                # TODO: Set Content Disposition Header
                 self._set_headers()
                 return (yield from self.write_stream(cached_stream))
 

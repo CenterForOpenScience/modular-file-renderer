@@ -57,6 +57,8 @@ class OsfProvider(provider.BaseProvider):
     def download(self):
         download_url = yield from self._fetch_download_url()
         response = yield from self._make_request('GET', download_url, allow_redirects=False)
+        if response.status >= 400:
+            raise exceptions.ProviderError('Unable to download the requested file, please try again later.', code=response.status)
         if response.status in (302, 301):
             response = yield from aiohttp.request('GET', response.headers['location'])
         return streams.ResponseStreamReader(response, unsizable=True)

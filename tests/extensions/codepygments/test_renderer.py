@@ -46,9 +46,9 @@ class TestCodePygmentsRenderer:
         assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
 
     def test_render_codepygments_invalid(self, url, download_url, invalid_file_path, assets_url, extension):
+        # additional decoding logic was added in the renderer, thus this should not render as text.
         renderer = CodePygmentsRenderer(url, download_url, invalid_file_path, assets_url, extension)
-        with pytest.raises(UnicodeDecodeError):
-            renderer.render()
+        renderer.render()
 
     def test_render_codepygments_file_required(self, renderer):
         assert renderer.file_required is True

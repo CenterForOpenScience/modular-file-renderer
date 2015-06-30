@@ -8,6 +8,7 @@ import aiohttp
 from waterbutler.core import streams
 
 from mfr.core import provider
+from mfr.core import exceptions
 
 
 class HttpProvider(provider.BaseProvider):
@@ -22,4 +23,6 @@ class HttpProvider(provider.BaseProvider):
     @asyncio.coroutine
     def download(self):
         response = yield from aiohttp.request('GET', self.url)
+        if response.status >= 400:
+            raise exceptions.ProviderError('Unable to download the requested file, please try again later.', code=response.status)
         return streams.ResponseStreamReader(response)

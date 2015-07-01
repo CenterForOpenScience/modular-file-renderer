@@ -29,9 +29,9 @@ class ExportHandler(core.BaseHandler):
             cached_stream = yield from self.cache_provider.download('{}.{}'.format(unique_path, type))
         except waterbutler.core.exceptions.DownloadError as e:
             assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
-            logger.info('No cached file found; Starting export')
+            logger.info('No cached file found; Starting export [{}]'.format(unique_path))
         else:
-            logger.info('Cached file found; Sending downstream')
+            logger.info('Cached file found; Sending downstream [{}]'.format(unique_path))
             # TODO: Set Content Disposition Header
             return (yield from self.write_stream(cached_stream))
 

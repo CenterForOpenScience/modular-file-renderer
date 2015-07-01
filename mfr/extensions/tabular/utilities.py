@@ -8,7 +8,7 @@ def header_population(headers):
     :param headers: list of column headers
     :return: a list of dictionaries
     """
-    return [{'id': field, 'name': field, 'field': field} for field in headers]
+    return [{'id': field, 'name': field, 'field': field, 'sortable': True} for field in headers]
 
 
 def data_population(in_data, headers=None):

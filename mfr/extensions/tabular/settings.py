@@ -28,10 +28,12 @@ SMALL_TABLE = config.get('SMALL_TABLE', {
     'enableColumnReorder': False,
     'forceFitColumns': True,
     'syncColumnCellResize': True,
+    'multiColumnSort': True,
 })
 
 BIG_TABLE = config.get('BIG_TABLE', {
     'enableCellNavigation': True,
     'enableColumnReorder': False,
     'syncColumnCellResize': True,
+    'multiColumnSort': True,
 })

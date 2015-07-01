@@ -13,7 +13,24 @@
         var columns = ${columns};
         var rows = ${rows};
         var options = ${options};
-        new Slick.Grid("#mfrViewer", rows, columns, options);
+        var grid = new Slick.Grid("#mfrViewer", rows, columns, options);
+        grid.onSort.subscribe(function (e, args) {
+            var cols = args.sortCols;
+            rows.sort(function (dataRow1, dataRow2) {
+                for (var i = 0; i < cols.length; i++) {
+                    var field = cols[i].sortCol.field;
+                    var sign = cols[i].sortAsc ? 1 : -1;
+                    var value1 = dataRow1[field], value2 = dataRow2[field];
+                    var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+                    if (result != 0) {
+                        return result;
+                    }
+                }
+                return 0;
+            });
+            grid.invalidate();
+            grid.render();
+        });
     });
 </script>
 

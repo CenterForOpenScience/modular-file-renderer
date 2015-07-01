@@ -18,14 +18,14 @@ class TestTabularPandaTools:
         with open(os.path.join(BASE, 'files', 'test.csv')) as fp:
             headers, data = panda_tools.csv_pandas(fp)
 
-        assert headers[0] == {'field': 'one', 'id': 'one', 'name': 'one'}
+        assert headers[0] == {'field': 'one', 'id': 'one', 'name': 'one', 'sortable': True}
         assert data[0] == {'one': 'à', 'two': 'b', 'three': 'c'}
 
     def test_tsv_pandas(self):
         with open(os.path.join(BASE, 'files', 'test.tsv')) as fp:
             headers, data = panda_tools.csv_pandas(fp)
 
-        assert headers[0] == {'field': 'one\ttwo\tthree', 'id': 'one\ttwo\tthree', 'name': 'one\ttwo\tthree'}
+        assert headers[0] == {'field': 'one\ttwo\tthree', 'id': 'one\ttwo\tthree', 'name': 'one\ttwo\tthree', 'sortable': True}
         assert data[0] == {'one\ttwo\tthree': 'a\tb\tc'}
 
     # def test_dta_pandas():

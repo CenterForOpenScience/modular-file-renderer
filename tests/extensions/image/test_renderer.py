@@ -1,16 +1,13 @@
 import pytest
 
+from mfr.core.provider import ProviderMetadata
+
 from mfr.extensions.image import ImageRenderer
 
 
 @pytest.fixture
-def url():
-    return 'http://osf.io/file/test.png'
-
-
-@pytest.fixture
-def download_url():
-    return 'http://wb.osf.io/file/test.png?token=1234'
+def metadata():
+    return ProviderMetadata('test', '.png', 'text/plain', '1234', 'http://wb.osf.io/file/test.png?token=1234')
 
 
 @pytest.fixture
@@ -19,18 +16,23 @@ def file_path():
 
 
 @pytest.fixture
+def url():
+    return 'http://osf.io/file/test.png'
+
+
+@pytest.fixture
 def assets_url():
     return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
-def extension():
-    return '.png'
+def export_url():
+    return 'http://mfr.osf.io/export?url=' + url()
 
 
 @pytest.fixture
-def renderer(url, download_url, file_path, assets_url, extension):
-    return ImageRenderer(url, download_url, file_path, assets_url, extension)
+def renderer(metadata, file_path, url, assets_url, export_url):
+    return ImageRenderer(metadata, file_path, url, assets_url, export_url)
 
 
 class TestImageRenderer:

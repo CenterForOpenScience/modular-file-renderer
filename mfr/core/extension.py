@@ -3,11 +3,10 @@ import abc
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
-    def __init__(self, url, file_path, assets_url, ext):
-        self.url = url
-        self.file_path = file_path
-        self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
-        self.extension = ext
+    def __init__(self, source_file_path, output_file_path, format):
+        self.source_file_path = source_file_path
+        self.output_file_path = output_file_path
+        self.format = format
 
     @abc.abstractmethod
     def export(self):
@@ -21,12 +20,12 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
 class BaseRenderer(metaclass=abc.ABCMeta):
 
-    def __init__(self, url, download_url, file_path, assets_url, ext):
-        self.url = url
-        self.download_url = download_url
+    def __init__(self, metadata, file_path, url, assets_url, export_url):
+        self.metadata = metadata
         self.file_path = file_path
+        self.url = url
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
-        self.extension = ext
+        self.export_url = export_url
 
     @abc.abstractmethod
     def render(self):

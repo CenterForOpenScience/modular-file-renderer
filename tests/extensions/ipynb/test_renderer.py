@@ -1,17 +1,15 @@
 import os
 import pytest
 
+from mfr.core.provider import ProviderMetadata
+
 from mfr.extensions.ipynb import IpynbRenderer
 from mfr.extensions.ipynb.exceptions import InvalidFormat
 
-@pytest.fixture
-def url():
-    return 'http://osf.io/file/file.ipynb'
-
 
 @pytest.fixture
-def download_url():
-    return 'http://wb.osf.io/file/file.ipynb?token=1234'
+def metadata():
+    return ProviderMetadata('test', '.ipynb', 'text/plain', '1234', 'http://wb.osf.io/file/test.ipynb?token=1234')
 
 
 @pytest.fixture
@@ -30,18 +28,23 @@ def invalid_json_file_path():
 
 
 @pytest.fixture
+def url():
+    return 'http://osf.io/file/file.ipynb'
+
+
+@pytest.fixture
 def assets_url():
     return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
-def extension():
-    return '.ipynb'
+def export_url():
+    return 'http://mfr.osf.io/export?url=' + url()
 
 
 @pytest.fixture
-def renderer(url, download_url, test_file_path, assets_url, extension):
-    return IpynbRenderer(url, download_url, test_file_path, assets_url, extension)
+def renderer(metadata, test_file_path, url, assets_url, export_url):
+    return IpynbRenderer(metadata, test_file_path, url, assets_url, export_url)
 
 
 class TestIpynbRenderer:
@@ -50,13 +53,13 @@ class TestIpynbRenderer:
         body = renderer.render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer mfr-ipynb-body">' in body
 
-    def test_render_ipynb_no_metadata(self, url, download_url, no_metadata_file_path, assets_url, extension):
-        renderer = IpynbRenderer(url, download_url, no_metadata_file_path, assets_url, extension)
+    def test_render_ipynb_no_metadata(self, metadata, no_metadata_file_path, url, assets_url, export_url):
+        renderer = IpynbRenderer(metadata, no_metadata_file_path, url, assets_url, export_url)
         body = renderer.render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer mfr-ipynb-body">' in body
 
-    def test_render_ipynb_invalid_json(self, url, download_url, invalid_json_file_path, assets_url, extension):
-        renderer = IpynbRenderer(url, download_url, invalid_json_file_path, assets_url, extension)
+    def test_render_ipynb_invalid_json(self, metadata, invalid_json_file_path, url, assets_url, export_url):
+        renderer = IpynbRenderer(metadata, invalid_json_file_path, url, assets_url, export_url)
         with pytest.raises(InvalidFormat):
             renderer.render()
 

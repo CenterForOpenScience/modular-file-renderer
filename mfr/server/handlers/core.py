@@ -1,7 +1,7 @@
 import os
-import asyncio
 import pkg_resources
 
+import tornado.gen
 import tornado.web
 from raven.contrib.tornado import SentryMixin
 
@@ -49,7 +49,7 @@ class CorsMixin(tornado.web.RequestHandler):
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
-    @asyncio.coroutine
+    @tornado.gen.coroutine
     def prepare(self):
         if self.request.method == 'OPTIONS':
             return
@@ -62,7 +62,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             self.url
         )
 
-        self.ext, self.unique_key, self.download_url = yield from self.provider.metadata()
+        self.metadata = yield from self.provider.metadata()
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -75,14 +75,14 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
 
-    @asyncio.coroutine
+    @tornado.gen.coroutine
     def write_stream(self, stream):
         while True:
             chunk = yield from stream.read(settings.CHUNK_SIZE)
             if not chunk:
                 break
             self.write(chunk)
-            yield from waterbutler.server.utils.future_wrapper(self.flush())
+            yield self.flush()
 
     def write_error(self, status_code, exc_info):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
@@ -98,7 +98,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 <div class="alert alert-warning" role="alert">
                     Unable to render the requested file, please try again later.
                 </div>
-                ''')
+            ''')
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
@@ -113,7 +113,7 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             for ep in list(pkg_resources.iter_entry_points(namespace))
         }
 
-    @waterbutler.server.utils.coroutine
+    @tornado.gen.coroutine
     def get(self, module_name, path):
         try:
             super().initialize(self.modules[module_name])

@@ -4,7 +4,7 @@ git+https://github.com/jmcarp/raven-python
 furl==0.4.2
 invoke==0.9.0
 stevedore==1.2.0
-tornado==4.0.2
+tornado==4.2
 
 # WaterButler
 git+https://github.com/CenterForOpenScience/waterbutler.git@master

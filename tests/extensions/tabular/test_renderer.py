@@ -1,21 +1,18 @@
 import os
 import pytest
 
+from xlrd.biffh import XLRDError
+
+from mfr.core.provider import ProviderMetadata
+
 from mfr.extensions.tabular import settings
 from mfr.extensions.tabular import TabularRenderer
 from mfr.extensions.tabular import exceptions
-from pandas.parser import CParserError
-from xlrd.biffh import XLRDError
 
 
 @pytest.fixture
-def url():
-    return 'http://osf.io/file/test.csv'
-
-
-@pytest.fixture
-def download_url():
-    return 'http://wb.osf.io/file/test.csv?token=1234'
+def metadata():
+    return ProviderMetadata('test', '.csv', 'text/plain', '1234', 'http://wb.osf.io/file/test.csv?token=1234')
 
 
 @pytest.fixture
@@ -49,13 +46,23 @@ def invalid_xlsx_file_path():
 
 
 @pytest.fixture
+def url():
+    return 'http://osf.io/file/test.csv'
+
+
+@pytest.fixture
 def assets_url():
     return 'http://mfr.osf.io/assets'
 
 
 @pytest.fixture
-def renderer(url, download_url, test_csv_file_path, assets_url, extension='.csv'):
-    return TabularRenderer(url, download_url, test_csv_file_path, assets_url, extension)
+def export_url():
+    return 'http://mfr.osf.io/export?url=' + url()
+
+
+@pytest.fixture
+def renderer(metadata, test_csv_file_path, url, assets_url, export_url):
+    return TabularRenderer(metadata, test_csv_file_path, url, assets_url, export_url)
 
 
 class TestTabularRenderer:
@@ -69,38 +76,44 @@ class TestTabularRenderer:
 
 class TestTabularCsvRenderer:
 
-    def test_render_tabular_csv(self, url, download_url, test_csv_file_path, assets_url, extension='.csv'):
-        renderer = TabularRenderer(url, download_url, test_csv_file_path, assets_url, extension)
+    def test_render_tabular_csv(self, test_csv_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.csv', 'text/plain', '1234', 'http://wb.osf.io/file/test.csv?token=1234')
+        renderer = TabularRenderer(metadata, test_csv_file_path, url, assets_url, export_url)
         body = renderer.render()
         assert '<div id="mfrViewer" style="min-height: {}px;"></div>'.format(settings.TABLE_HEIGHT) in body
 
-    def test_render_tabular_csv_invalid(self, url, download_url, invalid_csv_file_path, assets_url, extension='.csv'):
-        renderer = TabularRenderer(url, download_url, invalid_csv_file_path, assets_url, extension)
+    def test_render_tabular_csv_invalid(self, invalid_csv_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.csv', 'text/plain', '1234', 'http://wb.osf.io/file/test.csv?token=1234')
+        renderer = TabularRenderer(metadata, invalid_csv_file_path, url, assets_url, export_url)
         with pytest.raises(exceptions.EmptyTableException):
             renderer.render()
 
 
 class TestTabularTsvRenderer:
 
-    def test_render_tabular_tsv(self, url, download_url, test_tsv_file_path, assets_url, extension='.tsv'):
-        renderer = TabularRenderer(url, download_url, test_tsv_file_path, assets_url, extension)
+    def test_render_tabular_tsv(self, test_tsv_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.tsv', 'text/plain', '1234', 'http://wb.osf.io/file/test.tsv?token=1234')
+        renderer = TabularRenderer(metadata, test_tsv_file_path, url, assets_url, export_url)
         body = renderer.render()
         assert '<div id="mfrViewer" style="min-height: {}px;"></div>'.format(settings.TABLE_HEIGHT) in body
 
-    def test_render_tabular_tsv_invalid(self, url, download_url, invalid_tsv_file_path, assets_url, extension='.tsv'):
-        renderer = TabularRenderer(url, download_url, invalid_tsv_file_path, assets_url, extension)
+    def test_render_tabular_tsv_invalid(self, invalid_tsv_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.tsv', 'text/plain', '1234', 'http://wb.osf.io/file/test.tsv?token=1234')
+        renderer = TabularRenderer(metadata, invalid_tsv_file_path, url, assets_url, export_url)
         with pytest.raises(exceptions.EmptyTableException):
             renderer.render()
 
 
 class TestTabularXlsxRenderer:
 
-    def test_render_tabular_xlsx(self, url, download_url, test_xlsx_file_path, assets_url, extension='.xlsx'):
-        renderer = TabularRenderer(url, download_url, test_xlsx_file_path, assets_url, extension)
+    def test_render_tabular_xlsx(self, test_xlsx_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.xlsx', 'text/plain', '1234', 'http://wb.osf.io/file/test.xlsx?token=1234')
+        renderer = TabularRenderer(metadata, test_xlsx_file_path, url, assets_url, export_url)
         body = renderer.render()
         assert '<div id="mfrViewer" style="min-height: {}px;"></div>'.format(settings.TABLE_HEIGHT) in body
 
-    def test_render_tabular_xlsx_invalid(self, url, download_url, invalid_xlsx_file_path, assets_url, extension='.xlsx'):
-        renderer = TabularRenderer(url, download_url, invalid_xlsx_file_path, assets_url, extension)
+    def test_render_tabular_xlsx_invalid(self, invalid_xlsx_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.xlsx', 'text/plain', '1234', 'http://wb.osf.io/file/test.xlsx?token=1234')
+        renderer = TabularRenderer(metadata, invalid_xlsx_file_path, url, assets_url, export_url)
         with pytest.raises(XLRDError):
             renderer.render()

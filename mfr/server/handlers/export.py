@@ -70,7 +70,7 @@ class ExportHandler(core.BaseHandler):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
-        if settings.CACHE_ENABLED:
+        if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):
             with open(self.output_file_path.full_path, 'rb') as fp:
                 yield from self.cache_provider.upload(waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path)
 

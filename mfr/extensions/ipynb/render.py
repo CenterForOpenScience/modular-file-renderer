@@ -30,7 +30,7 @@ class IpynbRenderer(extension.BaseRenderer):
             },
         }))
         (body, _) = exporter.from_notebook_node(notebook)
-        return self.TEMPLATE.render(base=self.assets_url, body=body, md5 = self.extra.get('md5'))
+        return self.TEMPLATE.render(base=self.assets_url, body=body, md5=self.extra.get('md5'))
 
     @property
     def file_required(self):

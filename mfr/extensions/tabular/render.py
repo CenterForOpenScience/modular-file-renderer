@@ -24,7 +24,7 @@ class TabularRenderer(extension.BaseRenderer):
                 columns=json.dumps(columns),
                 rows=json.dumps(rows),
                 options=json.dumps(settings.SMALL_TABLE if len(columns) < 9 else settings.BIG_TABLE),
-                md5 = self.extra.get('md5')
+                md5=self.extra.get('md5')
             )
 
     @property

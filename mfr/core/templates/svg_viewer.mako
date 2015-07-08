@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <img class="mfrViewer" data-src="${url}">
 
 <script>

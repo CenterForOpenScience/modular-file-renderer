@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <audio controls>
     <source src="${url}">
     Your browser does not support the audio tag.

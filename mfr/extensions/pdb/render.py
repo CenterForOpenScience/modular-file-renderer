@@ -1,10 +1,9 @@
 """Molecule renderer module """
-import os
 import json
 
 from mako.lookup import TemplateLookup
 
-from mfr.core import extension
+from mfr.core import extension, TEMPLATE_BASE
 from mfr.extensions.pdb import settings
 
 
@@ -12,8 +11,8 @@ class PdbRenderer(extension.BaseRenderer):
 
     TEMPLATE = TemplateLookup(
         directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+            TEMPLATE_BASE
+        ]).get_template('pdb_viewer.mako')
 
     def render(self):
         return self.TEMPLATE.render(

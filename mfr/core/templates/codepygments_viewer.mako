@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 <link rel="stylesheet" href="${base}/css/default.css">
 

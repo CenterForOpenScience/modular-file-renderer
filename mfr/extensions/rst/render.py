@@ -1,17 +1,15 @@
-import os
-
 from mako.lookup import TemplateLookup
 from docutils.core import publish_parts
 
-from mfr.core import extension
+from mfr.core import extension, TEMPLATE_BASE
 
 
 class RstRenderer(extension.BaseRenderer):
 
     TEMPLATE = TemplateLookup(
         directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+            TEMPLATE_BASE
+        ]).get_template('rst_viewer.mako')
 
     def render(self):
         with open(self.file_path, 'r') as fp:

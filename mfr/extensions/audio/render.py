@@ -1,5 +1,3 @@
-import os
-
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension, TEMPLATE_BASE

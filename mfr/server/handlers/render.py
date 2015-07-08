@@ -43,7 +43,7 @@ class RenderHandler(core.BaseHandler):
             self.url,
             '{}://{}/assets'.format(self.request.protocol, self.request.host),
             self.request.uri.replace('/render?', '/export?', 1),
-            extra = self.extra
+            extra=self.extra
         )
 
         #TO DO: attempt to grab md5 from watebutler

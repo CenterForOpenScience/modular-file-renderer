@@ -3,8 +3,9 @@ import uuid
 import asyncio
 import logging
 
+import tornado.gen
+
 import waterbutler.core.streams
-import waterbutler.server.utils
 import waterbutler.core.exceptions
 
 from mfr.server import settings
@@ -22,17 +23,17 @@ class RenderHandler(core.BaseHandler):
     }
     md5 = ''
 
-    @waterbutler.server.utils.coroutine
+    @tornado.gen.coroutine
     def prepare(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
-        yield from super().prepare()
+        yield super().prepare()
 
         self.cache_file_path = yield from self.cache_provider.validate_path('/render/' + self.metadata.unique_key)
         self.source_file_path = yield from self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
 
-    @waterbutler.server.utils.coroutine
+    @tornado.gen.coroutine
     def get(self):
         """Render a file with the extension"""
         renderer = utils.make_renderer(
@@ -55,7 +56,7 @@ class RenderHandler(core.BaseHandler):
                 logger.info('No cached file found; Starting render [{}]'.format(self.cache_file_path))
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
-                return (yield from self.write_stream(cached_stream))
+                return (yield self.write_stream(cached_stream))
 
         if renderer.file_required or self.md5 == '':
             download_stream = yield from self.provider.download()
@@ -77,9 +78,9 @@ class RenderHandler(core.BaseHandler):
                 self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.cache_file_path)
             )
 
-        yield from self.write_stream(waterbutler.core.streams.StringStream(rendition))
+        yield self.write_stream(waterbutler.core.streams.StringStream(rendition))
 
-    @waterbutler.server.utils.coroutine
+    @tornado.gen.coroutine
     def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return

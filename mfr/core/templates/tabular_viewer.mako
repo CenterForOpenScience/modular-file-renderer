@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <link rel="stylesheet" href="${base}/css/slick.grid.css">
 <link rel="stylesheet" href="${base}/css/slick-default-theme.css">
 <link rel="stylesheet" href="${base}/css/examples.css">

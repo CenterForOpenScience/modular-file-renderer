@@ -1,17 +1,15 @@
-import os
-
 import pydocx.export
 from mako.lookup import TemplateLookup
 
-from mfr.core import extension
+from mfr.core import extension, TEMPLATE_BASE
 
 
 class DocxRenderer(extension.BaseRenderer):
 
     TEMPLATE = TemplateLookup(
         directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+            TEMPLATE_BASE
+        ]).get_template('docx_viewer.mako')
 
     # Workaround to remove default stylesheet and inlined styles
     # see: https://github.com/CenterForOpenScience/pydocx/issues/102
@@ -25,7 +23,7 @@ class DocxRenderer(extension.BaseRenderer):
 
     def render(self):
         body = self._PyDocXHTMLExporter(self.file_path).parsed
-        return self.TEMPLATE.render(base=self.assets_url, body=body)
+        return self.TEMPLATE.render(base=self.assets_url, body=body, md5=self.extra.get('md5'))
 
     @property
     def file_required(self):

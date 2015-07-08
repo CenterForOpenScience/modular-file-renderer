@@ -61,7 +61,9 @@ class OsfProvider(provider.BaseProvider):
             raise exceptions.ProviderError('Unable to download the requested file, please try again later.', code=response.status)
         if response.status in (302, 301):
             response = yield from aiohttp.request('GET', response.headers['location'])
-        return streams.ResponseStreamReader(response, unsizable=True)
+        download_stream = streams.ResponseStreamReader(response, unsizable=True)
+        download_stream.add_writer('md5', streams.HashStreamWriter(hashlib.md5))
+        return download_stream
 
     @asyncio.coroutine
     def _fetch_download_url(self):

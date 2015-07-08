@@ -1,11 +1,9 @@
-import os
-
 from IPython import nbformat
 from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
 from mako.lookup import TemplateLookup
 
-from mfr.core import extension
+from mfr.core import extension, TEMPLATE_BASE
 from mfr.extensions.ipynb import exceptions
 
 
@@ -13,8 +11,8 @@ class IpynbRenderer(extension.BaseRenderer):
 
     TEMPLATE = TemplateLookup(
         directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+            TEMPLATE_BASE
+        ]).get_template('ipynb_viewer.mako')
 
     def render(self):
         try:
@@ -32,7 +30,7 @@ class IpynbRenderer(extension.BaseRenderer):
             },
         }))
         (body, _) = exporter.from_notebook_node(notebook)
-        return self.TEMPLATE.render(base=self.assets_url, body=body)
+        return self.TEMPLATE.render(base=self.assets_url, body=body, md5=self.extra.get('md5'))
 
     @property
     def file_required(self):

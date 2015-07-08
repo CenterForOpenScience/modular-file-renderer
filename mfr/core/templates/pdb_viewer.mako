@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <div id="mfrViewer"></div>
 
 <script src="/static/js/mfr.js"></script>

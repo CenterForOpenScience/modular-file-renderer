@@ -27,4 +27,6 @@ class HttpProvider(provider.BaseProvider):
         response = yield from aiohttp.request('GET', self.url)
         if response.status >= 400:
             raise exceptions.ProviderError('Unable to download the requested file, please try again later.', code=response.status)
-        return streams.ResponseStreamReader(response)
+        download_stream = streams.ResponseStreamReader(response, unsizable=True)
+        download_stream.add_writer('md5', streams.HashStreamWriter(hashlib.md5))
+        return download_stream

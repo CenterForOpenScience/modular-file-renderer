@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <link rel="stylesheet" href="${base}/css/ipynb.css">
 <link rel="stylesheet" href="${base}/css/pygments.css">
 

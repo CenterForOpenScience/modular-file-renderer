@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <div style="word-wrap: break-word;" class="mfrViewer">
 ${body}
 </div>

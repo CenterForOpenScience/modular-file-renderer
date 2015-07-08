@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <video controls height="100%">
   <source src="${url}">
   Your browser does not support the video tag.
@@ -8,3 +9,4 @@
 <script>
     window.pymChild.sendMessage('embed', 'embed-responsive-16by9');
 </script>
+${md5}

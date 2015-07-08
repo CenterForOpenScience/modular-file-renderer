@@ -1,3 +1,4 @@
+<%inherit file="extras.mako"/>
 <!DOCTYPE html>
 <!--
 Copyright 2012 Mozilla Foundation

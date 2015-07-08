@@ -1,12 +1,10 @@
-import os
-
 import pygments.lexers
 import pygments.lexers.special
 import pygments.formatters
 from pygments.util import ClassNotFound
 from mako.lookup import TemplateLookup
 
-from mfr.core import extension
+from mfr.core import extension, TEMPLATE_BASE
 
 
 class CodePygmentsRenderer(extension.BaseRenderer):
@@ -15,13 +13,13 @@ class CodePygmentsRenderer(extension.BaseRenderer):
 
     TEMPLATE = TemplateLookup(
         directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+            TEMPLATE_BASE
+        ]).get_template('codepygments_viewer.mako')
 
     def render(self):
         with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.metadata.ext)
-            return self.TEMPLATE.render(base=self.assets_url, body=body)
+            return self.TEMPLATE.render(base=self.assets_url, body=body, md5=self.extra.get('md5'))
 
     @property
     def file_required(self):

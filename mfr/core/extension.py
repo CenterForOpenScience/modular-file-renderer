@@ -20,7 +20,8 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
 class BaseRenderer(metaclass=abc.ABCMeta):
 
-    def __init__(self, metadata, file_path, url, assets_url, export_url):
+    def __init__(self, metadata, file_path, url, assets_url, export_url, extra=None):
+        self.extra = extra or {}
         self.metadata = metadata
         self.file_path = file_path
         self.url = url

@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 class RenderHandler(core.BaseHandler):
 
     ALLOWED_METHODS = ['GET']
+    extra = {
+        'md5': ''
+    }
+    md5 = ''
 
     @waterbutler.server.utils.coroutine
     def prepare(self):
@@ -37,8 +41,11 @@ class RenderHandler(core.BaseHandler):
             self.source_file_path.full_path,
             self.url,
             '{}://{}/assets'.format(self.request.protocol, self.request.host),
-            self.request.uri.replace('/render?', '/export?', 1)
+            self.request.uri.replace('/render?', '/export?', 1),
+            extra = self.extra
         )
+
+        #TO DO: attempt to grab md5 from watebutler
 
         if renderer.cache_result and settings.CACHE_ENABLED:
             try:
@@ -50,11 +57,15 @@ class RenderHandler(core.BaseHandler):
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
                 return (yield from self.write_stream(cached_stream))
 
-        if renderer.file_required:
+        if renderer.file_required or self.md5 == '':
+            download_stream = yield from self.provider.download()
             yield from self.local_cache_provider.upload(
-                (yield from self.provider.download()),
+                download_stream,
                 self.source_file_path
             )
+            self.md5 = download_stream.writers['md5'].hexdigest
+
+        renderer.extra['md5'] = self.md5
 
         loop = asyncio.get_event_loop()
         rendition = (yield from loop.run_in_executor(None, renderer.render))

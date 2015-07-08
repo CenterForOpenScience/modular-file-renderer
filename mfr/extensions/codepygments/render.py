@@ -21,7 +21,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
     def render(self):
         with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.metadata.ext)
-            return self.TEMPLATE.render(base=self.assets_url, body=body)
+            return self.TEMPLATE.render(base=self.assets_url, body=body, md5 = self.extra.get('md5'))
 
     @property
     def file_required(self):

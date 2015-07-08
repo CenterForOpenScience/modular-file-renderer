@@ -20,6 +20,7 @@ class PdbRenderer(extension.BaseRenderer):
             base=self.assets_url,
             url=self.metadata.download_url,
             options=json.dumps(settings.OPTIONS),
+            md5 = self.extra.get('md5')
         )
 
     @property

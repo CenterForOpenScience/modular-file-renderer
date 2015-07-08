@@ -69,7 +69,7 @@ def make_exporter(name, source_file_path, output_file_path, format):
         raise exceptions.RendererError('No exporter could be found for the file type requested.', code=400)
 
 
-def make_renderer(name, metadata, file_path, url, assets_url, export_url):
+def make_renderer(name, metadata, file_path, url, assets_url, export_url, extra):
     """Returns an instance of :class:`mfr.core.extension.BaseRenderer`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
@@ -86,7 +86,7 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             namespace='mfr.renderers',
             name=(name and name.lower()) or 'none',
             invoke_on_load=True,
-            invoke_args=(metadata, file_path, url, assets_url, export_url),
+            invoke_args=(metadata, file_path, url, assets_url, export_url, extra),
         ).driver
     except RuntimeError:
         raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)

@@ -16,7 +16,7 @@ class RstRenderer(extension.BaseRenderer):
     def render(self):
         with open(self.file_path, 'r') as fp:
             body = publish_parts(fp.read(), writer_name='html')['html_body']
-            return self.TEMPLATE.render(base=self.assets_url, body=body)
+            return self.TEMPLATE.render(base=self.assets_url, body=body, md5 = self.extra.get('md5'))
 
     @property
     def file_required(self):

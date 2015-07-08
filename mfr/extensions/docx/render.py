@@ -25,7 +25,7 @@ class DocxRenderer(extension.BaseRenderer):
 
     def render(self):
         body = self._PyDocXHTMLExporter(self.file_path).parsed
-        return self.TEMPLATE.render(base=self.assets_url, body=body)
+        return self.TEMPLATE.render(base=self.assets_url, body=body, md5 = self.extra.get('md5'))
 
     @property
     def file_required(self):

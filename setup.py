@@ -41,6 +41,12 @@ setup(
             'osf = mfr.providers.osf:OsfProvider',
         ],
         'mfr.exporters': [
+            # google docs
+            '.gdraw = mfr.extensions.unoconv:UnoconvExporter',
+            '.gdoc = mfr.extensions.unoconv:UnoconvExporter',
+            '.gsheet = mfr.extensions.unoconv:UnoconvExporter',
+            '.gslides = mfr.extensions.unoconv:UnoconvExporter',
+
             # image
             '.jpg = mfr.extensions.image:ImageExporter',
             '.jpeg = mfr.extensions.image:ImageExporter',
@@ -64,9 +70,6 @@ setup(
             '.fodp = mfr.extensions.unoconv:UnoconvExporter',
             '.fods = mfr.extensions.unoconv:UnoconvExporter',
             '.fodt = mfr.extensions.unoconv:UnoconvExporter',
-            '.gdoc = mfr.extensions.unoconv:UnoconvExporter',
-            # '.gsheet = mfr.extensions.unoconv:UnoconvExporter',
-            '.gslides = mfr.extensions.unoconv:UnoconvExporter',
             # '.gif = mfr.extensions.unoconv:UnoconvExporter',
             # '.html = mfr.extensions.unoconv:UnoconvExporter',
             # '.jpg = mfr.extensions.unoconv:UnoconvExporter',
@@ -604,7 +607,12 @@ setup(
 
             # docx
             # '.docx = mfr.extensions.docx:DocxRenderer',
-            # '.gdoc = mfr.extensions.docx:DocxRenderer',
+
+            # google docs
+            '.gdraw = mfr.extensions.image:ImageRenderer',
+            '.gdoc = mfr.extensions.unoconv:UnoconvRenderer',
+            '.gsheet = mfr.extensions.tabular:TabularRenderer',
+            '.gslides = mfr.extensions.unoconv:UnoconvRenderer',
 
             # image
             '.bmp = mfr.extensions.image:ImageRenderer',
@@ -633,7 +641,6 @@ setup(
 
             # tabular
             '.csv = mfr.extensions.tabular:TabularRenderer',
-            '.gsheet = mfr.extensions.tabular:TabularRenderer',
             '.tsv = mfr.extensions.tabular:TabularRenderer',
             '.xls = mfr.extensions.tabular:TabularRenderer',
             '.xlsx = mfr.extensions.tabular:TabularRenderer',
@@ -655,9 +662,6 @@ setup(
             '.fodp = mfr.extensions.unoconv:UnoconvRenderer',
             '.fods = mfr.extensions.unoconv:UnoconvRenderer',
             '.fodt = mfr.extensions.unoconv:UnoconvRenderer',
-            '.gdoc = mfr.extensions.unoconv:UnoconvRenderer',
-            # '.gsheet = mfr.extensions.unoconv:UnoconvRenderer',
-            '.gslides = mfr.extensions.unoconv:UnoconvRenderer',
             # '.gif = mfr.extensions.unoconv:UnoconvRenderer',
             # '.html = mfr.extensions.unoconv:UnoconvRenderer',
             # '.jpg = mfr.extensions.unoconv:UnoconvRenderer',

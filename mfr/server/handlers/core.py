@@ -117,12 +117,12 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     def get(self, module_name, path):
         try:
             super().initialize(self.modules[module_name])
-            return (yield from waterbutler.server.utils.future_wrapper(super().get(path)))
+            yield super().get(path)
         except Exception:
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
-            return (yield from waterbutler.server.utils.future_wrapper(super().get(path)))
+            yield super().get(path)
         except Exception:
             self.set_status(404)

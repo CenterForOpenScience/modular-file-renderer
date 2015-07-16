@@ -52,7 +52,7 @@
 
         var spinner = document.createElement('div');
         var img = document.createElement('img');
-        spinner.setAttribute('class', 'logo-spin text-center');
+        spinner.setAttribute('class', 'mfr-logo-spin text-center');
         img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/loading.png');
         spinner.appendChild(img);
         return spinner

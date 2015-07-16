@@ -1,13 +1,13 @@
-.logo-spin {
-    -webkit-animation: spin 3s infinite linear, opacity 3s infinite linear;
-    animation: spin 3s infinite linear, opacity 3s infinite linear;
+.mfr-logo-spin {
+    -webkit-animation: mfr-spin 3s infinite linear, mfr-opacity 3s infinite linear;
+    animation: mfr-spin 3s infinite linear, mfr-opacity 3s infinite linear;
     position: absolute;
     top: 0;
     left: 50%;
     z-index: -1;
 }
 
-@-moz-keyframes spin {
+@-moz-keyframes mfr-spin {
     from {
         -moz-transform: rotate(0deg);
     }
@@ -15,7 +15,7 @@
         -moz-transform: rotate(360deg);
     }
 }
-@-webkit-keyframes spin {
+@-webkit-keyframes mfr-spin {
     from {
         -webkit-transform: rotate(0deg);
     }
@@ -23,7 +23,7 @@
         -webkit-transform: rotate(360deg);
     }
 }
-@keyframes spin {
+@keyframes mfr-spin {
     from {
         -webkit-transform: rotate(0deg);
     }
@@ -31,7 +31,7 @@
         -webkit-transform: rotate(360deg);
     }
 }
-@-moz-keyframes opacity {
+@-moz-keyframes mfr-opacity {
     0% {
         opacity : 0.1
     }
@@ -42,7 +42,7 @@
         opacity: 0.1
     }
 }
-@-webkit-keyframes opacity {
+@-webkit-keyframes mfr-opacity {
     0% {
         opacity : 0.1
     }
@@ -53,7 +53,7 @@
         opacity: 0.1
     }
 }
-@keyframes opacity {
+@keyframes mfr-opacity {
     0% {
         opacity : 0.1
     }

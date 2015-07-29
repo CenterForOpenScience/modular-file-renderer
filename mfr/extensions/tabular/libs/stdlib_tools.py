@@ -41,7 +41,7 @@ def set_dialect_quote_attrs(dialect, data):
 
     The regular expressions search for things that look like the beginning of
     a list, wrapped in a quotation mark that is not dialect.quotechar, with
-    list items sepeted by commas.
+    list items wrapped in dialect.quotechar and seperated by commas.
 
     Example matches include:
         "['1', '2', '3'         for quotechar == '

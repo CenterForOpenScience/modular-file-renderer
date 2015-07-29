@@ -15,7 +15,7 @@ def csv_stdlib(fp):
     except csv.Error:
         dialect = csv.excel
 
-    dialect = detect_quoted_fields(dialect, data)
+    set_dialect_quote_attrs(dialect, data)
     reader = csv.DictReader(fp, dialect=dialect)
     columns = []
     # update the reader field names to avoid duplicate column names when performing row extraction
@@ -36,19 +36,24 @@ def csv_stdlib(fp):
     return columns, rows
 
 
-def detect_quoted_fields(dialect, data):
-    if dialect != csv.excel:
-        if dialect.quotechar == '"':
-            if re.search('\'[[({]\".+\",', data):
-                dialect.quotechar = "'"
-            if re.search('\'\'\'[[({]\".+\",', data):
-                dialect.doublequote = True
-            return dialect
-        elif dialect.quotechar == "'":
-            if re.search('\"[[({]\'.+\',', data):
-                dialect.quotechar = '"'
-            if re.search('\"\"\"[[({]\'.+\',', data):
-                dialect.doublequote = True
-            return dialect
+def set_dialect_quote_attrs(dialect, data):
+    """Set quote-related dialect attributes based on up to 2kb of csv data.
 
-    return dialect
+    The regular expressions search for things that look like the beginning of
+    a list, wrapped in a quotation mark that is not dialect.quotechar, with
+    list items sepeted by commas.
+
+    Example matches include:
+        "['1', '2', '3'         for quotechar == '
+        '{"a", "b", "c"         for quotechar == "
+    """
+    if dialect.quotechar == '"':
+        if re.search('\'[[({]\".+\",', data):
+            dialect.quotechar = "'"
+        if re.search('\'\'\'[[({]\".+\",', data):
+            dialect.doublequote = True
+    elif dialect.quotechar == "'":
+        if re.search('\"[[({]\'.+\',', data):
+            dialect.quotechar = '"'
+        if re.search('\"\"\"[[({]\'.+\',', data):
+            dialect.doublequote = True

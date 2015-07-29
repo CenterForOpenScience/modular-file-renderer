@@ -14,8 +14,9 @@ def csv_stdlib(fp):
         dialect = csv.Sniffer().sniff(data)
     except csv.Error:
         dialect = csv.excel
+    else:
+        set_dialect_quote_attrs(dialect, data)
 
-    set_dialect_quote_attrs(dialect, data)
     reader = csv.DictReader(fp, dialect=dialect)
     columns = []
     # update the reader field names to avoid duplicate column names when performing row extraction

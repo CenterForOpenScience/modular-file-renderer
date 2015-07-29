@@ -1,4 +1,5 @@
 import csv
+import re
 
 
 def csv_stdlib(fp):
@@ -37,13 +38,17 @@ def csv_stdlib(fp):
 
 def detect_quoted_fields(dialect, data):
     if dialect != csv.excel:
-        if data.find("''") >= 0:
-            dialect.doublequote = True
-            dialect.quotechar = "'"
+        if dialect.quotechar == '"':
+            if re.search('\'[[({]\".+\",', data):
+                dialect.quotechar = "'"
+            if re.search('\'\'\'[[({]\".+\",', data):
+                dialect.doublequote = True
             return dialect
-        elif data.find('""') >= 0:
-            dialect.doublequote = True
-            dialect.quotechar = '"'
+        elif dialect.quotechar == "'":
+            if re.search('\"[[({]\'.+\',', data):
+                dialect.quotechar = '"'
+            if re.search('\"\"\"[[({]\'.+\',', data):
+                dialect.doublequote = True
             return dialect
 
     return dialect

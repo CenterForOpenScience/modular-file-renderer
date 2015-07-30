@@ -15,7 +15,7 @@ def csv_stdlib(fp):
     except csv.Error:
         dialect = csv.excel
     else:
-        set_dialect_quote_attrs(dialect, data)
+        _set_dialect_quote_attrs(dialect, data)
 
     reader = csv.DictReader(fp, dialect=dialect)
     columns = []
@@ -37,7 +37,7 @@ def csv_stdlib(fp):
     return columns, rows
 
 
-def set_dialect_quote_attrs(dialect, data):
+def _set_dialect_quote_attrs(dialect, data):
     """Set quote-related dialect attributes based on up to 2kb of csv data.
 
     The regular expressions search for things that look like the beginning of

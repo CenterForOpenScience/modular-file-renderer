@@ -49,12 +49,12 @@ def _set_dialect_quote_attrs(dialect, data):
         '{"a", "b", "c"         for quotechar == "
     """
     if dialect.quotechar == '"':
-        if re.search('\'[[({]\".+\",', data):
+        if re.search('\'[[({]".+",', data):
             dialect.quotechar = "'"
-        if re.search('\'\'\'[[({]\".+\",', data):
+        if re.search("'''[[({]\".+\",", data):
             dialect.doublequote = True
     elif dialect.quotechar == "'":
-        if re.search('\"[[({]\'.+\',', data):
+        if re.search("\"[[({]'.+',", data):
             dialect.quotechar = '"'
-        if re.search('\"\"\"[[({]\'.+\',', data):
+        if re.search('"""[[({]\'.+\',', data):
             dialect.doublequote = True

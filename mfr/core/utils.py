@@ -89,4 +89,4 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             invoke_args=(metadata, file_path, url, assets_url, export_url),
         ).driver
     except RuntimeError:
-        raise exceptions.RendererError('No renderer could be found for the file type requested.', code=400)
+        raise exceptions.RendererError('Viewing of this file type within the OSF is not currently supported. Please download the file to view.', code=400)

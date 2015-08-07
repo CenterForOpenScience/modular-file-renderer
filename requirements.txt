@@ -32,4 +32,5 @@ docutils==0.12
 
 # Tabular
 pandas==0.16.1
+rpy2==2.6.1
 git+https://github.com/icereval/xlrd.git

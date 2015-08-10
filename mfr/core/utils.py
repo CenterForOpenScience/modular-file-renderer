@@ -66,7 +66,7 @@ def make_exporter(name, source_file_path, output_file_path, format):
             invoke_args=(source_file_path, output_file_path, format),
         ).driver
     except RuntimeError:
-        raise exceptions.RendererError('No exporter could be found for the file type requested.', code=400)
+        raise exceptions.RendererError(settings.UNSUPPORTED_EXPORTER_MSG, code=400)
 
 
 def make_renderer(name, metadata, file_path, url, assets_url, export_url):
@@ -89,4 +89,4 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             invoke_args=(metadata, file_path, url, assets_url, export_url),
         ).driver
     except RuntimeError:
-        raise exceptions.RendererError('Viewing of this file type within the OSF is not currently supported. Please download the file to view.', code=400)
+        raise exceptions.RendererError(settings.UNSUPPORTED_RENDER_MSG, code=400)

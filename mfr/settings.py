@@ -6,6 +6,9 @@ import logging.config
 PROJECT_NAME = 'mfr'
 PROJECT_CONFIG_PATH = '~/.cos'
 
+UNSUPPORTED_EXPORTER_MSG = 'Exporting of this file type is not currently supported.'
+UNSUPPORTED_RENDER_MSG = 'Viewing of this file type is not currently supported. Please download the file to view.'
+
 try:
     import colorlog  # noqa
     DEFAULT_FORMATTER = {

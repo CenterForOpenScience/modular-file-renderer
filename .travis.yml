@@ -10,12 +10,13 @@ cache:
     - $HOME/wheelhouse
 
 before_install:
-    - export WHEELHOUSE=$HOME/wheelhouse
+  - export WHEELHOUSE=$HOME/wheelhouse
 
 install:
-    - travis_retry pip install invoke
-    - travis_retry invoke wheelhouse --develop
-    - travis_retry invoke install --develop
+  - sed 's/^rpy2==/#rpy2==/' -i requirements.txt
+  - travis_retry pip install invoke
+  - travis_retry invoke wheelhouse --develop
+  - travis_retry invoke install --develop
 
 env:
   - MFR_CONFIG=./travis-config.json

@@ -11,6 +11,7 @@ A Python package for rendering files to HTML via an embeddable iframe.
 ```bash
 # MacOSX: Install the latest version of python3
 brew install python3
+brew install r
 pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python `which python3` mfr

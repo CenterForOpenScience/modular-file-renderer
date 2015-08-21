@@ -46,14 +46,15 @@
         return el;
     }
 
-    function _createSpinner(url) {
+    function _createSpinner(url, img_name) {
         var parser = document.createElement('a');
         parser.href = url;
 
         var spinner = document.createElement('div');
         var img = document.createElement('img');
         spinner.setAttribute('class', 'mfr-logo-spin text-center');
-        img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/loading.png');
+        img_name = img_name || 'loading.png';
+        img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/' + img_name);
         spinner.appendChild(img);
         return spinner
     }
@@ -64,14 +65,15 @@
      * @class Render
      * @param {String} id The id of the div into which the iframe will be rendered.
      * @param {String} url The url of the iframe source.
+     * @param {String} img_name The filename of an image in mfr/server/static/images/ to use as a loading spinner
      * @param {Object} config Configuration to override the default settings.
      */
-    lib.Render = function (id, url, config) {
+    lib.Render = function (id, url, config, img_name) {
         var self = this;
         self.id = id;
         self.url = url;
         self.config = config;
-        self.spinner = _createSpinner(url);
+        self.spinner = _createSpinner(url, img_name);
 
         self.init = function () {
             self.pymParent = new pym.Parent(self.id, self.url, self.config);

@@ -1,12 +1,12 @@
 .mfr-logo-spin {
     -webkit-animation: mfr-spin 3s infinite linear, mfr-opacity 3s infinite linear;
+    -moz-animation: mfr-spin 3s infinite linear mfr-opacity 3s infinite linear;
     animation: mfr-spin 3s infinite linear, mfr-opacity 3s infinite linear;
     position: absolute;
     top: 0;
     left: 50%;
     z-index: -1;
 }
-
 @-moz-keyframes mfr-spin {
     from {
         -moz-transform: rotate(0deg);
@@ -26,9 +26,11 @@
 @keyframes mfr-spin {
     from {
         -webkit-transform: rotate(0deg);
+        transform:rotate(0deg);
     }
     to {
         -webkit-transform: rotate(360deg);
+        transform:rotate(360deg);
     }
 }
 @-moz-keyframes mfr-opacity {

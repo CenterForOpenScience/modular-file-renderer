@@ -6,6 +6,9 @@
 <div id="mfrViewer" style="min-height: ${height}px;">
     <nav><ul id="tabular-tabs" class="nav nav-tabs">
     </ul></nav>
+    <div id="inlineFilterPanel" style="background:#dddddd;padding:3px;color:black;">
+        Show rows with cells including: <input type="text" id="txtSearch">
+    </div>
     <div id="mfrGrid" style="min-height: ${height}px;">
     </div>
 </div>
@@ -21,6 +24,8 @@
         var options = ${options};
         var gridArr = {};
         var grid;
+        var data;
+        var searchString = "";
 
         for (var sheetName in sheets){
             var sheet = sheets[sheetName];
@@ -34,28 +39,63 @@
                 var rows = gridArr[$(this).attr('id')][1];
 
                 grid = new Slick.Grid('#mfrGrid', rows, columns, options);
-                grid.onSort.subscribe(function (e, args) {
-                    var cols = args.sortCols;
-                    rows.sort(function (dataRow1, dataRow2) {
-                        for (var i = 0; i < cols.length; i++) {
-                            var field = cols[i].sortCol.field;
-                            var sign = cols[i].sortAsc ? 1 : -1;
-                            var value1 = dataRow1[field], value2 = dataRow2[field];
-                            var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
-                            if (result !== 0) {
-                                return result;
-                            }
-                        }
-                        return 0;
-                    });
-                    grid.invalidate();
-                    grid.render();
-                });
+                searchString = "";
+                $("#txtSearch").value = "";
+                data = grid.getData();
+                grid.onSort.subscribe(sortData);
             });
         }
 
         $("#tabular-tabs").tab();
         $("#tabular-tabs a:first").click();
+
+        $("#txtSearch").keyup(function (e) {
+            // clear on Esc
+            if (e.which == 27) {
+              this.value = "";
+            }
+            searchString = this.value;
+            var filteredData = (searchString !== "") ? filterData(data, searchString) : data;
+            grid = new Slick.Grid('#mfrGrid', filteredData, grid.getColumns(), options);
+            grid.onSort.subscribe(sortData);
+        });
+
+        function filterData(data, search) {
+            var filteredData = [];
+            for (var i = 0; i<data.length; i++){
+                var filtered = false;
+                var item = data[i];
+                for (var title in item) {
+                    if (search !== "" && item[title].toString().indexOf(search) !== -1) {
+                        filtered = filtered || true;
+                        continue;
+                    }
+                }
+                if (filtered){
+                    filteredData.push(item);
+                }
+            }
+            return filteredData;
+        }
+
+        function sortData (e, args) {
+            var cols = args.sortCols;
+            var rows = grid.getData();
+            rows.sort(function (dataRow1, dataRow2) {
+                for (var i = 0; i < cols.length; i++) {
+                    var field = cols[i].sortCol.field;
+                    var sign = cols[i].sortAsc ? 1 : -1;
+                    var value1 = dataRow1[field], value2 = dataRow2[field];
+                    var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+                    if (result !== 0) {
+                        return result;
+                    }
+                }
+                return 0;
+            });
+            grid.invalidate();
+            grid.render();
+        }
     });
 </script>
 

@@ -109,7 +109,6 @@
             liFirst = $('.list li:first');
             liLast = $('.list li:last');
             widthOfList = liLast.position().left - liFirst.position().left;
-            console.log('f/l/m :' + liFirst.position().left + '/' + liLast.position().left + '/' + widthOfList);
             if (liFirst.position().left < 0) {
                 $('.scroller-left').show();
             }

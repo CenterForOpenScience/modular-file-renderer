@@ -4,8 +4,12 @@
 <link rel="stylesheet" href="${base}/css/bootstrap.min.css">
 
 <div id="mfrViewer" style="min-height: ${height}px;">
-    <nav><ul id="tabular-tabs" class="nav nav-tabs">
-    </ul></nav>
+    <div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>
+    <div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
+    <nav class="wrapper">
+        <ul id="tabular-tabs" class="nav nav-tabs list" style="height: 45px; overflow: auto; white-space: nowrap;"> 
+        </ul>
+    </nav>
     <div id="inlineFilterPanel" style="background:#dddddd;padding:3px;color:black;">
         Show rows with cells including: <input type="text" id="txtSearch">
     </div>
@@ -29,8 +33,8 @@
 
         for (var sheetName in sheets){
             var sheet = sheets[sheetName];
-            sheetName = sheetName.replace(' ', '_');
-            $("#tabular-tabs").append('<li role="presentation"><a id="' + sheetName + '" aria-controls="' + sheetName + '" role="tab" data-toggle="tab">'+ sheetName + '</a></li>');
+            sheetName = sheetName.replace( /(:|\.|\[|\]|,|@|&|\ )/g, '_' ); //Handle characters that can't be in DOM ID's
+            $("#tabular-tabs").append('<li role="presentation" style="display:inline-block; float: none;"><a id="' + sheetName + '" aria-controls="' + sheetName + '" role="tab" data-toggle="tab">'+ sheetName + '</a></li>');
             gridArr[sheetName] = [sheet[0], sheet[1]];
 
             $('#'+sheetName).click(function (e) {
@@ -58,6 +62,10 @@
             var filteredData = (searchString !== "") ? filterData(data, searchString) : data;
             grid = new Slick.Grid('#mfrGrid', filteredData, grid.getColumns(), options);
             grid.onSort.subscribe(sortData);
+        });
+
+        $(".list").on('scroll', function (e) {
+            reAdjust();
         });
 
         function filterData(data, search) {
@@ -96,6 +104,28 @@
             grid.invalidate();
             grid.render();
         }
+        
+        function reAdjust(){
+            liFirst = $('.list li:first');
+            liLast = $('.list li:last');
+            widthOfList = liLast.position().left - liFirst.position().left;
+            console.log('f/l/m :' + liFirst.position().left + '/' + liLast.position().left + '/' + widthOfList);
+            if (liFirst.position().left < 0) {
+                $('.scroller-left').show();
+            }
+            else {
+                $('.scroller-left').hide();
+            }
+
+            if ((liLast.position().left + liLast.width()) < (widthOfList-10)) {
+                $('.scroller-right').hide();
+            }
+            else {
+                $('.scroller-right').show();
+            }
+        }
+
+        reAdjust();
     });
 </script>
 

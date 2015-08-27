@@ -16,7 +16,7 @@ class TabularRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        with open(self.file_path) as fp:
+        with open(self.file_path, errors='replace') as fp:
             columns, rows = self._render_grid(fp, self.metadata.ext)
             return self.TEMPLATE.render(
                 base=self.assets_url,

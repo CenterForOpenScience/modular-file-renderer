@@ -30,6 +30,7 @@ dist
 /build
 eggs
 parts
+src
 bin
 var
 sdist
@@ -37,6 +38,7 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+share
 __pycache__
 .idea
 .hg

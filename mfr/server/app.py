@@ -3,6 +3,7 @@ import asyncio
 import tornado.web
 import tornado.httpserver
 import tornado.platform.asyncio
+import logging
 
 from mfr import settings
 from mfr.core.utils import AioSentryClient
@@ -11,6 +12,8 @@ from mfr.server.handlers.export import ExportHandler
 from mfr.server.handlers.render import RenderHandler
 from mfr.server.handlers.status import StatusHandler
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
+
+logger = logging.getLogger(__name__)
 
 
 def make_app(debug):
@@ -48,6 +51,8 @@ def serve():
         max_buffer_size=server_settings.MAX_BUFFER_SIZE,
         ssl_options=ssl_options,
     )
+
+    logger.info("Listening on {0}:{1}".format(server_settings.ADDRESS, server_settings.PORT))
 
     asyncio.get_event_loop().set_debug(server_settings.DEBUG)
     asyncio.get_event_loop().run_forever()

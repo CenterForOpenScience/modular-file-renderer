@@ -69,4 +69,7 @@ player/files/*
 player/mfr_config_local.py
 player/static/mfr/*
 
+# virtualenv stuff
+include
+
 !.gitkeep

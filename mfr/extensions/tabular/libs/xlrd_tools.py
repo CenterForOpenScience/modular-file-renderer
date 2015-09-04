@@ -1,6 +1,6 @@
 import xlrd
 from collections import OrderedDict
-from ..exceptions import TableTooBigException, EmptyTableException
+from ..exceptions import TableTooBigException
 
 from ..utilities import header_population
 from mfr.extensions.tabular.compat import range, basestring
@@ -22,6 +22,7 @@ def xlsx_xlrd(fp):
             raise TableTooBigException("Table is too large to render.")
 
         if sheet.ncols < 1 or sheet.nrows < 1:
+            sheets[sheet.name] = ([], [])
             continue
 
         fields = sheet.row_values(0) if sheet.nrows else []
@@ -40,8 +41,5 @@ def xlsx_xlrd(fp):
 
         header = header_population(fields)
         sheets[sheet.name] = (header, data)
-
-    if not sheets:
-        raise EmptyTableException("Table is empty or corrupt.")
 
     return sheets

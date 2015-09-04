@@ -2,6 +2,7 @@
 work consistently, we have disabled this for the moment."""
 
 import ezodf
+from collections import OrderedDict
 from ..utilities import data_population, header_population
 
 
@@ -12,7 +13,7 @@ def ods_ezodf(fp):
     """
 
     workbook = ezodf.opendoc(fp.name)
-    sheets = {}
+    sheets = OrderedDict()
 
     for sheet in workbook.sheets:
         list_data = [[cell.value for cell in row] for row in sheet.rows()]

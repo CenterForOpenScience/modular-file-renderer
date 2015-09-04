@@ -1,8 +1,7 @@
 import xlrd
-
+from collections import OrderedDict
 from ..exceptions import TableTooBigException, EmptyTableException
 
-#from ..configuration import _config
 from ..utilities import header_population
 from mfr.extensions.tabular.compat import range, basestring
 
@@ -13,11 +12,10 @@ def xlsx_xlrd(fp):
     :return: tuple of table headers and data
     """
     max_size = 10000
-    #config['max_size']
 
     wb = xlrd.open_workbook(fp.name)
 
-    sheets = {}
+    sheets = OrderedDict()
 
     for sheet in wb.sheets():
         if sheet.ncols > max_size or sheet.nrows > max_size:

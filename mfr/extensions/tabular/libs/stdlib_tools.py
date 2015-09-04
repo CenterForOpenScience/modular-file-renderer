@@ -34,7 +34,7 @@ def csv_stdlib(fp):
             'sortable': True,
         })
     rows = [row for row in reader]
-    return columns, rows
+    return {'Sheet 1': (columns, rows)}
 
 
 def _set_dialect_quote_attrs(dialect, data):

@@ -63,7 +63,7 @@ def data_from_dataframe(dataframe):
             except AttributeError:
                 data_row[name] = value
         data.append(data_row)
-    return header, data
+    return {'Sheet 1': (header, data)}
 
 
 def robjectify(fp):

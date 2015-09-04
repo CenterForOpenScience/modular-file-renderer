@@ -24,7 +24,7 @@ def xlsx_xlrd(fp):
             raise TableTooBigException("Table is too large to render.")
 
         if sheet.ncols < 1 or sheet.nrows < 1:
-            raise EmptyTableException("Table is empty or corrupt.")
+            continue
 
         fields = sheet.row_values(0) if sheet.nrows else []
 
@@ -42,5 +42,8 @@ def xlsx_xlrd(fp):
 
         header = header_population(fields)
         sheets[sheet.name] = (header, data)
+
+    if not sheets:
+        raise EmptyTableException("Table is empty or corrupt.")
 
     return sheets

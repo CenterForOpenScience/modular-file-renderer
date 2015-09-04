@@ -68,6 +68,10 @@
             reAdjust();
         });
 
+        $(window).resize(function () {
+            reAdjust();
+        });
+
         function filterData(data, search) {
             var filteredData = [];
             for (var i = 0; i<data.length; i++){
@@ -106,17 +110,17 @@
         }
         
         function reAdjust(){
-            liFirst = $('.list li:first');
-            liLast = $('.list li:last');
-            widthOfList = liLast.position().left - liFirst.position().left;
-            if (liFirst.position().left < 0) {
+            liFirstPosLeft = $('.list li:first').position().left;
+            liLastPosRight = $('.list li:last').position().left + $('.list li:last').width();
+            widthOfList = $('.list').width()
+            if (liFirstPosLeft < 0) {
                 $('.scroller-left').show();
             }
             else {
                 $('.scroller-left').hide();
             }
 
-            if ((liLast.position().left + liLast.width()) < (widthOfList-10)) {
+            if ((liLastPosRight - 2) < widthOfList) {  // The end of the list is consistently 1.9333 pixels off
                 $('.scroller-right').hide();
             }
             else {

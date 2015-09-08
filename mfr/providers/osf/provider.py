@@ -1,4 +1,5 @@
 import os
+import json
 import asyncio
 import hashlib
 import mimetypes
@@ -33,9 +34,15 @@ class OsfProvider(provider.BaseProvider):
     @asyncio.coroutine
     def metadata(self):
         download_url = yield from self._fetch_download_url()
-        metadata_url = download_url.replace('/file?', '/data?', 1)
-        metadata_request = yield from self._make_request('GET', metadata_url)
-        metadata = yield from metadata_request.json()
+        if '/file?' in download_url:
+            # TODO Remove this when API v0 is officially deprecated
+            metadata_url = download_url.replace('/file?', '/data?', 1)
+            metadata_request = yield from self._make_request('GET', metadata_url)
+            metadata = yield from metadata_request.json()
+        else:
+            metadata_request = yield from self._make_request('HEAD', download_url)
+            # To make changes to current code as minimal as possible
+            metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])}
         # e.g.,
         # metadata = {'data': {
         #     'name': 'blah.png',

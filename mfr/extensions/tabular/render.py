@@ -50,9 +50,6 @@ class TabularRenderer(extension.BaseRenderer):
             if len(sheet[0]) > settings.MAX_SIZE or len(sheet[1]) > settings.MAX_SIZE:
                 raise exceptions.TableTooBigException("Table is too large to render.", code=400)
 
-            if not sheet[0] and not sheet[1]:
-                raise exceptions.EmptyTableException("Table is empty or corrupt.", code=400)
-
         return sheets, size
 
     def _populate_data(self, fp, ext):

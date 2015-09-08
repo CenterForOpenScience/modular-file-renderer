@@ -1,5 +1,6 @@
 import csv
 import re
+from ..exceptions import EmptyTableException
 
 
 def csv_stdlib(fp):
@@ -34,6 +35,10 @@ def csv_stdlib(fp):
             'sortable': True,
         })
     rows = [row for row in reader]
+
+    if not columns and not rows:
+        raise EmptyTableException("Table empty or corrupt.")
+
     return {'Sheet 1': (columns, rows)}
 
 

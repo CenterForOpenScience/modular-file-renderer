@@ -5692,7 +5692,7 @@ var PDFViewerApplication = {
     }
     this.close();
 
-    var parameters = {password: password};
+    var parameters = {password: password, withCredentials: true};
     if (typeof file === 'string') { // URL
       this.setTitleUsingUrl(file);
       parameters.url = file;

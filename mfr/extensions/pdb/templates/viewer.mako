@@ -48,7 +48,7 @@
         $.ajax({
             async: true,
             url: '${url.replace("'", "\\'")}',
-            xhrFields: { withCredentials: true },
+##            xhrFields: { withCredentials: true },
         }).done(render);
    })();
 </script>

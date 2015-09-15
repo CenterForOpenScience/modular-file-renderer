@@ -23,13 +23,14 @@ class OsfProvider(provider.BaseProvider):
         self.headers = {}
 
         # capture request authorization
-        authorization = self.request.headers.get('Authorization')
-        if authorization and authorization.startswith('Bearer '):
-            self.token = authorization[7:].decode('utf')
-        elif 'token' in self.request.arguments:
-            self.token = self.request.arguments['token'][0].decode('utf-8')
-        else:
-            self.token = None
+        self.cookies = dict(self.request.cookies)
+        self.cookie = self.request.query_arguments.get('cookie')
+        self.view_only = self.request.query_arguments.get('view_only')
+        self.authorization = self.request.headers.get('Authorization')
+        if self.cookie:
+            self.cookie = self.cookie[0].decode()
+        if self.view_only:
+            self.view_only = self.view_only[0].decode()
 
     @asyncio.coroutine
     def metadata(self):
@@ -89,8 +90,13 @@ class OsfProvider(provider.BaseProvider):
 
     @asyncio.coroutine
     def _make_request(self, method, url, *args, **kwargs):
-        if 'headers' not in kwargs:
-            kwargs['headers'] = {}
-        if self.token:
-            kwargs['headers']['Authorization'] = 'Bearer ' + self.token
+        if self.cookies:
+            kwargs['cookies'] = self.cookies
+        if self.cookie:
+            kwargs.setdefault('params', {})['cookie'] = self.cookie
+        if self.view_only:
+            kwargs.setdefault('params', {})['view_only'] = self.view_only
+        if self.authorization:
+            kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
+
         return (yield from aiohttp.request(method, url, *args, **kwargs))

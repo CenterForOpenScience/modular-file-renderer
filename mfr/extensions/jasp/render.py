@@ -15,8 +15,8 @@ class JASPRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    MESSAGE_FILE_CORRUPT = "This JASP file is corrupt, and cannot be viewed"
-    MESSAGE_FILE_TO_OLD = "This JASP file was created in an early version of JASP, and cannot be previewed"
+    MESSAGE_FILE_CORRUPT = 'This JASP file is corrupt, and cannot be viewed'
+    MESSAGE_FILE_TO_OLD = 'This JASP file was created in an early version of JASP, and cannot be previewed'
 
     def render(self):
         try:
@@ -36,13 +36,10 @@ class JASPRenderer(extension.BaseRenderer):
         return True
 
     def _render_html(self, zip_file, ext, *args, **kwargs):
-
         index = None
-
         try:
-            with zip_file.open("index.html") as index_data:
-                index = index_data.read().decode("utf-8")
-
+            with zip_file.open('index.html') as index_data:
+                index = index_data.read().decode('utf-8')
         except KeyError:
             raise RendererError(self.MESSAGE_FILE_CORRUPT)
 
@@ -53,26 +50,26 @@ class JASPRenderer(extension.BaseRenderer):
         return processor.final_html()
 
     def _check_file(self, zip_file):
-
+        """Check if the file is OK (not corrupt)
+        :param zip_file: an opened ZipFile representing the JASP file
+        :return: True
+        """
         # Extract manifest file content
-
         try:
-            with zip_file.open("META-INF/MANIFEST.MF") as manifest_data:
-                manifest = manifest_data.read().decode("utf-8")
+            with zip_file.open('META-INF/MANIFEST.MF') as manifest_data:
+                manifest = manifest_data.read().decode('utf-8')
         except KeyError:
             raise RendererError(self.MESSAGE_FILE_CORRUPT)
 
-        lines = manifest.split("\n")
+        lines = manifest.split('\n')
 
         # Search for Data-Archive-Version
-
         for line in lines:
-            keyValue = line.split(":")
+            keyValue = line.split(':')
             if len(keyValue) == 2:
                 key = keyValue[0].strip()
                 value = keyValue[1].strip()
-
-                if key == "Data-Archive-Version":
+                if key == 'Data-Archive-Version':
                     dataArchiveVersion = value
                     break
         else:
@@ -84,8 +81,7 @@ class JASPRenderer(extension.BaseRenderer):
             raise RendererError(self.MESSAGE_FILE_CORRUPT)
 
         # Check that the file is new enough (contains preview content)
-
-        if dataArchiveVersion < LooseVersion("1.0.2"):
+        if dataArchiveVersion < LooseVersion('1.0.2'):
             raise RendererError(self.MESSAGE_FILE_TO_OLD)
 
         return True

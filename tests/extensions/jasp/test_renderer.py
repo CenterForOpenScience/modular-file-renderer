@@ -71,7 +71,6 @@ class TestCodeJASPRenderer:
         assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
 
     def test_render_JASP_not_a_zip_file(self, metadata, not_a_zip_file_path, url, assets_url, export_url):
-        
         try:
             renderer = JASPRenderer(metadata, not_a_zip_file_path, url, assets_url, export_url)
             renderer.render()
@@ -81,7 +80,6 @@ class TestCodeJASPRenderer:
         assert False # should not get here
 
     def test_render_JASP_no_manifest(self, metadata, no_manifest_path, url, assets_url, export_url):
-        
         try:
             renderer = JASPRenderer(metadata, no_manifest_path, url, assets_url, export_url)
             renderer.render()
@@ -91,7 +89,6 @@ class TestCodeJASPRenderer:
         assert False # should not get here
 
     def test_render_JASP_no_data_archive_version_in_manifest(self, metadata, no_data_archive_version_in_manifest_path, url, assets_url, export_url):
-        
         try:
             renderer = JASPRenderer(metadata, no_data_archive_version_in_manifest_path, url, assets_url, export_url)
             renderer.render()
@@ -101,7 +98,6 @@ class TestCodeJASPRenderer:
         assert False # should not get here
 
     def test_render_JASP_data_archive_is_too_old(self, metadata, data_archive_version_is_too_old_path, url, assets_url, export_url):
-        
         try:
             renderer = JASPRenderer(metadata, data_archive_version_is_too_old_path, url, assets_url, export_url)
             renderer.render()
@@ -111,7 +107,6 @@ class TestCodeJASPRenderer:
         assert False # should not get here
 
     def test_render_JASP_no_index_html(self, metadata, no_index_html_path, url, assets_url, export_url):
-        
         try:
             renderer = JASPRenderer(metadata, no_index_html_path, url, assets_url, export_url)
             renderer.render()
@@ -121,7 +116,6 @@ class TestCodeJASPRenderer:
         assert False # should not get here
 
     def test_render_JASP_contains_malicious_script(self, metadata, contains_malicious_script_path, url, assets_url, export_url):
-        
         renderer = JASPRenderer(metadata, contains_malicious_script_path, url, assets_url, export_url)
         body = renderer.render()
 

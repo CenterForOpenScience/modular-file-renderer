@@ -14,7 +14,7 @@ brew install python3
 brew install r
 pip install virtualenv
 pip install virtualenvwrapper
-mkvirtualenv --python `which python3` mfr
+mkvirtualenv --python=`which python3` mfr
 invoke install --develop
 invoke server
 ```

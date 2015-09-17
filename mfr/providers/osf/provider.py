@@ -1,4 +1,5 @@
 import os
+import json
 import asyncio
 import hashlib
 import mimetypes
@@ -22,20 +23,27 @@ class OsfProvider(provider.BaseProvider):
         self.headers = {}
 
         # capture request authorization
-        authorization = self.request.headers.get('Authorization')
-        if authorization and authorization.startswith('Bearer '):
-            self.token = authorization[7:].decode('utf')
-        elif 'token' in self.request.arguments:
-            self.token = self.request.arguments['token'][0].decode('utf-8')
-        else:
-            self.token = None
+        self.cookies = dict(self.request.cookies)
+        self.cookie = self.request.query_arguments.get('cookie')
+        self.view_only = self.request.query_arguments.get('view_only')
+        self.authorization = self.request.headers.get('Authorization')
+        if self.cookie:
+            self.cookie = self.cookie[0].decode()
+        if self.view_only:
+            self.view_only = self.view_only[0].decode()
 
     @asyncio.coroutine
     def metadata(self):
         download_url = yield from self._fetch_download_url()
-        metadata_url = download_url.replace('/file?', '/data?', 1)
-        metadata_request = yield from self._make_request('GET', metadata_url)
-        metadata = yield from metadata_request.json()
+        if '/file?' in download_url:
+            # TODO Remove this when API v0 is officially deprecated
+            metadata_url = download_url.replace('/file?', '/data?', 1)
+            metadata_request = yield from self._make_request('GET', metadata_url)
+            metadata = yield from metadata_request.json()
+        else:
+            metadata_request = yield from self._make_request('HEAD', download_url)
+            # To make changes to current code as minimal as possible
+            metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])}
         # e.g.,
         # metadata = {'data': {
         #     'name': 'blah.png',
@@ -82,8 +90,13 @@ class OsfProvider(provider.BaseProvider):
 
     @asyncio.coroutine
     def _make_request(self, method, url, *args, **kwargs):
-        if 'headers' not in kwargs:
-            kwargs['headers'] = {}
-        if self.token:
-            kwargs['headers']['Authorization'] = 'Bearer ' + self.token
+        if self.cookies:
+            kwargs['cookies'] = self.cookies
+        if self.cookie:
+            kwargs.setdefault('params', {})['cookie'] = self.cookie
+        if self.view_only:
+            kwargs.setdefault('params', {})['view_only'] = self.view_only
+        if self.authorization:
+            kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
+
         return (yield from aiohttp.request(method, url, *args, **kwargs))

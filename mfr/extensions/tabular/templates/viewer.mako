@@ -79,7 +79,7 @@
                 var item = data[i];
                 for (var title in item) {
                     var re = new RegExp(search, 'i');
-                    if (search !== "" && item[title].toString().match(re)) {
+                    if (search !== '' && item[title].toString().match(re)) {
                         filtered = filtered || true;
                         continue;
                     }

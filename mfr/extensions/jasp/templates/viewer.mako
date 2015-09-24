@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="/static/css/bootstrap.min.css">
-<link rel="stylesheet" href="${base}/css/default.css">
-
 <div style="word-wrap: break-word;" class="mfrViewer">
 ${body}
 </div>

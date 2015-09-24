@@ -10,10 +10,10 @@ class HTMLProcessor(HTMLParser):
     # The image content comes from the zip_file (specified with set_src_source())
     # It also strips <script> and <object> tags from the HTML (potential attack vectors)
 
-    def __init__(self):
+    def __init__(self, zip_file):
         HTMLParser.__init__(self)
         self._html = StringIO()  # buffer for the processed HTML
-        self._zip_file = None
+        self._zip_file = zip_file
 
     def set_src_source(self, zip_file):
         self._zip_file = zip_file
@@ -40,9 +40,6 @@ class HTMLProcessor(HTMLParser):
         self._html.write('>')
 
     def _insert_data_uri(self, src):
-        if self._zip_file is None:
-            return
-
         with self._zip_file.open(src) as src_file:
             src_data = src_file.read()
             src_b64 = base64.b64encode(src_data)

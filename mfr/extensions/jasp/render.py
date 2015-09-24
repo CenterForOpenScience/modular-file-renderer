@@ -43,8 +43,7 @@ class JASPRenderer(extension.BaseRenderer):
         except KeyError:
             raise RendererError(self.MESSAGE_FILE_CORRUPT)
 
-        processor = HTMLProcessor()
-        processor.set_src_source(zip_file)
+        processor = HTMLProcessor(zip_file)
         processor.feed(index)
 
         return processor.final_html()

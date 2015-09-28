@@ -74,11 +74,11 @@
 
         function filterData(data, search) {
             var filteredData = [];
+            var re = new RegExp(search, 'i');
             for (var i = 0; i<data.length; i++){
                 var filtered = false;
                 var item = data[i];
                 for (var title in item) {
-                    var re = new RegExp(search, 'i');
                     if (search !== '' && item[title].toString().match(re)) {
                         filtered = filtered || true;
                         continue;

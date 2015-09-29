@@ -730,6 +730,9 @@ setup(
             '.ogv = mfr.extensions.video:VideoRenderer',
             #'.wmv = mfr.extensions.video:VideoRenderer',
             '.webm = mfr.extensions.video:VideoRenderer',
+
+            # JASP
+            '.jasp = mfr.extensions.jasp:JASPRenderer'
         ]
     },
 )

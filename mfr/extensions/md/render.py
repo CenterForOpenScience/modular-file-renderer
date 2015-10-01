@@ -2,7 +2,6 @@ import os
 import markdown
 
 from mako.lookup import TemplateLookup
-#from docutils.core import publish_parts
 
 from mfr.core import extension
 
@@ -15,8 +14,8 @@ class MdRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
+        """Render a markdown file to html."""
         with open(self.file_path, 'r') as fp:
-            #body = publish_parts(fp.read(), writer_name='html')['html_body']
             body = markdown.markdown(fp.read())
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 

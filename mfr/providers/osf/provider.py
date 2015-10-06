@@ -43,7 +43,7 @@ class OsfProvider(provider.BaseProvider):
         else:
             metadata_request = yield from self._make_request('HEAD', download_url)
             # To make changes to current code as minimal as possible
-            metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])}
+            metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
         # e.g.,
         # metadata = {'data': {
         #     'name': 'blah.png',

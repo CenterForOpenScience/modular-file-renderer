@@ -99,6 +99,32 @@ The above test can be rewritten like so:
 .. _pytest fixtures: https://pytest.org/latest/fixture.html
 
 
+Manual Local Testing
+--------------------
+To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. 
+
+First, change the defaul provider to HTTP (in `/mfr/server/settings.py`):
+
+.. code-block:: python
+
+	PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
+	
+
+Because the MFR is passed a url to render, you also need to be running an http server:
+
+.. code-block:: bash
+
+    python -m SimpleHTTPServer 8000
+
+From a directory with a file you want to render, and with the MFR server running, go to 
+
+.. code-block:: bash
+
+	http://localhost:7778/render?url=http://localhost:8000/[filename].[ext]
+
+
+
+
 Writing A File Format Package
 -----------------------------
 

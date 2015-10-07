@@ -110,13 +110,15 @@ First, change the defaul provider to HTTP (in `/mfr/server/settings.py`):
 	PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
 	
 
-Because the MFR is passed a url to render, you also need to be running an http server:
+Because the MFR is passed a url to render, you also need to be running an http server.
+
+From a directory with a file you want to render:
 
 .. code-block:: bash
 
     python -m SimpleHTTPServer 8000
 
-From a directory with a file you want to render, and with the MFR server running, go to 
+With both the SimpleHTTPServer the MFR server running, go to 
 
 .. code-block:: bash
 

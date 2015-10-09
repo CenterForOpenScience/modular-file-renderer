@@ -61,3 +61,12 @@
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+/* CSS only for Firefox */
+@-moz-document url-prefix() {
+  .highlight > pre {
+      white-space: pre-wrap;       /*  css-3 */
+      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+      word-break: break-all;
+  }
+}

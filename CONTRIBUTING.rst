@@ -24,25 +24,35 @@ Clone the repo: ::
     $ git clone https://github.com/CenterForOpenScience/modular-file-renderer.git
     $ cd modular-file-renderer
 
-Install the development dependencies.
+Configure development environment and Install the development dependencies.
 
 .. note::
 
-    It is recommended that you use a `virtualenv`_ during development.
+    It is recommended that you use a `virtualenv`_ with `virtualenvwrapper`_ during development. Python 3.4 and R are required.
 
 .. _virtualenv: http://www.virtualenv.org/en/latest/
+.. _virtualenvwrapper: https://pypi.python.org/pypi/virtualenvwrapper
 
-::
+.. code-block:: bash
 
+    # For MacOSX: Install the latest version of python3
+    $ brew install python3
+    $ brew install r
+    # Linux users, probably the same thing but with apt-get
+    # If someone wants to update this guide, please do.
+
+    $ pip install virtualenv
+    $ pip install virtualenvwrapper
+    $ mkvirtualenv --python=`which python3` mfr
+    
     $ pip install -U -r dev-requirements.txt
 
 
 Lastly, install mfr in development mode. ::
 
     $ python setup.py develop
-
     $ invoke server
-
+   
 Running tests
 -------------
 
@@ -87,6 +97,34 @@ The above test can be rewritten like so:
         assert render.render_html(fakefile) == '<p>rendered testfile.mp4</p>'
 
 .. _pytest fixtures: https://pytest.org/latest/fixture.html
+
+
+Manual Local Testing
+--------------------
+To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. 
+
+First, change the defaul provider to HTTP (in `/mfr/server/settings.py`):
+
+.. code-block:: python
+
+	PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
+	
+
+Because the MFR is passed a url to render, you also need to be running an http server.
+
+From a directory with a file you want to render:
+
+.. code-block:: bash
+
+    python -m SimpleHTTPServer 8000
+
+With both the SimpleHTTPServer the MFR server running, go to 
+
+.. code-block:: bash
+
+	http://localhost:7778/render?url=http://localhost:8000/[filename].[ext]
+
+
 
 
 Writing A File Format Package

@@ -2,6 +2,17 @@
 ChangeLog
 *********
 
+0.7.0 (2015-10-08)
+==================
+
+- Add support for rendering JASP files
+- Add support for searching tabular renderers
+
+0.6.0 (2015-09-17)
+==================
+
+- Add support for cookie based authentication for pdfs and pdbs
+
 
 0.1.0 (2015-06-07)
 ==================

@@ -37,3 +37,6 @@ git+https://github.com/icereval/xlrd.git
 
 # Rpy
 rpy2==2.6.2
+
+#Md
+markdown==2.6.2

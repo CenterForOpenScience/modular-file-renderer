@@ -2,7 +2,6 @@ mako==1.0.1
 aiohttp==0.18.4
 git+https://github.com/jmcarp/raven-python
 furl==0.4.2
-invoke==0.11.1
 stevedore==1.2.0
 tornado==4.3
 

@@ -1,7 +1,8 @@
 Setting Up
 ==========
 
-Make sure that you are using >= python3.3 and install invoke for your current python3 version.
+Make sure that you have installed R, are using >= python3.3 and install invoke for your current python3 version.
+
 
 .. code-block:: bash
 

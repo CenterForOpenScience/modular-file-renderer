@@ -20,7 +20,7 @@ For Ubuntu users:
 
 ```bash
 apt-get install python3
-apt-get install r-base-core
+apt-get install r-base
 ```
 
 After installing python3, create the virtual environment with the following commands:

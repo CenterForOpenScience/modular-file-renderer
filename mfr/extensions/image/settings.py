@@ -5,5 +5,6 @@ except ImportError:
 
 config = settings.get('IMAGE_EXTENSION_CONFIG', {})
 
-TYPE = config.get('TYPE', 'jpeg')
-MAXIMUM_SIZE = config.get('MAXIMUM_SIZE', '1200x1200')
+EXPORT_TYPE = config.get('EXPORT_TYPE', 'jpeg')
+EXPORT_MAXIMUM_SIZE = config.get('EXPORT_MAXIMUM_SIZE', '1200x1200')
+EXPORT_EXCLUSIONS = config.get('EXPORT_EXCLUSION_MAP', ['.gif', ])

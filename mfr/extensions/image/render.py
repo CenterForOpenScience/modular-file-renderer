@@ -16,8 +16,11 @@ class ImageRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
+        if self.metadata.ext in settings.EXPORT_EXCLUSIONS:
+            return self.TEMPLATE.render(base=self.assets_url, url=self.url)
+
         exported_url = furl.furl(self.export_url)
-        exported_url.args['format'] = '{}.{}'.format(settings.MAXIMUM_SIZE, settings.TYPE)
+        exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         return self.TEMPLATE.render(base=self.assets_url, url=exported_url.url)
 
     @property

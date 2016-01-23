@@ -3,6 +3,7 @@ import pytest
 from mfr.core.provider import ProviderMetadata
 
 from mfr.extensions.image import ImageRenderer
+from mfr.extensions.image import settings
 
 
 @pytest.fixture
@@ -27,7 +28,7 @@ def assets_url():
 
 @pytest.fixture
 def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+    return 'http://mfr.osf.io/export?url={}&format={}.{}'.format(url(), settings.MAXIMUM_SIZE, settings.TYPE)
 
 
 @pytest.fixture
@@ -37,6 +38,6 @@ def renderer(metadata, file_path, url, assets_url, export_url):
 
 class TestImageRenderer:
 
-    def test_render_image(self, renderer, url):
+    def test_render_image(self, renderer, export_url):
         body = renderer.render()
-        assert '<img style="max-width: 100%;" src="{}">'.format(url) in body
+        assert '<img style="max-width: 100%;" src="{}">'.format(export_url) in body

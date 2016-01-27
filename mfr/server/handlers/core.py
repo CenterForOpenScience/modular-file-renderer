@@ -81,9 +81,6 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             chunk = yield from stream.read(settings.CHUNK_SIZE)
             if not chunk:
                 break
-            # Temp fix, write does not accept bytearrays currently
-            if isinstance(chunk, bytearray):
-                chunk = bytes(chunk)
             self.write(chunk)
             yield self.flush()
 

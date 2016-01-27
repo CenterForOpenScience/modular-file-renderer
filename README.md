@@ -34,6 +34,18 @@ invoke install --develop
 invoke server
 ```
 
+```bash
+# ubuntu: Install the latest version of python3.5
+apt-get install python3.5
+apt-get install r-base
+pip install virtualenv
+pip install virtualenvwrapper
+mkvirtualenv --python=`which python3.5` mfr
+pip install invoke
+invoke install --develop
+invoke server
+```
+
 ### Create your own module
 
 Interested in adding support for a new provider or file format? Check out the CONTRIBUTING.rst docs.

@@ -2,6 +2,39 @@
 ChangeLog
 *********
 
+0.8.4 (2016-01-27)
+==================
+
+- Exclude .ico files from image scaling
+
+0.8.3 (2016-01-26)
+==================
+
+- Support maximum dimensions for images
+- Images larger than maximum dimensions are scaled down
+
+0.8.2 (2015-11-13)
+==================
+
+- Remove invoke from requirements
+
+0.8.1 (2015-11-13)
+==================
+
+- Manually garbage collect exceptions to work around issue in python 3.4
+
+0.8.0 (2015-10-22)
+==================
+
+- Support word breaks in <pre> tags in Firefox.
+- Codepygments extension: remove dependency on bootstrap css; add minimal
+  styling to maintain look.
+
+0.7.1 (2015-10-09)
+==================
+
+- Unpin numpy to avoid error in pandas.
+
 0.7.0 (2015-10-08)
 ==================
 

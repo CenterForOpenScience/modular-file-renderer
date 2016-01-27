@@ -44,7 +44,6 @@ class OsfProvider(provider.BaseProvider):
             metadata_request = yield from self._make_request('HEAD', download_url)
             # To make changes to current code as minimal as possible
             metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
-        yield from metadata_request.release()
         # e.g.,
         # metadata = {'data': {
         #     'name': 'blah.png',
@@ -69,7 +68,6 @@ class OsfProvider(provider.BaseProvider):
         if response.status >= 400:
             raise exceptions.ProviderError('Unable to download the requested file, please try again later.', code=response.status)
         if response.status in (302, 301):
-            yield from response.release()
             response = yield from aiohttp.request('GET', response.headers['location'])
         return streams.ResponseStreamReader(response, unsizable=True)
 
@@ -85,7 +83,6 @@ class OsfProvider(provider.BaseProvider):
                     'Content-Type': 'application/json'
                 }
             )
-            yield from request.release()
             if request.status != 302:
                 raise exceptions.ProviderError(request.reason, request.status)
             self.download_url = request.headers['location']

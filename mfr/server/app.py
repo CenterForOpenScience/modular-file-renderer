@@ -1,3 +1,4 @@
+import gc
 import asyncio
 
 import tornado.web
@@ -32,8 +33,19 @@ def make_app(debug):
     return app
 
 
+@asyncio.coroutine
+def cleanup():
+    # Forces exceptions to be garbage collected
+    # This is fixed in python 3.5 but needs manual collection in 3.4
+    while True:
+        gc.collect()
+        yield from asyncio.sleep(1)
+
+
 def serve():
     tornado.platform.asyncio.AsyncIOMainLoop().install()
+
+    asyncio.async(cleanup())
 
     app = make_app(server_settings.DEBUG)
 

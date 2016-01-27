@@ -1,8 +1,13 @@
 import os
 import pytest
 
+#from xlrd.biffh import XLRDError
+
 from mfr.core.provider import ProviderMetadata
+
+#from mfr.extensions.md import settings
 from mfr.extensions.md import MdRenderer
+#from mfr.extensions.md import exceptions
 
 
 @pytest.fixture
@@ -47,9 +52,16 @@ class TestMdRenderer:
     def test_render_md_cache_result(self, renderer):
         assert renderer.cache_result is True
 
-    def test_render_md(self, test_md_file_path, assets_url, export_url):
+    def test_render_md_md(self, test_md_file_path, assets_url, export_url):
         metadata = ProviderMetadata('test', '.md', 'text/plain', '1234', 'http://wb.osf.io/file/test.md?token=1234')
         renderer = MdRenderer(metadata, test_md_file_path, url, assets_url, export_url)
+        #body = renderer.render_html()
         body = renderer.render()
         assert '<ul>\n<li>one</li>\n<li>two</li>\n</ul>' in body
+
+#    def test_render_md_md_invalid(self, invalid_md_file_path, assets_url, export_url):
+#        metadata = ProviderMetadata('test', '.md', 'text/plain', '1234', 'http://wb.osf.io/file/test.md?token=1234')
+#        renderer = MdRenderer(metadata, invalid_md_file_path, url, assets_url, export_url)
+#        with pytest.raises(exceptions.EmptyTableException):
+#            renderer.render()
 

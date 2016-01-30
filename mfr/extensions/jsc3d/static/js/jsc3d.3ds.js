@@ -72,6 +72,7 @@ JSC3D.Autodesk3DSLoader.prototype.loadFromUrl = function(urlName) {
 //		xhr.responseType = "arraybuffer";
 	}
 
+	// TODO: CORS required for WaterButler w/ OSF Multi-Domain Cookie
 	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {

@@ -29,7 +29,7 @@
   canvas.width  = window.innerWidth * 0.95;
   canvas.height = 500;
   var viewer = new JSC3D.Viewer(canvas);
-  viewer.setParameter('SceneUrl', '${url}${ext}');
+  viewer.setParameter('SceneUrl', '${ext}');
   viewer.setParameter('InitRotationX', -15);
   viewer.setParameter('InitRotationY', 0);
   viewer.setParameter('InitRotationZ', 0);

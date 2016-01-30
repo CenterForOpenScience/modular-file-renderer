@@ -3802,6 +3802,7 @@ JSC3D.ObjLoader.prototype.loadObjFile = function(urlPath, fileName) {
 	var xhr = window.XMLHttpRequest ? new XMLHttpRequest : new ActiveXObject('MSXML2.XMLHTTP.3.0');
 	xhr.open('GET', urlName, true);
 
+	// TODO: CORS required for WaterButler w/ OSF Multi-Domain Cookie
 	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {
@@ -3847,6 +3848,7 @@ JSC3D.ObjLoader.prototype.loadMtlFile = function(scene, urlPath, fileName) {
 	var xhr = window.XMLHttpRequest ? new XMLHttpRequest : new ActiveXObject('MSXML2.XMLHTTP.3.0');
 	xhr.open('GET', urlName, true);
 
+	// TODO: CORS required for WaterButler w/ OSF Multi-Domain Cookie
 	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {
@@ -4196,6 +4198,7 @@ JSC3D.StlLoader.prototype.loadFromUrl = function(urlName) {
 	var xhr = window.XMLHttpRequest ? new XMLHttpRequest : new ActiveXObject('MSXML2.XMLHTTP.3.0');
 	xhr.open('GET', urlName, true);
 
+	// TODO: CORS required for WaterButler w/ OSF Multi-Domain Cookie
 	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {
@@ -4240,6 +4243,7 @@ JSC3D.StlLoader.prototype.loadBinaryFromUrl = function(urlName) {
 	xhr.open('GET', urlName, true);
 	xhr.setRequestHeader("Accept-Charset", "x-user-defined");
 
+	// TODO: CORS required for WaterButler w/ OSF Multi-Domain Cookie
 	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {

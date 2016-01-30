@@ -18,8 +18,7 @@ Thumbs.db
 # Python
 #######################
 *.py[cod]
-*.so
-*.py[cod]
+**/*.pyc
 
 # C extensions
 *.so
@@ -28,7 +27,7 @@ Thumbs.db
 *.egg
 *.egg-info
 dist
-build
+/build
 eggs
 parts
 bin

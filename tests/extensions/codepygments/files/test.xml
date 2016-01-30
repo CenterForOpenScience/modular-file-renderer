@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rdf:RDF xmlns="http://usefulinc.com/ns/doap#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><Project><name>pg_dump</name>
+<shortdesc>createdb -- create a new PostgreSQL database</shortdesc>
+<description>Installing
+----------
+
+requires:
+
+::
+
+    sudo pip install appscript GitPython gitconfig gitinfo
+
+macos.notify() on Mac OS &lt; 10.8 requires `Growl &lt;http://growl.info/&gt;`_
+
+macos.temperature requires `Temperature
+Monitor &lt;http://www.bresink.com/osx/TemperatureMonitor.html&gt;`_
+
+macos.app.ical.today\_events() requires
+`icalBuddy &lt;http://hasseg.org/icalBuddy/&gt;`_
+
+macos.display.sleep() requires `Sleep
+Display &lt;http://www.malcolmhall.com/products/sleepdisplay/&gt;`_
+
+::
+
+    sudo pip install macos
+
+ Usage ----------
+
+::
+
+    import macos
+    print macos.version
+    print macos.shell("ls /")
+    print macos.shell("sudo python setup.py install",True) # osascript -e "do shell script %s with administrator privileges"
+    if macos.idle()&gt;10:
+        macos.purge() # run purge command (optimize RAM)
+    if macos.idle()&gt;5*60:
+        macos.display.sleep() # turn off display
+
+
+    # volume, say
+    macos.volume.muted=False
+    macos.volume.alert, macos.volume.input, macos.volume.output =(0,14,88)
+    print "volume [input=%s,output=%s,alert=%s]" % (macos.volume.input, macos.volume.output, macos.volume.alert)
+    macos.say("We must secure the existence of our people and a future for White Children",using="Alex")
+
+    # AppleScript
+    macos.osascript('tell application "iTunes" to play')
+
+
+    # launchctl
+    print macos.launchctl.running("myagent")
+    for l in macos.launchctl.list()
+        print l.pid, l.exitstatus, l.label
+
+    # notify
+    from macos import notify
+    notify("title","desc")
+    notify("title","desc",app="iCal",sticky=True)
+
+    # iCal
+    from macos.app import ical
+    if ical.running:
+        for todo in ical.todos:
+            if todo.completion_date:
+                print todo.uid,todo.summary,"completed"
+                todo.delete()
+        ical.todo("new todo","description") # add new todo
+        for e in in ical.events:
+            print e.uid,e.summary,e.description
+        get_event("summary").start_date=datetime.now()
+
+    # iTunes
+    from macos.app import itunes
+    print itunes.running, itunes.playing
+    itunes.pause(), itunes.play(), itunes.stop()    
+    itunes.fadein(5), itunes.fadeout(5)
+
+    # Skype
+    from macos.app import skype
+    print skype.running,skype.calling
+
+    # VLC
+    from macos.app import vlc
+    print vlc.running, vlc.playing
+    vlc.open("~/press.avi").fullscreen().volume(100) 
+
+    # Transmission
+    from macos.app import transmission
+    transmission.open()
+    transmission.close()
+
+    # Chrome 
+    from macos.app import chrome
+    if chrome.running:
+        for t in chrome.tabs:
+            print t.url,t.title
+            t.reload() 
+        macos.open("http://127.0.0.1")
+
+    for a in macos.user.library.launchagents:
+        print l.pid, l.exitstatus, l.label
+
+    for a in macos.user.library.launchagents: # plistlib objects
+        print a.Label, macos.launchctl.running(a.Label)
+
+    # git
+    print macos.user.gitconfig.user.name, macos.user.gitconfig.github.password
+    print macos.user.git.path, macos.user.git.exists # ~/git
+    for dir in macos.user.git: # iterate repositories dirs
+        print ""
+        print dir.path,dir.git
+        if dir.git:
+            print dir.repo # dir.repo is GitPython Repo object
+            # Shorthands:
+            print dir.nothing_to_commit
+            print dir.status
+            print "modified=",dir.modified
+            print "deleted=",dir.deleted
+            print "untracked=",dir.untracked
+
+    # temperature
+    print macos.temperature.air
+
+TODO
+
+-  Terminal
+-  Firefox</description>
+<homepage rdf:resource="http://github.com/cancerhermit/pg_dump.py" />
+<maintainer><foaf:Person><foaf:name>cancerhermit</foaf:name>
+<foaf:mbox_sha1sum>b9b695d3ed85f6f39fccffc186a71a2f21dfa096</foaf:mbox_sha1sum></foaf:Person></maintainer>
+<release><Version><revision>0.0.1</revision></Version></release>
+</Project></rdf:RDF>

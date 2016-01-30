@@ -24,26 +24,35 @@ Clone the repo: ::
     $ git clone https://github.com/CenterForOpenScience/modular-file-renderer.git
     $ cd modular-file-renderer
 
-Install the development dependencies.
+Configure development environment and Install the development dependencies.
 
 .. note::
 
-    It is recommended that you use a `virtualenv`_ during development.
+    It is recommended that you use a `virtualenv`_ with `virtualenvwrapper`_ during development. Python 3.4 and R are required.
 
 .. _virtualenv: http://www.virtualenv.org/en/latest/
+.. _virtualenvwrapper: https://pypi.python.org/pypi/virtualenvwrapper
 
-::
+.. code-block:: bash
 
-    $ pip install -r dev-requirements.txt
+    # For MacOSX: Install the latest version of python3
+    $ brew install python3
+    $ brew install r
+    # Linux users, probably the same thing but with apt-get
+    # If someone wants to update this guide, please do.
 
-
+    $ pip install virtualenv
+    $ pip install virtualenvwrapper
+    $ mkvirtualenv --python=`which python3` mfr
+    
+    $ pip install -U -r dev-requirements.txt
 
 
 Lastly, install mfr in development mode. ::
 
     $ python setup.py develop
-
-
+    $ invoke server
+   
 Running tests
 -------------
 
@@ -59,15 +68,16 @@ You can also use pytest directly. ::
 Writing tests
 -------------
 
-Unit tests should be written for all rendering, exporting, and detection code.
+Unit tests should be written for all rendering code.
 
-Tests can be written as functions, like so:
+Tests should be encapsulated within a class and written as functions, like so:
 
 .. code-block:: python
 
     # in test_myformat.py
 
     from mfr_something import render
+
 
     def test_render_html():
         with open('testfile.mp4') as fp:
@@ -88,32 +98,32 @@ The above test can be rewritten like so:
 
 .. _pytest fixtures: https://pytest.org/latest/fixture.html
 
-Using the player
-----------------
 
-The mfr comes with a Flask app for previewing rendered files. Create a ``files/`` subdirectory in ``player`` and copy the files you want to render into it. Then run the app from the ``player`` directory with ::
+Manual Local Testing
+--------------------
+To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. 
 
-    $ invoke player
-
-Then browse to ``localhost:5000`` in your browser.
-
-Configuring the player
-++++++++++++++++++++++
-
-You will likely want to add additional filehandler modules to the player. The first time you run ``invoke player``, a file is created at ``player/mfr_config_local.py``. You can add additional handlers to the ``HANDLERS`` list and add any additional configuration here.
+First, change the defaul provider to HTTP (in `/mfr/server/settings.py`):
 
 .. code-block:: python
 
-    # in player/mfr_config_local.py
+	PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
+	
 
-    import mfr_image
-    import mfr_code_pygments
+Because the MFR is passed a url to render, you also need to be running an http server.
 
-    # Add additional handlers here
-    HANDLERS = [
-        mfr_image.Handler,
-        mfr_code_pygments.Handler,
-    ]
+From a directory with a file you want to render:
+
+.. code-block:: bash
+
+    python -m SimpleHTTPServer 8000
+
+With both the SimpleHTTPServer the MFR server running, go to 
+
+.. code-block:: bash
+
+	http://localhost:7778/render?url=http://localhost:8000/[filename].[ext]
+
 
 
 
@@ -126,15 +136,14 @@ There are two main pieces of a file format package are
 - Your :class:`FileHandler <mfr.core.FileHandler>`
 
 
-Rendering/Exporting Code
+Rendering Code
 ++++++++++++++++++++++++
 
-Renderers are simply callables (functions or methods) that take a file as their first argument and return a :class:`RenderResult <mfr.core.RenderResult>` which contains content(a string of the rendered HTML) and assets (a dictionary that points to lists of javascript or css sources).
+Renderers are simply callables (functions or methods) that take a file as their first argument and return
 
 Here is a very simple example of function that takes a filepointer and outputs a render result with an HTML image tag.
 
 .. code-block:: python
-    from mfr import RenderResult
 
     def render_img_tag(filepointer):
         filename = filepointer.name
@@ -205,51 +214,38 @@ Each package has its own directory. At a minimum, your package should include:
 
 Apart from those files, you  are free to organize your rendering and export code however you want.
 
-A typical directory structure might look like this:
+A typical extension plugin directory structure might look like this:
 
 ::
 
-	mfr
-	└──mfr-something
-		├── export-requirements.txt
-		├── render-requirements.txt
-		├── __init__.py
-		├── render.py
-		├── export.py
-		├── static
-		│   ├── js
-		│   └── css
-		├── tests
-		│   ├── __init__.py
-		│   └── test_something.py
-		├── templates
-		│   └── something.html
-		├── libs
-		│   ├── __init__.py
-		│   └── something_tools.py
-		├── setup.py
-		├── README.rst
-		└── configuration.py
-
-where "something" is a file format, e.g. "mfr_image", "mfr_movie".
-
-.. note::
-
-    You may decide to make subdirectories for rendering and exporting code if single files start to become very large.
-
-
-Use a template
-++++++++++++++
-
-The fastest way to get started on a module is to use `cookiecutter template`_ for mfr modules. This will create the directory structure above.
-
-::
-
-    $ pip install cookiecutter
-    $ cookiecutter https://github.com/CenterForOpenScience/cookiecutter-mfr.git
-
-.. _cookiecutter template: https://github.com/CenterForOpenScience/cookiecutter-mfr
-
+	modular-file-renderer
+	├── mfr
+	│	├── __init__.py
+	│	└── extensions
+	│		├── __init__.py
+	│		└── custom-plugin
+	│			├── __init__.py
+	│			├── render.py
+	│			├── export.py
+	│			├── settings.py
+	│			├── static
+	│			│	├── css
+	│			│	└── js
+	│			├── templates
+	│			│	└── viewer.mako
+	│			└── libs
+	│				├── __init__.py
+	│				└── tools.py
+	├── tests
+	│	├── __init__.py
+	│	└── extnesions
+	│		├── __init__.py
+	│		└── custom-plugin
+	│			├── __init__.py
+	│			└── test_custom_plugin.py
+	├── setup.py
+	├── README.md
+	└── requirements.py
 
 
 Documentation

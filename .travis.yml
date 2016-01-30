@@ -1,20 +1,34 @@
-# Config file for automatic testing at travis-ci.org
-
 language: python
 
 python:
-  - "2.6"
-  - "2.7"
-  - "3.3"
   - "3.4"
-  # TODO(asmacdo)
-  # pypy is unable to install numpy and pandas. The test should either not
-  # install pandas or it should install from the pypy repo.
-  # - "pypy"
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/wheelhouse
+
+before_install:
+  - export WHEELHOUSE=$HOME/wheelhouse
 
 install:
-    - travis_retry pip install -r dev-requirements.txt
-    - travis_retry invoke plugin_requirements
-    - travis_retry python mfr/cli.py install all
+  - sed 's/^rpy2==/#rpy2==/' -i requirements.txt
+  - travis_retry pip install invoke
+  - travis_retry invoke wheelhouse --develop
+  - travis_retry invoke install --develop
 
-script: python setup.py test
+env:
+  - MFR_CONFIG=./travis-config.json
+
+script:
+  - invoke test
+
+before_cache:
+  # exclude python requirements from github repo's
+  - rm -f $HOME/wheelhouse/raven-*.whl
+  - rm -f $HOME/wheelhouse/xlrd-*.whl
+  - rm -f $HOME/wheelhouse/waterbutler-*.whl
+
+notifications:
+  flowdock: 0221882cdda034c0e9ac2a0e766053dd

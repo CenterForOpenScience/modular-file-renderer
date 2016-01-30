@@ -1,2 +1,0 @@
-git+https://github.com/mstamy2/PyPDF2.git
-mako

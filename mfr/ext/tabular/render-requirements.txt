@@ -1,2 +1,0 @@
-git+https://github.com/icereval/xlrd.git
-pandas>=0.14.1

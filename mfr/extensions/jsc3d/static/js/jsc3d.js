@@ -5215,6 +5215,7 @@ JSC3D.StlLoader.prototype.loadFromUrl = function(urlName) {
 	else
 		xhr.overrideMimeType('text/plain; charset=x-user-defined');
 
+	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {
 			if(this.status == 200 || this.status == 0) {

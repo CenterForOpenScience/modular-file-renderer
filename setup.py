@@ -627,6 +627,9 @@ setup(
             # ipynb
             '.ipynb = mfr.extensions.ipynb:IpynbRenderer',
 
+            # jsc3d
+            '.stl = mfr.extensions.jsc3d:StlRenderer',
+
             # pdb
             '.pdb = mfr.extensions.pdb:PdbRenderer',
 

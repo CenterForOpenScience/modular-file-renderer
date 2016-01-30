@@ -149,25 +149,27 @@ JSC3D.OpenCTMLoader = function(onload, onerror, onprogress, onresource) {
  * @param {String} urlName a string specifying where to fetch the CTM file.
  */
 JSC3D.OpenCTMLoader.prototype.loadFromUrl = function(urlName) {
-	// ignore query substring if any
-	var questionMarkAt = urlName.indexOf('?');
-	if(questionMarkAt >= 0)
-		urlName = urlName.substring(0, questionMarkAt);
-
-	// extract parent path name
-	var lastSlashAt = urlName.lastIndexOf('/');
-	if(lastSlashAt < 0)
-		lastSlashAt = urlName.lastIndexOf('\\');
-	if(lastSlashAt < 0)
-		this.urlPath = '';
-	else
-		this.urlPath = urlName.substring(0, lastSlashAt+1);
+	// TODO: WaterButler requires query string parameters
+	//// ignore query substring if any
+	//var questionMarkAt = urlName.indexOf('?');
+	//if(questionMarkAt >= 0)
+	//	urlName = urlName.substring(0, questionMarkAt);
+    //
+	//// extract parent path name
+	//var lastSlashAt = urlName.lastIndexOf('/');
+	//if(lastSlashAt < 0)
+	//	lastSlashAt = urlName.lastIndexOf('\\');
+	//if(lastSlashAt < 0)
+	//	this.urlPath = '';
+	//else
+	//	this.urlPath = urlName.substring(0, lastSlashAt+1);
 
 	var xhr = new XMLHttpRequest;
 	xhr.open('GET', encodeURI(urlName), true);
 	xhr.overrideMimeType('text/plain; charset=x-user-defined');
 
 	var self = this;
+	// TODO: CORS required for WaterButler w/ OSF Multi-Domain Cookie
 	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {

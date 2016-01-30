@@ -1,12 +1,12 @@
 """3D renderer module """
-# Uses jsc3d: https://code.google.com/p/jsc3d/
+# Uses jsc3d: https://github.com/humu2009/jsc3d/tree/master/jsc3d
 import os
 
 from mako.lookup import TemplateLookup
 from mfr.core import extension
 
 
-class StlRenderer(extension.BaseRenderer):
+class JSC3DRenderer(extension.BaseRenderer):
 
     TEMPLATE = TemplateLookup(
         directories=[
@@ -14,11 +14,10 @@ class StlRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        # import ipdb; ipdb.set_trace()
         return self.TEMPLATE.render(
             base=self.assets_url,
             url=self.metadata.download_url,
-            fileExt=self.metadata.ext,
+            ext=self.metadata.ext.lower(),
         )
 
     @property

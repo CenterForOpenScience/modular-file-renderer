@@ -1,1 +1,1 @@
-from .render import StlRenderer  # noqa
+from .render import JSC3DRenderer  # noqa

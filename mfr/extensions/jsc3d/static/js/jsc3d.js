@@ -4795,6 +4795,7 @@ JSC3D.ObjLoader.prototype.loadObjFile = function(urlPath, fileName) {
 	var xhr = new XMLHttpRequest;
 	xhr.open('GET', urlName, true);
 
+	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {
 			if(this.status == 200 || this.status == 0) {
@@ -4847,6 +4848,7 @@ JSC3D.ObjLoader.prototype.loadMtlFile = function(scene, urlPath, fileName) {
 	var xhr = new XMLHttpRequest;
 	xhr.open('GET', urlName, true);
 
+	xhr.withCredentials = true;
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {
 			if(this.status == 200 || this.status == 0) {

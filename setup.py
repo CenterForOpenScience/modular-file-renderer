@@ -479,6 +479,7 @@ setup(
             '.sage = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.sass = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.sc = mfr.extensions.codepygments:CodePygmentsRenderer',
+            '.scad = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.scala = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.scaml = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.sce = mfr.extensions.codepygments:CodePygmentsRenderer',
@@ -628,7 +629,10 @@ setup(
             '.ipynb = mfr.extensions.ipynb:IpynbRenderer',
 
             # jsc3d
-            '.stl = mfr.extensions.jsc3d:StlRenderer',
+            '.3ds = mfr.extensions.jsc3d:JSC3DRenderer',
+            '.ctm = mfr.extensions.jsc3d:JSC3DRenderer',
+            '.obj = mfr.extensions.jsc3d:JSC3DRenderer',
+            '.stl = mfr.extensions.jsc3d:JSC3DRenderer',
 
             # pdb
             '.pdb = mfr.extensions.pdb:PdbRenderer',

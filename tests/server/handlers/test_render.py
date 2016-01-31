@@ -1,5 +1,3 @@
-import mfr
-import json
 from tests import utils
 from tornado import testing
 

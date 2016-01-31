@@ -6,8 +6,11 @@ import tornado.httpserver
 import tornado.platform.asyncio
 import logging
 
+from raven.contrib.tornado import AsyncSentryClient
+
+import mfr
 from mfr import settings
-from mfr.core.utils import AioSentryClient
+from mfr.core import utils
 from mfr.server import settings as server_settings
 from mfr.server.handlers.export import ExportHandler
 from mfr.server.handlers.render import RenderHandler
@@ -28,8 +31,8 @@ def make_app(debug):
         ],
         debug=debug,
     )
-    # Fix package import
-    app.sentry_client = AioSentryClient(settings.get('SENTRY_DSN', None))
+    utils.patch_raven()
+    app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=mfr.__version__)
     return app
 
 

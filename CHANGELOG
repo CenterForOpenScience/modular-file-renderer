@@ -2,6 +2,12 @@
 ChangeLog
 *********
 
+0.9.5 (2016-01-31)
+==================
+
+- Remove Sentry Ravent Client patch, latest version no longer requires
+patching
+
 0.9.3/4 (2016-01-30)
 ==================
 

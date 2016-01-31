@@ -31,7 +31,6 @@ def make_app(debug):
         ],
         debug=debug,
     )
-    utils.patch_raven()
     app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=mfr.__version__)
     return app
 

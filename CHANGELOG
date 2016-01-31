@@ -2,7 +2,7 @@
 ChangeLog
 *********
 
-0.9.3 (2016-01-30)
+0.9.3/4 (2016-01-30)
 ==================
 
 - Updated Sentry Raven Client to send release w/ Tornado patch and tests

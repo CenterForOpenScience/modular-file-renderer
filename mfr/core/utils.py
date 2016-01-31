@@ -4,13 +4,6 @@ from mfr import settings
 from mfr.core import exceptions
 
 
-def patch_raven():
-    from raven.utils import json
-    from tornado.concurrent import Future
-
-    json.BetterJSONEncoder.ENCODER_BY_TYPE[Future] = lambda o: None
-
-
 def make_provider(name, request, url):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 

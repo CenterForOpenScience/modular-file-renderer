@@ -24,31 +24,37 @@
 <script src="${base}/js/jsc3d.ctm.js"></script>
 % endif
 
-<script type="text/javascript">
-  var canvas = document.getElementById('mfrViewer');
-  canvas.width  = window.innerWidth * 0.95;
-  canvas.height = 500;
-  var viewer = new JSC3D.Viewer(canvas);
-  viewer.setParameter('SceneUrl', '${ext}');
-  viewer.setParameter('InitRotationX', -15);
-  viewer.setParameter('InitRotationY', 0);
-  viewer.setParameter('InitRotationZ', 0);
-  viewer.setParameter('ModelColor', '#CCCCCC');
-  viewer.setParameter('BackgroundColor1', '#FFFFFF');
-  viewer.setParameter('BackgroundColor2', '#FFFFFF');
-  viewer.setParameter('RenderMode', 'textureflat');
-  viewer.setParameter('MipMapping', 'on');
-  viewer.setParameter('Renderer', 'webgl');
-  viewer.setParameter('Definition', 'high');
+<script>
+    (function () {
+        var canvas = document.getElementById('mfrViewer');
+        canvas.width = window.innerWidth * 0.95;
+        canvas.height = 500;
 
-  var _getLoader = JSC3D.LoaderSelector.getLoader;
-  JSC3D.LoaderSelector.getLoader = function (fileExtName) {
-    var loader = _getLoader(fileExtName);
-    var _loadFromUrl = loader.loadFromUrl;
-    loader.loadFromUrl = _loadFromUrl.bind(loader, '${url}');
-    return loader;
-  };
+        var viewer = new JSC3D.Viewer(canvas);
+        viewer.setParameter('SceneUrl', '${ext}');
+        viewer.setParameter('InitRotationX', -15);
+        viewer.setParameter('InitRotationY', 0);
+        viewer.setParameter('InitRotationZ', 0);
+        viewer.setParameter('ModelColor', '#CCCCCC');
+        viewer.setParameter('BackgroundColor1', '#FFFFFF');
+        viewer.setParameter('BackgroundColor2', '#FFFFFF');
+        viewer.setParameter('RenderMode', 'textureflat');
+        viewer.setParameter('MipMapping', 'on');
+        viewer.setParameter('Renderer', 'webgl');
+        viewer.setParameter('Definition', 'high');
 
-  viewer.init();
-  viewer.update();
+        var _getLoader = JSC3D.LoaderSelector.getLoader;
+        JSC3D.LoaderSelector.getLoader = function (fileExtName) {
+            var loader = _getLoader(fileExtName);
+            if (!loader) {
+                return viewer.reportProgress('Unable to load renderer for file of type \'' + fileExtName + '\'', 0);
+            }
+            var _loadFromUrl = loader.loadFromUrl;
+            loader.loadFromUrl = _loadFromUrl.bind(loader, '${url}');
+            return loader;
+        };
+
+        viewer.init();
+        viewer.update();
+   })();
 </script>

@@ -10,7 +10,6 @@ from raven.contrib.tornado import AsyncSentryClient
 
 import mfr
 from mfr import settings
-from mfr.core import utils
 from mfr.server import settings as server_settings
 from mfr.server.handlers.export import ExportHandler
 from mfr.server.handlers.render import RenderHandler

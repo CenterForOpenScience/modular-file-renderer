@@ -154,7 +154,7 @@ JSC3D.OpenCTMLoader.prototype.loadFromUrl = function(urlName) {
 	//var questionMarkAt = urlName.indexOf('?');
 	//if(questionMarkAt >= 0)
 	//	urlName = urlName.substring(0, questionMarkAt);
-    //
+	//
 	//// extract parent path name
 	//var lastSlashAt = urlName.lastIndexOf('/');
 	//if(lastSlashAt < 0)

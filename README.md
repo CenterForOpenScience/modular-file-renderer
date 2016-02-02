@@ -8,13 +8,28 @@ A Python package for rendering files to HTML via an embeddable iframe.
 
 ### Startup commands
 
+Install the latest version of python3
+
+For MacOSX users:
+
 ```bash
-# MacOSX: Install the latest version of python3
 brew install python3
 brew install r
+```
+For Ubuntu users:
+
+```bash
+apt-get install python3
+apt-get install r-base
+```
+
+After installing python3, create the virtual environment with the following commands:
+
+```bash
 pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python=`which python3` mfr
+pip install invoke
 invoke install --develop
 invoke server
 ```

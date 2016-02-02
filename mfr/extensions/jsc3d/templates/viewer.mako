@@ -1,10 +1,21 @@
-<canvas id="mfrViewer"></canvas>
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+<style type="text/css">
+    .popover {
+        max-width: 100%;
+    }
+</style>
+<script src="/static/js/jquery-1.11.3.min.js" type="text/javascript"></script>
+<script src="/static/js/bootstrap.min.js" type="text/javascript"></script>
+
+<canvas id="mfrViewer" tabindex="-1"></canvas>
+<a style="position: absolute; top: 10px; right: 10px; cursor: pointer;"
+   data-toggle="popover" data-trigger="hover" data-placement="left" data-html="true"
+   data-content="Drag mouse to rotate<br>Drag mouse with ctrl pressed to pan<br>Drag mouse with shift pressed to zoom">
+   <img src="${base}/images/question-circle.png">
+</a>
 
 <script src="/static/js/mfr.js"></script>
 <script src="/static/js/mfr.child.js"></script>
-<script>
-    window.pymChild.sendMessage('embed', 'embed-responsive-16by9');
-</script>
 
 <!--[if !IE]><!-->
 <script type="text/javascript" src="${base}/js/jsc3d.js"></script>
@@ -25,9 +36,13 @@
 % endif
 
 <script>
-    (function () {
+    $(function () {
+        $('[data-toggle="popover"]').popover();
+        $('#mfrViewer').bind('contextmenu', function () { return false; });
+        window.focus();
+
         var canvas = document.getElementById('mfrViewer');
-        canvas.width = window.innerWidth * 0.95;
+        canvas.width = window.innerWidth;
         canvas.height = 500;
 
         var viewer = new JSC3D.Viewer(canvas);
@@ -56,5 +71,5 @@
 
         viewer.init();
         viewer.update();
-   })();
+   });
 </script>

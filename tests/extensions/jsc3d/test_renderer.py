@@ -35,9 +35,9 @@ def renderer(metadata, file_path, url, assets_url, export_url):
     return JSC3DRenderer(metadata, file_path, url, assets_url, export_url)
 
 
-class TestPdbRenderer:
+class TestJSC3DRenderer:
 
     def test_render_stl(self, renderer):
         body = renderer.render()
-        assert '<canvas id="mfrViewer"></canvas>' in body
+        assert '<canvas id="mfrViewer" tabindex="-1"></canvas>' in body
         assert 'viewer.init();' in body

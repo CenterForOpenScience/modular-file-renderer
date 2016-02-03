@@ -45,7 +45,12 @@ class TestRstRenderer:
 
     def test_render_rst(self, renderer):
         body = renderer.render()
-        assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
+        assert """
+<h1 class="title">Test</h1>
+<p>&lt;script&gt;
+alert(&quot;Hello world&quot;);
+&lt;/script&gt;</p>
+"""  in body
 
     def test_render_rst_invalid(self, metadata, invalid_file_path, url, assets_url, export_url):
         renderer = RstRenderer(metadata, invalid_file_path, url, assets_url, export_url)

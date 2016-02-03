@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="static/css/default.css">
 <div style="word-wrap: break-word;" class="mfrViewer">
 ${body}
 </div>

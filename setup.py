@@ -526,7 +526,6 @@ setup(
             '.tt = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.twig = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.txt = mfr.extensions.codepygments:CodePygmentsRenderer',
-            '.md = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rmd = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.do = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.sas = mfr.extensions.codepygments:CodePygmentsRenderer',
@@ -627,6 +626,10 @@ setup(
 
             # ipynb
             '.ipynb = mfr.extensions.ipynb:IpynbRenderer',
+
+            # md
+            '.md = mfr.extensions.md:MdRenderer',
+            '.markdown = mfr.extensions.md:MdRenderer',
 
             # jsc3d
             '.3ds = mfr.extensions.jsc3d:JSC3DRenderer',

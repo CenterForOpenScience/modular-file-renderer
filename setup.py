@@ -470,7 +470,6 @@ setup(
             '.rq = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rql = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rs = mfr.extensions.codepygments:CodePygmentsRenderer',
-            '.rst = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rsl = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rss = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rvt = mfr.extensions.codepygments:CodePygmentsRenderer',
@@ -526,7 +525,6 @@ setup(
             '.tt = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.twig = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.txt = mfr.extensions.codepygments:CodePygmentsRenderer',
-            '.md = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.rmd = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.do = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.sas = mfr.extensions.codepygments:CodePygmentsRenderer',
@@ -628,6 +626,10 @@ setup(
             # ipynb
             '.ipynb = mfr.extensions.ipynb:IpynbRenderer',
 
+            # md
+            '.md = mfr.extensions.md:MdRenderer',
+            '.markdown = mfr.extensions.md:MdRenderer',
+
             # jsc3d
             '.3ds = mfr.extensions.jsc3d:JSC3DRenderer',
             '.ctm = mfr.extensions.jsc3d:JSC3DRenderer',
@@ -641,7 +643,7 @@ setup(
             '.pdf = mfr.extensions.pdf:PdfRenderer',
 
             # rst
-            # '.rst = mfr.extensions.rst:RstRenderer',
+            '.rst = mfr.extensions.rst:RstRenderer',
 
             # svg
             # '.svg = mfr.extensions.svg:SvgRenderer',

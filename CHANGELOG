@@ -2,6 +2,14 @@
 ChangeLog
 *********
 
+0.10.0 (2016-02-11)
+===================
+
+- Markdown and ReStructuredText files are now rendered in their formatted
+display. (thanks, @TomBaxter!)
+- ...oh, and they're styled, too! (thanks, @erinspace!)
+- Update MFR install instructions. (thanks, @rafaeldelucena!)
+
 0.9.6 (2016-02-01)
 ==================
 

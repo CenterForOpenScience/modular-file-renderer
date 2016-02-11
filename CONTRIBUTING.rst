@@ -118,6 +118,12 @@ From a directory with a file you want to render:
 
     python -m SimpleHTTPServer 8000
 
+Or for python 3
+
+.. code-block:: bash
+
+    python3 -m http.server 8000
+
 With both the SimpleHTTPServer the MFR server running, go to 
 
 .. code-block:: bash

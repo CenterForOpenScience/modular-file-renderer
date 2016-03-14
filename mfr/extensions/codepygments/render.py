@@ -40,7 +40,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         data = fp.read()
 
         content, exception = None, None
-        for encoding in ['windows-1252', 'utf-8', 'utf-16', 'ISO-8859-2']:
+        for encoding in ['utf-8', 'utf-16', 'windows-1252', 'ISO-8859-2']:
             try:
                 content = data.decode(encoding)
                 break

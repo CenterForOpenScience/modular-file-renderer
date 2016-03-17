@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="${base}/css/ipynb.css">
 <link rel="stylesheet" href="${base}/css/pygments.css">
+<link rel="stylesheet" href="/static/css/default.css">
 
 <div style="word-wrap: break-word;" class="mfrViewer mfr-ipynb-body">
     ${body | n}

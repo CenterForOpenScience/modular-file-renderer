@@ -21,7 +21,7 @@ class RenderHandler(core.BaseHandler):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
-        yield super().prepare()
+        await super().prepare()
 
         self.cache_file_path = await self.cache_provider.validate_path('/render/' + self.metadata.unique_key)
         self.source_file_path = await self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
@@ -45,7 +45,7 @@ class RenderHandler(core.BaseHandler):
                 logger.info('No cached file found; Starting render [{}]'.format(self.cache_file_path))
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
-                return (yield self.write_stream(cached_stream))
+                return (await self.write_stream(cached_stream))
 
         if renderer.file_required:
             await self.local_cache_provider.upload(
@@ -63,9 +63,9 @@ class RenderHandler(core.BaseHandler):
                 self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.cache_file_path)
             )
 
-        yield self.write_stream(waterbutler.core.streams.StringStream(rendition))
+        await self.write_stream(waterbutler.core.streams.StringStream(rendition))
 
-    async def on_finish(self):
+    def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 

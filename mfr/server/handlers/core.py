@@ -1,8 +1,8 @@
 import os
 import pkg_resources
 
-import tornado.gen
 import tornado.web
+import tornado.iostream
 from raven.contrib.tornado import SentryMixin
 
 import waterbutler.core.utils
@@ -75,15 +75,21 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         )
 
     async def write_stream(self, stream):
-        while True:
-            chunk = await stream.read(settings.CHUNK_SIZE)
-            if not chunk:
-                break
-            # Temp fix, write does not accept bytearrays currently
-            if isinstance(chunk, bytearray):
-                chunk = bytes(chunk)
-            self.write(chunk)
-            yield self.flush()
+        try:
+            while True:
+                chunk = await stream.read(settings.CHUNK_SIZE)
+                if not chunk:
+                    break
+                # Temp fix, write does not accept bytearrays currently
+                if isinstance(chunk, bytearray):
+                    chunk = bytes(chunk)
+                self.write(chunk)
+                del chunk
+                await self.flush()
+        except tornado.iostream.StreamClosedError:
+            # Client has disconnected early.
+            # No need for any exception to be raised
+            return
 
     def write_error(self, status_code, exc_info):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
@@ -117,12 +123,12 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     async def get(self, module_name, path):
         try:
             super().initialize(self.modules[module_name])
-            return (yield super().get(path))
+            return (await super().get(path))
         except Exception:
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
-            return (yield super().get(path))
+            return (await super().get(path))
         except Exception:
             self.set_status(404)

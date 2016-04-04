@@ -21,7 +21,7 @@ class ExportHandler(core.BaseHandler):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
-        yield super().prepare()
+        await super().prepare()
 
         self.format = self.request.query_arguments['format'][0].decode('utf-8')
         self.cache_file_path = await self.cache_provider.validate_path('/export/{}.{}'.format(self.metadata.unique_key, self.format))
@@ -40,7 +40,7 @@ class ExportHandler(core.BaseHandler):
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
                 self._set_headers()
-                return (yield self.write_stream(cached_stream))
+                return (await self.write_stream(cached_stream))
 
         await self.local_cache_provider.upload(
             (await self.provider.download()),
@@ -59,12 +59,20 @@ class ExportHandler(core.BaseHandler):
 
         with open(self.output_file_path.full_path, 'rb') as fp:
             self._set_headers()
-            yield self.write_stream(waterbutler.core.streams.FileStreamReader(fp))
+            await self.write_stream(waterbutler.core.streams.FileStreamReader(fp))
 
-    async def on_finish(self):
+    def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
+        # Spin off upload into non-blocking operation
+        loop = asyncio.get_event_loop()
+        loop.call_soon(
+            asyncio.ensure_future,
+            self._cache_and_clean(),
+        )
+
+    async def _cache_and_clean(self):
         if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):
             with open(self.output_file_path.full_path, 'rb') as fp:
                 await self.cache_provider.upload(waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path)

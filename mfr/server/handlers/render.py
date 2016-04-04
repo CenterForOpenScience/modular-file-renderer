@@ -3,8 +3,6 @@ import uuid
 import asyncio
 import logging
 
-import tornado.gen
-
 import waterbutler.core.streams
 import waterbutler.core.exceptions
 
@@ -19,18 +17,16 @@ class RenderHandler(core.BaseHandler):
 
     ALLOWED_METHODS = ['GET']
 
-    @tornado.gen.coroutine
-    def prepare(self):
+    async def prepare(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
         yield super().prepare()
 
-        self.cache_file_path = yield from self.cache_provider.validate_path('/render/' + self.metadata.unique_key)
-        self.source_file_path = yield from self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
+        self.cache_file_path = await self.cache_provider.validate_path('/render/' + self.metadata.unique_key)
+        self.source_file_path = await self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
 
-    @tornado.gen.coroutine
-    def get(self):
+    async def get(self):
         """Render a file with the extension"""
         renderer = utils.make_renderer(
             self.metadata.ext,
@@ -43,7 +39,7 @@ class RenderHandler(core.BaseHandler):
 
         if renderer.cache_result and settings.CACHE_ENABLED:
             try:
-                cached_stream = yield from self.cache_provider.download(self.cache_file_path)
+                cached_stream = await self.cache_provider.download(self.cache_file_path)
             except waterbutler.core.exceptions.DownloadError as e:
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting render [{}]'.format(self.cache_file_path))
@@ -52,25 +48,24 @@ class RenderHandler(core.BaseHandler):
                 return (yield self.write_stream(cached_stream))
 
         if renderer.file_required:
-            yield from self.local_cache_provider.upload(
-                (yield from self.provider.download()),
+            await self.local_cache_provider.upload(
+                (await self.provider.download()),
                 self.source_file_path
             )
 
         loop = asyncio.get_event_loop()
-        rendition = (yield from loop.run_in_executor(None, renderer.render))
+        rendition = (await loop.run_in_executor(None, renderer.render))
 
         # Spin off upload into non-blocking operation
         if renderer.cache_result and settings.CACHE_ENABLED:
             loop.call_soon(
-                asyncio.async,
+                asyncio.ensure_future,
                 self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.cache_file_path)
             )
 
         yield self.write_stream(waterbutler.core.streams.StringStream(rendition))
 
-    @tornado.gen.coroutine
-    def on_finish(self):
+    async def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 

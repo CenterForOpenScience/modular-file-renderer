@@ -49,8 +49,7 @@ class CorsMixin(tornado.web.RequestHandler):
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
-    @tornado.gen.coroutine
-    def prepare(self):
+    async def prepare(self):
         if self.request.method == 'OPTIONS':
             return
 
@@ -62,7 +61,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             self.url
         )
 
-        self.metadata = yield from self.provider.metadata()
+        self.metadata = await self.provider.metadata()
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -75,10 +74,9 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
 
-    @tornado.gen.coroutine
-    def write_stream(self, stream):
+    async def write_stream(self, stream):
         while True:
-            chunk = yield from stream.read(settings.CHUNK_SIZE)
+            chunk = await stream.read(settings.CHUNK_SIZE)
             if not chunk:
                 break
             # Temp fix, write does not accept bytearrays currently
@@ -116,8 +114,7 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             for ep in list(pkg_resources.iter_entry_points(namespace))
         }
 
-    @tornado.gen.coroutine
-    def get(self, module_name, path):
+    async def get(self, module_name, path):
         try:
             super().initialize(self.modules[module_name])
             return (yield super().get(path))

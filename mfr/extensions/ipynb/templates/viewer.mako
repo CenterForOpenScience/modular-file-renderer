@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="${base}/css/ipynb.css">
 <link rel="stylesheet" href="${base}/css/pygments.css">
 <link rel="stylesheet" href="/static/css/default.css">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
 
 <div style="word-wrap: break-word;" class="mfrViewer mfr-ipynb-body">
     ${body | n}

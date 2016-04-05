@@ -31,10 +31,10 @@
  */
 
 body {
-    font-family: Helvetica, Arial, Freesans, clean, sans-serif;
-padding:1em;
-margin:auto;
-background:#fefefe;
+    font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
+    padding:1em;
+    margin:auto;
+    background:#fefefe;
 }
 
 h1, h2, h3, h4, h5, h6 {

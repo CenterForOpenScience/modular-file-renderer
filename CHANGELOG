@@ -2,6 +2,15 @@
 ChangeLog
 *********
 
+0.11.0 (2016-04-08)
+===================
+
+- IPython notebooks are now styled and look **much** better. (thanks, @erinspace!)
+- The OSF (https://osf.io) has moved to Open Sans as the default font, so we shall do the same for
+Markdown, ReStructred Text, and IPython notebooks. (thanks, @mfraezz!)
+- COS is hiring! http://cos.io/jobs (thanks, @AndrewSallans!)
+- Update copyright date. (thanks, monotonic progression of time!)
+
 0.10.2 (2016-03-21)
 ===================
 

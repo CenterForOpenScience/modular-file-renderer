@@ -74,15 +74,16 @@ class ExportHandler(core.BaseHandler):
             with open(self.output_file_path.full_path, 'rb') as fp:
                 yield from self.cache_provider.upload(waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path)
 
-        try:
-            os.remove(self.source_file_path.full_path)
-        except FileNotFoundError:
-            pass
+        if hasattr(self, 'source_file_path'):
+            try:
+                os.remove(self.source_file_path.full_path)
+            except FileNotFoundError:
+                pass
 
-        try:
-            os.remove(self.output_file_path.full_path)
-        except FileNotFoundError:
-            pass
+            try:
+                os.remove(self.output_file_path.full_path)
+            except FileNotFoundError:
+                pass
 
     def _set_headers(self):
         self.set_header('Content-Disposition', 'attachment;filename="{}"'.format('{}.{}'.format(self.metadata.name.replace('"', '\\"'), self.format)))

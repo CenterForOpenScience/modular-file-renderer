@@ -1,5 +1,8 @@
 import os
 
+import furl
+
+
 try:
     from mfr import settings
 except ImportError:
@@ -32,3 +35,8 @@ CACHE_PROVIDER_SETTINGS = config.get('CACHE_PROVIDER_SETTINGS', {'folder': '/tmp
 CACHE_PROVIDER_CREDENTIALS = config.get('CACHE_PROVIDER_CREDENTIALS', {})
 
 LOCAL_CACHE_PROVIDER_SETTINGS = config.get('LOCAL_CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfrlocalcache/'})
+
+ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', ['http://localhost:5000/'])
+ALLOWED_PROVIDER_NETLOCS = []
+for domain in ALLOWED_PROVIDER_DOMAINS:
+    ALLOWED_PROVIDER_NETLOCS.append(furl.furl(domain).netloc)

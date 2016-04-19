@@ -1,10 +1,21 @@
 import abc
 
+import furl
+
+from mfr.core import exceptions
+from mfr.server import settings
+
 
 class BaseProvider(metaclass=abc.ABCMeta):
 
     def __init__(self, request, url):
         self.request = request
+        url_netloc = furl.furl(url).netloc
+        if url_netloc not in settings.ALLOWED_PROVIDER_NETLOCS:
+            raise exceptions.ProviderError(
+                message="{} is not a permitted provider domain.".format(url_netloc),
+                code=400
+            )
         self.url = url
 
     @abc.abstractmethod

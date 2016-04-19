@@ -3,6 +3,7 @@ import json
 import logging
 import logging.config
 
+
 PROJECT_NAME = 'mfr'
 PROJECT_CONFIG_PATH = '~/.cos'
 

@@ -111,4 +111,4 @@ class OsfProvider(provider.BaseProvider):
         if self.authorization:
             kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
 
-        return (await aiohttp.request(method, url, *args, **kwargs))
+        return await aiohttp.request(method, url, *args, **kwargs)

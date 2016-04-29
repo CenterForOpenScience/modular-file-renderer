@@ -45,16 +45,16 @@ class RenderHandler(core.BaseHandler):
                 logger.info('No cached file found; Starting render [{}]'.format(self.cache_file_path))
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
-                return (await self.write_stream(cached_stream))
+                return await self.write_stream(cached_stream)
 
         if renderer.file_required:
             await self.local_cache_provider.upload(
-                (await self.provider.download()),
+                await self.provider.download(),
                 self.source_file_path
             )
 
         loop = asyncio.get_event_loop()
-        rendition = (await loop.run_in_executor(None, renderer.render))
+        rendition = await loop.run_in_executor(None, renderer.render)
 
         # Spin off upload into non-blocking operation
         if renderer.cache_result and settings.CACHE_ENABLED:

@@ -123,12 +123,12 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     async def get(self, module_name, path):
         try:
             super().initialize(self.modules[module_name])
-            return (await super().get(path))
+            return await super().get(path)
         except Exception:
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
-            return (await super().get(path))
+            return await super().get(path)
         except Exception:
             self.set_status(404)

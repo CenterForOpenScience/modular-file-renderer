@@ -40,10 +40,10 @@ class ExportHandler(core.BaseHandler):
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
                 self._set_headers()
-                return (await self.write_stream(cached_stream))
+                return await self.write_stream(cached_stream)
 
         await self.local_cache_provider.upload(
-            (await self.provider.download()),
+            await self.provider.download(),
             self.source_file_path
         )
 

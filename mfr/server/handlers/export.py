@@ -65,12 +65,7 @@ class ExportHandler(core.BaseHandler):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
-        # Spin off upload into non-blocking operation
-        loop = asyncio.get_event_loop()
-        loop.call_soon(
-            asyncio.ensure_future,
-            self._cache_and_clean(),
-        )
+        asyncio.ensure_future(self._cache_and_clean())
 
     async def _cache_and_clean(self):
         if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):

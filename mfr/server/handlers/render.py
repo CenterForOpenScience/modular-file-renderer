@@ -58,9 +58,11 @@ class RenderHandler(core.BaseHandler):
 
         # Spin off upload into non-blocking operation
         if renderer.cache_result and settings.CACHE_ENABLED:
-            loop.call_soon(
-                asyncio.ensure_future,
-                self.cache_provider.upload(waterbutler.core.streams.StringStream(rendition), self.cache_file_path)
+            asyncio.ensure_future(
+                self.cache_provider.upload(
+                    waterbutler.core.streams.StringStream(rendition),
+                    self.cache_file_path
+                )
             )
 
         await self.write_stream(waterbutler.core.streams.StringStream(rendition))

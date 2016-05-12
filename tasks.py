@@ -23,8 +23,6 @@ def monkey_patch():
         return _create_default_context(purpose=purpose, cafile=cafile, capath=capath, cadata=cadata)
     ssl.create_default_context = create_default_context
 
-monkey_patch()
-
 
 @task
 def wheelhouse(develop=False):
@@ -60,5 +58,6 @@ def test(verbose=False):
 
 @task
 def server():
+    monkey_patch()
     from mfr.server.app import serve
     serve()

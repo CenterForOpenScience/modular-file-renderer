@@ -1,8 +1,8 @@
 import os
 import pkg_resources
 
-import tornado.gen
 import tornado.web
+import tornado.iostream
 from raven.contrib.tornado import SentryMixin
 
 import waterbutler.core.utils
@@ -49,8 +49,7 @@ class CorsMixin(tornado.web.RequestHandler):
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
-    @tornado.gen.coroutine
-    def prepare(self):
+    async def prepare(self):
         if self.request.method == 'OPTIONS':
             return
 
@@ -62,7 +61,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             self.url
         )
 
-        self.metadata = yield from self.provider.metadata()
+        self.metadata = await self.provider.metadata()
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -75,14 +74,22 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
 
-    @tornado.gen.coroutine
-    def write_stream(self, stream):
-        while True:
-            chunk = yield from stream.read(settings.CHUNK_SIZE)
-            if not chunk:
-                break
-            self.write(chunk)
-            yield self.flush()
+    async def write_stream(self, stream):
+        try:
+            while True:
+                chunk = await stream.read(settings.CHUNK_SIZE)
+                if not chunk:
+                    break
+                # Temp fix, write does not accept bytearrays currently
+                if isinstance(chunk, bytearray):
+                    chunk = bytes(chunk)
+                self.write(chunk)
+                del chunk
+                await self.flush()
+        except tornado.iostream.StreamClosedError:
+            # Client has disconnected early.
+            # No need for any exception to be raised
+            return
 
     def write_error(self, status_code, exc_info):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
@@ -113,16 +120,15 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             for ep in list(pkg_resources.iter_entry_points(namespace))
         }
 
-    @tornado.gen.coroutine
-    def get(self, module_name, path):
+    async def get(self, module_name, path):
         try:
             super().initialize(self.modules[module_name])
-            return (yield super().get(path))
+            return await super().get(path)
         except Exception:
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
-            return (yield super().get(path))
+            return await super().get(path)
         except Exception:
             self.set_status(404)

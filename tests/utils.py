@@ -1,8 +1,5 @@
 import pytest
-import asyncio
 from unittest import mock
-
-from decorator import decorator
 
 from tornado import testing
 from tornado.platform.asyncio import AsyncIOMainLoop
@@ -12,18 +9,13 @@ from mfr.core.provider import BaseProvider
 
 
 class MockCoroutine(mock.Mock):
-    @asyncio.coroutine
-    def __call__(self, *args, **kwargs):
+    async def __call__(self, *args, **kwargs):
         return super().__call__(*args, **kwargs)
-
-@decorator
-def async(func, *args, **kwargs):
-    future = func(*args, **kwargs)
-    asyncio.get_event_loop().run_until_complete(future)
 
 
 class FakeProvider(BaseProvider):
     pass
+
 
 class HandlerTestCase(testing.AsyncHTTPTestCase):
 

@@ -1,7 +1,7 @@
 import os
 import json
-import asyncio
 import hashlib
+import logging
 import mimetypes
 
 import furl
@@ -11,6 +11,8 @@ from waterbutler.core import streams
 
 from mfr.core import exceptions
 from mfr.core import provider
+
+logger = logging.getLogger(__name__)
 
 
 class OsfProvider(provider.BaseProvider):
@@ -32,18 +34,19 @@ class OsfProvider(provider.BaseProvider):
         if self.view_only:
             self.view_only = self.view_only[0].decode()
 
-    @asyncio.coroutine
-    def metadata(self):
-        download_url = yield from self._fetch_download_url()
+    async def metadata(self):
+        download_url = await self._fetch_download_url()
         if '/file?' in download_url:
             # TODO Remove this when API v0 is officially deprecated
             metadata_url = download_url.replace('/file?', '/data?', 1)
-            metadata_request = yield from self._make_request('GET', metadata_url)
-            metadata = yield from metadata_request.json()
+            metadata_request = await self._make_request('GET', metadata_url)
+            metadata = await metadata_request.json()
         else:
-            metadata_request = yield from self._make_request('HEAD', download_url)
+            metadata_request = await self._make_request('HEAD', download_url)
             # To make changes to current code as minimal as possible
             metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
+        await metadata_request.release()
+
         # e.g.,
         # metadata = {'data': {
         #     'name': 'blah.png',
@@ -53,6 +56,7 @@ class OsfProvider(provider.BaseProvider):
         #         ...
         #     },
         # }}
+
         name, ext = os.path.splitext(metadata['data']['name'])
         content_type = metadata['data']['contentType'] or mimetypes.guess_type(metadata['data']['name'])[0]
         cleaned_url = furl.furl(download_url)
@@ -61,21 +65,28 @@ class OsfProvider(provider.BaseProvider):
         unique_key = hashlib.sha256((metadata['data']['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
         return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url)
 
-    @asyncio.coroutine
-    def download(self):
-        download_url = yield from self._fetch_download_url()
-        response = yield from self._make_request('GET', download_url, allow_redirects=False)
+    async def download(self):
+        download_url = await self._fetch_download_url()
+        response = await self._make_request('GET', download_url, allow_redirects=False)
+
         if response.status >= 400:
-            raise exceptions.ProviderError('Unable to download the requested file, please try again later.', code=response.status)
+            err_resp = await response.read()
+            logger.error('Unable to download file: ({}) {}'.format(response.status, err_resp.decode('utf-8')))
+            raise exceptions.ProviderError(
+                'Unable to download the requested file, please try again later.',
+                code=response.status
+            )
+
         if response.status in (302, 301):
-            response = yield from aiohttp.request('GET', response.headers['location'])
+            await response.release()
+            response = await aiohttp.request('GET', response.headers['location'])
+
         return streams.ResponseStreamReader(response, unsizable=True)
 
-    @asyncio.coroutine
-    def _fetch_download_url(self):
+    async def _fetch_download_url(self):
         if not self.download_url:
             # make request to osf, don't follow, store waterbutler download url
-            request = yield from self._make_request(
+            request = await self._make_request(
                 'GET',
                 self.url,
                 allow_redirects=False,
@@ -83,13 +94,14 @@ class OsfProvider(provider.BaseProvider):
                     'Content-Type': 'application/json'
                 }
             )
+            await request.release()
+
             if request.status != 302:
                 raise exceptions.ProviderError(request.reason, request.status)
             self.download_url = request.headers['location']
         return self.download_url
 
-    @asyncio.coroutine
-    def _make_request(self, method, url, *args, **kwargs):
+    async def _make_request(self, method, url, *args, **kwargs):
         if self.cookies:
             kwargs['cookies'] = self.cookies
         if self.cookie:
@@ -99,4 +111,4 @@ class OsfProvider(provider.BaseProvider):
         if self.authorization:
             kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
 
-        return (yield from aiohttp.request(method, url, *args, **kwargs))
+        return await aiohttp.request(method, url, *args, **kwargs)

@@ -8,7 +8,7 @@ A Python package for rendering files to HTML via an embeddable iframe.
 
 ### Startup commands
 
-Install the latest version of python3
+Install the latest version of python3.5.
 
 For MacOSX users:
 
@@ -23,7 +23,7 @@ apt-get install python3
 apt-get install r-base
 ```
 
-After installing python3, create the virtual environment with the following commands:
+After installing python3.5, create the virtual environment with the following commands:
 
 ```bash
 pip install virtualenv
@@ -32,6 +32,27 @@ mkvirtualenv --python=`which python3` mfr
 pip install invoke
 invoke install --develop
 invoke server
+```
+### Testing Configuration (optional)
+
+MFR looks for local configuration in `~/.cos/mfr-test.json`.  The defaults should suffice for most local testing.  If you're running the OSF on something other than `http://localhost:5000/`, you'll need to update the `ALLOWED_PROVIDER_DOMAINS` settings value:
+
+```json
+{
+  "SERVER_CONFIG": {
+    "ALLOWED_PROVIDER_DOMAINS": ['http://localhost:9999/']
+  }
+}
+```
+
+If you encounter the error message `TypeError: throw() takes 2 positional arguments but 4 were given`, you've run into a [core asyncio bug](https://bugs.python.org/issue25394)!  This bug is triggered by turning on debugging. You'll need to set `SERVER_CONFIG.DEBUG` to `false` in your `mfr-test.json`, e.g.
+
+```json
+{
+  "SERVER_CONFIG": {
+    "DEBUG": false
+  }
+}
 ```
 
 ### Create your own module

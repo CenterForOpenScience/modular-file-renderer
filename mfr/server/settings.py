@@ -13,7 +13,7 @@ config = settings.get('SERVER_CONFIG', {})
 
 STATIC_PATH = config.get('STATIC_PATH', os.path.join(os.path.dirname(__file__), 'static'))
 
-ADDRESS = config.get('ADDRESS', '127.0.0.1')
+ADDRESS = config.get('ADDRESS', 'localhost')
 PORT = config.get('PORT', 7778)
 
 DEBUG = config.get('DEBUG', False)

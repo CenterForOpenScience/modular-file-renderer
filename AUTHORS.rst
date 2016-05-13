@@ -25,3 +25,6 @@ Contributors
 - Michael Haselton `@icereval <https://github.com/icereval>`_
 - Megan Kelly `@megankelly <https://github.com/megankelly>`_
 - Chris Seto `@chrisseto <https://github.com/chrisseto>`_
+- Fitz Elliott `@felliott <https://github.com/felliott>`_
+- Erin Braswell `@erinspace <https://github.com/erinspace>`_
+- Rafael de Lucena Valle `@rafaeldelucena <https://github.com/rafaeldelucena>`_

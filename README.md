@@ -40,7 +40,7 @@ MFR looks for local configuration in `~/.cos/mfr-test.json`.  The defaults shoul
 ```json
 {
   "SERVER_CONFIG": {
-    "ALLOWED_PROVIDER_DOMAINS": ['http://localhost:9999/']
+    "ALLOWED_PROVIDER_DOMAINS": ["http://localhost:9999/"]
   }
 }
 ```

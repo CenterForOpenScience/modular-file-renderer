@@ -71,7 +71,7 @@ pre {
     line-height: 1.42857;
     background-color: #F5F5F5;
     border: 1px solid #CCC;
-    white-space: pre-line;
+    white-space: pre-wrap;
 }
 
 code, kbd, pre, samp {

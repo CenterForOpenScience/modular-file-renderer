@@ -71,7 +71,7 @@ pre {
     line-height: 1.42857;
     background-color: #F5F5F5;
     border: 1px solid #CCC;
-    white-space:pre-line;
+    white-space: pre-line;
 }
 
 code, kbd, pre, samp {
@@ -81,13 +81,3 @@ code, kbd, pre, samp {
 * {
     box-sizing: border-box;
 }
-
-/* CSS only for Firefox
-@-moz-document url-prefix() {
-  .highlight > pre {
-      white-space: pre-wrap;
-      white-space: -moz-pre-wrap;
-      word-break: break-all;
-  }
-}
-*/

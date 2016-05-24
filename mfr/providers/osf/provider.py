@@ -84,7 +84,7 @@ class OsfProvider(provider.BaseProvider):
         return streams.ResponseStreamReader(response, unsizable=True)
 
     async def _fetch_download_url(self):
-        # Waterbutler url provided
+        # v1 Waterbutler url provided
         if 'v1/resources' in self.url:
             return self.url
         if not self.download_url:

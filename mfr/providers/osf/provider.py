@@ -2,6 +2,7 @@ import os
 import json
 import hashlib
 import logging
+from urllib.parse import urlparse
 import mimetypes
 
 import furl
@@ -85,7 +86,8 @@ class OsfProvider(provider.BaseProvider):
 
     async def _fetch_download_url(self):
         # v1 Waterbutler url provided
-        if 'v1/resources' in self.url:
+        path = urlparse(self.url).path
+        if path.startswith('/v1/resources'):
             return self.url
         if not self.download_url:
             # make request to osf, don't follow, store waterbutler download url

@@ -13,10 +13,10 @@ config = settings.get('SERVER_CONFIG', {})
 
 STATIC_PATH = config.get('STATIC_PATH', os.path.join(os.path.dirname(__file__), 'static'))
 
-ADDRESS = config.get('ADDRESS', '127.0.0.1')
+ADDRESS = config.get('ADDRESS', 'localhost')
 PORT = config.get('PORT', 7778)
 
-DEBUG = config.get('DEBUG', True)
+DEBUG = config.get('DEBUG', False)
 
 SSL_CERT_FILE = config.get('SSL_CERT_FILE', None)
 SSL_KEY_FILE = config.get('SSL_KEY_FILE', None)

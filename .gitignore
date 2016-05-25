@@ -70,3 +70,5 @@ player/mfr_config_local.py
 player/static/mfr/*
 
 !.gitkeep
+
+.cache

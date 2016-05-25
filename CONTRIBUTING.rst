@@ -28,29 +28,29 @@ Configure development environment and Install the development dependencies.
 
 .. note::
 
-    It is recommended that you use a `virtualenv`_ with `virtualenvwrapper`_ during development. Python 3.4 and R are required.
+    It is recommended that you use a `virtualenv`_ with `virtualenvwrapper`_ during development. Python 3.5 and R are required.
 
 .. _virtualenv: http://www.virtualenv.org/en/latest/
 .. _virtualenvwrapper: https://pypi.python.org/pypi/virtualenvwrapper
 
 .. code-block:: bash
 
-    # For MacOSX: Install the latest version of python3
+    # For Mac OS X: Install the latest version of python3.5
     $ brew install python3
     $ brew install r
+
     # Linux users, probably the same thing but with apt-get
     # If someone wants to update this guide, please do.
 
     $ pip install virtualenv
     $ pip install virtualenvwrapper
     $ mkvirtualenv --python=`which python3` mfr
-    
-    $ pip install -U -r dev-requirements.txt
+    $ pip install invoke
 
 
 Lastly, install mfr in development mode. ::
 
-    $ python setup.py develop
+    $ invoke install -d
     $ invoke server
    
 Running tests
@@ -101,13 +101,16 @@ The above test can be rewritten like so:
 
 Manual Local Testing
 --------------------
+
 To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. 
 
-First, change the defaul provider to HTTP (in `/mfr/server/settings.py`):
+First, change the default provider to HTTP (in `/mfr/server/settings.py`) and update the provider domain whitelist:
 
 .. code-block:: python
 
-	PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
+    PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
+    ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', ['http://localhost:8000/'])
+
 	
 
 Because the MFR is passed a url to render, you also need to be running an http server.
@@ -244,14 +247,14 @@ A typical extension plugin directory structure might look like this:
 	│				└── tools.py
 	├── tests
 	│	├── __init__.py
-	│	└── extnesions
+	│	└── extensions
 	│		├── __init__.py
 	│		└── custom-plugin
 	│			├── __init__.py
 	│			└── test_custom_plugin.py
 	├── setup.py
 	├── README.md
-	└── requirements.py
+	└── requirements.txt
 
 
 Documentation
@@ -261,7 +264,10 @@ Contributions to the documentation are welcome. Documentation is written in `reS
 
 To build docs: ::
 
-    $ invoke docs -b
+    $ pip install -r doc-requirements.txt
+    $ cd docs
+    $ make html
+    $ open _build/html/index.html
 
 The ``-b`` (for "browse") automatically opens up the docs in your browser after building.
 

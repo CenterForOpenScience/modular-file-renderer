@@ -1,8 +1,8 @@
 import os
 import pkg_resources
 
-import tornado.gen
 import tornado.web
+import tornado.iostream
 from raven.contrib.tornado import SentryMixin
 
 import waterbutler.core.utils
@@ -30,27 +30,50 @@ CORS_EXPOSE_HEADERS = [
 ]
 
 
-class CorsMixin(tornado.web.RequestHandler):
+class CorsMixin:
+
+    def _cross_origin_is_allowed(self):
+        if self.request.method == 'OPTIONS':
+            return True
+        elif not self.request.cookies and self.request.headers.get('Authorization'):
+            return True
+        return False
 
     def set_default_headers(self):
-        if isinstance(settings.CORS_ALLOW_ORIGIN, str):
-            self.set_header('Access-Control-Allow-Origin', settings.CORS_ALLOW_ORIGIN)
+        if not self.request.headers.get('Origin'):
+            return
+
+        allowed_origin = None
+        if self._cross_origin_is_allowed():
+            allowed_origin = self.request.headers['Origin']
+        elif isinstance(settings.CORS_ALLOW_ORIGIN, str):
+            if settings.CORS_ALLOW_ORIGIN == '*':
+                # Wild cards cannot be used with allowCredentials.
+                # Match Origin if its specified, makes pdfs and pdbs render properly
+                allowed_origin = self.request.headers['Origin']
+            else:
+                allowed_origin = settings.CORS_ALLOW_ORIGIN
         else:
-            if self.request.headers.get('Origin') in settings.CORS_ALLOW_ORIGIN:
-                self.set_header('Access-Control-Allow-Origin', self.request.headers['Origin'])
+            if self.request.headers['Origin'] in settings.CORS_ALLOW_ORIGIN:
+                allowed_origin = self.request.headers['Origin']
+
+        if allowed_origin is not None:
+            self.set_header('Access-Control-Allow-Origin', allowed_origin)
+
+        self.set_header('Access-Control-Allow-Credentials', 'true')
         self.set_header('Access-Control-Allow-Headers', ', '.join(CORS_ACCEPT_HEADERS))
         self.set_header('Access-Control-Expose-Headers', ', '.join(CORS_EXPOSE_HEADERS))
         self.set_header('Cache-control', 'no-store, no-cache, must-revalidate, max-age=0')
 
     def options(self):
         self.set_status(204)
-        self.set_header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE'),
+        if self.request.headers.get('Origin'):
+            self.set_header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE'),
 
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
-    @tornado.gen.coroutine
-    def prepare(self):
+    async def prepare(self):
         if self.request.method == 'OPTIONS':
             return
 
@@ -62,7 +85,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             self.url
         )
 
-        self.metadata = yield from self.provider.metadata()
+        self.metadata = await self.provider.metadata()
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -75,14 +98,22 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
 
-    @tornado.gen.coroutine
-    def write_stream(self, stream):
-        while True:
-            chunk = yield from stream.read(settings.CHUNK_SIZE)
-            if not chunk:
-                break
-            self.write(chunk)
-            yield self.flush()
+    async def write_stream(self, stream):
+        try:
+            while True:
+                chunk = await stream.read(settings.CHUNK_SIZE)
+                if not chunk:
+                    break
+                # Temp fix, write does not accept bytearrays currently
+                if isinstance(chunk, bytearray):
+                    chunk = bytes(chunk)
+                self.write(chunk)
+                del chunk
+                await self.flush()
+        except tornado.iostream.StreamClosedError:
+            # Client has disconnected early.
+            # No need for any exception to be raised
+            return
 
     def write_error(self, status_code, exc_info):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
@@ -113,16 +144,15 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             for ep in list(pkg_resources.iter_entry_points(namespace))
         }
 
-    @tornado.gen.coroutine
-    def get(self, module_name, path):
+    async def get(self, module_name, path):
         try:
             super().initialize(self.modules[module_name])
-            return (yield super().get(path))
+            return await super().get(path)
         except Exception:
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
-            return (yield super().get(path))
+            return await super().get(path)
         except Exception:
             self.set_status(404)

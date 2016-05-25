@@ -1,28 +1,27 @@
 Setting Up
 ==========
 
-Make sure that you have installed R, are using >= python3.3 and install invoke for your current python3 version.
+Make sure that you have installed R, are using python3.5, and have installed invoke for your current python3 version.
 
+Install ``invoke``:
 
 .. code-block:: bash
 
     pip install invoke
 
-
-Install requirements
+Install requirements:
 
 .. code-block:: bash
 
     invoke install
 
-Or for some nicities (like tests)
+Or for some nicities (like tests):
 
 .. code-block:: bash
 
     invoke install --develop
 
-
-Start the server
+Start the server:
 
 .. note
 

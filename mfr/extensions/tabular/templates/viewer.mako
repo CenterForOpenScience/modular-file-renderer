@@ -91,6 +91,28 @@
             return filteredData;
         }
 
+        function probablyANumber(s) {
+            // Guess whether something is a number.  isNaN coerces its argument into a Number.
+            // Most non-numeric strings will return NaN, including "3.14abc".  Special care must
+            // be taken with non-numeric things that can be cast to Numbers e.g. true, false, null,
+            // "", "      ", etc.  For more information see:
+            //
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/isNaN
+            //
+            // This is called probablyANumber because I'm sure we've omitted some special case.
+            return !isNaN(s) && s !== null && s !== "" && s !== false && s !== true &&
+                   !/^ +$/.test(s);
+        }
+
+        function prepareSortValue(s) {
+            // Everything retrieved from SlickGrid is a string.
+            // If those strings are numbers, parse them.
+            if (probablyANumber(s)) {
+                return parseFloat(s);
+            }
+            return s;
+        }
+
         function sortData (e, args) {
             var cols = args.sortCols;
             var rows = grid.getData();
@@ -98,7 +120,8 @@
                 for (var i = 0; i < cols.length; i++) {
                     var field = cols[i].sortCol.field;
                     var sign = cols[i].sortAsc ? 1 : -1;
-                    var value1 = dataRow1[field], value2 = dataRow2[field];
+                    var value1 = prepareSortValue(dataRow1[field]);
+                    var value2 = prepareSortValue(dataRow2[field]);
                     var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
                     if (result !== 0) {
                         return result;
@@ -113,7 +136,7 @@
         function reAdjust(){
             liFirstPosLeft = $('.list li:first').position().left;
             liLastPosRight = $('.list li:last').position().left + $('.list li:last').width();
-            widthOfList = $('.list').width()
+            widthOfList = $('.list').width();
             if (liFirstPosLeft < 0) {
                 $('.scroller-left').show();
             }

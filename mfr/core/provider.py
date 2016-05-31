@@ -1,4 +1,5 @@
 import abc
+import markupsafe
 
 import furl
 
@@ -13,7 +14,9 @@ class BaseProvider(metaclass=abc.ABCMeta):
         url_netloc = furl.furl(url).netloc
         if url_netloc not in settings.ALLOWED_PROVIDER_NETLOCS:
             raise exceptions.ProviderError(
-                message="{} is not a permitted provider domain.".format(url_netloc),
+                message="{} is not a permitted provider domain.".format(
+                    markupsafe.escape(url_netloc)
+                ),
                 code=400
             )
         self.url = url

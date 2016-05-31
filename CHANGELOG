@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+0.12.1 (2016-05-31)
+===================
+
+- When an invalid provider is passed to MFR, HTML escape the url in the error message.
+
 0.12.0 (2016-05-24)
 ===================
 

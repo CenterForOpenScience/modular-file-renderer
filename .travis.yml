@@ -13,8 +13,10 @@ before_install:
   - export WHEELHOUSE=$HOME/wheelhouse
 
 install:
-  - sed 's/^rpy2==/#rpy2==/' -i requirements.txt
+  - travis_retry pip install --upgrade pip
+  - travis_retry pip install wheel==0.26.0
   - travis_retry pip install invoke
+  - sed 's/^rpy2==/#rpy2==/' -i requirements.txt
   - travis_retry invoke wheelhouse --develop
   - travis_retry invoke install --develop
 
@@ -25,10 +27,11 @@ script:
   - invoke test
 
 before_cache:
-  # exclude python requirements from github repo's
-  - rm -f $HOME/wheelhouse/raven-*.whl
+  # force reinstall for reqs pulled from github repos
   - rm -f $HOME/wheelhouse/xlrd-*.whl
   - rm -f $HOME/wheelhouse/waterbutler-*.whl
+  - rm -f $HOME/wheelhouse/aiohttpretty-*.whl
+
 
 notifications:
   flowdock: 0221882cdda034c0e9ac2a0e766053dd

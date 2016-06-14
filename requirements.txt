@@ -1,5 +1,6 @@
 aiohttp==0.18.4
 furl==0.4.2
+invoke==0.11.1
 mako==1.0.1
 raven==5.10.2
 stevedore==1.2.0

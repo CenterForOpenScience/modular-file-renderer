@@ -7,7 +7,7 @@ Install ``invoke``:
 
 .. code-block:: bash
 
-    pip install invoke
+    pip install invoke==0.11.1
 
 Install requirements:
 

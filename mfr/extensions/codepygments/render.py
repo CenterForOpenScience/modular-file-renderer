@@ -1,5 +1,6 @@
 import os
 
+import chardet
 import pygments.lexers
 import pygments.lexers.special
 import pygments.formatters
@@ -34,20 +35,27 @@ class CodePygmentsRenderer(extension.BaseRenderer):
     def _render_html(self, fp, ext, *args, **kwargs):
         """Generate an html representation of the file
         :param fp: File pointer
+        :param ext: File name extension
         :return: Content html
         """
         formatter = pygments.formatters.HtmlFormatter()
         data = fp.read()
 
         content, exception = None, None
-        for encoding in ['utf-8', 'utf-16', 'windows-1252', 'ISO-8859-2']:
+        try:
+            content = data.decode('utf-8')
+        except UnicodeDecodeError as e:
+            exception = e
+
+        if exception is not None:
+            encoding = chardet.detect(data)
             try:
-                content = data.decode(encoding)
-                break
+                content = data.decode(encoding['encoding'])
             except UnicodeDecodeError as e:
                 exception = e
+
         if content is None:
-            assert exception is not None, 'Got not content or exception'
+            assert exception is not None, 'Got no content or exception'
             raise exception
 
         try:

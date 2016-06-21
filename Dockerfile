@@ -42,6 +42,9 @@ RUN apt-get update \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
+# ensure unoconv can locate the uno library
+ENV PYTHONPATH=/usr/lib/python3/dist-packages
+
 RUN mkdir -p /code
 WORKDIR /code
 

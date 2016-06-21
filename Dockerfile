@@ -56,9 +56,6 @@ COPY ./ /code/
 
 RUN python setup.py develop
 
-# first run will fail, however it will setup the environment for the next run to be successful
-RUN gosu www-data /usr/bin/unoconv --listener --server=0.0.0.0 --port=2002 -vvv
-
 EXPOSE 7778
 
 CMD ["gosu", "nobody", "invoke", "server"]

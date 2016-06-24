@@ -173,80 +173,17 @@ html_sidebars = {
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'mfrdoc'
 
-
-# -- Options for LaTeX output --------------------------------------------------
-
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
-}
-
-# Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'mfr.tex', u'mfr Documentation',
-    u'Center for Open Science', 'manual'),
+    ('documentation', False),
 ]
 
-# The name of an image file (relative to this directory) to place at the top of
-# the title page.
-#latex_logo = None
 
-# For "manual" documents, if this is true, then toplevel headings are parts,
-# not chapters.
-#latex_use_parts = False
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-# If true, show page references after internal links.
-#latex_show_pagerefs = False
-
-# If true, show URL addresses after external links.
-#latex_show_urls = False
-
-# Documents to append as an appendix to all manuals.
-#latex_appendices = []
-
-# If false, no module index is generated.
-#latex_domain_indices = True
-
-
-# -- Options for manual page output --------------------------------------------
-
-# One entry per manual page. List of tuples
-# (source start file, name, description, authors, manual section).
-man_pages = [
-    ('index', 'mfr', u'mfr Documentation',
-     [u'Center for Open Science'], 1)
-]
-
-# If true, show URL addresses after external links.
-#man_show_urls = False
-
-
-# -- Options for Texinfo output ------------------------------------------------
-
-# Grouping the document tree into Texinfo files. List of tuples
-# (source start file, target name, title, author,
-#  dir menu entry, description, category)
-texinfo_documents = [
-    ('index', 'mfr', u'mfr Documentation',
-    u'Center for Open Science', 'mfr', 'HTML file renderer for Python',
-    ''),
-]
-
-# Documents to append as an appendix to all manuals.
-#texinfo_appendices = []
-
-# If false, no module index is generated.
-#texinfo_domain_indices = True
-
-# How to display URL addresses: 'footnote', 'no', or 'inline'.
-#texinfo_show_urls = 'footnote'
-
-# If true, do not generate a @detailmenu in the "Top" node's menu.
-#texinfo_no_detailmenu = False
+# On RTD we can't import sphinx_rtd_theme, but it will be applied by
+# default anyway.  This block will use the same theme when building locally
+# as on RTD.
+if not on_rtd:
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]

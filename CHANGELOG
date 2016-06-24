@@ -2,6 +2,12 @@
 ChangeLog
 *********
 
+0.14.0 (2016-06-24)
+===================
+- Feature: The Dockerfile now sets up unoconv for you.
+- Fix: Character encodings for text files are now detected with the chardet library.  Inspired
+by a file that was both valid ISO-8859-1 and UTF-16 at the same time.
+
 0.13.0 (2016-06-17)
 ===================
 - Avoid an unnecessary lookup when MFR's OSF provider gets a WaterButler V1 url for
@@ -14,7 +20,7 @@ downloading. (thanks, @pattisdr!)
 
 0.12.2 (2016-06-13)
 ===================
-- Add a Dockerfile to simplify runninf MFR in dev environments.
+- Add a Dockerfile to simplify running MFR in dev environments.
 - Pin invoke to v0.11.1.  Our tasks.py is incompatible with v0.13.
 
 0.12.1 (2016-05-31)
@@ -24,7 +30,7 @@ downloading. (thanks, @pattisdr!)
 0.12.0 (2016-05-24)
 ===================
 - MFR now requires python-3.5!  Make sure to set the SERVER_DEBUG flag to false in your server
-config to avoid the hated "throw() takes 2 positional arguments but 4 were given" error.  
+config to avoid the hated "throw() takes 2 positional arguments but 4 were given" error.
 - Tabular files now sort numish columns numerically!  (thanks, @mfraezz!)
 - MFR correctly sets the Access-Control-Allow-Origin header when it receives a request with
 an Authorization header but no cookie. IOW it can now be used outside the OSF! (thanks,

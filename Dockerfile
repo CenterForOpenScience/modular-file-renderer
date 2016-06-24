@@ -42,6 +42,9 @@ RUN apt-get update \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
+# ensure unoconv can locate the uno library
+ENV PYTHONPATH=/usr/lib/python3/dist-packages
+
 RUN mkdir -p /code
 WORKDIR /code
 
@@ -53,6 +56,8 @@ RUN pip install --no-cache-dir -r /code/requirements.txt
 
 # Copy the rest of the code over
 COPY ./ /code/
+
+RUN python setup.py develop
 
 EXPOSE 7778
 

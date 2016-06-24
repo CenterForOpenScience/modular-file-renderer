@@ -1,11 +1,14 @@
+-r requirements.txt
+
+-e git+https://github.com/centerforopenscience/aiohttpretty.git@0.0.2#egg=aiohttpretty
+colorlog==2.5.0
 flake8==2.3.0
-pep8
-mccabe
-pyflakes
 ipdb
+mccabe
+pep8
+pyflakes
 pytest==2.8.2
 pytest-cov==2.2.0
 pyzmq==14.4.1
-colorlog==2.5.0
--e git+https://github.com/centerforopenscience/aiohttpretty.git@0.0.2#egg=aiohttpretty
--r requirements.txt
+
+

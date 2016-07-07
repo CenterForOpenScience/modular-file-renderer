@@ -1,1 +1,5 @@
-.. include:: ../LICENSE.rst
+Licence
+=======
+
+.. include:: ../LICENSE
+   :literal:

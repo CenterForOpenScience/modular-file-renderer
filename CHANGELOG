@@ -5,13 +5,11 @@ ChangeLog
 0.14.0 (2016-06-24)
 ===================
 - Feature: The Dockerfile now sets up unoconv for you.
-- Fix: Character encodings for text files are now detected with the chardet library.  Inspired
-by a file that was both valid ISO-8859-1 and UTF-16 at the same time.
+- Fix: Character encodings for text files are now detected with the chardet library.  Inspired by a file that was both valid ISO-8859-1 and UTF-16 at the same time.
 
 0.13.0 (2016-06-17)
 ===================
-- Avoid an unnecessary lookup when MFR's OSF provider gets a WaterButler V1 url for
-downloading. (thanks, @pattisdr!)
+- Avoid an unnecessary lookup when MFR's OSF provider gets a WaterButler V1 url for downloading. (thanks, @pattisdr!)
 - Update the install docs to pin invoke to 0.11.1.
 
 0.12.3 (2016-06-13)
@@ -29,24 +27,19 @@ downloading. (thanks, @pattisdr!)
 
 0.12.0 (2016-05-24)
 ===================
-- MFR now requires python-3.5!  Make sure to set the SERVER_DEBUG flag to false in your server
-config to avoid the hated "throw() takes 2 positional arguments but 4 were given" error.
+- MFR now requires python-3.5!  Make sure to set the SERVER_DEBUG flag to false in your server config to avoid the hated "throw() takes 2 positional arguments but 4 were given" error.
 - Tabular files now sort numish columns numerically!  (thanks, @mfraezz!)
-- MFR correctly sets the Access-Control-Allow-Origin header when it receives a request with
-an Authorization header but no cookie. IOW it can now be used outside the OSF! (thanks,
-@samchrisinger!)
+- MFR correctly sets the Access-Control-Allow-Origin header when it receives a request with an Authorization header but no cookie. IOW it can now be used outside the OSF! (thanks, @samchrisinger!)
 - Text files now wrap on Safari and Chrome. (thanks, @zamattiac!)
 
 0.11.1 (2016-04-19)
 ===================
-- Require admin to set a whitelist of permitted provider domains, to avoid spamming other sites
-with requests.
+- Require admin to set a whitelist of permitted provider domains, to avoid spamming other sites with requests.
 
 0.11.0 (2016-04-08)
 ===================
 - IPython notebooks are now styled and look **much** better. (thanks, @erinspace!)
-- The OSF (https://osf.io) has moved to Open Sans as the default font, so we shall do the same for
-Markdown, ReStructred Text, and IPython notebooks. (thanks, @mfraezz!)
+- The OSF (https://osf.io) has moved to Open Sans as the default font, so we shall do the same for Markdown, ReStructred Text, and IPython notebooks. (thanks, @mfraezz!)
 - COS is hiring! http://cos.io/jobs (thanks, @AndrewSallans!)
 - Update copyright date. (thanks, monotonic progression of time!)
 
@@ -60,8 +53,7 @@ Markdown, ReStructred Text, and IPython notebooks. (thanks, @mfraezz!)
 
 0.10.0 (2016-02-11)
 ===================
-- Markdown and ReStructuredText files are now rendered in their formatted
-display. (thanks, @TomBaxter!)
+- Markdown and ReStructuredText files are now rendered in their formatted display. (thanks, @TomBaxter!)
 - ...oh, and they're styled, too! (thanks, @erinspace!)
 - Update MFR install instructions. (thanks, @rafaeldelucena!)
 
@@ -71,11 +63,10 @@ display. (thanks, @TomBaxter!)
 
 0.9.5 (2016-01-31)
 ==================
-- Remove Sentry Ravent Client patch, latest version no longer requires
-patching
+- Remove Sentry Ravent Client patch, latest version no longer requires patching
 
 0.9.3/4 (2016-01-30)
-==================
+====================
 - Updated Sentry Raven Client to send release w/ Tornado patch and tests
 
 0.9.2 (2016-01-30)
@@ -88,8 +79,7 @@ patching
 
 0.9.0 (2016-01-30)
 ==================
-- Support for 3D model file formats (.stl, .3ds, .ctm, .obj) via jsc3d,
-https://github.com/humu2009/jsc3d
+- Support for 3D model file formats (.stl, .3ds, .ctm, .obj) via jsc3d, https://github.com/humu2009/jsc3d
 - Support for .scad (OpenSCAD) syntax highlighting
 
 0.8.4 (2016-01-27)

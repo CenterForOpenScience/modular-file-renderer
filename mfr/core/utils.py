@@ -46,7 +46,7 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
     """Returns an instance of :class:`mfr.core.extension.BaseRenderer`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
-    :param :class:`mfr.core.provider.ProviderMetadata` metadata:
+    :param: :class:`mfr.core.provider.ProviderMetadata` metadata:
     :param str file_path:
     :param str url:
     :param str assets_url:

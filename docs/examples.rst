@@ -56,7 +56,7 @@ app.py
 
 view_file.html
 
-.. code-block:: html
+.. code-block:: none
 
     {% for stylesheet in render_result.assets.css %}
         <link rel="stylesheet" href={{ stylesheet }}/>

@@ -8,6 +8,7 @@ from pygments.util import ClassNotFound
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
+from mfr.extensions.codepygments import exceptions
 
 
 class CodePygmentsRenderer(extension.BaseRenderer):
@@ -20,6 +21,9 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
+        file_size = os.path.getsize(self.file_path)
+        if file_size > 65536:
+            raise(exceptions.FileToLargeException('Text files larger than 64kb are not rendered; please download the file to view.'))
         with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.metadata.ext)
             return self.TEMPLATE.render(base=self.assets_url, body=body)

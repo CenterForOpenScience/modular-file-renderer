@@ -45,7 +45,12 @@ class OsfProvider(provider.BaseProvider):
         else:
             metadata_request = await self._make_request('HEAD', download_url)
             # To make changes to current code as minimal as possible
-            metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
+            try:
+                metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
+            except KeyError:
+                raise exceptions.MetadataError(
+                    'Failed to return metadata. metadata request code was {}'.format(str(metadata_request.status)),
+                    code=400)
         await metadata_request.release()
 
         # e.g.,

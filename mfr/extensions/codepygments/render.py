@@ -49,10 +49,11 @@ class CodePygmentsRenderer(extension.BaseRenderer):
 
         if exception is not None:
             encoding = chardet.detect(data)
-            try:
-                content = data.decode(encoding['encoding'])
-            except UnicodeDecodeError as e:
-                exception = e
+            if encoding['encoding']:
+                try:
+                    content = data.decode(encoding['encoding'])
+                except UnicodeDecodeError as e:
+                    exception = e
 
         if content is None:
             assert exception is not None, 'Got no content or exception'

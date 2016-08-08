@@ -12,6 +12,7 @@ from waterbutler.core import streams
 
 from mfr.core import exceptions
 from mfr.core import provider
+from mfr.providers.osf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +69,8 @@ class OsfProvider(provider.BaseProvider):
 
     async def download(self):
         download_url = await self._fetch_download_url()
-        response = await self._make_request('GET', download_url, allow_redirects=False)
+        headers = {settings.MFR_IDENTIFYING_HEADER: '1'}
+        response = await self._make_request('GET', download_url, allow_redirects=False, headers=headers)
 
         if response.status >= 400:
             err_resp = await response.read()

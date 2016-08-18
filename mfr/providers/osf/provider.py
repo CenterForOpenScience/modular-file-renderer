@@ -18,6 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 class OsfProvider(provider.BaseProvider):
+    """Open Science Framework (https://osf.io) -aware provider.  Knows the OSF ecosystem and
+    can request specific metadata for the file referenced by the URL.  Can correctly propagate
+    OSF authorization to verify ownership and permisssions of file.
+    """
 
     UNNEEDED_URL_PARAMS = ('_', 'token', 'action', 'mode', 'displayName')
 
@@ -37,13 +41,18 @@ class OsfProvider(provider.BaseProvider):
             self.view_only = self.view_only[0].decode()
 
     async def metadata(self):
+        """Fetch metadata about the file from WaterButler. V0 and V1 urls must be handled
+        differently.
+        """
         download_url = await self._fetch_download_url()
         if '/file?' in download_url:
+            # URL is for WaterButler v0 API
             # TODO Remove this when API v0 is officially deprecated
             metadata_url = download_url.replace('/file?', '/data?', 1)
             metadata_request = await self._make_request('GET', metadata_url)
             metadata = await metadata_request.json()
         else:
+            # URL is for WaterButler v1 API
             metadata_request = await self._make_request('HEAD', download_url)
             # To make changes to current code as minimal as possible
             metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
@@ -68,6 +77,7 @@ class OsfProvider(provider.BaseProvider):
         return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url)
 
     async def download(self):
+        """Download file from WaterButler, returning stream."""
         download_url = await self._fetch_download_url()
         headers = {settings.MFR_IDENTIFYING_HEADER: '1'}
         response = await self._make_request('GET', download_url, allow_redirects=False, headers=headers)
@@ -87,6 +97,11 @@ class OsfProvider(provider.BaseProvider):
         return streams.ResponseStreamReader(response, unsizable=True)
 
     async def _fetch_download_url(self):
+        """Provider needs a WaterButler URL to download and get metadata.  If ``url`` is already
+        a WaterButler url, return that.  If not, then the url points to an OSF endpoint that will
+        redirect to WB.  Issue a GET request against it, then return the WB url stored in the
+        Location header.
+        """
         # v1 Waterbutler url provided
         path = urlparse(self.url).path
         if path.startswith('/v1/resources'):
@@ -109,6 +124,7 @@ class OsfProvider(provider.BaseProvider):
         return self.download_url
 
     async def _make_request(self, method, url, *args, **kwargs):
+        """Pass through OSF credentials."""
         if self.cookies:
             kwargs['cookies'] = self.cookies
         if self.cookie:

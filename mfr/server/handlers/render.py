@@ -27,7 +27,7 @@ class RenderHandler(core.BaseHandler):
         self.source_file_path = await self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
 
     async def get(self):
-        """Render a file with the extension"""
+        """Return HTML that will display the given file."""
         renderer = utils.make_renderer(
             self.metadata.ext,
             self.metadata,

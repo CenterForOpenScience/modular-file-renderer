@@ -8,6 +8,10 @@ from mfr.server import settings
 
 
 class BaseProvider(metaclass=abc.ABCMeta):
+    """Base class for MFR Providers.  Requires ``download`` and ``metadata`` methods.
+    Validates that the given file url is hosted at a domain listed in
+    `mfr.server.settings.ALLOWED_PROVIDER_DOMAINS`.
+    """
 
     def __init__(self, request, url):
         self.request = request

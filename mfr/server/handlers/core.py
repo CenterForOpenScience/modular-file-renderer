@@ -72,8 +72,15 @@ class CorsMixin:
 
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
+    """Base class for the Render and Export handlers.  Fetches the file metadata for the file
+    indicated by the ``url`` query parameter and builds the provider caches.  Also handles
+    writing output and errors.
+    """
 
     async def prepare(self):
+        """Builds an MFR provider instance, to which it passes the the ``url`` query parameter.
+        From that, the file metadata is extracted.  Also builds cached waterbutler providers.
+        """
         if self.request.method == 'OPTIONS':
             return
 

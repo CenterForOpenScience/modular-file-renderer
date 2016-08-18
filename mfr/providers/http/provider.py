@@ -15,6 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 class HttpProvider(provider.BaseProvider):
+    """Basic MFR provider.  Infers file metadata (extension, type) from the url. Downloads by
+    issuing a GET to the url.
+    """
 
     async def metadata(self):
         path = urlparse(self.url).path

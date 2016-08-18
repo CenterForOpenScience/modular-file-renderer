@@ -33,6 +33,10 @@ class BaseRenderer(metaclass=abc.ABCMeta):
 
     @abc.abstractproperty
     def file_required(self):
+        """Does the rendering html need the raw file content to display correctly?
+        Syntax-highlighted text files do.  Standard image formats do not, since an <img> tag
+        only needs a url to the file.
+        """
         pass
 
     @abc.abstractproperty

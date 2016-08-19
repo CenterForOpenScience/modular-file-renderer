@@ -107,25 +107,27 @@ class OsfProvider(provider.BaseProvider):
         redirect to WB.  Issue a GET request against it, then return the WB url stored in the
         Location header.
         """
-        # v1 Waterbutler url provided
-        path = urlparse(self.url).path
-        if path.startswith('/v1/resources'):
-            return self.url
         if not self.download_url:
-            # make request to osf, don't follow, store waterbutler download url
-            request = await self._make_request(
-                'GET',
-                self.url,
-                allow_redirects=False,
-                headers={
-                    'Content-Type': 'application/json'
-                }
-            )
-            await request.release()
+            # v1 Waterbutler url provided
+            path = urlparse(self.url).path
+            if path.startswith('/v1/resources'):
+                self.download_url = self.url
+            else:
+                # make request to osf, don't follow, store waterbutler download url
+                request = await self._make_request(
+                    'GET',
+                    self.url,
+                    allow_redirects=False,
+                    headers={
+                        'Content-Type': 'application/json'
+                    }
+                )
+                await request.release()
 
-            if request.status != 302:
-                raise exceptions.ProviderError(request.reason, request.status)
-            self.download_url = request.headers['location']
+                if request.status != 302:
+                    raise exceptions.ProviderError(request.reason, request.status)
+                self.download_url = request.headers['location']
+
         return self.download_url
 
     async def _make_request(self, method, url, *args, **kwargs):

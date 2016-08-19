@@ -1,4 +1,5 @@
 import os
+import asyncio
 import pkg_resources
 
 import tornado.web
@@ -140,6 +141,15 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                     Unable to render the requested file, please try again later.
                 </div>
             ''')
+
+    def on_finish(self):
+        if self.request.method not in self.ALLOWED_METHODS:
+            return
+
+        asyncio.ensure_future(self._cache_and_clean())
+
+    async def _cache_and_clean(self):
+        return
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):

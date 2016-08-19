@@ -61,12 +61,6 @@ class ExportHandler(core.BaseHandler):
             self._set_headers()
             await self.write_stream(waterbutler.core.streams.FileStreamReader(fp))
 
-    def on_finish(self):
-        if self.request.method not in self.ALLOWED_METHODS:
-            return
-
-        asyncio.ensure_future(self._cache_and_clean())
-
     async def _cache_and_clean(self):
         if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):
             with open(self.output_file_path.full_path, 'rb') as fp:

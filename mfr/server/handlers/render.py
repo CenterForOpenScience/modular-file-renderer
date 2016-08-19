@@ -67,10 +67,7 @@ class RenderHandler(core.BaseHandler):
 
         await self.write_stream(waterbutler.core.streams.StringStream(rendition))
 
-    def on_finish(self):
-        if self.request.method not in self.ALLOWED_METHODS:
-            return
-
+    async def _cache_and_clean(self):
         try:
             os.remove(self.source_file_path.full_path)
         except FileNotFoundError:

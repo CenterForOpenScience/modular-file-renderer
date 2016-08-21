@@ -68,7 +68,8 @@ class RenderHandler(core.BaseHandler):
         await self.write_stream(waterbutler.core.streams.StringStream(rendition))
 
     async def _cache_and_clean(self):
-        try:
-            os.remove(self.source_file_path.full_path)
-        except FileNotFoundError:
-            pass
+        if hasattr(self, 'source_file_path'):
+            try:
+                os.remove(self.source_file_path.full_path)
+            except FileNotFoundError:
+                pass

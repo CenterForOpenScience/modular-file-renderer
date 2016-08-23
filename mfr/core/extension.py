@@ -50,11 +50,17 @@ class BaseRenderer(metaclass=abc.ABCMeta):
             'url': self.url,
             'export_url': self.export_url,
             'file_path': self.file_path,
-            'file_required': self.file_required,
             'cache_result': self.cache_result,
             # 'error': 'error_t',
             # 'elapsed': 'elpased_t',
         })
+
+        # unoconv gets file_required from its subrenderer, which is constructed at the end of
+        # __init__.
+        try:
+            self.renderer_metrics.add('file_required', self.file_required)
+        except AttributeError:
+            pass
 
     @abc.abstractmethod
     def render(self):

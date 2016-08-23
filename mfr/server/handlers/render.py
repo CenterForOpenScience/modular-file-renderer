@@ -1,5 +1,4 @@
 import os
-import uuid
 import asyncio
 import logging
 
@@ -10,11 +9,13 @@ from mfr.server import settings
 from mfr.core import utils as utils
 from mfr.server.handlers import core
 
+
 logger = logging.getLogger(__name__)
 
 
 class RenderHandler(core.BaseHandler):
 
+    NAME = 'render'
     ALLOWED_METHODS = ['GET']
 
     async def prepare(self):
@@ -23,8 +24,13 @@ class RenderHandler(core.BaseHandler):
 
         await super().prepare()
 
-        self.cache_file_path = await self.cache_provider.validate_path('/render/' + self.metadata.unique_key)
-        self.source_file_path = await self.local_cache_provider.validate_path('/render/' + str(uuid.uuid4()))
+        self.cache_file_id = self.metadata.unique_key
+        self.cache_file_path = await self.cache_provider.validate_path(
+            '/render/{}'.format(self.cache_file_id)
+        )
+        self.source_file_path = await self.local_cache_provider.validate_path(
+            '/render/{}'.format(self.source_file_id)
+        )
 
     async def get(self):
         """Return HTML that will display the given file."""

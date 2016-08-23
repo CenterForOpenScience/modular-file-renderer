@@ -1,5 +1,4 @@
 import os
-import uuid
 import asyncio
 import logging
 
@@ -10,11 +9,13 @@ from mfr.server import settings
 from mfr.core import utils as utils
 from mfr.server.handlers import core
 
+
 logger = logging.getLogger(__name__)
 
 
 class ExportHandler(core.BaseHandler):
 
+    NAME = 'export'
     ALLOWED_METHODS = ['GET']
 
     async def prepare(self):
@@ -24,9 +25,19 @@ class ExportHandler(core.BaseHandler):
         await super().prepare()
 
         self.format = self.request.query_arguments['format'][0].decode('utf-8')
-        self.cache_file_path = await self.cache_provider.validate_path('/export/{}.{}'.format(self.metadata.unique_key, self.format))
-        self.source_file_path = await self.local_cache_provider.validate_path('/export/{}'.format(uuid.uuid4()))
-        self.output_file_path = await self.local_cache_provider.validate_path('/export/{}.{}'.format(self.source_file_path.name, self.format))
+        self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
+
+        self.cache_file_path = await self.cache_provider.validate_path(
+            '/export/{}'.format(self.cache_file_id)
+        )
+        self.source_file_path = await self.local_cache_provider.validate_path(
+            '/export/{}'.format(self.source_file_id)
+        )
+
+        self.output_file_id = '{}.{}'.format(self.source_file_path.name, self.format)
+        self.output_file_path = await self.local_cache_provider.validate_path(
+            '/export/{}'.format(self.output_file_id)
+        )
 
     async def get(self):
         """Export a file to the format specified via the associated extension library"""

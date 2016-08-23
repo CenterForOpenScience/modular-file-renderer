@@ -1,4 +1,6 @@
 import os
+import abc
+import uuid
 import asyncio
 import pkg_resources
 
@@ -78,6 +80,12 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
     writing output and errors.
     """
 
+    bytes_written = 0
+
+    @abc.abstractproperty
+    def NAME(self):
+        raise NotImplementedError
+
     async def prepare(self):
         """Builds an MFR provider instance, to which it passes the the ``url`` query parameter.
         From that, the file metadata is extracted.  Also builds cached waterbutler providers.
@@ -109,6 +117,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
 
+        self.source_file_id = uuid.uuid4()
+
     async def write_stream(self, stream):
         try:
             while True:
@@ -118,6 +128,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 # Temp fix, write does not accept bytearrays currently
                 if isinstance(chunk, bytearray):
                     chunk = bytes(chunk)
+                self.bytes_written += len(chunk)
                 self.write(chunk)
                 del chunk
                 await self.flush()

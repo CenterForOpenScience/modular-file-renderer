@@ -5,6 +5,7 @@ import furl
 
 from mfr.core import exceptions
 from mfr.server import settings
+from mfr.core.metrics import MetricsRecord
 
 
 class BaseProvider(metaclass=abc.ABCMeta):
@@ -24,6 +25,13 @@ class BaseProvider(metaclass=abc.ABCMeta):
                 code=400
             )
         self.url = url
+        self.provider_metrics = MetricsRecord('provider')
+        self.metrics = self.provider_metrics.new_subrecord(self.NAME)
+
+        self.provider_metrics.merge({
+            'type': self.NAME,
+            'url': str(self.url),
+        })
 
     @abc.abstractproperty
     def NAME(self):

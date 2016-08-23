@@ -36,6 +36,8 @@ class UnoconvRenderer(extension.BaseRenderer):
 
         # can't call file_required until renderer is built
         self.renderer_metrics.add('file_required', self.file_required)
+        self.renderer_metrics.add('cache_result', self.cache_result)
+
         self.metrics.merge({
             'map': {
                 'renderer': self.map['renderer'],

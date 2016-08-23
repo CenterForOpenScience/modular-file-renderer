@@ -24,6 +24,7 @@ class OsfProvider(provider.BaseProvider):
     """
 
     UNNEEDED_URL_PARAMS = ('_', 'token', 'action', 'mode', 'displayName')
+    NAME = 'osf'
 
     def __init__(self, request, url):
         super().__init__(request, url)

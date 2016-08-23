@@ -19,6 +19,8 @@ class HttpProvider(provider.BaseProvider):
     issuing a GET to the url.
     """
 
+    NAME = 'http'
+
     async def metadata(self):
         path = urlparse(self.url).path
         name, ext = os.path.splitext(os.path.split(path)[-1])

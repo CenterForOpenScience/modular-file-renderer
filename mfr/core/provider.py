@@ -25,6 +25,10 @@ class BaseProvider(metaclass=abc.ABCMeta):
             )
         self.url = url
 
+    @abc.abstractproperty
+    def NAME(self):
+        raise NotImplementedError
+
     @abc.abstractmethod
     def metadata(self):
         pass
@@ -42,3 +46,12 @@ class ProviderMetadata:
         self.content_type = content_type
         self.unique_key = unique_key
         self.download_url = download_url
+
+    def serialize(self):
+        return {
+            'name': self.name,
+            'ext': self.ext,
+            'content_type': self.content_type,
+            'unique_key': str(self.unique_key),
+            'download_url': str(self.download_url),
+        }

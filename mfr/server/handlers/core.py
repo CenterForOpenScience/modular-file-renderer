@@ -12,10 +12,9 @@ import waterbutler.core.utils
 import waterbutler.server.utils
 import waterbutler.core.exceptions
 
-from mfr.core import utils
 from mfr.server import settings
-from mfr.core import exceptions
 from mfr.core.metrics import MetricsRecord
+from mfr.core import utils, exceptions, remote_logging
 
 CORS_ACCEPT_HEADERS = [
     'Range',
@@ -185,9 +184,22 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         })
 
         asyncio.ensure_future(self._cache_and_clean())
+        asyncio.ensure_future(
+            remote_logging.log_analytics(
+                remote_logging._serialize_request(self.request), self._all_metrics()))
 
     async def _cache_and_clean(self):
         return
+
+    def _all_metrics(self):
+        return {
+            'handler': self.handler_metrics.serialize(),
+            'provider': self.provider.provider_metrics.serialize(),
+            'file': self.metadata.serialize(),
+            'extension': self.extension_metrics.serialize(),
+            'renderer': self.renderer_metrics.serialize() if hasattr(self, 'renderer_metrics') else None,
+            'exporter': self.exporter_metrics.serialize() if hasattr(self, 'exporter_metrics') else None,
+        }
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):

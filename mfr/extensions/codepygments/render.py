@@ -1,6 +1,7 @@
 import os
 
 import chardet
+import pygments
 import pygments.lexers
 import pygments.lexers.special
 import pygments.formatters
@@ -18,6 +19,10 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         directories=[
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.metrics.add('pygments_version', pygments.__version__)
 
     def render(self):
         with open(self.file_path, 'rb') as fp:
@@ -64,8 +69,13 @@ class CodePygmentsRenderer(extension.BaseRenderer):
                 exception = exceptions.RendererError('Unable to decode file as {}'.format(encoding), code=400)
             raise exception
 
+        self.metrics.merge({'encoding': encoding, 'default_lexer': False})
+
         try:
             lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
         except ClassNotFound:
+            self.metrics.add('default_lexer', True)
             lexer = self.DEFAULT_LEXER()
+
+        self.metrics.add('lexer', lexer.name)
         return pygments.highlight(content, lexer, formatter)

@@ -1,5 +1,7 @@
 import abc
 
+from mfr.core.metrics import MetricsRecord
+
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
@@ -7,6 +9,18 @@ class BaseExporter(metaclass=abc.ABCMeta):
         self.source_file_path = source_file_path
         self.output_file_path = output_file_path
         self.format = format
+        self.exporter_metrics = MetricsRecord('exporter')
+        if self._get_module_name():
+            self.metrics = self.exporter_metrics.new_subrecord(self._get_module_name())
+
+        self.exporter_metrics.merge({
+            'class': self._get_module_name(),
+            'format': self.format,
+            'source_path': str(self.source_file_path),
+            'output_path': str(self.output_file_path),
+            # 'error': 'error_t',
+            # 'elapsed': 'elpased_t',
+        })
 
     @abc.abstractmethod
     def export(self):
@@ -26,6 +40,21 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         self.url = url
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
         self.export_url = export_url
+        self.renderer_metrics = MetricsRecord('renderer')
+        if self._get_module_name():
+            self.metrics = self.renderer_metrics.new_subrecord(self._get_module_name())
+
+        self.renderer_metrics.merge({
+            'class': self._get_module_name(),
+            'ext': self.metadata.ext,
+            'url': self.url,
+            'export_url': self.export_url,
+            'file_path': self.file_path,
+            'file_required': self.file_required,
+            'cache_result': self.cache_result,
+            # 'error': 'error_t',
+            # 'elapsed': 'elpased_t',
+        })
 
     @abc.abstractmethod
     def render(self):

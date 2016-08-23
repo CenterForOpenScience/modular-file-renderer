@@ -67,6 +67,7 @@ class RenderHandler(core.BaseHandler):
 
         loop = asyncio.get_event_loop()
         rendition = await loop.run_in_executor(None, renderer.render)
+        self.renderer_metrics = renderer.renderer_metrics
 
         # Spin off upload into non-blocking operation
         if renderer.cache_result and settings.CACHE_ENABLED:

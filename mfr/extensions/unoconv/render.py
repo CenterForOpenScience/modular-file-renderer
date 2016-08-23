@@ -34,6 +34,13 @@ class UnoconvRenderer(extension.BaseRenderer):
             export_url
         )
 
+        self.metrics.merge({
+            'map': {
+                'renderer': self.map['renderer'],
+                'format': self.map['format'],
+            },
+        })
+
     def render(self):
         if self.renderer.file_required:
             exporter = utils.make_exporter(
@@ -45,6 +52,7 @@ class UnoconvRenderer(extension.BaseRenderer):
             exporter.export()
 
         rendition = self.renderer.render()
+        self.metrics.add('subrenderer', self.renderer.renderer_metrics.serialize())
 
         if self.renderer.file_required:
             try:

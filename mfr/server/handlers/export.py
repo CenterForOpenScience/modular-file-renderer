@@ -78,6 +78,7 @@ class ExportHandler(core.BaseHandler):
 
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, exporter.export)
+        self.exporter_metrics = exporter.exporter_metrics
 
         with open(self.output_file_path.full_path, 'rb') as fp:
             self._set_headers()

@@ -39,13 +39,18 @@ class TabularRenderer(extension.BaseRenderer):
         :param fp: file pointer object
         :return: RenderResult object containing html and assets
         """
+        self._renderer_tabular_metrics = {}
+
         sheets = self._populate_data(fp, ext)
 
         size = settings.SMALL_TABLE
+        self._renderer_tabular_metrics['size'] = 'small'
+        self._renderer_tabular_metrics['nbr_sheets'] = len(sheets)
         for sheet in sheets:
             sheet = sheets[sheet]  # Sheets are stored in key-value pairs of the form {sheet: (col, row)}
             if len(sheet[0]) > 9:  # Check the number of columns
                 size = settings.BIG_TABLE
+                self._renderer_tabular_metrics['size'] = 'big'
 
             if len(sheet[0]) > settings.MAX_SIZE or len(sheet[1]) > settings.MAX_SIZE:
                 raise exceptions.TableTooBigException("Table is too large to render.", code=400)
@@ -66,6 +71,7 @@ class TabularRenderer(extension.BaseRenderer):
             except ImportError:
                 pass
             else:
+                self._renderer_tabular_metrics['importer'] = function.__name__
                 try:
                     return imported(fp)
                 except KeyError:

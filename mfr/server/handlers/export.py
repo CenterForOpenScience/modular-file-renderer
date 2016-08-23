@@ -38,6 +38,13 @@ class ExportHandler(core.BaseHandler):
         self.output_file_path = await self.local_cache_provider.validate_path(
             '/export/{}'.format(self.output_file_id)
         )
+        self.metrics.merge({
+            'output_file': {
+                'id': self.output_file_id,
+                'path': str(self.output_file_path),
+                'provider': self.local_cache_provider.NAME,
+            }
+        })
 
     async def get(self):
         """Export a file to the format specified via the associated extension library"""
@@ -48,8 +55,10 @@ class ExportHandler(core.BaseHandler):
             except waterbutler.core.exceptions.DownloadError as e:
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting export [{}]'.format(self.cache_file_path))
+                self.metrics.add('cache_file.result', 'miss')
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
+                self.metrics.add('cache_file.result', 'hit')
                 self._set_headers()
                 return await self.write_stream(cached_stream)
 
@@ -64,6 +73,8 @@ class ExportHandler(core.BaseHandler):
             self.output_file_path.full_path,
             self.format
         )
+
+        self.extension_metrics.add('class', exporter._get_module_name())
 
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, exporter.export)

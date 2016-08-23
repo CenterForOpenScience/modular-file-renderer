@@ -15,7 +15,7 @@ import waterbutler.core.exceptions
 from mfr.core import utils
 from mfr.server import settings
 from mfr.core import exceptions
-
+from mfr.core.metrics import MetricsRecord
 
 CORS_ACCEPT_HEADERS = [
     'Range',
@@ -82,6 +82,16 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
     bytes_written = 0
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.handler_metrics = MetricsRecord('handler')
+        self.handler_metrics.add('cache_file.result', None)
+        self.handler_metrics.add('source_file.upload.required', True)
+
+        self.metrics = self.handler_metrics.new_subrecord(self.NAME)
+
+        self.extension_metrics = MetricsRecord('extension')
+
     @abc.abstractproperty
     def NAME(self):
         raise NotImplementedError
@@ -105,6 +115,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         )
 
         self.metadata = await self.provider.metadata()
+        self.extension_metrics.add('ext', self.metadata.ext)
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -156,6 +167,22 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
     def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
+
+        self.handler_metrics.merge({
+            'type': self.NAME,
+            'bytes_written': self.bytes_written,
+            # 'elpased': elapsed.serialize(),
+            'cache_file': {
+                'id': str(self.cache_file_id),
+                'path': str(self.cache_file_path),
+                'provider': str(self.cache_provider.NAME),
+            },
+            'source_file': {
+                'id': str(self.source_file_id),
+                'path': str(self.source_file_path),
+                'provider': str(self.local_cache_provider.NAME),
+            }
+        })
 
         asyncio.ensure_future(self._cache_and_clean())
 

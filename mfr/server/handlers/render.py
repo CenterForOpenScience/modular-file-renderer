@@ -43,14 +43,18 @@ class RenderHandler(core.BaseHandler):
             self.request.uri.replace('/render?', '/export?', 1)
         )
 
+        self.extension_metrics.add('class', renderer._get_module_name())
+
         if renderer.cache_result and settings.CACHE_ENABLED:
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
             except waterbutler.core.exceptions.DownloadError as e:
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting render [{}]'.format(self.cache_file_path))
+                self.metrics.add('cache_file.result', 'miss')
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
+                self.metrics.add('cache_file.result', 'hit')
                 return await self.write_stream(cached_stream)
 
         if renderer.file_required:
@@ -58,6 +62,8 @@ class RenderHandler(core.BaseHandler):
                 await self.provider.download(),
                 self.source_file_path
             )
+        else:
+            self.metrics.add('source_file.upload.required', False)
 
         loop = asyncio.get_event_loop()
         rendition = await loop.run_in_executor(None, renderer.render)

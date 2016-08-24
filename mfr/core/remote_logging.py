@@ -15,7 +15,6 @@ from waterbutler.core.utils import async_retry
 logger = logging.getLogger(__name__)
 
 
-@async_retry(retries=5, backoff=5)
 async def log_analytics(request, metrics):
     """Send events to Keen describing the action that occurred."""
     if settings.KEEN_PRIVATE_PROJECT_ID is None:
@@ -75,10 +74,13 @@ async def log_analytics(request, metrics):
 
     # send the private payload
     await _send_to_keen(keen_payload, collection, settings.KEEN_PRIVATE_PROJECT_ID,
-                        settings.KEEN_PRIVATE_WRITE_KEY, 'private')
+                        settings.KEEN_PRIVATE_WRITE_KEY, keen_payload['handler']['type'],
+                        domain='private')
 
 
-async def _send_to_keen(payload, collection, project_id, write_key, domain='private'):
+
+@async_retry(retries=5, backoff=5)
+async def _send_to_keen(payload, collection, project_id, write_key, action, domain='private'):
     """Serialize and send an event to Keen.  If an error occurs, try up to five more times.
     Will raise an excpetion if the event cannot be sent."""
 
@@ -94,12 +96,10 @@ async def _send_to_keen(payload, collection, project_id, write_key, domain='priv
 
     async with await aiohttp.request('POST', url, headers=headers, data=serialized) as resp:
         if resp.status == 201:
-            logger.info('Successfully logged {} to {} collection in {} Keen'.format(
-                payload['handler']['type'], collection, domain
-            ))
+            logger.info('Successfully logged {} to {} collection in {} Keen'.format(action, collection, domain))
         else:
             raise Exception('Failed to log {} to {} collection in {} Keen. Status: {} Error: {}'.format(
-                payload['handler']['type'], collection, domain, str(int(resp.status)), await resp.read()
+                action, collection, domain, str(int(resp.status)), await resp.read()
             ))
         return
 

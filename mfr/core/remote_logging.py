@@ -70,10 +70,17 @@ async def log_analytics(request, metrics):
             'output': 'referrer.info',
         })
 
-    collection = 'mfr_action'
+    # maassage file data, if available
+    file_metadata = None
+    try:
+        file_metadata = metrics['provider']['provider_osf']['metadata']['raw']['data']
+    except KeyError:
+        pass
+    else:
+        _munge_file_metadata(file_metadata)
 
     # send the private payload
-    await _send_to_keen(keen_payload, collection, settings.KEEN_PRIVATE_PROJECT_ID,
+    await _send_to_keen(keen_payload, 'mfr_action', settings.KEEN_PRIVATE_PROJECT_ID,
                         settings.KEEN_PRIVATE_WRITE_KEY, keen_payload['handler']['type'],
                         domain='private')
 
@@ -135,3 +142,28 @@ def _serialize_request(request):
         serialized['referrer']['url'] = referrer
 
     return serialized
+
+
+def _munge_file_metadata(metadata):
+    if metadata is None:
+        return None
+
+    try:
+        file_extra = metadata.pop('extra')
+    except KeyError:
+        pass
+    else:
+        metadata['extra'] = {
+            'common': {},
+            metadata['provider']: file_extra,
+        }
+
+    # synthetic fields to make Keen queries easier/prettier
+    metadata['full_path'] = '/'.join([
+        '', metadata['resource'], metadata['provider'], metadata['path'].lstrip('/')
+    ])
+    metadata['full_materialized'] = '/'.join([
+        '', metadata['resource'], metadata['provider'], metadata['materialized'].lstrip('/')
+    ])
+
+    return metadata

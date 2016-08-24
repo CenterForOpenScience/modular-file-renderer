@@ -84,6 +84,14 @@ async def log_analytics(request, metrics):
                         settings.KEEN_PRIVATE_WRITE_KEY, keen_payload['handler']['type'],
                         domain='private')
 
+    if keen_payload['handler']['type'] != 'render' or file_metadata is None:
+        return
+
+    # build and ship the public file stats payload
+    public_payload = _build_public_file_payload('view_file', request, file_metadata)
+    await _send_to_keen(public_payload, 'file_stats', settings.KEEN_PUBLIC_PROJECT_ID,
+                        settings.KEEN_PUBLIC_WRITE_KEY, keen_payload['handler']['type'],
+                        domain='public')
 
 
 @async_retry(retries=5, backoff=5)
@@ -142,6 +150,56 @@ def _serialize_request(request):
         serialized['referrer']['url'] = referrer
 
     return serialized
+
+
+def _build_public_file_payload(action, request, file_metadata):
+    public_payload = {
+        'meta': {
+            'epoch': 1,
+        },
+        'request': {
+            'url': request['request']['url']
+        },
+        'anon': {
+            'country': None,
+            'continent': None,
+        },
+        'action': {
+            'type': action,
+        },
+        'file': file_metadata,
+        'keen': {
+            'addons': [
+                {
+                    'name': 'keen:url_parser',
+                    'input': {
+                        'url': 'request.url'
+                    },
+                    'output': 'request.info',
+                },
+            ],
+        },
+    }
+
+    if request['referrer']['url'] is not None:
+        public_payload['referrer'] = request['referrer']  # .info added via keen addons
+        public_payload['keen']['addons'].append({
+            'name': 'keen:referrer_parser',
+            'input': {
+                'referrer_url': 'referrer.url',
+                'page_url': 'request.url'
+            },
+            'output': 'referrer.info'
+        })
+        public_payload['keen']['addons'].append({
+            'name': 'keen:url_parser',
+            'input': {
+                'url': 'referrer.url'
+            },
+            'output': 'referrer.info',
+        })
+
+    return public_payload
 
 
 def _munge_file_metadata(metadata):

@@ -1,4 +1,7 @@
 import os
+import abc
+import uuid
+import asyncio
 import pkg_resources
 
 import tornado.web
@@ -9,10 +12,9 @@ import waterbutler.core.utils
 import waterbutler.server.utils
 import waterbutler.core.exceptions
 
-from mfr.core import utils
 from mfr.server import settings
-from mfr.core import exceptions
-
+from mfr.core.metrics import MetricsRecord
+from mfr.core import utils, exceptions, remote_logging
 
 CORS_ACCEPT_HEADERS = [
     'Range',
@@ -72,12 +74,38 @@ class CorsMixin:
 
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
+    """Base class for the Render and Export handlers.  Fetches the file metadata for the file
+    indicated by the ``url`` query parameter and builds the provider caches.  Also handles
+    writing output and errors.
+    """
+
+    bytes_written = 0
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.handler_metrics = MetricsRecord('handler')
+        self.handler_metrics.add('cache_file.result', None)
+        self.handler_metrics.add('source_file.upload.required', True)
+
+        self.metrics = self.handler_metrics.new_subrecord(self.NAME)
+
+        self.extension_metrics = MetricsRecord('extension')
+
+    @abc.abstractproperty
+    def NAME(self):
+        raise NotImplementedError
 
     async def prepare(self):
+        """Builds an MFR provider instance, to which it passes the the ``url`` query parameter.
+        From that, the file metadata is extracted.  Also builds cached waterbutler providers.
+        """
         if self.request.method == 'OPTIONS':
             return
 
-        self.url = self.request.query_arguments['url'][0].decode('utf-8')
+        try:
+            self.url = self.request.query_arguments['url'][0].decode('utf-8')
+        except KeyError:
+            raise exceptions.ProviderError('"url" is a required argument.', code=400)
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -86,6 +114,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         )
 
         self.metadata = await self.provider.metadata()
+        self.extension_metrics.add('ext', self.metadata.ext)
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -98,6 +127,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
 
+        self.source_file_id = uuid.uuid4()
+
     async def write_stream(self, stream):
         try:
             while True:
@@ -107,6 +138,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 # Temp fix, write does not accept bytearrays currently
                 if isinstance(chunk, bytearray):
                     chunk = bytes(chunk)
+                self.bytes_written += len(chunk)
                 self.write(chunk)
                 del chunk
                 await self.flush()
@@ -130,6 +162,44 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                     Unable to render the requested file, please try again later.
                 </div>
             ''')
+
+    def on_finish(self):
+        if self.request.method not in self.ALLOWED_METHODS:
+            return
+
+        self.handler_metrics.merge({
+            'type': self.NAME,
+            'bytes_written': self.bytes_written,
+            # 'elpased': elapsed.serialize(),
+            'cache_file': {
+                'id': str(self.cache_file_id),
+                'path': str(self.cache_file_path),
+                'provider': str(self.cache_provider.NAME),
+            },
+            'source_file': {
+                'id': str(self.source_file_id),
+                'path': str(self.source_file_path),
+                'provider': str(self.local_cache_provider.NAME),
+            }
+        })
+
+        asyncio.ensure_future(self._cache_and_clean())
+        asyncio.ensure_future(
+            remote_logging.log_analytics(
+                remote_logging._serialize_request(self.request), self._all_metrics()))
+
+    async def _cache_and_clean(self):
+        return
+
+    def _all_metrics(self):
+        return {
+            'handler': self.handler_metrics.serialize(),
+            'provider': self.provider.provider_metrics.serialize(),
+            'file': self.metadata.serialize(),
+            'extension': self.extension_metrics.serialize(),
+            'renderer': self.renderer_metrics.serialize() if hasattr(self, 'renderer_metrics') else None,
+            'exporter': self.exporter_metrics.serialize() if hasattr(self, 'exporter_metrics') else None,
+        }
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):

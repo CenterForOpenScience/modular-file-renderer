@@ -34,6 +34,17 @@ class UnoconvRenderer(extension.BaseRenderer):
             export_url
         )
 
+        # can't call file_required until renderer is built
+        self.renderer_metrics.add('file_required', self.file_required)
+        self.renderer_metrics.add('cache_result', self.cache_result)
+
+        self.metrics.merge({
+            'map': {
+                'renderer': self.map['renderer'],
+                'format': self.map['format'],
+            },
+        })
+
     def render(self):
         if self.renderer.file_required:
             exporter = utils.make_exporter(
@@ -45,6 +56,7 @@ class UnoconvRenderer(extension.BaseRenderer):
             exporter.export()
 
         rendition = self.renderer.render()
+        self.metrics.add('subrenderer', self.renderer.renderer_metrics.serialize())
 
         if self.renderer.file_required:
             try:

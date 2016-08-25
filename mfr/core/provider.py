@@ -5,9 +5,14 @@ import furl
 
 from mfr.core import exceptions
 from mfr.server import settings
+from mfr.core.metrics import MetricsRecord
 
 
 class BaseProvider(metaclass=abc.ABCMeta):
+    """Base class for MFR Providers.  Requires ``download`` and ``metadata`` methods.
+    Validates that the given file url is hosted at a domain listed in
+    `mfr.server.settings.ALLOWED_PROVIDER_DOMAINS`.
+    """
 
     def __init__(self, request, url):
         self.request = request
@@ -20,6 +25,17 @@ class BaseProvider(metaclass=abc.ABCMeta):
                 code=400
             )
         self.url = url
+        self.provider_metrics = MetricsRecord('provider')
+        self.metrics = self.provider_metrics.new_subrecord(self.NAME)
+
+        self.provider_metrics.merge({
+            'type': self.NAME,
+            'url': str(self.url),
+        })
+
+    @abc.abstractproperty
+    def NAME(self):
+        raise NotImplementedError
 
     @abc.abstractmethod
     def metadata(self):
@@ -38,3 +54,12 @@ class ProviderMetadata:
         self.content_type = content_type
         self.unique_key = unique_key
         self.download_url = download_url
+
+    def serialize(self):
+        return {
+            'name': self.name,
+            'ext': self.ext,
+            'content_type': self.content_type,
+            'unique_key': str(self.unique_key),
+            'download_url': str(self.download_url),
+        }

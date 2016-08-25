@@ -1,7 +1,4 @@
-.. mfr documentation master file, created by
-   sphinx-quickstart on Tue Jul  9 22:26:36 2013.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. title:: Modular File Renderer
 
 mfr: HTML file renderer for Python
 ==================================
@@ -14,20 +11,21 @@ Release v\ |version|. (:ref:`Installation <install>`)
 Ready to dive in?
 -----------------
 
-Go on to the :ref:`Quickstart tutorial <quickstart>` or check out some :ref:`examples <examples>`.
+Go to the :ref:`Quickstart tutorial <quickstart>`, check out some :ref:`examples <examples>` for code, or see the :ref:`Overview <overview>` to understand its architecture.
+
 
 
 Guide
 -----
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   license
    install
    quickstart
    examples
-   api_reference
+   overview
+   code
 
 Project info
 ------------
@@ -38,3 +36,4 @@ Project info
    contributing
    authors
    changelog
+   license

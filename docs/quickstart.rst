@@ -30,7 +30,7 @@ This example is equivalent to above.
 
 RenderResult objects contain the resultant html as content. Any javascript or css assets are contained in a dictionary. To display assets with jinja, simply iterate through the lists.
 
-.. code-block:: html
+.. code-block:: none
 
     {% for stylesheet in render_result.assets.css %}
         <link rel="stylesheet" href={{ stylesheet }}/>

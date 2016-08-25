@@ -16,6 +16,7 @@ class ImageRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
+        self.metrics.add('needs_export', False)
         if self.metadata.ext in settings.EXPORT_EXCLUSIONS:
             return self.TEMPLATE.render(base=self.assets_url, url=self.url)
 
@@ -27,6 +28,7 @@ class ImageRenderer(extension.BaseRenderer):
         else:
             return self.TEMPLATE.render(base=self.assets_url, url=self.url)
 
+        self.metrics.add('needs_export', True)
         return self.TEMPLATE.render(base=self.assets_url, url=exported_url.url)
 
     @property

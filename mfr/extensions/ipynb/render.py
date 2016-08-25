@@ -1,5 +1,6 @@
 import os
 
+import IPython
 from IPython import nbformat
 from IPython.config import Config
 from IPython.nbconvert.exporters import HTMLExporter
@@ -15,6 +16,10 @@ class IpynbRenderer(extension.BaseRenderer):
         directories=[
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.metrics.add('ipython_version', IPython.__version__)
 
     def render(self):
         try:

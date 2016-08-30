@@ -2,6 +2,14 @@
 ChangeLog
 *********
 
+0.15.0 (2016-08-25)
+===================
+- Feature: add analytics to MFR requests.  MFR now keeps track of requests, handlers, renderers,
+and exporters, with more to come!
+- Fix: Better error handling for a number of edge cases. (thanks, @TomBaxter!)
+- Docs: many fixes to doc build, layout, and formatting. (thanks, @TomBaxter!)
+- Docs: add overview of MFR architecture to docs
+
 0.14.0 (2016-06-24)
 ===================
 - Feature: The Dockerfile now sets up unoconv for you.

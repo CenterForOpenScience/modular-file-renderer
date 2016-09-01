@@ -22,6 +22,9 @@ RUN apt-get update \
     # unoconv dependencies
     && apt-get install -y \
         unoconv \
+    # pspp dependencies
+    && apt-get install -y \
+        pspp \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*

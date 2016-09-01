@@ -23,6 +23,10 @@ def dta_pandas():
     return dta_pandas
 
 
+def sav_stdlib():
+    from ..libs.stdlib_tools import sav_stdlib
+    return sav_stdlib
+
 def sav_pandas():
     from ..libs.panda_tools import sav_pandas
     return sav_pandas

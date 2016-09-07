@@ -1,10 +1,10 @@
 import os
 
-import IPython
-from IPython import nbformat
-from IPython.config import Config
-from IPython.nbconvert.exporters import HTMLExporter
+import nbformat
+import nbconvert
+from traitlets.config import Config
 from mako.lookup import TemplateLookup
+from nbconvert.exporters import HTMLExporter
 
 from mfr.core import extension
 from mfr.extensions.ipynb import exceptions
@@ -19,7 +19,8 @@ class IpynbRenderer(extension.BaseRenderer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('ipython_version', IPython.__version__)
+        self.metrics.add('nbformat_version', nbformat.__version__)
+        self.metrics.add('nbconvert_version', nbconvert.__version__)
 
     def render(self):
         try:

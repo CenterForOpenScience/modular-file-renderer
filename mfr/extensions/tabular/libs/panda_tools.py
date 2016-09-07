@@ -1,7 +1,9 @@
+from tempfile import NamedTemporaryFile
+
 import numpy
 import pandas
-from tempfile import NamedTemporaryFile
-from ..utilities import header_population, strip_comments
+
+from mfr.extensions.tabular.utilities import header_population, strip_comments, sav_to_csv
 
 
 def csv_pandas(fp):
@@ -36,11 +38,14 @@ def dta_pandas(fp):
 
 
 def sav_pandas(fp):
-    """Read and convert a sav file to JSON format using the pandas library
+    """Read and convert a .sav file to a .csv file via pspp, then convert that to JSON format
+    using the pandas library
+
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    dataframe = robjectify(fp)
+    csv_file = sav_to_csv(fp)
+    dataframe = pandas.read_csv(csv_file.name, low_memory=False)
     return data_from_dataframe(dataframe)
 
 
@@ -64,15 +69,3 @@ def data_from_dataframe(dataframe):
                 data_row[name] = value
         data.append(data_row)
     return {'Sheet 1': (header, data)}
-
-
-def robjectify(fp):
-    """Create a dataframe object using R"""
-
-    import pandas.rpy.common as common
-    import rpy2.robjects as robjects
-    r = robjects
-    r.r("require(foreign)")
-    r.r('x <- read.spss("{}",to.data.frame=T)'.format(fp.name))
-    r.r('row.names(x) = 0:(nrow(x)-1)')
-    return common.load_data('x')

@@ -33,7 +33,9 @@ class EnmlRenderer(extension.BaseRenderer):
         print ("EnmlRenderer.render: (1) ")
 
         with open(self.file_path, 'r') as fp:
-            body = markdown.markdown(fp.read(), extensions=[EscapeHtml()])
+            # body = markdown.markdown(fp.read(), extensions=[EscapeHtml()])
+            # already html
+            body = fp.read()
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 
     @property

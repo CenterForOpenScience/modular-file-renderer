@@ -25,12 +25,12 @@ class EnmlRenderer(extension.BaseRenderer):
         super().__init__(*args, **kwargs)
         self.metrics.add('markdown_version', markdown.version)
 
-        print ("EnmlRenderer.__init__: args, kwargs", args, kwargs)
+        print("EnmlRenderer.__init__: args, kwargs", args, kwargs)
 
     def render(self):
         """Render a markdown file to html."""
 
-        print ("EnmlRenderer.render: (1) ")
+        print("EnmlRenderer.render: (1) ")
 
         with open(self.file_path, 'r') as fp:
             # body = markdown.markdown(fp.read(), extensions=[EscapeHtml()])

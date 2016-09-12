@@ -1,4 +1,5 @@
 import os
+
 import markdown
 from markdown.extensions import Extension
 
@@ -19,6 +20,10 @@ class MdRenderer(extension.BaseRenderer):
         directories=[
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.metrics.add('markdown_version', markdown.version)
 
     def render(self):
         """Render a markdown file to html."""

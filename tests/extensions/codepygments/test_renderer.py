@@ -1,6 +1,7 @@
 import os
 import pytest
 
+from mfr.core.exceptions import RendererError
 from mfr.core.provider import ProviderMetadata
 
 from mfr.extensions.codepygments import CodePygmentsRenderer
@@ -54,7 +55,7 @@ class TestCodePygmentsRenderer:
 
     def test_render_codepygments_invalid(self, metadata, invalid_file_path, url, assets_url, export_url):
         renderer = CodePygmentsRenderer(metadata, invalid_file_path, url, assets_url, export_url)
-        with pytest.raises(UnicodeDecodeError):
+        with pytest.raises(RendererError):
             renderer.render()
 
     def test_render_codepygments_file_required(self, renderer):

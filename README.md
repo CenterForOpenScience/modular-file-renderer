@@ -14,13 +14,13 @@ For MacOSX users:
 
 ```bash
 brew install python3
-brew install r
+brew install pspp
 ```
 For Ubuntu users:
 
 ```bash
 apt-get install python3
-apt-get install r-base
+apt-get install pspp
 ```
 
 After installing python3.5, create the virtual environment with the following commands:
@@ -28,7 +28,7 @@ After installing python3.5, create the virtual environment with the following co
 ```bash
 pip install virtualenv
 pip install virtualenvwrapper
-mkvirtualenv --python=`which python3` mfr
+mkvirtualenv --python=`which python3.5` mfr
 pip install invoke==0.11.1
 invoke install --develop
 invoke server

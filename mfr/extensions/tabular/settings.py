@@ -20,7 +20,7 @@ LIBS = config.get('LIBS', {
     '.xlsx': [libs.xlsx_xlrd],
     '.xls': [libs.xlsx_xlrd],
     '.dta': [libs.dta_pandas],
-    '.sav': [libs.sav_pandas],
+    '.sav': [libs.sav_stdlib],
     # '.ods': [libs.ods_ezodf],
 })
 
@@ -38,3 +38,5 @@ BIG_TABLE = config.get('BIG_TABLE', {
     'syncColumnCellResize': True,
     'multiColumnSort': True,
 })
+
+PSPP_CONVERT_BIN = config.get('PSPP_CONVERT_BIN', '/usr/bin/pspp-convert')

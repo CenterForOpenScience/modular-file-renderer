@@ -23,6 +23,10 @@ class DocxRenderer(extension.BaseRenderer):
         def indent(self, text, *args, **kwargs):
             return text
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.metrics.add('pydocx_version', pydocx.__version__)
+
     def render(self):
         body = self._PyDocXHTMLExporter(self.file_path).parsed
         return self.TEMPLATE.render(base=self.assets_url, body=body)

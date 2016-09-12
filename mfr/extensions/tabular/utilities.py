@@ -1,6 +1,9 @@
 import re
+import subprocess
+from tempfile import NamedTemporaryFile
 
-from mfr.extensions.tabular import compat
+from mfr.core import exceptions
+from mfr.extensions.tabular import compat, settings
 
 
 def header_population(headers):
@@ -35,3 +38,22 @@ def strip_comments(src, dest):
         data = data.encode('utf-8', 'ignore')
     dest.write(data)
     dest.seek(0)
+
+
+def sav_to_csv(fp):
+    """Converts a SPSS .sav to a .csv file by calling out to ``pspp-convert``.
+
+    :param fp: file pointer object to .sav file
+    :return: file pointer to .csv file. You are responsible for closing this.
+    """
+    csv_file = NamedTemporaryFile(mode='w+b', suffix='.csv')
+    try:
+        subprocess.check_call([
+            settings.PSPP_CONVERT_BIN,
+            fp.name,
+            csv_file.name,
+        ])
+    except subprocess.CalledProcessError:
+        raise exceptions.ExporterError(
+            'Unable to convert the SPSS file to CSV, please try again later.', code=400)
+    return csv_file

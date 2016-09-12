@@ -8,8 +8,9 @@ import pygments.formatters
 from pygments.util import ClassNotFound
 from mako.lookup import TemplateLookup
 
+from mfr.extensions.codepygments import settings
 from mfr.core import extension, exceptions
-from mfr.extensions.codepygments import cp_exceptions
+from mfr.extensions.codepygments import exceptions as cp_exceptions
 
 
 class CodePygmentsRenderer(extension.BaseRenderer):
@@ -27,7 +28,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
 
     def render(self):
         file_size = os.path.getsize(self.file_path)
-        if file_size > 65536:
+        if file_size > settings.MAX_SIZE:
             raise(cp_exceptions.FileToLargeException('Text files larger than 64kb are not rendered; please download the file to view.'))
         with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.metadata.ext)

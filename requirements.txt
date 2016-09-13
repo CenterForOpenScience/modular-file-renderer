@@ -22,7 +22,9 @@ pydocx==0.7.0
 Pillow==2.8.2
 
 # IPython
-ipython==3.1.0
+nbconvert==4.2.0
+nbformat==4.1.0
+traitlets==4.2.2
 jsonschema==2.4.0
 jinja2==2.7.3
 mistune==0.7
@@ -36,9 +38,6 @@ docutils==0.12
 # Tabular
 pandas==0.17.1
 git+https://github.com/icereval/xlrd.git
-
-# Rpy
-rpy2==2.7.8
 
 # Md
 markdown==2.6.2

@@ -64,7 +64,7 @@ class OsfProvider(provider.BaseProvider):
             metadata = await metadata_request.json()
         else:
             # URL is for WaterButler v1 API
-            self.metrics.add('metadata.wb_api', 'v0')
+            self.metrics.add('metadata.wb_api', 'v1')
             metadata_request = await self._make_request('HEAD', download_url)
             # To make changes to current code as minimal as possible
             try:

@@ -1,10 +1,6 @@
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
+from mfr import settings
 
-config = settings.get('PDB_EXTENSION_CONFIG', {})
-
+config = settings.child('PDB_EXTENSION_CONFIG')
 
 OPTIONS = config.get('OPTIONS', {
     'width': 'auto',

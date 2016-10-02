@@ -1,10 +1,6 @@
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
+from mfr import settings
 
-config = settings.get('OSF_PROVIDER_CONFIG', {})
-
+config = settings.child('OSF_PROVIDER_CONFIG')
 
 # BASE_URL = config.get('BASE_URL', 'http://localhost:5001/')
 

@@ -59,5 +59,12 @@ def test(verbose=False):
 @task
 def server():
     monkey_patch()
+
+    if os.environ.get('REMOTE_DEBUG', None):
+        import pydevd
+        # e.g. '127.0.0.1:5678'
+        remote_parts = os.environ.get('REMOTE_DEBUG').split(':')
+        pydevd.settrace(remote_parts[0], port=int(remote_parts[1]), suspend=False, stdoutToServer=True, stderrToServer=True)
+
     from mfr.server.app import serve
     serve()

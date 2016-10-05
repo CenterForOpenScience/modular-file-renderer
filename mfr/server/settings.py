@@ -3,13 +3,9 @@ import os
 import furl
 
 
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
+from mfr import settings
 
-config = settings.get('SERVER_CONFIG', {})
-
+config = settings.child('SERVER_CONFIG')
 
 STATIC_PATH = config.get('STATIC_PATH', os.path.join(os.path.dirname(__file__), 'static'))
 
@@ -36,22 +32,22 @@ CACHE_PROVIDER_CREDENTIALS = config.get('CACHE_PROVIDER_CREDENTIALS', {})
 
 LOCAL_CACHE_PROVIDER_SETTINGS = config.get('LOCAL_CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfrlocalcache/'})
 
-ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', ['http://localhost:5000/', 'http://localhost:7777/'])
+ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', 'http://localhost:5000/ http://localhost:7777/').split(' ')
 ALLOWED_PROVIDER_NETLOCS = []
 for domain in ALLOWED_PROVIDER_DOMAINS:
     ALLOWED_PROVIDER_NETLOCS.append(furl.furl(domain).netloc)
 
 
-analytics_config = config.get('ANALYTICS', {})
+analytics_config = config.child('ANALYTICS')
 
-keen_config = analytics_config.get('KEEN', {})
+keen_config = analytics_config.child('KEEN')
 KEEN_API_BASE_URL = keen_config.get('API_BASE_URL', 'https://api.keen.io')
 KEEN_API_VERSION = keen_config.get('API_VERSION', '3.0')
 
-keen_private_config = keen_config.get('PRIVATE', {})
+keen_private_config = keen_config.child('PRIVATE')
 KEEN_PRIVATE_PROJECT_ID = keen_private_config.get('PROJECT_ID', None)
 KEEN_PRIVATE_WRITE_KEY = keen_private_config.get('WRITE_KEY', None)
 
-keen_public_config = keen_config.get('PUBLIC', {})
+keen_public_config = keen_config.child('PUBLIC')
 KEEN_PUBLIC_PROJECT_ID = keen_public_config.get('PROJECT_ID', None)
 KEEN_PUBLIC_WRITE_KEY = keen_public_config.get('WRITE_KEY', None)

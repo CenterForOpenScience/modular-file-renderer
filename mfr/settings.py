@@ -4,6 +4,23 @@ import logging
 import logging.config
 
 
+class SettingsDict(dict):
+
+    def __init__(self, *args, parent=None, **kwargs):
+        self.parent = parent
+        super().__init__(*args, **kwargs)
+
+    def get(self, key, default=None):
+        env = '{}_{}'.format(self.parent, key) if self.parent else key
+        if env in os.environ:
+            return os.environ.get(env)
+        return super().get(key, default)
+
+    def child(self, key):
+        env = '{}_{}'.format(self.parent, key) if self.parent else key
+        return SettingsDict(self.get(key, {}), parent=env)
+
+
 PROJECT_NAME = 'mfr'
 PROJECT_CONFIG_PATH = '~/.cos'
 
@@ -61,21 +78,21 @@ except KeyError:
     config_path = '{}/{}-{}.json'.format(PROJECT_CONFIG_PATH, PROJECT_NAME, env)
 
 
-config = {}
+config = SettingsDict()
 config_path = os.path.expanduser(config_path)
 if not os.path.exists(config_path):
     logging.warning('No \'{}\' configuration file found'.format(config_path))
 else:
     with open(os.path.expanduser(config_path)) as fp:
-        config = json.load(fp)
+        config = SettingsDict(json.load(fp))
 
 
-def get(key, default):
-    return config.get(key, default)
+def child(key):
+    return config.child(key)
 
 
-logging_config = get('LOGGING', DEFAULT_LOGGING_CONFIG)
+logging_config = config.get('LOGGING', DEFAULT_LOGGING_CONFIG)
 logging.config.dictConfig(logging_config)
 
 
-SENTRY_DSN = get('SENTRY_DSN', None)
+SENTRY_DSN = config.get('SENTRY_DSN', None)

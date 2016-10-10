@@ -152,4 +152,4 @@ logging_config = config.get('LOGGING', DEFAULT_LOGGING_CONFIG)
 logging.config.dictConfig(logging_config)
 
 
-SENTRY_DSN = config.get('SENTRY_DSN', None)
+SENTRY_DSN = config.get_nullable('SENTRY_DSN', None)

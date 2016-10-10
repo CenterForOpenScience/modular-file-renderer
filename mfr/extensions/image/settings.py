@@ -1,5 +1,6 @@
 from mfr import settings
 
+
 config = settings.child('IMAGE_EXTENSION_CONFIG')
 
 EXPORT_TYPE = config.get('EXPORT_TYPE', 'jpeg')

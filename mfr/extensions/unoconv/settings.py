@@ -2,6 +2,7 @@ import os
 
 from mfr import settings
 
+
 config = settings.child('UNOCONV_EXTENSION_CONFIG')
 
 UNOCONV_BIN = config.get('UNOCONV_BIN', '/usr/bin/unoconv')

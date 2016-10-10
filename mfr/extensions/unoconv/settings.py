@@ -1,11 +1,9 @@
 import os
 
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
+from mfr import settings
 
-config = settings.get('UNOCONV_EXTENSION_CONFIG', {})
+
+config = settings.child('UNOCONV_EXTENSION_CONFIG')
 
 UNOCONV_BIN = config.get('UNOCONV_BIN', '/usr/bin/unoconv')
 

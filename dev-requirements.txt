@@ -2,13 +2,11 @@
 
 -e git+https://github.com/centerforopenscience/aiohttpretty.git@0.0.2#egg=aiohttpretty
 colorlog==2.5.0
-flake8==2.3.0
+flake8==3.0.4
 ipdb
 mccabe
-pep8
+pydevd==0.0.6
 pyflakes
 pytest==2.8.2
 pytest-cov==2.2.0
 pyzmq==14.4.1
-
-

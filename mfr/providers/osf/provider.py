@@ -7,6 +7,7 @@ import mimetypes
 
 import furl
 import aiohttp
+from aiohttp.errors import ContentEncodingError
 
 from waterbutler.core import streams
 
@@ -64,16 +65,19 @@ class OsfProvider(provider.BaseProvider):
             metadata = await metadata_request.json()
         else:
             # URL is for WaterButler v1 API
-            self.metrics.add('metadata.wb_api', 'v0')
+            self.metrics.add('metadata.wb_api', 'v1')
             metadata_request = await self._make_request('HEAD', download_url)
             # To make changes to current code as minimal as possible
             try:
                 metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
+                await metadata_request.release()
             except KeyError:
                 raise exceptions.MetadataError(
                     'Failed to fetch metadata. Received response code {}'.format(str(metadata_request.status)),
                     code=400)
-        await metadata_request.release()
+            except ContentEncodingError:
+                pass  # hack: aiohttp tries to unzip empty body when Content-Encoding is set
+
         self.metrics.add('metadata.raw', metadata)
 
         # e.g.,

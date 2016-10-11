@@ -1,17 +1,12 @@
+from mfr import settings
 from mfr.extensions.tabular import libs
 
 
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
+config = settings.child('TABULAR_EXTENSION_CONFIG')
 
-config = settings.get('TABULAR_EXTENSION_CONFIG', {})
-
-
-MAX_SIZE = config.get('MAX_SIZE', 10000)
-TABLE_WIDTH = config.get('TABLE_WIDTH', 700)
-TABLE_HEIGHT = config.get('TABLE_HEIGHT', 600)
+MAX_SIZE = int(config.get('MAX_SIZE', 10000))
+TABLE_WIDTH = int(config.get('TABLE_WIDTH', 700))
+TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 
 LIBS = config.get('LIBS', {
     '.csv': [libs.csv_stdlib],

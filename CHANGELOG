@@ -2,6 +2,15 @@
 ChangeLog
 *********
 
+0.17.0 (2016-10-11)
+===================
+- Feature: WaterButler accepts configuration from the environment, overriding any file-based
+configuration.  This helps MFR integrate nicer in a docker-compose environment. (thanks, @icereval!)
+- Fix: Fix pdf presentation mode on Safari. (thanks, @darioncassel!)
+- Fix: Fix aiohttp crashing on gzipped HEAD requests.
+- Fix: Fix incorrect WB API usage metrics.
+- Code: Bump raven dependency to 5.27.0.
+
 0.16.0 (2016-09-13)
 ===================
 - Feature: MFR now does .sav conversion via pspp-convert instead of rpy2.

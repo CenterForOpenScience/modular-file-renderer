@@ -1,10 +1,12 @@
 import os
 import pytest
+from tempfile import NamedTemporaryFile
 
 from mfr.core.exceptions import RendererError
 from mfr.core.provider import ProviderMetadata
 
 from mfr.extensions.codepygments import CodePygmentsRenderer
+from mfr.extensions.codepygments import settings
 
 
 @pytest.fixture
@@ -16,6 +18,29 @@ def metadata():
 def test_file_path():
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'test.xml')
 
+@pytest.fixture
+def max_size_file_path():
+    dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            'files')
+    with NamedTemporaryFile(mode='w+b', suffix='.txt', dir=dir_path,
+                            delete=False) as temp_file:
+        temp_file_path = temp_file.name
+        file_size = settings.MAX_SIZE
+        temp_file.seek(file_size -1)
+        temp_file.write(b'0')
+    return temp_file_path
+
+@pytest.fixture
+def over_size_file_path():
+    dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            'files')
+    with NamedTemporaryFile(mode='w+b', suffix='.txt', dir=dir_path,
+                            delete=False) as temp_file:
+        temp_file_path = temp_file.name
+        file_size = settings.MAX_SIZE
+        temp_file.seek(file_size)
+        temp_file.write(b'0')
+    return temp_file_path
 
 @pytest.fixture
 def invalid_file_path():
@@ -57,6 +82,23 @@ class TestCodePygmentsRenderer:
         renderer = CodePygmentsRenderer(metadata, invalid_file_path, url, assets_url, export_url)
         with pytest.raises(RendererError):
             renderer.render()
+
+    def test_render_codepygments_max_size(self, metadata, max_size_file_path, url, assets_url, export_url):
+        try:
+            renderer = CodePygmentsRenderer(metadata, max_size_file_path, url, assets_url, export_url)
+            body = renderer.render()
+            assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
+        finally:
+            os.remove(max_size_file_path)
+
+    def test_render_codepygments_over_size(self, metadata, over_size_file_path, url, assets_url, export_url):
+        with pytest.raises(RendererError):
+            try:
+                renderer = CodePygmentsRenderer(metadata, over_size_file_path,
+                                                url, assets_url, export_url)
+                renderer.render()
+            finally:
+                os.remove(over_size_file_path)
 
     def test_render_codepygments_file_required(self, renderer):
         assert renderer.file_required is True

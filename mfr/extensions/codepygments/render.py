@@ -1,6 +1,7 @@
 import os
 
 import chardet
+from humanfriendly import format_size
 import pygments
 import pygments.lexers
 import pygments.lexers.special
@@ -29,7 +30,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
     def render(self):
         file_size = os.path.getsize(self.file_path)
         if file_size > settings.MAX_SIZE:
-            raise(cp_exceptions.FileToLargeException('Text files larger than 64kb are not rendered; please download the file to view.'))
+            raise(cp_exceptions.FileToLargeException('Text files larger than {} are not rendered; please download the file to view.'.format(format_size(settings.MAX_SIZE, binary=True))))
         with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.metadata.ext)
             return self.TEMPLATE.render(base=self.assets_url, body=body)

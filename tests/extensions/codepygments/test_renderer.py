@@ -6,6 +6,7 @@ from mfr.core.exceptions import RendererError
 from mfr.core.provider import ProviderMetadata
 
 from mfr.extensions.codepygments import CodePygmentsRenderer
+from mfr.extensions.codepygments.exceptions import FileToLargeException
 from mfr.extensions.codepygments import settings
 
 
@@ -92,7 +93,7 @@ class TestCodePygmentsRenderer:
             os.remove(max_size_file_path)
 
     def test_render_codepygments_over_size(self, metadata, over_size_file_path, url, assets_url, export_url):
-        with pytest.raises(RendererError):
+        with pytest.raises(FileToLargeException):
             try:
                 renderer = CodePygmentsRenderer(metadata, over_size_file_path,
                                                 url, assets_url, export_url)

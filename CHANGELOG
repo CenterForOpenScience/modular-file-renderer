@@ -2,6 +2,14 @@
 ChangeLog
 *********
 
+0.18.0 (2016-10-31)
+===================
+- HALLOWEEN RELEASE!
+- Feature: Add configurable size limit to text renderer to avoid dumping 100s of MB of text into
+the user's browser. (thanks, @TomBaxter!)
+- Fix: Pad MFR 404 errors to >512 bytes.  IE discards 404 messages smaller than that and
+substitutes its own 404 page. (thanks, @alexschiller!)
+
 0.17.0 (2016-10-11)
 ===================
 - Feature: WaterButler accepts configuration from the environment, overriding any file-based

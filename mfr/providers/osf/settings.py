@@ -1,11 +1,6 @@
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
-
-config = settings.get('OSF_PROVIDER_CONFIG', {})
+from mfr import settings
 
 
-# BASE_URL = config.get('BASE_URL', 'http://localhost:5001/')
+config = settings.child('OSF_PROVIDER_CONFIG')
 
 MFR_IDENTIFYING_HEADER = config.get('MFR_IDENTIFYING_HEADER', 'X-Cos-Mfr-Render-Request')

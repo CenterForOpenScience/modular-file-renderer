@@ -1,6 +1,4 @@
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
+from mfr import settings
 
-config = settings.get('HTTP_PROVIDER_CONFIG', {})
+
+config = settings.child('HTTP_PROVIDER_CONFIG')

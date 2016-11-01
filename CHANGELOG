@@ -2,6 +2,36 @@
 ChangeLog
 *********
 
+0.18.0 (2016-10-31)
+===================
+- HALLOWEEN RELEASE!
+- Feature: Add configurable size limit to text renderer to avoid dumping 100s of MB of text into
+the user's browser. (thanks, @TomBaxter!)
+- Fix: Pad MFR 404 errors to >512 bytes.  IE discards 404 messages smaller than that and
+substitutes its own 404 page. (thanks, @alexschiller!)
+
+0.17.0 (2016-10-11)
+===================
+- Feature: WaterButler accepts configuration from the environment, overriding any file-based
+configuration.  This helps MFR integrate nicer in a docker-compose environment. (thanks, @icereval!)
+- Fix: Fix pdf presentation mode on Safari. (thanks, @darioncassel!)
+- Fix: Fix aiohttp crashing on gzipped HEAD requests.
+- Fix: Fix incorrect WB API usage metrics.
+- Code: Bump raven dependency to 5.27.0.
+
+0.16.0 (2016-09-13)
+===================
+- Feature: MFR now does .sav conversion via pspp-convert instead of rpy2.
+- Fix: Update ipython notebook renderer to use split-out nbconvert and nbformat libraries.
+
+0.15.0 (2016-08-25)
+===================
+- Feature: add analytics to MFR requests.  MFR now keeps track of requests, handlers, renderers,
+and exporters, with more to come!
+- Fix: Better error handling for a number of edge cases. (thanks, @TomBaxter!)
+- Docs: many fixes to doc build, layout, and formatting. (thanks, @TomBaxter!)
+- Docs: add overview of MFR architecture to docs
+
 0.14.0 (2016-06-24)
 ===================
 - Feature: The Dockerfile now sets up unoconv for you.

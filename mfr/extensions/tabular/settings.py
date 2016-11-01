@@ -1,17 +1,12 @@
+from mfr import settings
 from mfr.extensions.tabular import libs
 
 
-try:
-    from mfr import settings
-except ImportError:
-    settings = {}
+config = settings.child('TABULAR_EXTENSION_CONFIG')
 
-config = settings.get('TABULAR_EXTENSION_CONFIG', {})
-
-
-MAX_SIZE = config.get('MAX_SIZE', 10000)
-TABLE_WIDTH = config.get('TABLE_WIDTH', 700)
-TABLE_HEIGHT = config.get('TABLE_HEIGHT', 600)
+MAX_SIZE = int(config.get('MAX_SIZE', 10000))
+TABLE_WIDTH = int(config.get('TABLE_WIDTH', 700))
+TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 
 LIBS = config.get('LIBS', {
     '.csv': [libs.csv_stdlib],
@@ -20,7 +15,7 @@ LIBS = config.get('LIBS', {
     '.xlsx': [libs.xlsx_xlrd],
     '.xls': [libs.xlsx_xlrd],
     '.dta': [libs.dta_pandas],
-    '.sav': [libs.sav_pandas],
+    '.sav': [libs.sav_stdlib],
     # '.ods': [libs.ods_ezodf],
 })
 
@@ -38,3 +33,5 @@ BIG_TABLE = config.get('BIG_TABLE', {
     'syncColumnCellResize': True,
     'multiColumnSort': True,
 })
+
+PSPP_CONVERT_BIN = config.get('PSPP_CONVERT_BIN', '/usr/bin/pspp-convert')

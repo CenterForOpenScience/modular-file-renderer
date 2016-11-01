@@ -1,9 +1,10 @@
 aiohttp==0.18.4
 chardet==2.3.0
 furl==0.4.2
+humanfriendly==2.1
 invoke==0.11.1
 mako==1.0.1
-raven==5.10.2
+raven==5.27.0
 stevedore==1.2.0
 tornado==4.3
 
@@ -22,7 +23,9 @@ pydocx==0.7.0
 Pillow==2.8.2
 
 # IPython
-ipython==3.1.0
+nbconvert==4.2.0
+nbformat==4.1.0
+traitlets==4.2.2
 jsonschema==2.4.0
 jinja2==2.7.3
 mistune==0.7
@@ -36,9 +39,6 @@ docutils==0.12
 # Tabular
 pandas==0.17.1
 git+https://github.com/icereval/xlrd.git
-
-# Rpy
-rpy2==2.7.8
 
 # Md
 markdown==2.6.2

@@ -22,6 +22,9 @@ RUN apt-get update \
     # unoconv dependencies
     && apt-get install -y \
         unoconv \
+    # pspp dependencies
+    && apt-get install -y \
+        pspp \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
@@ -56,6 +59,9 @@ RUN pip install --no-cache-dir -r /code/requirements.txt
 
 # Copy the rest of the code over
 COPY ./ /code/
+
+ARG GIT_COMMIT=
+ENV GIT_COMMIT ${GIT_COMMIT}
 
 RUN python setup.py develop
 

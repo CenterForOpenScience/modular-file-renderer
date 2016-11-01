@@ -14,7 +14,7 @@ Or download one of the following:
 * tarball_
 * zipball_
 
-Make sure that you have installed R, are using python3.5, and have installed invoke for your current python3 version.
+Make sure that you have installed pspp, are using python3.5, and have installed invoke for your current python3 version.
 
 Install the version of invoke found in the requirements.txt file. Currently 0.11.1
 

@@ -6,7 +6,18 @@
 
 A Python package for rendering files to HTML via an embeddable iframe.
 
-### Startup commands
+### Documentation
+
+*Note: https://readthedocs.org/ is currently unable to build documentation for Python 3.5 projects.*  The documentation available at https://mfr.readthedocs.io/en/latest/ is outdated (v0.15.0). For the most up-to-date documentation, build locally. Within your checkout, run:
+
+```bash
+pip install -r doc-requirements.txt
+cd docs
+make
+open _build/html/index.html
+```
+
+### Setting up
 
 Install the latest version of python3.5.
 
@@ -14,13 +25,15 @@ For MacOSX users:
 
 ```bash
 brew install python3
-brew install r
+# optional, needed for some converters
+brew install pspp unoconv
 ```
 For Ubuntu users:
 
 ```bash
 apt-get install python3
-apt-get install r-base
+# optional, needed for some converters
+apt-get install pspp unoconv
 ```
 
 After installing python3.5, create the virtual environment with the following commands:
@@ -30,12 +43,19 @@ pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python=`which python3.5` mfr
 pip install invoke==0.11.1
-invoke install --develop
+invoke install
 invoke server
 ```
-### Testing Configuration (optional)
 
-MFR looks for local configuration in `~/.cos/mfr-test.json`.  The defaults should suffice for most local testing.  If you're running the OSF on something other than `http://localhost:5000/`, you'll need to update the `ALLOWED_PROVIDER_DOMAINS` settings value:
+### Configuring
+
+MFR configuration is done through a JSON file (`mfr-test.json`) that lives in the `.cos` directory of your home directory.  If this is your first time setting up MFR or its sister project, [WaterButler](https://github.com/CenterForOpenScience/waterbutler/), you probably do not have this directory and will need to create it:
+
+```bash
+mkdir ~/.cos
+```
+
+The defaults should suffice for most local testing.  If you're running the OSF on something other than `http://localhost:5000/`, you'll need to update the `ALLOWED_PROVIDER_DOMAINS` settings value:
 
 ```json
 {
@@ -45,7 +65,7 @@ MFR looks for local configuration in `~/.cos/mfr-test.json`.  The defaults shoul
 }
 ```
 
-If you encounter the error message `TypeError: throw() takes 2 positional arguments but 4 were given`, you've run into a [core asyncio bug](https://bugs.python.org/issue25394)!  This bug is triggered by turning on debugging. You'll need to set `SERVER_CONFIG.DEBUG` to `false` in your `mfr-test.json`, e.g.
+If you encounter the error message `TypeError: throw() takes 2 positional arguments but 4 were given`, you've run into a [core asyncio bug](https://bugs.python.org/issue25394)!  This bug is triggered by turning on debugging. You'll need to set the `SERVER_CONFIG.DEBUG` flag to `false`:
 
 ```json
 {
@@ -55,11 +75,20 @@ If you encounter the error message `TypeError: throw() takes 2 positional argume
 }
 ```
 
+### Testing
+
+Before running the tests, you will need to install some additional requirements. In your checkout, run:
+
+```bash
+invoke install --develop
+invoke test
+```
+
 ### Create your own module
 
 Interested in adding support for a new provider or file format? Check out the CONTRIBUTING.rst docs.
 
-### License 
+### License
 
 Copyright 2013-2016 Center for Open Science
 
@@ -75,6 +104,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-### COS is Hiring!
+### COS is hiring!
 
-Want to help save science? Want to get paid to develop free, open source software? [Check out our openings!](http://cos.io/jobs)
+Want to help save science? Want to get paid to develop free, open source software? [Check out our openings!](https://cos.io/jobs/)

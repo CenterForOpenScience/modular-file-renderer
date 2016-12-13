@@ -5,6 +5,7 @@ humanfriendly==2.1
 invoke==0.11.1
 mako==1.0.1
 raven==5.27.0
+setuptools==30.4.0
 stevedore==1.2.0
 tornado==4.3
 

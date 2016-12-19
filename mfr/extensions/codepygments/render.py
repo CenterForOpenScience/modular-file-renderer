@@ -30,10 +30,14 @@ class CodePygmentsRenderer(extension.BaseRenderer):
     def render(self):
         file_size = os.path.getsize(self.file_path)
         if file_size > settings.MAX_SIZE:
-            raise cp_exceptions.FileTooLargeException(
-                'Text files larger than {} are not rendered. Please download the file to '
-                'view.'.format(format_size(settings.MAX_SIZE, binary=True))
-            )
+            keen_data = {'FileTooLargeError':
+                            {'file_size': file_size,
+                             'MAX_SIZE': settings.MAX_SIZE
+                             }
+                         }
+            raise cp_exceptions.FileTooLargeError(
+                'Text files larger than {} are not rendered. Please download the file to view.'.format(format_size(settings.MAX_SIZE, binary=True)),
+                keen_data=keen_data)
 
         with open(self.file_path, 'rb') as fp:
             body = self._render_html(fp, self.metadata.ext)

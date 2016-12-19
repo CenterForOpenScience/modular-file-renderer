@@ -2,6 +2,7 @@ import os
 import abc
 import uuid
 import asyncio
+import logging
 import pkg_resources
 
 import tornado.web
@@ -151,22 +152,49 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
         etype, exc, _ = exc_info
 
+        default_html_err = '''
+            <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+            <div class="alert alert-warning" role="alert">
+            Unable to render the requested file, please try again later.
+            </div>
+            '''
+
         if issubclass(etype, exceptions.PluginError):
             self.set_status(exc.code)
-            self.finish(exc.as_html())
         else:
             self.set_status(400)
-            self.finish('''
-                <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-                <div class="alert alert-warning" role="alert">
-                    Unable to render the requested file, please try again later.
-                </div>
-            ''')
+
+        self.exception_metrics = MetricsRecord('exception')
+        self.exception_metrics.merge({
+            'exception_name': str(exc.__class__.__name__),
+            'exception_code': self.get_status(),
+            'exception_message': exc.message,
+            'exception_data': exc.data})
+        self._final_handler_merge()
+        keen_event = self._all_metrics()
+        keen_event['exception'] = self.exception_metrics.serialize()
+        logger = logging.getLogger('keen_err_logger')
+        logger.error(keen_event)
+
+        # kludge. tornado throws error if finish is called more then once.
+        if callable(getattr(exc, 'as_html', None)):
+            self.finish(exc.as_html())
+        else:
+            self.finish(default_html_err)
 
     def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
+        if not hasattr(self, 'exception_metrics'):
+            self._final_handler_merge()
+            asyncio.ensure_future(self._cache_and_clean())
+            asyncio.ensure_future(
+                remote_logging.log_analytics(
+                    remote_logging._serialize_request(self.request),
+                    self._all_metrics()))
+
+    def _final_handler_merge(self):
         self.handler_metrics.merge({
             'type': self.NAME,
             'bytes_written': self.bytes_written,
@@ -182,11 +210,6 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 'provider': str(self.local_cache_provider.NAME),
             }
         })
-
-        asyncio.ensure_future(self._cache_and_clean())
-        asyncio.ensure_future(
-            remote_logging.log_analytics(
-                remote_logging._serialize_request(self.request), self._all_metrics()))
 
     async def _cache_and_clean(self):
         return

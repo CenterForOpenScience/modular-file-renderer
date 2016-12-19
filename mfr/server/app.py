@@ -14,8 +14,18 @@ from mfr.server.handlers.export import ExportHandler
 from mfr.server.handlers.render import RenderHandler
 from mfr.server.handlers.status import StatusHandler
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
+from mfr.core import remote_logging
 
 logger = logging.getLogger(__name__)
+
+if server_settings.KEEN_ERRORS_PROJECT_ID is None:
+    logger.info('No KEEN_ERRORS_PROJECT_ID configured. Errors will not be logged to keen.io')
+else:
+    keen_err_logger = logging.getLogger('keen_err_logger')
+    keen_err_handler = remote_logging.KeenHandler('mfr_errors',
+                                    server_settings.KEEN_ERRORS_PROJECT_ID,
+                                    server_settings.KEEN_ERRORS_WRITE_KEY)
+    keen_err_logger.addHandler(keen_err_handler)
 
 
 def make_app(debug):

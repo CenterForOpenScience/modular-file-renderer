@@ -39,7 +39,20 @@ def make_exporter(name, source_file_path, output_file_path, format):
             invoke_args=(source_file_path, output_file_path, format),
         ).driver
     except RuntimeError:
-        raise exceptions.RendererError(settings.UNSUPPORTED_EXPORTER_MSG, code=400)
+        keen_data = {'MakeExporterError':
+                        {'DriverArgs':
+                            {'namespace': 'mfr.renderers',
+                             'name': (name and name.lower()) or 'none',
+                             'invoke_on_load': True,
+                             'invoke_args':
+                                 {'source_file_path': source_file_path,
+                                  'output_file_path': output_file_path,
+                                  'format': format}
+                             }
+                         }
+                     }
+        raise exceptions.MakeExporterError(settings.UNSUPPORTED_EXPORTER_MSG,
+                                       code=400, keen_data=keen_data)
 
 
 def make_renderer(name, metadata, file_path, url, assets_url, export_url):
@@ -62,4 +75,19 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             invoke_args=(metadata, file_path, url, assets_url, export_url),
         ).driver
     except RuntimeError:
-        raise exceptions.RendererError(settings.UNSUPPORTED_RENDER_MSG, code=400)
+        keen_data = {'MakeRendererError':
+                        {'DriverArgs':
+                            {'namespace': 'mfr.renderers',
+                             'name': (name and name.lower()) or 'none',
+                             'invoke_on_load': True,
+                             'invoke_args':
+                                {'metadata': metadata.serialize(),
+                                 'file_path': file_path,
+                                 'url': url,
+                                 'assets_url': assets_url,
+                                 'export_url': export_url}
+                             }
+                         }
+                     }
+        raise exceptions.MakeRendererError(settings.UNSUPPORTED_RENDER_MSG,
+                                       code=400, keen_data=keen_data)

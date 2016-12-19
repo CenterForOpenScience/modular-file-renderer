@@ -2,6 +2,7 @@ import os
 import abc
 import uuid
 import asyncio
+import logging
 import pkg_resources
 
 import tornado.web
@@ -153,6 +154,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
         if issubclass(etype, exceptions.PluginError):
             self.set_status(exc.code)
+        logger = logging.getLogger('keen_err_logger')
+        logger.error(keen_event)
             self.finish(exc.as_html())
         else:
             self.set_status(400)

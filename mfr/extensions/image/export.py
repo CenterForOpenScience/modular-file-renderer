@@ -48,4 +48,7 @@ class ImageExporter(extension.BaseExporter):
             exported_image.save(self.output_file_path, type)
             exported_image.close()
         except UnicodeDecodeError:
-            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400)
+            keen_data = {'type': 'image_export',
+                         'image_type': type,
+                         'path': str(self.source_file_path)}
+            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400, keen_data=keen_data)

@@ -10,7 +10,7 @@ class PluginError(waterbutler.core.exceptions.PluginError):
     def __init__(self, message, code=500, keen_data={}):
         super().__init__(message, code)
         if settings.KEEN_ERRORS_PROJECT_ID:
-            self.data = keen_data
+            self.data = {self.__class__.__name__: keen_data}
 
     def as_html(self):
         return '''
@@ -27,18 +27,12 @@ class ExtensionError(PluginError):
     inherit from ExtensionError
     """
 
-    def __init__(self, message, code=500, keen_data={}):
-        super().__init__(message, code, keen_data=keen_data)
-
 
 class RendererError(ExtensionError):
     """The MFR related errors raised
     from a :class:`mfr.core.extension` and relating
     to rendering should inherit from RendererError
     """
-
-    def __init__(self, message, code=500, keen_data={}):
-        super().__init__(message, code, keen_data=keen_data)
 
 
 class MakeRendererError(ExtensionError):
@@ -47,14 +41,16 @@ class MakeRendererError(ExtensionError):
     should inherit from MakeRendererError
     """
 
-    def __init__(self, message, code=500, keen_data={}):
-        super().__init__(message, code, keen_data=keen_data)
-
-
 class ExporterError(ExtensionError):
     """The MFR related errors raised
     from a :class:`mfr.core.extension` and relating
     to exporting should inherit from ExporterError
+    """
+
+class SubprocessError(ExporterError):
+    """The MFR related errors raised
+    from a :class:`mfr.core.extension` and relating
+    to subprocess should inherit from SubprocessError
     """
 
 class MakeExporterError(ExtensionError):
@@ -62,10 +58,6 @@ class MakeExporterError(ExtensionError):
     from a :def:`mfr.core.utils.make_exporter`
     should inherit from MakeExporterError
     """
-
-    def __init__(self, message, code=500, keen_data={}):
-        super().__init__(message, code, keen_data=keen_data)
-
 
 class ProviderError(PluginError):
     """The MFR related errors raised
@@ -80,17 +72,9 @@ class DownloadError(ProviderError):
     to downloads should inherit from DownloadError
     """
 
-    def __init__(self, message, keen_data: dict ={}, code=500):
-        keen_data = {'DownloadError': keen_data}
-        super().__init__(message, code, keen_data=keen_data)
-
 
 class MetadataError(ProviderError):
     """The MFR related errors raised
     from a :class:`mfr.core.provider` and relating
     to metadata should inherit from MetadataError
     """
-
-    def __init__(self, message, keen_data: dict ={}, code=500):
-        keen_data = {'MetadataError': keen_data}
-        super().__init__(message, code, keen_data=keen_data)

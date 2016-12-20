@@ -53,7 +53,12 @@ def sav_to_csv(fp):
             fp.name,
             csv_file.name,
         ])
-    except subprocess.CalledProcessError:
-        raise exceptions.ExporterError(
-            'Unable to convert the SPSS file to CSV, please try again later.', code=400)
+    except subprocess.CalledProcessError as err:
+        keen_data = {'type': 'unoconv',
+                     'unoconv_cmd': str(err.cmd),
+                     'unoconv_returncode': err.returncode,
+                     'path': fp.name}
+        raise exceptions.SubprocessError(
+            'Unable to convert the SPSS file to CSV, please try again later.',
+            code=400, keen_data=keen_data)
     return csv_file

@@ -1,4 +1,5 @@
 import os
+import ast
 import hashlib
 import logging
 import mimetypes
@@ -33,8 +34,10 @@ class HttpProvider(provider.BaseProvider):
         if response.status >= 400:
             err_resp = await response.read()
             logger.error('Unable to download file: ({}) {}'.format(response.status, err_resp.decode('utf-8')))
-            raise exceptions.ProviderError(
+            resp_text = await response.text()
+            keen_data = {'download_url': self.url,
+                         'response': ast.literal_eval(resp_text)}
+            raise exceptions.DownloadError(
                 'Unable to download the requested file, please try again later.',
-                code=response.status
-            )
+                code=response.status, keen_data=keen_data)
         return streams.ResponseStreamReader(response)

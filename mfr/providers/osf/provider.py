@@ -73,9 +73,11 @@ class OsfProvider(provider.BaseProvider):
                 metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
                 await metadata_request.release()
             except KeyError:
-                raise exceptions.MetadataError(
-                    'Failed to fetch metadata. Received response code {}'.format(str(metadata_request.status)),
-                    code=400)
+                resp_text = await metadata_request.text()
+                keen_data = {'metadata_url': download_url,
+                             'response': ast.literal_eval(resp_text)
+                             }
+                raise exceptions.MetadataError('Failed to fetch metadata. Received response code {}'.format(str(metadata_request.status)), code=400, keen_data=keen_data)
             except ContentEncodingError:
                 pass  # hack: aiohttp tries to unzip empty body when Content-Encoding is set
 
@@ -114,9 +116,7 @@ class OsfProvider(provider.BaseProvider):
                          }
             raise exceptions.DownloadError(
                 'Unable to download the requested file, please try again later.',
-                code=response.status,
-                keen_data=keen_data
-            )
+                code=response.status, keen_data=keen_data)
 
         self.metrics.add('download.saw_redirect', False)
         if response.status in (302, 301):
@@ -150,10 +150,12 @@ class OsfProvider(provider.BaseProvider):
                         'Content-Type': 'application/json'
                     }
                 )
+                resp_text = await request.text()
                 await request.release()
 
                 if request.status != 302:
-                    keen_data = {'metadata_url': self.url
+                    keen_data = {'metadata_url': self.url,
+                                 'response': ast.literal_eval(resp_text)
                                  }
                     raise exceptions.MetadataError(request.reason, request.status,
                                                    keen_data=keen_data)

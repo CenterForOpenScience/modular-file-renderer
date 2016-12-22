@@ -167,15 +167,14 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         else:
             self.set_status(400)
 
-        self.exception_metrics = MetricsRecord('exception')
-        self.exception_metrics.merge({
-            'exception_name': str(exc.__class__.__name__),
-            'exception_code': self.get_status(),
-            'exception_message': exc.message,
-            'exception_data': exc.data})
+        self.error_metrics = MetricsRecord('error')
+        self.error_metrics.merge({'code': self.get_status(),
+                                      'message': exc.message,
+                                      'nomen': exc.nomen,
+                                      'error_{}'.format(exc.nomen): exc.data})
         self._final_handler_merge()
         keen_event = self._all_metrics()
-        keen_event['exception'] = self.exception_metrics.serialize()
+        keen_event['error'] = self.error_metrics.serialize()
         logger = logging.getLogger('keen_err_logger')
         logger.error(keen_event)
 
@@ -189,7 +188,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
-        if not hasattr(self, 'exception_metrics'):
+        if not hasattr(self, 'error_metrics'):
             self._final_handler_merge()
             asyncio.ensure_future(self._cache_and_clean())
             asyncio.ensure_future(

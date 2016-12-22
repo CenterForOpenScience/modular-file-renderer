@@ -1,5 +1,4 @@
 import waterbutler.core.exceptions
-from mfr.server import settings
 
 
 class PluginError(waterbutler.core.exceptions.PluginError):
@@ -7,10 +6,10 @@ class PluginError(waterbutler.core.exceptions.PluginError):
     should inherit from PluginError
     """
 
-    def __init__(self, message, code=500, keen_data={}):
+    def __init__(self, message, nomen: str, code=500):
         super().__init__(message, code)
-        if settings.KEEN_ERRORS_PROJECT_ID:
-            self.data = {self.__class__.__name__: keen_data}
+        self.nomen = nomen
+        self.data = self.keen_data
 
     def as_html(self):
         return '''
@@ -27,12 +26,27 @@ class ExtensionError(PluginError):
     inherit from ExtensionError
     """
 
+    def __init__(self, message, nomen: str, extension: str, code=500):
+        self.keen_data = {'nomen': nomen,
+                          'extension': extension,
+                          'extention_{}'.format(nomen): self.keen_data
+                          }
+        super().__init__(message, 'extension', code=code)
+
 
 class RendererError(ExtensionError):
     """The MFR related errors raised
     from a :class:`mfr.core.extension` and relating
     to rendering should inherit from RendererError
     """
+
+    def __init__(self, message, nomen: str, renderer_class: str,
+                 extension: str, code=500):
+        self.keen_data = {'nomen': nomen,
+                          'renderer_class': renderer_class,
+                          'renderer_{}'.format(nomen): self.keen_data
+                          }
+        super().__init__(message, 'renderer', extension, code=code)
 
 
 class MakeRendererError(ExtensionError):
@@ -41,11 +55,21 @@ class MakeRendererError(ExtensionError):
     should inherit from MakeRendererError
     """
 
+
 class ExporterError(ExtensionError):
     """The MFR related errors raised
     from a :class:`mfr.core.extension` and relating
     to exporting should inherit from ExporterError
     """
+
+    def __init__(self, message, nomen: str, exporter_class: str,
+                 extension: str, code=500):
+        self.keen_data = {'nomen': nomen,
+                          'exporter_class': exporter_class,
+                          'expoorter_{}'.format(nomen): self.keen_data
+                          }
+        super().__init__(message, 'exporter', extension, code=code)
+
 
 class SubprocessError(ExporterError):
     """The MFR related errors raised
@@ -53,11 +77,13 @@ class SubprocessError(ExporterError):
     to subprocess should inherit from SubprocessError
     """
 
+
 class MakeExporterError(ExtensionError):
     """The MFR related errors raised
     from a :def:`mfr.core.utils.make_exporter`
     should inherit from MakeExporterError
     """
+
 
 class ProviderError(PluginError):
     """The MFR related errors raised

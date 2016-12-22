@@ -2,7 +2,6 @@ from PIL import Image
 import imghdr
 
 from mfr.core import extension
-from mfr.core import exceptions
 from mfr.extensions.image import exceptions as image_exceptions
 
 
@@ -23,13 +22,6 @@ class ImageExporter(extension.BaseExporter):
         })
         try:
             image = Image.open(self.source_file_path)
-        except IOError as err:
-            keen_data = {'file_name_ext': type,
-                         'imghdr_type': imghdr.what(self.source_file_path),
-                         'IOError': str(err)
-                         }
-            raise image_exceptions.PillowImageError('Unable to export the file in the requested format, please try again later.', code=400, keen_data=keen_data)
-        try:
             if max_size:
                 # resize the image to the w/h maximum specified
                 ratio = min(max_size[0] / image.size[0], max_size[1] / image.size[1])
@@ -47,8 +39,5 @@ class ImageExporter(extension.BaseExporter):
                 image.close()
             exported_image.save(self.output_file_path, type)
             exported_image.close()
-        except UnicodeDecodeError:
-            keen_data = {'type': 'image_export',
-                         'image_type': type,
-                         'path': str(self.source_file_path)}
-            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400, keen_data=keen_data)
+        except (UnicodeDecodeError, IOError) as err:
+            raise image_exceptions.PillowImageError('Unable to export the file in the requested format, please check that file is a valid {}.'.format(type), type, imghdr.what(self.source_file_path), str(err), err.__class__.__name__, self.__class__.__name__, '.{}'.format(type), code=400)

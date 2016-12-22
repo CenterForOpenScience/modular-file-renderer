@@ -7,5 +7,11 @@ class FileTooLargeError(RendererError):
     file to display should inherit from FileTooLargeError
     """
 
-    def __init__(self, message, keen_data: dict ={}, code=500):
-        super().__init__(message, code, keen_data=keen_data)
+    def __init__(self, message, file_size: int, max_size: int,
+                 renderer_class: str, extension: str, code: int=500):
+
+        self.keen_data = {'file_size': file_size,
+                          'max_size': max_size}
+
+        super().__init__(message, 'file_too_large', renderer_class,
+                         extension, code=code)

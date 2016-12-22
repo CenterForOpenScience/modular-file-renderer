@@ -27,9 +27,7 @@ class JASPRenderer(extension.BaseRenderer):
                 body = self._render_html(zip_file, self.metadata.ext)
                 return self.TEMPLATE.render(base=self.assets_url, body=body)
         except BadZipFile as err:
-            keen_data = {'type': 'bad_zip',
-                         'reason': str(err)}
-            raise exceptions.JaspFileCorruptError(self.MESSAGE_FILE_CORRUPT + ' Failure to unzip. ' + str(err), keen_data=keen_data)
+            raise exceptions.JaspFileCorruptError('{} Failure to unzip. {}.'.format(self.MESSAGE_FILE_CORRUPT, str(err)), 'bad_zip', str(err), self.__class__.__name__, self.metadata.ext)
 
     @property
     def file_required(self):
@@ -45,9 +43,7 @@ class JASPRenderer(extension.BaseRenderer):
             with zip_file.open('index.html') as index_data:
                 index = index_data.read().decode('utf-8')
         except KeyError:
-            keen_data = {'type': 'key_error',
-                         'reason': 'zip missing ./index.html'}
-            raise exceptions.JaspFileCorruptError(self.MESSAGE_FILE_CORRUPT + ' Missing index.html', keen_data=keen_data)
+            raise exceptions.JaspFileCorruptError('{} Missing index.html.'.format(self.MESSAGE_FILE_CORRUPT), 'key_error', 'zip missing ./index.html', self.__class__.__name__, self.metadata.ext)
 
         processor = HTMLProcessor(zip_file)
         processor.feed(index)
@@ -64,9 +60,7 @@ class JASPRenderer(extension.BaseRenderer):
             with zip_file.open('META-INF/MANIFEST.MF') as manifest_data:
                 manifest = manifest_data.read().decode('utf-8')
         except KeyError:
-            keen_data = {'type': 'key_error',
-                         'reason': 'zip missing ./META-INF/MANIFEST.MF'}
-            raise exceptions.JaspFileCorruptError(self.MESSAGE_FILE_CORRUPT + ' Missing META-INF/MANIFEST.MF', keen_data=keen_data)
+            raise exceptions.JaspFileCorruptError('{} Missing META-INF/MANIFEST.MF'.format(self.MESSAGE_FILE_CORRUPT), 'key_error', 'zip missing ./META-INF/MANIFEST.MF', self.__class__.__name__, self.metadata.ext)
 
         lines = manifest.split('\n')
 
@@ -82,24 +76,17 @@ class JASPRenderer(extension.BaseRenderer):
                 elif key == 'Created-By':
                     createdBy = str(value)
         if not dataArchiveVersion:
-            keen_data = {'type': 'manifest_parse_error',
-                         'reason': 'Data-Archive-Version not found'}
-            raise exceptions.JaspFileCorruptError(self.MESSAGE_FILE_CORRUPT + ' Data-Archive-Version not found', keen_data=keen_data)
+            raise exceptions.JaspFileCorruptError('{} Data-Archive-Version not found.'.format(self.MESSAGE_FILE_CORRUPT), 'manifest_parse_error', 'Data-Archive-Version not found.', self.__class__.__name__, self.metadata.ext)
 
         try:
             dataArchiveVersion = LooseVersion(dataArchiveVersion)
         except ValueError:
-            keen_data = {'type': 'manifest_parse_error',
-                         'reason': 'Data-Archive-Version not parsable'}
-            raise exceptions.JaspFileCorruptError(self.MESSAGE_FILE_CORRUPT + ' Data-Archive-Version not parsable', keen_data=keen_data)
+            raise exceptions.JaspFileCorruptError('{} Data-Archive-Version not parsable.'.format(self.MESSAGE_FILE_CORRUPT), 'manifest_parse_error', 'Data-Archive-Version not parsable.', self.__class__.__name__, self.metadata.ext)
 
         # Check that the file is new enough (contains preview content)
         if dataArchiveVersion < self.MINIMUM_VERSION:
-            keen_data = {'created_by': createdBy,
-                         'data_archive_version': dataArchiveVersion.vstring,
-                         'minimum_version': self.MINIMUM_VERSION.vstring
-                         }
-            raise exceptions.JaspVersionError('This JASP file was created with an older data archive version({}), and cannot be previewed. Minimum data archive version is {}.'.format(dataArchiveVersion.vstring, self.MINIMUM_VERSION.vstring),
-                                               keen_data=keen_data)
+            minimum_version = self.MINIMUM_VERSION.vstring
+            data_archive_version = dataArchiveVersion.vstring
+            raise exceptions.JaspVersionError('This JASP file was created with an older data archive version({}), and cannot be previewed. Minimum data archive version is {}.'.format(data_archive_version, minimum_version), createdBy, data_archive_version, minimum_version, self.__class__.__name__, self.metadata.ext)
 
         return True

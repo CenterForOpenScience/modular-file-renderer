@@ -6,9 +6,15 @@ class JaspVersionError(RendererError):
     relating to minimum data archive version should inherit from RendererError
     """
 
-    def __init__(self, message, keen_data: dict ={}, code=500):
-        keen_data = {'JaspVersionError': keen_data}
-        super().__init__(message, code, keen_data=keen_data)
+    def __init__(self, message, created_by: str, data_archive_version: str,
+                 minimum_version: str, renderer_class: str, extension: str,
+                 code=500):
+        self.keen_data = {'created_by': created_by,
+                          'data_archive_version': data_archive_version,
+                          'minimum_version': minimum_version
+                          }
+        super().__init__(message, 'jasp_version', renderer_class,
+                         extension, code=code)
 
 
 class JaspFileCorruptError(RendererError):
@@ -16,6 +22,9 @@ class JaspFileCorruptError(RendererError):
     relating to failure while consuming JASP file should inherit from RendererError
     """
 
-    def __init__(self, message, keen_data: dict ={}, code=500):
-        keen_data = {'JaspFileCorruptError': keen_data}
-        super().__init__(message, code, keen_data=keen_data)
+    def __init__(self, message, name: str, reason: str, renderer_class: str,
+                 extension: str, code=500):
+        self.keen_data = {'name': name,
+                          'reason': reason}
+        super().__init__(message, 'jasp_file_corrupt', renderer_class,
+                         extension, code=code)

@@ -1,17 +1,41 @@
 from mfr.core.exceptions import RendererError
 
 
-class MissingRequirementsException(RendererError):
-    pass
+class MissingRequirementsError(RendererError):
+    def __init__(self, message, function_preference, renderer_class: str,
+                 extension: str, code: int=500):
+
+        self.keen_data = {'function_preference': function_preference}
+
+        super().__init__(message, 'missing_requirements', renderer_class,
+                         extension, code=code)
 
 
-class EmptyTableException(RendererError):
-    pass
+class EmptyTableError(RendererError):
+    def __init__(self, message, renderer_class: str,
+                 extension: str, code: int=500):
+
+        self.keen_data = {}
+
+        super().__init__(message, 'empty_table', renderer_class,
+                         extension, code=code)
 
 
-class TableTooBigException(RendererError):
-    pass
+class TableTooBigError(RendererError):
+    def __init__(self, message, renderer_class: str,
+                 extension: str, code: int=500):
+
+        self.keen_data = {}
+
+        super().__init__(message, 'table_too_big', renderer_class,
+                         extension, code=code)
 
 
-class UnexpectedFormattingException(RendererError):
-    pass
+class UnexpectedFormattingError(RendererError):
+    def __init__(self, message, formatting_function: str, renderer_class: str,
+                 extension: str, code: int=500):
+
+        self.keen_data = {'formatting_function': formatting_function}
+
+        super().__init__(message, 'unexpected_formatting', renderer_class,
+                         extension, code=code)

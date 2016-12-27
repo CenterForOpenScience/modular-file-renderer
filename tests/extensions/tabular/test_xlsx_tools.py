@@ -9,7 +9,7 @@ class TestTabularPandaTools:
 
     def test_xlsx_xlrd(self):
         with open(os.path.join(BASE, 'files', 'test.xlsx')) as fp:
-            sheets = xlrd_tools.xlsx_xlrd(fp)
+            sheets = xlrd_tools.xlsx_xlrd(fp, 'TabularRenderer', '.xlsx')
 
         sheet = sheets.popitem()[1]
         assert sheet[0][0] == {'field': 'one', 'id': 'one', 'name': 'one', 'sortable': True}

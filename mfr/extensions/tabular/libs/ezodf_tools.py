@@ -6,7 +6,7 @@ from collections import OrderedDict
 from ..utilities import data_population, header_population
 
 
-def ods_ezodf(fp):
+def ods_ezodf(fp, renderer_class, extension):
     """Read and convert a ods file to JSON format using the ezodf library
     :param fp: File pointer object
     :return: tuple of table headers and data

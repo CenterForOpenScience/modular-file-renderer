@@ -8,6 +8,8 @@ MAX_SIZE = int(config.get('MAX_SIZE', 10000))
 TABLE_WIDTH = int(config.get('TABLE_WIDTH', 700))
 TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 
+# All libs called from here must take args (fp, renderer_class, extension)
+# renderer_class, and extension to be passed to exception if raised in lib
 LIBS = config.get('LIBS', {
     '.csv': [libs.csv_stdlib],
     '.tsv': [libs.csv_stdlib],

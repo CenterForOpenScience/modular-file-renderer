@@ -45,7 +45,7 @@ def csv_stdlib(fp, renderer_class, extension):
     return {'Sheet 1': (columns, rows)}
 
 
-def sav_stdlib(fp):
+def sav_stdlib(fp, renderer_class, extension):
     """Read and convert a .sav file to .csv with pspp, then convert that to JSON format using
     the python standard library
 
@@ -55,7 +55,7 @@ def sav_stdlib(fp):
     csv_file = utilities.sav_to_csv(fp)
     with open(csv_file.name, 'r') as file:
         csv_file.close()
-        return csv_stdlib(file)
+        return csv_stdlib(file, renderer_class, extension)
 
 
 def _set_dialect_quote_attrs(dialect, data):

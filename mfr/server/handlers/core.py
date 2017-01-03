@@ -172,7 +172,9 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                                       'message': exc.message,
                                       'nomen': exc.nomen,
                                       'error_{}'.format(exc.nomen): exc.data})
-        self._final_handler_merge()
+        # MetadataError will have no cache/file info
+        if getattr(self, 'cache_file_id', None):
+            self._final_handler_merge()
         keen_event = self._all_metrics()
         keen_event['error'] = self.error_metrics.serialize()
         logger = logging.getLogger('keen_err_logger')
@@ -220,8 +222,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         return {
             'handler': self.handler_metrics.serialize(),
             'provider': self.provider.provider_metrics.serialize(),
-            'file': self.metadata.serialize(),
             'extension': self.extension_metrics.serialize(),
+            'file': self.metadata.serialize() if hasattr(self, 'metadata') else None,
             'renderer': self.renderer_metrics.serialize() if hasattr(self, 'renderer_metrics') else None,
             'exporter': self.exporter_metrics.serialize() if hasattr(self, 'exporter_metrics') else None,
         }

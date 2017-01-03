@@ -39,18 +39,16 @@ def make_exporter(name, source_file_path, output_file_path, format):
             invoke_args=(source_file_path, output_file_path, format),
         ).driver
     except RuntimeError:
-        keen_data = {'DriverArgs':
-                        {'namespace': 'mfr.renderers',
-                         'name': (name and name.lower()) or 'none',
-                         'invoke_on_load': True,
-                         'invoke_args':
-                             {'source_file_path': source_file_path,
-                              'output_file_path': output_file_path,
-                              'format': format}
-                         }
-                     }
+        driver_args = {'namespace': 'mfr.renderers',
+                       'name': (name and name.lower()) or 'none',
+                       'invoke_on_load': True,
+                       'invoke_args':
+                           {'source_file_path': source_file_path,
+                            'output_file_path': output_file_path,
+                            'format': format}
+                       }
         raise exceptions.MakeExporterError(settings.UNSUPPORTED_EXPORTER_MSG,
-                                       code=400, keen_data=keen_data)
+                                           driver_args, name, code=400)
 
 
 def make_renderer(name, metadata, file_path, url, assets_url, export_url):
@@ -73,17 +71,15 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             invoke_args=(metadata, file_path, url, assets_url, export_url),
         ).driver
     except RuntimeError:
-        keen_data = {'DriverArgs':
-                        {'namespace': 'mfr.renderers',
-                         'name': (name and name.lower()) or 'none',
-                         'invoke_on_load': True,
-                         'invoke_args':
-                            {'metadata': metadata.serialize(),
-                             'file_path': file_path,
-                             'url': url,
-                             'assets_url': assets_url,
-                             'export_url': export_url}
-                         }
-                     }
+        driver_args = {'namespace': 'mfr.renderers',
+                       'name': (name and name.lower()) or 'none',
+                       'invoke_on_load': True,
+                       'invoke_args':
+                          {'metadata': metadata.serialize(),
+                           'file_path': file_path,
+                           'url': url,
+                           'assets_url': assets_url,
+                           'export_url': export_url}
+                       }
         raise exceptions.MakeRendererError(settings.UNSUPPORTED_RENDER_MSG,
-                                       code=400, keen_data=keen_data)
+                                           driver_args, metadata.ext, code=400)

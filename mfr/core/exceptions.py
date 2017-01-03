@@ -55,6 +55,10 @@ class MakeRendererError(ExtensionError):
     should inherit from MakeRendererError
     """
 
+    def __init__(self, message, driver_args: dict, extension: str, code=500):
+        self.keen_data = {'driver_args': driver_args}
+        super().__init__(message, 'make_renderer', extension, code=code)
+
 
 class ExporterError(ExtensionError):
     """The MFR related errors raised
@@ -66,7 +70,7 @@ class ExporterError(ExtensionError):
                  extension: str, code=500):
         self.keen_data = {'nomen': nomen,
                           'exporter_class': exporter_class,
-                          'expoorter_{}'.format(nomen): self.keen_data
+                          'exporter_{}'.format(nomen): self.keen_data
                           }
         super().__init__(message, 'exporter', extension, code=code)
 
@@ -77,12 +81,30 @@ class SubprocessError(ExporterError):
     to subprocess should inherit from SubprocessError
     """
 
+    def __init__(self, message, type: str, cmd: str, returncode: int,
+                 path: str, extension: str, exporter_class: str='',
+                 code: int=500):
+        self.keen_data = {'type': type,
+                          'cmd': cmd,
+                          'returncode': returncode,
+                          'path': path}
+        if exporter_class:
+            super().__init__(message, 'subprocess', exporter_class, extension,
+                             code=code)
+        else:
+            super(ExporterError, self).__init__(message, 'subprocess',
+                                                 extension, code=code)
+
 
 class MakeExporterError(ExtensionError):
     """The MFR related errors raised
     from a :def:`mfr.core.utils.make_exporter`
     should inherit from MakeExporterError
     """
+
+    def __init__(self, message, driver_args: dict, extension: str, code=500):
+        self.keen_data = {'driver_args': driver_args}
+        super().__init__(message, 'make_exporter', extension, code=code)
 
 
 class ProviderError(PluginError):
@@ -91,6 +113,13 @@ class ProviderError(PluginError):
     inherit from ProviderError
     """
 
+    def __init__(self, message, nomen: str, provider: str, code=500):
+        self.keen_data = {'nomen': nomen,
+                          'provider': provider,
+                          'provider_{}'.format(nomen): self.keen_data
+                          }
+        super().__init__(message, 'provider', code=code)
+
 
 class DownloadError(ProviderError):
     """The MFR related errors raised
@@ -98,9 +127,21 @@ class DownloadError(ProviderError):
     to downloads should inherit from DownloadError
     """
 
+    def __init__(self, message, download_url: str, response: str,
+                 provider: str, code=500):
+        self.keen_data = {'download_url': download_url,
+                          'response': response}
+        super().__init__(message, 'download', provider, code=code)
+
 
 class MetadataError(ProviderError):
     """The MFR related errors raised
     from a :class:`mfr.core.provider` and relating
     to metadata should inherit from MetadataError
     """
+
+    def __init__(self, message, metadata_url: str, response: str,
+                 provider: str, code=500):
+        self.keen_data = {'metadata_url': metadata_url,
+                          'response': response}
+        super().__init__(message, 'metadata', provider, code=code)

@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+0.18.3 (2017-01-11)
+===================
+- Fix: Increase max codepygments render size to 200kb from 64kb.
+
 0.18.2 (2017-01-04)
 ===================
 - Happy New Year!

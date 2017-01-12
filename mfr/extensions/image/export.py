@@ -1,7 +1,8 @@
 from PIL import Image
+import imghdr
 
 from mfr.core import extension
-from mfr.core import exceptions
+from mfr.extensions.image import exceptions as image_exceptions
 
 
 class ImageExporter(extension.BaseExporter):
@@ -35,7 +36,8 @@ class ImageExporter(extension.BaseExporter):
                 image.close()
             else:
                 exported_image = image
+                image.close()
             exported_image.save(self.output_file_path, type)
             exported_image.close()
-        except UnicodeDecodeError:
-            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400)
+        except (UnicodeDecodeError, IOError) as err:
+            raise image_exceptions.PillowImageError('Unable to export the file in the requested format, please check that file is a valid {}.'.format(type), type, imghdr.what(self.source_file_path), str(err), err.__class__.__name__, self.__class__.__name__, '.{}'.format(type), code=400)

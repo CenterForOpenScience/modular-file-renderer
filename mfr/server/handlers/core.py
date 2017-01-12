@@ -2,6 +2,7 @@ import os
 import abc
 import uuid
 import asyncio
+import logging
 import pkg_resources
 
 import tornado.web
@@ -105,7 +106,10 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         try:
             self.url = self.request.query_arguments['url'][0].decode('utf-8')
         except KeyError:
-            raise exceptions.ProviderError('"url" is a required argument.', code=400)
+            keen_data = {'type': 'prepare_no_url',
+                         'provider': settings.PROVIDER_NAME}
+            raise exceptions.ProviderError('"url" is a required argument.',
+                                           code=400, keen_data=keen_data)
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -151,22 +155,50 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         self.captureException(exc_info)  # Log all non 2XX codes to sentry
         etype, exc, _ = exc_info
 
+        default_html_err = '''
+            <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+            <div class="alert alert-warning" role="alert">
+            Unable to render the requested file, please try again later.
+            </div>
+            '''
+
         if issubclass(etype, exceptions.PluginError):
             self.set_status(exc.code)
-            self.finish(exc.as_html())
         else:
             self.set_status(400)
-            self.finish('''
-                <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-                <div class="alert alert-warning" role="alert">
-                    Unable to render the requested file, please try again later.
-                </div>
-            ''')
+
+        self.error_metrics = MetricsRecord('error')
+        self.error_metrics.merge({'code': self.get_status(),
+                                      'message': exc.message,
+                                      'nomen': exc.nomen,
+                                      'error_{}'.format(exc.nomen): exc.data})
+        # MetadataError will have no cache/file info
+        if getattr(self, 'cache_file_id', None):
+            self._final_handler_merge()
+        keen_event = self._all_metrics()
+        keen_event['error'] = self.error_metrics.serialize()
+        logger = logging.getLogger('keen_err_logger')
+        logger.error(keen_event)
+
+        # kludge. tornado throws error if finish is called more then once.
+        if callable(getattr(exc, 'as_html', None)):
+            self.finish(exc.as_html())
+        else:
+            self.finish(default_html_err)
 
     def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
+        if not hasattr(self, 'error_metrics'):
+            self._final_handler_merge()
+            asyncio.ensure_future(self._cache_and_clean())
+            asyncio.ensure_future(
+                remote_logging.log_analytics(
+                    remote_logging._serialize_request(self.request),
+                    self._all_metrics()))
+
+    def _final_handler_merge(self):
         self.handler_metrics.merge({
             'type': self.NAME,
             'bytes_written': self.bytes_written,
@@ -183,11 +215,6 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             }
         })
 
-        asyncio.ensure_future(self._cache_and_clean())
-        asyncio.ensure_future(
-            remote_logging.log_analytics(
-                remote_logging._serialize_request(self.request), self._all_metrics()))
-
     async def _cache_and_clean(self):
         return
 
@@ -195,8 +222,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         return {
             'handler': self.handler_metrics.serialize(),
             'provider': self.provider.provider_metrics.serialize(),
-            'file': self.metadata.serialize(),
             'extension': self.extension_metrics.serialize(),
+            'file': self.metadata.serialize() if hasattr(self, 'metadata') else None,
             'renderer': self.renderer_metrics.serialize() if hasattr(self, 'renderer_metrics') else None,
             'exporter': self.exporter_metrics.serialize() if hasattr(self, 'exporter_metrics') else None,
         }

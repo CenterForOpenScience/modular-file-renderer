@@ -1,11 +1,11 @@
 import re
 import csv
 
-from ..exceptions import EmptyTableException
+from mfr.extensions.tabular.exceptions import EmptyTableError
 from mfr.extensions.tabular import utilities
 
 
-def csv_stdlib(fp):
+def csv_stdlib(fp, renderer_class, extension):
     """Read and convert a csv file to JSON format using the python standard library
     :param fp: File pointer object
     :return: tuple of table headers and data
@@ -39,12 +39,13 @@ def csv_stdlib(fp):
     rows = [row for row in reader]
 
     if not columns and not rows:
-        raise EmptyTableException("Table empty or corrupt.")
+        raise EmptyTableError('Table empty or corrupt.', renderer_class,
+                              extension)
 
     return {'Sheet 1': (columns, rows)}
 
 
-def sav_stdlib(fp):
+def sav_stdlib(fp, renderer_class, extension):
     """Read and convert a .sav file to .csv with pspp, then convert that to JSON format using
     the python standard library
 
@@ -54,7 +55,7 @@ def sav_stdlib(fp):
     csv_file = utilities.sav_to_csv(fp)
     with open(csv_file.name, 'r') as file:
         csv_file.close()
-        return csv_stdlib(file)
+        return csv_stdlib(file, renderer_class, extension)
 
 
 def _set_dialect_quote_attrs(dialect, data):

@@ -19,5 +19,9 @@ class UnoconvExporter(extension.BaseExporter):
                 '-vvv',
                 self.source_file_path
             ])
-        except subprocess.CalledProcessError:
-            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400)
+        except subprocess.CalledProcessError as err:
+            keen_data = {'type': 'unoconv',
+                         'unoconv_cmd': str(err.cmd),
+                         'unoconv_returncode': err.returncode,
+                         'path': str(self.source_file_path)}
+            raise exceptions.SubprocessError('Unable to export the file in the requested format, please try again later.', code=400, keen_data=keen_data)

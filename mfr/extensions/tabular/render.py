@@ -68,13 +68,19 @@ class TabularRenderer(extension.BaseRenderer):
         for function in function_preference:
             try:
                 imported = function()
+            # TODO missing function raises AttributeError not ImportError
             except ImportError:
                 pass
+            # TODO if this else is reached will either return or raise.
+            # will not try next function.
             else:
                 self._renderer_tabular_metrics['importer'] = function.__name__
                 try:
-                    return imported(fp)
+                    return imported(fp, self.__class__.__name__,
+                                    self.metadata.ext)
                 except KeyError:
-                    raise exceptions.UnexpectedFormattingException()
+                    raise exceptions.UnexpectedFormattingError('Unexpected formatting error.', str(function), self.__class__.__name__, self.metadata.ext)
 
-        raise exceptions.MissingRequirementsException('Renderer requirements are not met')
+        # TODO this raise will only occur if function_preference is an empty set
+        # or all functions in the set raise an import error
+        raise exceptions.MissingRequirementsError('Renderer requirements are not met', function_preference, self.__class__.__name__, self.metadata.ext)

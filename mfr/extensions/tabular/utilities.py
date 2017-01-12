@@ -48,12 +48,14 @@ def sav_to_csv(fp):
     """
     csv_file = NamedTemporaryFile(mode='w+b', suffix='.csv')
     try:
+        raise subprocess.CalledProcessError('oops', 'cmd')
         subprocess.check_call([
             settings.PSPP_CONVERT_BIN,
             fp.name,
             csv_file.name,
         ])
-    except subprocess.CalledProcessError:
-        raise exceptions.ExporterError(
-            'Unable to convert the SPSS file to CSV, please try again later.', code=400)
+    except subprocess.CalledProcessError as err:
+        raise exceptions.SubprocessError(
+            'Unable to convert the SPSS file to CSV, please try again later.',
+            'unoconv', str(err.cmd), err.returncode, fp.name, '.sav', code=400)
     return csv_file

@@ -3,6 +3,7 @@ import json
 import logging
 
 import aiohttp
+import asyncio
 # from geoip import geolite2
 
 import mfr
@@ -70,7 +71,7 @@ async def log_analytics(request, metrics):
             'output': 'referrer.info',
         })
 
-    # maassage file data, if available
+    # massage file data, if available
     file_metadata = None
     try:
         file_metadata = metrics['provider']['provider_osf']['metadata']['raw']['data']
@@ -230,3 +231,31 @@ def _munge_file_metadata(metadata):
     ])
 
     return metadata
+
+
+class KeenHandler(logging.Handler):
+
+        def __init__(self, collection, project_id, write_key):
+            super().__init__()
+            self.collection = collection
+            self.project_id = project_id
+            self.write_key = write_key
+
+        async def keen_request(self, log_dict, client):
+            log_dict = dict(log_dict)
+            log_serialized = json.dumps(log_dict).encode('UTF-8')
+            headers = {'Content-Type': 'application/json',
+                       'Authorization': self.write_key, }
+            url = '{0}/{1}/projects/{2}/events/{3}'.format(settings.KEEN_API_BASE_URL, settings.KEEN_API_VERSION, self.project_id, self.collection)
+            async with await client.request('POST', url, headers=headers,
+                                      data=log_serialized) as resp:
+                if resp.status == 201:
+                    logger.info('Successfully logged to {} collection in Keen'.format(self.collection))
+                else:
+                    logger.warn('Failed to log to {} collection in Keen. Status: {} Error: {}'.format(self.collection, str(int(resp.status)), resp.text()))
+
+            client.close()
+
+        def emit(self, log_record):
+            client = aiohttp.ClientSession()
+            asyncio.ensure_future(self.keen_request(log_record.msg, client))

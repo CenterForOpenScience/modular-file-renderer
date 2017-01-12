@@ -28,7 +28,7 @@ def tsv_pandas(fp):
     return data_from_dataframe(dataframe)
 
 
-def dta_pandas(fp):
+def dta_pandas(fp, renderer_class, extension):
     """Read and convert a dta file to JSON format using the pandas library
     :param fp: File pointer object
     :return: tuple of table headers and data

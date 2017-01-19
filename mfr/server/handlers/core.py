@@ -152,9 +152,29 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         etype, exc, _ = exc_info
 
         if issubclass(etype, exceptions.PluginError):
+            self.error_metrics =  {
+                'code': exc.code,
+                'message': exc.message,
+                'type': etype.__name__,
+                'materialized_type': 'error.plugin.{}'.format(etype.__name__),
+                'error_nonspecific': {
+                    'class': etype.__name__,
+                    'data': repr(exc),
+                },
+            }
             self.set_status(exc.code)
             self.finish(exc.as_html())
         else:
+            self.error_metrics = {
+                'code': self.get_status(),
+                'message': str(exc),
+                'type': 'nonspecific',
+                'materialized_type': 'error.nonspecific',
+                'error_nonspecific': {
+                    'class': etype.__name__,
+                    'data': repr(exc),
+                },
+            }
             self.set_status(400)
             self.finish('''
                 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
@@ -220,6 +240,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         if hasattr(self, 'provider') and hasattr(self.provider, 'provider_metrics'):
             metrics['provider'] = self.provider.provider_metrics.serialize()
 
+        # error_metrics is already serialized
+        metrics['error'] = getattr(self, 'error_metrics') if hasattr(self, 'error_metrics') else None
         return metrics
 
 

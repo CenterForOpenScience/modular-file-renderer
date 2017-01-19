@@ -70,7 +70,7 @@ async def log_analytics(request, metrics, is_error=False):
             'output': 'referrer.info',
         })
 
-    # maassage file data, if available
+    # massage file data, if available
     file_metadata = None
     try:
         file_metadata = metrics['provider']['provider_osf']['metadata']['raw']['data']

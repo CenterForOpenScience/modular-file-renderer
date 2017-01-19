@@ -8,6 +8,7 @@ def make_provider(name, request, url):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 
     :param str name: The name of the provider to instantiate. (osf)
+    :param request:
     :param dict url:
 
     :rtype: :class:`mfr.core.provider.BaseProvider`

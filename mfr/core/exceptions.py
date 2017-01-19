@@ -10,9 +10,11 @@ class PluginError(waterbutler.core.exceptions.PluginError):
         return '''
             <link rel="stylesheet" href="/static/css/bootstrap.min.css">
             <div class="alert alert-warning" role="alert">{}</div>
-            <div style="display: none;">This text and the text below is only presented because IE consumes error messages below 512 bytes</div>
-            <div style="display: none;">Want to help save science? Want to get paid to develop free, open source software? Check out our openings!</div>
-            '''.format(self.message)
+            <div style="display: none;">This text and the text below is only presented because
+              IE consumes error messages below 512 bytes</div>
+            <div style="display: none;">Want to help save science? Want to get paid to develop
+              free, open source software? Check out our openings!</div>
+        '''.format(self.message)
 
 
 class ExtensionError(PluginError):

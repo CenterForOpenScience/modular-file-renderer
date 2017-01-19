@@ -156,25 +156,31 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         etype, exc, _ = exc_info
 
         if issubclass(etype, exceptions.PluginError):
-            self.error_metrics =  {
-                'code': exc.code,
-                'message': exc.message,
-                'type': etype.__name__,
-                'materialized_type': 'error.plugin.{}'.format(etype.__name__),
-                'error_nonspecific': {
-                    'class': etype.__name__,
-                    'data': repr(exc),
-                },
-            }
+            try:  # clever errors shouldn't break other things
+                current, child_type = {}, None
+                for level in reversed(exc.attr_stack):
+                    if current:
+                        current = {'{}_{}'.format(level[0], child_type): current}
+                        current['child_type'] = child_type
+                    current.update(level[1])
+                    current['self_type'] = level[0]
+                    child_type = level[0]
+
+                current['materialized_type'] = '.'.join([x[0] for x in exc.attr_stack])
+                self.error_metrics = current
+            except Exception as exc:
+                pass
             self.set_status(exc.code)
             self.finish(exc.as_html())
         else:
             self.error_metrics = {
                 'code': self.get_status(),
                 'message': str(exc),
-                'type': 'nonspecific',
+                'self_type': 'error',
+                'child_type': 'nonspecific',
                 'materialized_type': 'error.nonspecific',
                 'error_nonspecific': {
+                    'self_type': 'nonspecific',
                     'class': etype.__name__,
                     'data': repr(exc),
                 },

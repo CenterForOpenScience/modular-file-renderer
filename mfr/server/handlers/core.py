@@ -218,7 +218,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         asyncio.ensure_future(self._cache_and_clean())
         asyncio.ensure_future(
             remote_logging.log_analytics(
-                remote_logging._serialize_request(self.request), self._all_metrics()))
+                remote_logging._serialize_request(self.request),
+                self._all_metrics(), is_error=hasattr(self, 'error_metrics')))
 
     async def _cache_and_clean(self):
         return

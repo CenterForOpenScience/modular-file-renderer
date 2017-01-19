@@ -15,7 +15,7 @@ from waterbutler.core.utils import async_retry
 logger = logging.getLogger(__name__)
 
 
-async def log_analytics(request, metrics):
+async def log_analytics(request, metrics, is_error=False):
     """Send events to Keen describing the action that occurred."""
     if settings.KEEN_PRIVATE_PROJECT_ID is None:
         return
@@ -74,17 +74,18 @@ async def log_analytics(request, metrics):
     file_metadata = None
     try:
         file_metadata = metrics['provider']['provider_osf']['metadata']['raw']['data']
-    except KeyError:
+    except (KeyError, TypeError):
         pass
     else:
         _munge_file_metadata(file_metadata)
 
     # send the private payload
-    await _send_to_keen(keen_payload, 'mfr_action', settings.KEEN_PRIVATE_PROJECT_ID,
+    private_collection = 'mfr_errors' if is_error else 'mfr_action'
+    await _send_to_keen(keen_payload, private_collection, settings.KEEN_PRIVATE_PROJECT_ID,
                         settings.KEEN_PRIVATE_WRITE_KEY, keen_payload['handler']['type'],
                         domain='private')
 
-    if keen_payload['handler']['type'] != 'render' or file_metadata is None:
+    if keen_payload['handler']['type'] != 'render' or file_metadata is None or is_error:
         return
 
     # build and ship the public file stats payload

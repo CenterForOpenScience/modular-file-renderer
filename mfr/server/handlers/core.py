@@ -172,16 +172,28 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'bytes_written': self.bytes_written,
             # 'elpased': elapsed.serialize(),
             'cache_file': {
-                'id': str(self.cache_file_id),
-                'path': str(self.cache_file_path),
-                'provider': str(self.cache_provider.NAME),
+                'id': str(getattr(self, 'cache_file_id', '')),
+                'path': str(getattr(self, 'cache_file_path', '')),
             },
             'source_file': {
-                'id': str(self.source_file_id),
-                'path': str(self.source_file_path),
-                'provider': str(self.local_cache_provider.NAME),
+                'id': str(getattr(self, 'source_file_id', '')),
+                'path': str(getattr(self, 'source_file_path', '')),
             }
         })
+
+        if hasattr(self, 'cache_provider'):
+            self.handler_metrics.merge({
+                'cache_file': {
+                    'provider': self.cache_provider.NAME
+                }
+            })
+
+        if hasattr(self, 'local_cache_provider'):
+            self.handler_metrics.merge({
+                'source_file': {
+                    'provider': self.local_cache_provider.NAME
+                }
+            })
 
         asyncio.ensure_future(self._cache_and_clean())
         asyncio.ensure_future(
@@ -192,14 +204,23 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         return
 
     def _all_metrics(self):
-        return {
+        metrics = {
             'handler': self.handler_metrics.serialize(),
-            'provider': self.provider.provider_metrics.serialize(),
-            'file': self.metadata.serialize(),
-            'extension': self.extension_metrics.serialize(),
-            'renderer': self.renderer_metrics.serialize() if hasattr(self, 'renderer_metrics') else None,
-            'exporter': self.exporter_metrics.serialize() if hasattr(self, 'exporter_metrics') else None,
         }
+
+        metrics_attrs = [
+            ('extension', 'extension_metrics'),
+            ('file', 'metadata'),
+            ('renderer', 'renderer_metrics'),
+            ('exporter', 'exporter_metrics'),
+        ]
+        for (key, name) in metrics_attrs:
+            metrics[key] = getattr(self, name).serialize() if hasattr(self, name) else None
+
+        if hasattr(self, 'provider') and hasattr(self.provider, 'provider_metrics'):
+            metrics['provider'] = self.provider.provider_metrics.serialize()
+
+        return metrics
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):

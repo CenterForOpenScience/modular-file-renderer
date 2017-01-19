@@ -105,7 +105,11 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         try:
             self.url = self.request.query_arguments['url'][0].decode('utf-8')
         except KeyError:
-            raise exceptions.ProviderError('"url" is a required argument.', code=400)
+            raise exceptions.ProviderError(
+                '"url" is a required argument.',
+                provider=settings.PROVIDER_NAME,
+                code=400,
+            )
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,

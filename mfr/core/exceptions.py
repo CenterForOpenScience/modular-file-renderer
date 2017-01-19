@@ -26,26 +26,77 @@ class PluginError(waterbutler.core.exceptions.PluginError):
               free, open source software? Check out our openings!</div>
         '''.format(self.message)
 
+    def _format_original_exception(self, exc):
+        """Sometimes we catch an error from an external library, but would like to throw our own
+        error instead.  This method will take in an external error class and format it for
+        consistent representation in the error metrics.
+        """
+        formatted_exc = {'class': '', 'message': ''}
+        if exc is not None:
+            formatted_exc['class'] = exc.__class__.__name__
+            formatted_exc['message'] = str(exc)
+        return formatted_exc
+
 
 class ExtensionError(PluginError):
-    """The MFR related errors raised
-    from a :class:`mfr.core.extension` should
-    inherit from ExtensionError
+    """The MFR related errors raised from a :class:`mfr.core.extension` should inherit from
+    ExtensionError
     """
+
+    __TYPE = 'extension'
+
+    def __init__(self, message, *args, extension: str='', **kwargs):
+        super().__init__(message, *args, **kwargs)
+        self.extension = extension
+        self.attr_stack.append([self.__TYPE, {'extension': self.extension}])
 
 
 class RendererError(ExtensionError):
-    """The MFR related errors raised
-    from a :class:`mfr.core.extension` and relating
-    to rendering should inherit from RendererError
+    """The MFR related errors raised from a :class:`mfr.core.extension` and relating to rendering
+    should inherit from RendererError
     """
+
+    __TYPE = 'renderer'
+
+    def __init__(self, message, *args, renderer_class: str='', **kwargs):
+        super().__init__(message, *args, **kwargs)
+        self.renderer_class = renderer_class
+        self.attr_stack.append([self.__TYPE, {'class': self.renderer_class}])
 
 
 class ExporterError(ExtensionError):
-    """The MFR related errors raised
-    from a :class:`mfr.core.extension` and relating
-    to exporting should inherit from ExporterError
+    """The MFR related errors raised from a :class:`mfr.core.extension` and relating to exporting
+    should inherit from ExporterError
     """
+
+    __TYPE = 'exporter'
+
+    def __init__(self, message, *args, exporter_class: str='', **kwargs):
+        super().__init__(message, *args, **kwargs)
+        self.exporter_class = exporter_class
+        self.attr_stack.append([self.__TYPE, {'exporter_class': self.exporter_class}])
+
+
+class SubprocessError(ExporterError):
+    """The MFR related errors raised from a :class:`mfr.core.extension` and relating to subprocess
+    should inherit from SubprocessError
+    """
+
+    __TYPE = 'subprocess'
+
+    def __init__(self, message, *args, code: int=500, process: str='', cmd: str='',
+                 returncode: int=None, path: str='', **kwargs):
+        super().__init__(message, *args, code=code, **kwargs)
+        self.process = process
+        self.cmd = cmd
+        self.return_code = returncode
+        self.path = path
+        self.attr_stack.append([self.__TYPE, {
+            'process': self.process,
+            'cmd': self.cmd,
+            'returncode': self.return_code,
+            'path': self.path,
+        }])
 
 
 class ProviderError(PluginError):

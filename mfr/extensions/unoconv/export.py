@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 from mfr.core import extension
@@ -19,5 +20,15 @@ class UnoconvExporter(extension.BaseExporter):
                 '-vvv',
                 self.source_file_path
             ])
-        except subprocess.CalledProcessError:
-            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400)
+        except subprocess.CalledProcessError as err:
+            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+            raise exceptions.SubprocessError(
+                'Unable to export the file in the requested format, please try again later.',
+                process='unoconv',
+                cmd=str(err.cmd),
+                returncode=err.returncode,
+                path=str(self.source_file_path),
+                code=400,
+                extension=extension or '',
+                exporter_class='unoconv',
+            )

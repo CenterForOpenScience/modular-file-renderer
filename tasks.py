@@ -1,11 +1,11 @@
 import os
 
-from invoke import task, run
+from invoke import task
 
 WHEELHOUSE_PATH = os.environ.get('WHEELHOUSE')
 
 
-def monkey_patch():
+def monkey_patch(ctx):
     # Force an older cacert.pem from certifi v2015.4.28, prevents an ssl failure w/ identity.api.rackspacecloud.com.
     #
     # SubjectAltNameWarning: Certificate for identity.api.rackspacecloud.com has no `subjectAltName`, falling
@@ -25,40 +25,40 @@ def monkey_patch():
 
 
 @task
-def wheelhouse(develop=False):
+def wheelhouse(ctx, develop=False):
     req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
     cmd = 'pip wheel --find-links={} -r {} --wheel-dir={}'.format(WHEELHOUSE_PATH, req_file, WHEELHOUSE_PATH)
-    run(cmd, pty=True)
+    ctx.run(cmd, pty=True)
 
 
 @task
-def install(develop=False):
-    run('python setup.py develop')
+def install(ctx, develop=False):
+    ctx.run('python setup.py develop')
     req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
     cmd = 'pip install --upgrade -r {}'.format(req_file)
 
     if WHEELHOUSE_PATH:
         cmd += ' --no-index --find-links={}'.format(WHEELHOUSE_PATH)
-    run(cmd, pty=True)
+    ctx.run(cmd, pty=True)
 
 
 @task
-def flake():
-    run('flake8 .', pty=True)
+def flake(ctx):
+    ctx.run('flake8 .', pty=True)
 
 
 @task
-def test(verbose=False):
-    flake()
+def test(ctx, verbose=False):
+    flake(ctx)
     cmd = 'py.test --cov-report term-missing --cov mfr tests'
     if verbose:
         cmd += ' -v'
-    run(cmd, pty=True)
+    ctx.run(cmd, pty=True)
 
 
 @task
-def server():
-    monkey_patch()
+def server(ctx):
+    monkey_patch(ctx)
 
     if os.environ.get('REMOTE_DEBUG', None):
         import pydevd

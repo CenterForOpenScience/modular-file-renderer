@@ -73,8 +73,13 @@ class OsfProvider(provider.BaseProvider):
                 await metadata_request.release()
             except KeyError:
                 raise exceptions.MetadataError(
-                    'Failed to fetch metadata. Received response code {}'.format(str(metadata_request.status)),
-                    code=400)
+                    'Failed to fetch metadata. Received response '
+                    'code {}'.format(str(metadata_request.status)),
+                    metadata_url=download_url,
+                    response=await metadata_request.text(),
+                    provider=self.NAME,
+                    code=400,
+                )
             except ContentEncodingError:
                 pass  # hack: aiohttp tries to unzip empty body when Content-Encoding is set
 
@@ -106,11 +111,13 @@ class OsfProvider(provider.BaseProvider):
         response = await self._make_request('GET', download_url, allow_redirects=False, headers=headers)
 
         if response.status >= 400:
-            err_resp = await response.read()
-            logger.error('Unable to download file: ({}) {}'.format(response.status, err_resp.decode('utf-8')))
-            raise exceptions.ProviderError(
+            resp_text = await response.text()
+            logger.error('Unable to download file: ({}) {}'.format(response.status, resp_text))
+            raise exceptions.DownloadError(
                 'Unable to download the requested file, please try again later.',
-                code=response.status
+                download_url=download_url,
+                response=resp_text,
+                provider=self.NAME,
             )
 
         self.metrics.add('download.saw_redirect', False)
@@ -147,7 +154,12 @@ class OsfProvider(provider.BaseProvider):
                 await request.release()
 
                 if request.status != 302:
-                    raise exceptions.ProviderError(request.reason, request.status)
+                    raise exceptions.MetadataError(
+                        request.reason,
+                        metadata_url=self.url,
+                        provider=self.NAME,
+                        code=request.status,
+                    )
                 self.download_url = request.headers['location']
 
             self.metrics.add('download_url.derived_url', str(self.download_url))

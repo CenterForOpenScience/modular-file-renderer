@@ -1,7 +1,10 @@
+import os
+import imghdr
+
 from PIL import Image
 
 from mfr.core import extension
-from mfr.core import exceptions
+from mfr.extensions.image import exceptions
 
 
 class ImageExporter(extension.BaseExporter):
@@ -32,10 +35,17 @@ class ImageExporter(extension.BaseExporter):
                 image = image.convert('RGBA')
                 exported_image = Image.new("RGBA", image.size, (255, 255, 255))
                 exported_image.paste(image, image)
-                image.close()
             else:
                 exported_image = image
             exported_image.save(self.output_file_path, type)
             exported_image.close()
-        except UnicodeDecodeError:
-            raise exceptions.ExporterError('Unable to export the file in the requested format, please try again later.', code=400)
+        except (UnicodeDecodeError, IOError) as err:
+            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+            raise exceptions.PillowImageError(
+                'Unable to export the file as a {}, please check that the '
+                'file is a valid image.'.format(type),
+                export_format=type,
+                detected_format=imghdr.what(self.source_file_path),
+                original_exception=err,
+                code=400,
+            )

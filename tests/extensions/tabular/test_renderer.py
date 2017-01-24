@@ -85,7 +85,7 @@ class TestTabularCsvRenderer:
     def test_render_tabular_csv_invalid(self, invalid_csv_file_path, assets_url, export_url):
         metadata = ProviderMetadata('test', '.csv', 'text/plain', '1234', 'http://wb.osf.io/file/test.csv?token=1234')
         renderer = TabularRenderer(metadata, invalid_csv_file_path, url, assets_url, export_url)
-        with pytest.raises(exceptions.EmptyTableException):
+        with pytest.raises(exceptions.EmptyTableError):
             renderer.render()
 
 
@@ -100,7 +100,7 @@ class TestTabularTsvRenderer:
     def test_render_tabular_tsv_invalid(self, invalid_tsv_file_path, assets_url, export_url):
         metadata = ProviderMetadata('test', '.tsv', 'text/plain', '1234', 'http://wb.osf.io/file/test.tsv?token=1234')
         renderer = TabularRenderer(metadata, invalid_tsv_file_path, url, assets_url, export_url)
-        with pytest.raises(exceptions.EmptyTableException):
+        with pytest.raises(exceptions.EmptyTableError):
             renderer.render()
 
 

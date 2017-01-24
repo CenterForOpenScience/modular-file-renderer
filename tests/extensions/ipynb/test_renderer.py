@@ -4,7 +4,7 @@ import pytest
 from mfr.core.provider import ProviderMetadata
 
 from mfr.extensions.ipynb import IpynbRenderer
-from mfr.extensions.ipynb.exceptions import InvalidFormat
+from mfr.extensions.ipynb.exceptions import InvalidFormatError
 
 
 @pytest.fixture
@@ -60,7 +60,7 @@ class TestIpynbRenderer:
 
     def test_render_ipynb_invalid_json(self, metadata, invalid_json_file_path, url, assets_url, export_url):
         renderer = IpynbRenderer(metadata, invalid_json_file_path, url, assets_url, export_url)
-        with pytest.raises(InvalidFormat):
+        with pytest.raises(InvalidFormatError):
             renderer.render()
 
     def test_render_docx_file_required(self, renderer):

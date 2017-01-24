@@ -1,6 +1,5 @@
 from stevedore import driver
 
-from mfr import settings
 from mfr.core import exceptions
 
 
@@ -8,17 +7,29 @@ def make_provider(name, request, url):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 
     :param str name: The name of the provider to instantiate. (osf)
+    :param request:
     :param dict url:
 
     :rtype: :class:`mfr.core.provider.BaseProvider`
     """
-    manager = driver.DriverManager(
-        namespace='mfr.providers',
-        name=name.lower(),
-        invoke_on_load=True,
-        invoke_args=(request, url, ),
-    )
-    return manager.driver
+    try:
+        return driver.DriverManager(
+            namespace='mfr.providers',
+            name=name.lower(),
+            invoke_on_load=True,
+            invoke_args=(request, url, ),
+        ).driver
+    except RuntimeError:
+        raise exceptions.MakeProviderError(
+            '"{}" is not a supported provider'.format(name.lower()),
+            namespace='mfr.providers',
+            name=name.lower(),
+            invoke_on_load=True,
+            invoke_args={
+                'request': request,
+                'url': url,
+            }
+        )
 
 
 def make_exporter(name, source_file_path, output_file_path, format):
@@ -31,15 +42,25 @@ def make_exporter(name, source_file_path, output_file_path, format):
 
     :rtype: :class:`mfr.core.extension.BaseExporter`
     """
+    normalized_name = (name and name.lower()) or 'none'
     try:
         return driver.DriverManager(
             namespace='mfr.exporters',
-            name=(name and name.lower()) or 'none',
+            name=normalized_name,
             invoke_on_load=True,
             invoke_args=(source_file_path, output_file_path, format),
         ).driver
     except RuntimeError:
-        raise exceptions.RendererError(settings.UNSUPPORTED_EXPORTER_MSG, code=400)
+        raise exceptions.MakeExporterError(
+            namespace='mfr.exporters',
+            name=normalized_name,
+            invoke_on_load=True,
+            invoke_args={
+                'source_file_path': source_file_path,
+                'output_file_path': output_file_path,
+                'format': format,
+            }
+        )
 
 
 def make_renderer(name, metadata, file_path, url, assets_url, export_url):
@@ -54,12 +75,24 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
 
     :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
+    normalized_name = (name and name.lower()) or 'none'
     try:
         return driver.DriverManager(
             namespace='mfr.renderers',
-            name=(name and name.lower()) or 'none',
+            name=normalized_name,
             invoke_on_load=True,
             invoke_args=(metadata, file_path, url, assets_url, export_url),
         ).driver
     except RuntimeError:
-        raise exceptions.RendererError(settings.UNSUPPORTED_RENDER_MSG, code=400)
+        raise exceptions.MakeRendererError(
+            namespace='mfr.renderers',
+            name=normalized_name,
+            invoke_on_load=True,
+            invoke_args={
+                'metadata': metadata.serialize(),
+                'file_path': file_path,
+                'url': url,
+                'assets_url': assets_url,
+                'export_url': export_url,
+            }
+        )

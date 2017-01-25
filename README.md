@@ -6,6 +6,11 @@
 
 A Python package for rendering files to HTML via an embeddable iframe.
 
+### Compatibility
+
+MFR is compatible with Python 3.5 (tested up to 3.5.3) and 3.6.
+
+
 ### Documentation
 
 Documentation available at: http://modular-file-renderer.readthedocs.io/en/latest/
@@ -80,11 +85,10 @@ invoke test
 
 ### Known Issues
 
-Running invoke install -d with setuptools v31 can break waterbutler.  The symptom error message is: "AttributeError:
-module 'mfr' has no attribute '__version__'".  If you encounter this, you will need to remove the file
-mfr-nspkg.pth from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
+ - Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file
+`mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
 
-#
+- The error `def create_default_context(purpose=ssl.Purpose.SERVER_AUTH, *, cafile=None, capath=None, cadata=None): SyntaxError: invalid syntax` can be fixed by restarting your virtual environment. The problem should not reoccur.
 
 ### Create your own module
 

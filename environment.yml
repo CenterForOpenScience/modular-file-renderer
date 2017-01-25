@@ -26,7 +26,6 @@ dependencies:
   - jinja2==2.7.3
   - mistune==0.7
   - docutils==0.12
-  - pandas==0.17.1
   - git+https://github.com/icereval/xlrd.git
   - markdown==2.6.2
   - certifi==2015.4.28

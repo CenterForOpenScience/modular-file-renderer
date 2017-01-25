@@ -192,7 +192,7 @@ class UnsupportedExtensionError(DriverManagerError):
 
 
 class MakeRendererError(UnsupportedExtensionError):
-    """The MFR related errors raised from a :def:`mfr.core.utils.make_renderer` should inherit from
+    """The MFR related errors raised from a ``mfr.core.utils.make_renderer`` should inherit from
     MakeRendererError
     """
 
@@ -202,7 +202,7 @@ class MakeRendererError(UnsupportedExtensionError):
 
 
 class MakeExporterError(UnsupportedExtensionError):
-    """The MFR related errors raised from a :def:`mfr.core.utils.make_exporter` should inherit from
+    """The MFR related errors raised from ``mfr.core.utils.make_exporter`` should inherit from
     MakeExporterError
     """
 

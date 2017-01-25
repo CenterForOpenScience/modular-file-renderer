@@ -175,11 +175,6 @@ html_sidebars = {
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'mfrdoc'
 
-latex_documents = [
-    ('documentation', False),
-]
-
-
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 # On RTD we can't import sphinx_rtd_theme, but it will be applied by

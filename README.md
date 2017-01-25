@@ -8,14 +8,7 @@ A Python package for rendering files to HTML via an embeddable iframe.
 
 ### Documentation
 
-*Note: https://readthedocs.org/ is currently unable to build documentation for Python 3.5 projects.*  The documentation available at https://mfr.readthedocs.io/en/latest/ is outdated (v0.15.0). For the most up-to-date documentation, build locally. Within your checkout, run:
-
-```bash
-pip install -r doc-requirements.txt
-cd docs
-make
-open _build/html/index.html
-```
+Documentation available at: http://modular-file-renderer.readthedocs.io/en/latest/
 
 ### Setting up
 

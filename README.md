@@ -35,6 +35,7 @@ After installing python3.5, create the virtual environment with the following co
 pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python=`which python3.5` mfr
+pip install setuptools==30.4.0
 pip install invoke==0.11.1
 invoke install
 invoke server
@@ -76,6 +77,14 @@ Before running the tests, you will need to install some additional requirements.
 invoke install --develop
 invoke test
 ```
+
+### Known Issues
+
+Running invoke install -d with setuptools v31 can break waterbutler.  The symptom error message is: "AttributeError:
+module 'mfr' has no attribute '__version__'".  If you encounter this, you will need to remove the file
+mfr-nspkg.pth from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
+
+#
 
 ### Create your own module
 

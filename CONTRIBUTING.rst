@@ -45,7 +45,7 @@ Configure development environment and Install the development dependencies.
     $ pip install virtualenv
     $ pip install virtualenvwrapper
     $ mkvirtualenv --python=`which python3` mfr
-    $ pip install invoke==0.11.1
+    $ pip install invoke==0.13.0
 
 
 Lastly, install mfr in development mode. ::

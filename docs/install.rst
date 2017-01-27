@@ -16,13 +16,13 @@ Or download one of the following:
 
 Make sure that you have installed pspp, are using python3.5, and have installed invoke for your current python3 version.
 
-Install the version of invoke found in the requirements.txt file. Currently 0.11.1
+Install the version of invoke found in the requirements.txt file. Currently 0.13.0
 
 Install ``invoke``:
 
 .. code-block:: bash
 
-    pip install invoke==0.11.1
+    pip install invoke==0.13.0
 
 Install requirements:
 

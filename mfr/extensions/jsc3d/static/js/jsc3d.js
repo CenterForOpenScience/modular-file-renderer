@@ -1464,6 +1464,10 @@ JSC3D.Viewer.prototype.render = function() {
 	if(this.scene.isEmpty())
 		return;
 
+    if(this.zoomFactor < .1){
+        this.zoomFactor = .1;
+    }
+
 	var aabb = this.scene.aabb;
 
 	// calculate transformation matrix

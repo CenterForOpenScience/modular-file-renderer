@@ -14,14 +14,13 @@ Or download one of the following:
 * tarball_
 * zipball_
 
-Make sure that you have installed pspp, are using python3.5, and have installed invoke for your current python3 version.
+Make sure that you have installed `pspp <https://www.gnu.org/software/pspp/>`_ and are using python 3.5 or greater.
 
-Install the version of invoke found in the requirements.txt file. Currently 0.13.0
-
-Install ``invoke``:
+Install the versions of ``setuptools`` and ``invoke`` found in the requirements.txt file:
 
 .. code-block:: bash
 
+    pip install setuptools==30.4.0
     pip install invoke==0.13.0
 
 Install requirements:

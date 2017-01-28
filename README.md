@@ -10,7 +10,6 @@ A Python package for rendering files to HTML via an embeddable iframe.
 
 MFR is compatible with Python 3.5 (tested up to 3.5.3) and 3.6.
 
-
 ### Documentation
 
 Documentation available at: http://modular-file-renderer.readthedocs.io/en/latest/
@@ -83,9 +82,9 @@ invoke install --develop
 invoke test
 ```
 
-### Known Issues
+### Known issues
 
- - Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file
+- Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file
 `mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
 
 - The error `def create_default_context(purpose=ssl.Purpose.SERVER_AUTH, *, cafile=None, capath=None, cadata=None): SyntaxError: invalid syntax` can be fixed by restarting your virtual environment. The problem should not reoccur.
@@ -114,4 +113,4 @@ limitations under the License.
 
 ### COS is hiring!
 
-Want to help save science? Want to get paid to develop free, open source software? [Check out our openings!](https://cos.io/jobs/)
+Want to help save science? Want to get paid to develop free, open source software? [Check out our openings!](https://cos.io/our-communities/jobs/)

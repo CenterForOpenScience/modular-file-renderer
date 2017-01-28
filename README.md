@@ -41,7 +41,7 @@ pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python=`which python3.5` mfr
 pip install setuptools==30.4.0
-pip install invoke==0.11.1
+pip install invoke==0.13.0
 invoke install
 invoke server
 ```
@@ -89,6 +89,8 @@ invoke test
 `mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
 
 - The error `def create_default_context(purpose=ssl.Purpose.SERVER_AUTH, *, cafile=None, capath=None, cadata=None): SyntaxError: invalid syntax` can be fixed by restarting your virtual environment. The problem should not reoccur.
+
+- `invoke $command` results in `'$command' did not receive all required positional arguments!`: this error message occurs when trying to run MFR v0.19.0+ with `invoke<0.13.0`.  Run `pip install invoke==0.13.0`, then retry your command.
 
 ### Create your own module
 

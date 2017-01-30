@@ -39,7 +39,7 @@ docutils==0.12
 
 # Tabular
 pandas==0.17.1
-git+https://github.com/icereval/xlrd.git
+xlrd==1.0.0
 
 # Md
 markdown==2.6.2

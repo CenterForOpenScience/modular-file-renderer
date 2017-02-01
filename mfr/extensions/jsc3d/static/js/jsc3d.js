@@ -529,6 +529,7 @@ JSC3D.Viewer.prototype.replaceScene = function(scene) {
 JSC3D.Viewer.prototype.resetScene = function() {
 	var d = (!this.scene || this.scene.isEmpty()) ? 0 : this.scene.aabb.lengthOfDiagonal();
 	this.zoomFactor = (d == 0) ? 1 : (this.frameWidth < this.frameHeight ? this.frameWidth : this.frameHeight) / d;
+	this.minZoomFactor = this.zoomFactor/10
 	this.panning = [0, 0];
 	this.rotMatrix.identity();
 	this.rotMatrix.rotateAboutXAxis(this.initRotX);
@@ -1108,6 +1109,7 @@ JSC3D.Viewer.prototype.setupScene = function(scene) {
 		var w = this.frameWidth;
 		var h = this.frameHeight;
 		this.zoomFactor = (d == 0) ? 1 : (w < h ? w : h) / d;
+    	this.minZoomFactor = this.zoomFactor/10;
 		this.panning = [0, 0];
 	}
 
@@ -1464,8 +1466,10 @@ JSC3D.Viewer.prototype.render = function() {
 	if(this.scene.isEmpty())
 		return;
 
-    if(this.zoomFactor < .1){
-        this.zoomFactor = .1;
+    console.log(this.minZoomFactor);
+    console.log(this.zoomFactor);
+    if(this.zoomFactor < this.minZoomFactor){
+        this.zoomFactor = this.minZoomFactor;
     }
 
 	var aabb = this.scene.aabb;

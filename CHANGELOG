@@ -2,6 +2,18 @@
 ChangeLog
 *********
 
+0.19.0 (2017-02-02)
+===================
+- Feature: MFR errors are now categorized and have error-specific metadata added to then.  If Keen
+logging is enabled, the error metadata will be logged there for future investigation.
+- Fix: The 3D object renderer now imposes a maximum zoom-out limit, so objects can't be shrunk to
+infinitesimalness. (thanks, @johnetordoff!)
+- Fix: MFR docs are once again building on readthedocs.org! (thanks, @johnetordoff!)
+- Code: Update MFR to use invoke 0.13.0. If you have an existing checkout, you will need to
+upgrade invoke manually: pip install invoke==0.13.0 (thanks, @johnetordoff!)
+- Docs: MFR has been verified to work with python 3.5.3 and 3.6.0. From now on, the docs will
+mention which python versions MFR has been verfied to work on. (thanks, @johnetordoff!)
+
 0.18.3 (2017-01-11)
 ===================
 - Fix: Increase max codepygments render size to 200kb from 64kb.

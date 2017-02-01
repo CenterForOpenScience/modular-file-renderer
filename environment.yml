@@ -9,7 +9,6 @@ dependencies:
   - chardet==2.3.0
   - furl==0.4.2
   - humanfriendly==2.1
-  - invoke==0.11.1
   - mako==1.0.1
   - raven==5.27.0
   - stevedore==1.2.0

@@ -13,7 +13,10 @@ from waterbutler.core import streams
 
 from mfr.core import exceptions
 from mfr.core import provider
+from mfr.core.utils import sizeof_fmt
 from mfr.providers.osf import settings
+from mfr.settings import MAX_FILE_SIZE_TO_RENDER
+from mfr.extensions.tabular.exceptions import TooBigToRenderError
 
 logger = logging.getLogger(__name__)
 
@@ -96,6 +99,11 @@ class OsfProvider(provider.BaseProvider):
         # }}
 
         name, ext = os.path.splitext(metadata['data']['name'])
+
+        if  MAX_FILE_SIZE_TO_RENDER.get(ext) and metadata['data']['size'] > MAX_FILE_SIZE_TO_RENDER.get(ext):
+            size = sizeof_fmt(MAX_FILE_SIZE_TO_RENDER.get(ext))
+            raise TooBigToRenderError("This file exceeds with extention '{ext}' the size limit of {size}".format(**locals()))
+
         content_type = metadata['data']['contentType'] or mimetypes.guess_type(metadata['data']['name'])[0]
         cleaned_url = furl.furl(download_url)
         for unneeded in OsfProvider.UNNEEDED_URL_PARAMS:

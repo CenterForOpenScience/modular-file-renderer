@@ -1,7 +1,7 @@
 import re
 import csv
 
-from ..exceptions import EmptyTableException
+from mfr.extensions.tabular.exceptions import EmptyTableError
 from mfr.extensions.tabular import utilities
 
 
@@ -39,7 +39,7 @@ def csv_stdlib(fp):
     rows = [row for row in reader]
 
     if not columns and not rows:
-        raise EmptyTableException("Table empty or corrupt.")
+        raise EmptyTableError('Table empty or corrupt.', extension='csv')
 
     return {'Sheet 1': (columns, rows)}
 

@@ -6,16 +6,13 @@
 
 A Python package for rendering files to HTML via an embeddable iframe.
 
+### Compatibility
+
+MFR is compatible with Python 3.5 (tested up to 3.5.3) and 3.6.
+
 ### Documentation
 
-*Note: https://readthedocs.org/ is currently unable to build documentation for Python 3.5 projects.*  The documentation available at https://mfr.readthedocs.io/en/latest/ is outdated (v0.15.0). For the most up-to-date documentation, build locally. Within your checkout, run:
-
-```bash
-pip install -r doc-requirements.txt
-cd docs
-make
-open _build/html/index.html
-```
+Documentation available at: http://modular-file-renderer.readthedocs.io/en/latest/
 
 ### Setting up
 
@@ -42,7 +39,8 @@ After installing python3.5, create the virtual environment with the following co
 pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python=`which python3.5` mfr
-pip install invoke==0.11.1
+pip install setuptools==30.4.0
+pip install invoke==0.13.0
 invoke install
 invoke server
 ```
@@ -84,13 +82,22 @@ invoke install --develop
 invoke test
 ```
 
+### Known issues
+
+- Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file
+`mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
+
+- The error `def create_default_context(purpose=ssl.Purpose.SERVER_AUTH, *, cafile=None, capath=None, cadata=None): SyntaxError: invalid syntax` can be fixed by restarting your virtual environment. The problem should not reoccur.
+
+- `invoke $command` results in `'$command' did not receive all required positional arguments!`: this error message occurs when trying to run MFR v0.19.0+ with `invoke<0.13.0`.  Run `pip install invoke==0.13.0`, then retry your command.
+
 ### Create your own module
 
 Interested in adding support for a new provider or file format? Check out the CONTRIBUTING.rst docs.
 
 ### License
 
-Copyright 2013-2016 Center for Open Science
+Copyright 2013-2017 Center for Open Science
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -106,4 +113,4 @@ limitations under the License.
 
 ### COS is hiring!
 
-Want to help save science? Want to get paid to develop free, open source software? [Check out our openings!](https://cos.io/jobs/)
+Want to help save science? Want to get paid to develop free, open source software? [Check out our openings!](https://cos.io/our-communities/jobs/)

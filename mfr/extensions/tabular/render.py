@@ -53,7 +53,7 @@ class TabularRenderer(extension.BaseRenderer):
                 self._renderer_tabular_metrics['size'] = 'big'
 
             if len(sheet[0]) > settings.MAX_SIZE or len(sheet[1]) > settings.MAX_SIZE:
-                raise exceptions.TableTooBigException("Table is too large to render.", code=400)
+                raise exceptions.TableTooBigError('Table is too large to render.', extension=ext)
 
         return sheets, size
 
@@ -75,6 +75,16 @@ class TabularRenderer(extension.BaseRenderer):
                 try:
                     return imported(fp)
                 except KeyError:
-                    raise exceptions.UnexpectedFormattingException()
+                    raise exceptions.UnexpectedFormattingError(
+                        'Unexpected formatting error.',
+                        extension=self.metadata.ext,
+                        formatting_function=str(function),
+                    )
 
-        raise exceptions.MissingRequirementsException('Renderer requirements are not met')
+        # this will only occur if function_preference is an empty set
+        # or all functions in the set raise an import error
+        raise exceptions.MissingRequirementsError(
+            'Renderer requirements are not met',
+            extension=self.metadata.ext,
+            function_preference=function_preference,
+        )

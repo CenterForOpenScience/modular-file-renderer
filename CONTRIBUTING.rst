@@ -24,20 +24,22 @@ Clone the repo: ::
     $ git clone https://github.com/CenterForOpenScience/modular-file-renderer.git
     $ cd modular-file-renderer
 
-Configure development environment and Install the development dependencies.
+Configure development environment and install the development dependencies.
 
 .. note::
 
-    It is recommended that you use a `virtualenv`_ with `virtualenvwrapper`_ during development. Python 3.5 and R are required.
+    It is recommended that you use a `virtualenv`_ with `virtualenvwrapper`_ during development. Python 3.5 or greater, `R`_, and `pspp`_ are required.
 
 .. _virtualenv: http://www.virtualenv.org/en/latest/
 .. _virtualenvwrapper: https://pypi.python.org/pypi/virtualenvwrapper
+.. _R: https://www.r-project.org/
+.. _pspp: https://www.gnu.org/software/pspp/
 
 .. code-block:: bash
 
     # For Mac OS X: Install the latest version of python3.5
     $ brew install python3
-    $ brew install r
+    $ brew install r pspp
 
     # Linux users, probably the same thing but with apt-get
     # If someone wants to update this guide, please do.
@@ -45,7 +47,8 @@ Configure development environment and Install the development dependencies.
     $ pip install virtualenv
     $ pip install virtualenvwrapper
     $ mkvirtualenv --python=`which python3` mfr
-    $ pip install invoke==0.11.1
+    $ pip install setuptools==30.4.0
+    $ pip install invoke==0.13.0
 
 
 Lastly, install mfr in development mode. ::

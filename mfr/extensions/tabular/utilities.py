@@ -53,7 +53,15 @@ def sav_to_csv(fp):
             fp.name,
             csv_file.name,
         ])
-    except subprocess.CalledProcessError:
-        raise exceptions.ExporterError(
-            'Unable to convert the SPSS file to CSV, please try again later.', code=400)
+    except subprocess.CalledProcessError as err:
+        raise exceptions.SubprocessError(
+            'Unable to convert the SPSS file to CSV, please try again later.',
+            code=500,
+            process='pspp',
+            cmd=str(err.cmd),
+            returncode=err.returncode,
+            path=fp.name,
+            extension='sav',
+            exporter_class='tabular',
+        )
     return csv_file

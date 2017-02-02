@@ -100,7 +100,7 @@ class OsfProvider(provider.BaseProvider):
 
         name, ext = os.path.splitext(metadata['data']['name'])
 
-        if  MAX_FILE_SIZE_TO_RENDER.get(ext) and metadata['data']['size'] > MAX_FILE_SIZE_TO_RENDER.get(ext):
+        if MAX_FILE_SIZE_TO_RENDER.get(ext) and metadata['data']['size'] > MAX_FILE_SIZE_TO_RENDER.get(ext):
             size = sizeof_fmt(MAX_FILE_SIZE_TO_RENDER.get(ext))
             raise TooBigToRenderError("This file exceeds with extention '{ext}' the size limit of {size}".format(**locals()))
 

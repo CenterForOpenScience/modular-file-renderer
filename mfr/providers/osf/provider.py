@@ -102,7 +102,7 @@ class OsfProvider(provider.BaseProvider):
 
         if MAX_FILE_SIZE_TO_RENDER.get(ext) and metadata['data']['size'] > MAX_FILE_SIZE_TO_RENDER.get(ext):
             size = sizeof_fmt(MAX_FILE_SIZE_TO_RENDER.get(ext))
-            raise TooBigToRenderError("This file exceeds with extention '{ext}' the size limit of {size}".format(**locals()))
+            raise TooBigToRenderError("This file exceeds with extension '{ext}' the size limit of {size}".format(**locals()))
 
         content_type = metadata['data']['contentType'] or mimetypes.guess_type(metadata['data']['name'])[0]
         cleaned_url = furl.furl(download_url)

@@ -10,7 +10,9 @@
 <canvas id="mfrViewer" tabindex="-1"></canvas>
 <a style="position: absolute; top: 10px; right: 10px; cursor: pointer;"
    data-toggle="popover" data-trigger="hover" data-placement="left" data-html="true"
-   data-content="Drag mouse to rotate<br>Drag mouse with ctrl pressed to pan<br>Drag mouse with shift pressed to zoom">
+   data-content="<p><b> Rotate:</b> Click and drag</p>
+                 <p><b> Pan:</b> Ctrl + click and drag</p>
+                 <p><b> Zoom in/out:</b> Shift + click and drag up/down, scroll with mouse wheel, or two-finger scroll on trackpad</p>">
    <img src="${base}/images/question-circle.png">
 </a>
 

@@ -145,6 +145,14 @@ class MetadataError(ProviderError):
             'response': self.response
         }])
 
+class TooBigToRenderError(ProviderError):
+
+    __TYPE = 'too_big_to_render'
+
+    def __init__(self, message, *args, code: int=400, **kwargs):
+        super().__init__(message, *args, code=code, **kwargs)
+        self.attr_stack.append([self.__TYPE, {}])
+
 
 class DriverManagerError(PluginError):
 

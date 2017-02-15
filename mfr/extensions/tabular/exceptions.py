@@ -33,14 +33,6 @@ class TableTooBigError(TabularRendererError):
         super().__init__(message, *args, code=code, **kwargs)
         self.attr_stack.append([self.__TYPE, {}])
 
-class TooBigToRenderError(TabularRendererError):
-
-    __TYPE = 'tabular_too_big_to_render'
-
-    def __init__(self, message, *args, code: int=400, **kwargs):
-        super().__init__(message, *args, code=code, **kwargs)
-        self.attr_stack.append([self.__TYPE, {}])
-
 
 class UnexpectedFormattingError(TabularRendererError):
 

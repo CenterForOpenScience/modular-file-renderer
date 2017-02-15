@@ -1,7 +1,7 @@
 import re
 import csv
 
-from mfr.extensions.tabular.exceptions import EmptyTableError
+from mfr.extensions.tabular.exceptions import EmptyTableError, TabularRendererError
 from mfr.extensions.tabular import utilities
 
 
@@ -36,7 +36,15 @@ def csv_stdlib(fp):
             'name': fieldname,
             'sortable': True,
         })
-    rows = [row for row in reader]
+
+    try:
+        rows = [row for row in reader]
+    except csv.Error as e:
+        if any("field larger than field limit" in errorMsg for errorMsg in e.args):
+            raise TabularRendererError('This file contains a field too large to render. '
+                                                  'Please download and view it locally.', code=400)
+        else:
+            raise TabularRendererError('csv.Error: {}'.format(e))
 
     if not columns and not rows:
         raise EmptyTableError('Table empty or corrupt.', extension='csv')

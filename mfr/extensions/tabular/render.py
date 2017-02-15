@@ -1,6 +1,6 @@
 import os
 import json
-import _csv
+import csv
 
 from mako.lookup import TemplateLookup
 from mfr.core import extension
@@ -42,14 +42,7 @@ class TabularRenderer(extension.BaseRenderer):
         """
         self._renderer_tabular_metrics = {}
 
-        try:
-            sheets = self._populate_data(fp, ext)
-        except _csv.Error as e:
-            if any("field larger than field limit" in errorMsg for errorMsg in e.args):
-                raise exceptions.TabularRendererError('This file contains a field too large to render. '
-                                           'Please download and view it locally.')
-            else:
-                raise exceptions.TabularRendererError('_csv.Error: {}'.format(e))
+        sheets = self._populate_data(fp, ext)
 
         size = settings.SMALL_TABLE
         self._renderer_tabular_metrics['size'] = 'small'

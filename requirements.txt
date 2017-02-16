@@ -24,7 +24,7 @@ pydocx==0.7.0
 Pillow==2.8.2
 
 # IPython
-ipdb==0.10.2
+ipython==5.2.2
 nbconvert==4.2.0
 nbformat==4.1.0
 traitlets==4.2.2

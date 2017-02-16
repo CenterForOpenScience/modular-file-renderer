@@ -87,7 +87,7 @@ invoke test
 - Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file
 `mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
 
-- The error `def create_default_context(purpose=ssl.Purpose.SERVER_AUTH, *, cafile=None, capath=None, cadata=None): SyntaxError: invalid syntax` can be fixed by restarting your virtual environment. The problem should not reoccur.
+- The error `def create_default_context(purpose=ssl.Purpose.SERVER_AUTH, *, cafile=None, capath=None, cadata=None): SyntaxError: invalid syntax` is caused by inadvertently running the wrong version of Python. This can be caused by hashing the alias `inv`. To fix this run the command `hash -d inv` then run `inv server`.
 
 - `invoke $command` results in `'$command' did not receive all required positional arguments!`: this error message occurs when trying to run MFR v0.19.0+ with `invoke<0.13.0`.  Run `pip install invoke==0.13.0`, then retry your command.
 

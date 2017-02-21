@@ -84,6 +84,9 @@ PROJECT_CONFIG_PATH = '~/.cos'
 UNSUPPORTED_EXPORTER_MSG = 'Exporting of this file type is not currently supported.'
 UNSUPPORTED_RENDER_MSG = 'Viewing of this file type is not currently supported. Please download the file to view.'
 
+
+MAX_FILE_SIZE_TO_RENDER = {'.csv': 100000000, '.xlsx': 1000000000, '.tsv': 1000000000, '.sav': 1000000000, '.xls': 1000000000}
+
 try:
     import colorlog  # noqa
     DEFAULT_FORMATTER = {

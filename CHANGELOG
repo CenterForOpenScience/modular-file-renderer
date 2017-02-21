@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+0.19.1 (2017-02-21)
+===================
+- Fix: explicitly depend on IPython to fix ipynb rendering.  nbconvert and nbformat have an
+undeclared dependency on it. (thanks, @johnetordoff!)
+
 0.19.0 (2017-02-02)
 ===================
 - Feature: MFR errors are now categorized and have error-specific metadata added to then.  If Keen

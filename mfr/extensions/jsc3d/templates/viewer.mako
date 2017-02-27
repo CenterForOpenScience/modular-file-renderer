@@ -12,7 +12,7 @@
    data-toggle="popover" data-trigger="hover" data-placement="left" data-html="true"
    data-content="<p><b> Rotate:</b> Click and drag</p>
                  <p><b> Pan:</b> Ctrl + click and drag</p>
-                 <p><b> Zoom in/out:</b> Shift + click and drag up/down, scroll with mouse wheel, or two-finger scroll on trackpad</p>">
+                 <p><b> Zoom:</b> Shift + click and drag up/down</p>">
    <img src="${base}/images/question-circle.png">
 </a>
 

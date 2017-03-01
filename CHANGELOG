@@ -2,6 +2,20 @@
 ChangeLog
 *********
 
+0.20.0 (2017-03-01)
+===================
+- The "(thanks, @johnetordoff!)" release
+- Feature: The tabular spreadsheet renderer now recognizes date fields as dates and will format
+them as such. (thanks, @johnetordoff!)
+- Feature: Don't even try to render tabular files larger than 100Mb. Neither the server nor the
+browser wants that. (thanks, @johnetordoff!)
+- Feature: Render a better error message when encountering a csv file with a single field larger
+than ~128kb.  The underlying library can't handle that, so it's polite to let the user know.
+(thanks, @johnetordoff!)
+- Feature: MFR will now render .m4v files using the <video> tag. (thanks, @johnetordoff!)
+- Fix: Improve tooltip language on 3d object-renderer. (thanks, @johnetordoff!)
+- Code: Start depending on upstream xlrd instead of our own fork. (thanks, @johnetordoff!)
+
 0.19.1 (2017-02-21)
 ===================
 - Fix: explicitly depend on IPython to fix ipynb rendering.  nbconvert and nbformat have an

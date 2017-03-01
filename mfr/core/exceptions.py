@@ -145,6 +145,23 @@ class MetadataError(ProviderError):
             'response': self.response
         }])
 
+class TooBigToRenderError(ProviderError):
+    """If the user tries to render a file larger than a server specified maximum, throw a
+    TooBigToRenderError.
+    """
+
+    __TYPE = 'too_big_to_render'
+
+    def __init__(self, message, *args, requested_size: int=None, maximum_size: int=None,
+                 code: int=400, **kwargs):
+        super().__init__(message, *args, code=code, **kwargs)
+        self.requested_size = requested_size
+        self.maximum_size = maximum_size
+        self.attr_stack.append([self.__TYPE, {
+            'requested_size': self.requested_size,
+            'maximum_size': self.maximum_size,
+        }])
+
 
 class DriverManagerError(PluginError):
 

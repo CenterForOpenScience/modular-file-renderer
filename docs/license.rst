@@ -1,4 +1,4 @@
-Licence
+License
 =======
 
 .. include:: ../LICENSE

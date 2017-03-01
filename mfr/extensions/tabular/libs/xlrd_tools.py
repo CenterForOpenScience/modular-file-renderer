@@ -1,6 +1,6 @@
 import xlrd
 from collections import OrderedDict
-from ..exceptions import TableTooBigException
+from ..exceptions import TableTooBigError
 
 from ..utilities import header_population
 from mfr.extensions.tabular.compat import range, basestring
@@ -19,7 +19,7 @@ def xlsx_xlrd(fp):
 
     for sheet in wb.sheets():
         if sheet.ncols > max_size or sheet.nrows > max_size:
-            raise TableTooBigException("Table is too large to render.")
+            raise TableTooBigError('Table is too large to render.', '.xlsx')
 
         if sheet.ncols < 1 or sheet.nrows < 1:
             sheets[sheet.name] = ([], [])
@@ -34,10 +34,16 @@ def xlsx_xlrd(fp):
             for index, value in enumerate(fields)
         ]
 
-        data = [
-            dict(zip(fields, sheet.row_values(row_index)))
-            for row_index in range(1, sheet.nrows)
-        ]
+        data = []
+        for i in range(1, sheet.nrows):
+            row = []
+            for cell in sheet.row(i):
+                if cell.ctype == xlrd.XL_CELL_DATE:
+                    value = xlrd.xldate.xldate_as_datetime(cell.value, wb.datemode).isoformat()
+                else:
+                    value = cell.value
+                row.append(value)
+            data.append(dict(zip(fields, row)))
 
         header = header_population(fields)
         sheets[sheet.name] = (header, data)

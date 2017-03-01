@@ -33,8 +33,11 @@ class HttpProvider(provider.BaseProvider):
         if response.status >= 400:
             err_resp = await response.read()
             logger.error('Unable to download file: ({}) {}'.format(response.status, err_resp.decode('utf-8')))
-            raise exceptions.ProviderError(
+            raise exceptions.DownloadError(
                 'Unable to download the requested file, please try again later.',
-                code=response.status
+                download_url=self.url,
+                response=await response.text(),
+                code=response.status,
+                provider='http',
             )
         return streams.ResponseStreamReader(response)

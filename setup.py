@@ -735,6 +735,7 @@ setup(
 
             # video
             '.mp4 = mfr.extensions.video:VideoRenderer',
+            '.m4v = mfr.extensions.video:VideoRenderer',
             #'.avi = mfr.extensions.video:VideoRenderer',
             '.ogv = mfr.extensions.video:VideoRenderer',
             #'.wmv = mfr.extensions.video:VideoRenderer',

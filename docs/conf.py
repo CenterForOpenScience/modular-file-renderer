@@ -45,7 +45,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'mfr'
-copyright = u'2016'
+copyright = u'2017, Center For Open Science'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -96,7 +96,7 @@ pygments_style = 'flask_theme_support.FlaskyStyle'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'kr'
+#html_theme = 'kr'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -174,11 +174,6 @@ html_sidebars = {
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'mfrdoc'
-
-latex_documents = [
-    ('documentation', False),
-]
-
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 

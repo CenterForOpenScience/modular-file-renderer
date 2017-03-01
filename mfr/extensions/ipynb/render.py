@@ -26,8 +26,13 @@ class IpynbRenderer(extension.BaseRenderer):
         try:
             with open(self.file_path, 'r') as file_pointer:
                 notebook = nbformat.reads(file_pointer.read(), as_version=4)
-        except ValueError:
-            raise exceptions.InvalidFormat('Could not read ipython notebook file.')
+        except ValueError as err:
+            raise exceptions.InvalidFormatError(
+                'Could not read ipython notebook file. {}'.format(str(err)),
+                extension=self.metadata.ext,
+                download_url=str(self.metadata.download_url),
+                original_exception=err,
+            )
 
         exporter = HTMLExporter(config=Config({
             'HTMLExporter': {

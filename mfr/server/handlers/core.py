@@ -105,7 +105,11 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         try:
             self.url = self.request.query_arguments['url'][0].decode('utf-8')
         except KeyError:
-            raise exceptions.ProviderError('"url" is a required argument.', code=400)
+            raise exceptions.ProviderError(
+                '"url" is a required argument.',
+                provider=settings.PROVIDER_NAME,
+                code=400,
+            )
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -152,9 +156,35 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         etype, exc, _ = exc_info
 
         if issubclass(etype, exceptions.PluginError):
+            try:  # clever errors shouldn't break other things
+                current, child_type = {}, None
+                for level in reversed(exc.attr_stack):
+                    if current:
+                        current = {'{}_{}'.format(level[0], child_type): current}
+                        current['child_type'] = child_type
+                    current.update(level[1])
+                    current['self_type'] = level[0]
+                    child_type = level[0]
+
+                current['materialized_type'] = '.'.join([x[0] for x in exc.attr_stack])
+                self.error_metrics = current
+            except Exception as exc:
+                pass
             self.set_status(exc.code)
             self.finish(exc.as_html())
         else:
+            self.error_metrics = {
+                'code': self.get_status(),
+                'message': str(exc),
+                'self_type': 'error',
+                'child_type': 'nonspecific',
+                'materialized_type': 'error.nonspecific',
+                'error_nonspecific': {
+                    'self_type': 'nonspecific',
+                    'class': etype.__name__,
+                    'data': repr(exc),
+                },
+            }
             self.set_status(400)
             self.finish('''
                 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
@@ -172,34 +202,58 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             'bytes_written': self.bytes_written,
             # 'elpased': elapsed.serialize(),
             'cache_file': {
-                'id': str(self.cache_file_id),
-                'path': str(self.cache_file_path),
-                'provider': str(self.cache_provider.NAME),
+                'id': str(getattr(self, 'cache_file_id', '')),
+                'path': str(getattr(self, 'cache_file_path', '')),
             },
             'source_file': {
-                'id': str(self.source_file_id),
-                'path': str(self.source_file_path),
-                'provider': str(self.local_cache_provider.NAME),
+                'id': str(getattr(self, 'source_file_id', '')),
+                'path': str(getattr(self, 'source_file_path', '')),
             }
         })
+
+        if hasattr(self, 'cache_provider'):
+            self.handler_metrics.merge({
+                'cache_file': {
+                    'provider': self.cache_provider.NAME
+                }
+            })
+
+        if hasattr(self, 'local_cache_provider'):
+            self.handler_metrics.merge({
+                'source_file': {
+                    'provider': self.local_cache_provider.NAME
+                }
+            })
 
         asyncio.ensure_future(self._cache_and_clean())
         asyncio.ensure_future(
             remote_logging.log_analytics(
-                remote_logging._serialize_request(self.request), self._all_metrics()))
+                remote_logging._serialize_request(self.request),
+                self._all_metrics(), is_error=hasattr(self, 'error_metrics')))
 
     async def _cache_and_clean(self):
         return
 
     def _all_metrics(self):
-        return {
+        metrics = {
             'handler': self.handler_metrics.serialize(),
-            'provider': self.provider.provider_metrics.serialize(),
-            'file': self.metadata.serialize(),
-            'extension': self.extension_metrics.serialize(),
-            'renderer': self.renderer_metrics.serialize() if hasattr(self, 'renderer_metrics') else None,
-            'exporter': self.exporter_metrics.serialize() if hasattr(self, 'exporter_metrics') else None,
         }
+
+        metrics_attrs = [
+            ('extension', 'extension_metrics'),
+            ('file', 'metadata'),
+            ('renderer', 'renderer_metrics'),
+            ('exporter', 'exporter_metrics'),
+        ]
+        for (key, name) in metrics_attrs:
+            metrics[key] = getattr(self, name).serialize() if hasattr(self, name) else None
+
+        if hasattr(self, 'provider') and hasattr(self.provider, 'provider_metrics'):
+            metrics['provider'] = self.provider.provider_metrics.serialize()
+
+        # error_metrics is already serialized
+        metrics['error'] = getattr(self, 'error_metrics') if hasattr(self, 'error_metrics') else None
+        return metrics
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):

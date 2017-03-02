@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+0.20.1 (2017-03-02)
+===================
+- Fix: Cast OSF file size metadata to an int before comparing to our maximum supported file size
+limit.  Some providers return file size as a string instead of int.
+
 0.20.0 (2017-03-01)
 ===================
 - The "(thanks, @johnetordoff!)" release

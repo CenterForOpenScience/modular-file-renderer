@@ -102,12 +102,12 @@ class OsfProvider(provider.BaseProvider):
         size = metadata['data']['size']
 
         max_file_size = MAX_FILE_SIZE_TO_RENDER.get(ext)
-        if max_file_size and size and size > max_file_size:
+        if max_file_size and size and int(size) > max_file_size:
             raise TooBigToRenderError(
                 "This file with extension '{ext}' exceeds the size limit of {max_size} and will not "
                 "be rendered. To view this file download it and view it "
                 "offline.".format(ext=ext, max_size=sizeof_fmt(max_file_size)),
-                requested_size=size, maximum_size=max_file_size,
+                requested_size=int(size), maximum_size=max_file_size,
             )
 
         content_type = metadata['data']['contentType'] or mimetypes.guess_type(metadata['data']['name'])[0]

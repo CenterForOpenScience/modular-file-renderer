@@ -742,7 +742,10 @@ setup(
             '.webm = mfr.extensions.video:VideoRenderer',
 
             # JASP
-            '.jasp = mfr.extensions.jasp:JASPRenderer'
+            '.jasp = mfr.extensions.jasp:JASPRenderer',
+
+            # Zip
+            '.zip = mfr.extensions.zip:ZipRenderer'
         ]
     },
 )

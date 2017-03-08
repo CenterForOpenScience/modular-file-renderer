@@ -41,8 +41,11 @@ def renderer(metadata, test_file_path, url, assets_url, export_url):
 
 class TestZipRenderer:
 
-    def test_format_zip(self, renderer):
+    def test_render(self, renderer):
+        body = renderer.render()
+        assert 'test 1<br>__MACOSX/<br>__MACOSX/._test 1<br>test 2<br>__MACOSX/._test 2' in body
 
+    def test_format_zip(self, renderer):
         with ZipFile(os.path.join(BASE, 'files', 'test.zip'), 'r') as zip_file:
             zip_string = renderer.format_zip(zip_file)
         assert 'test 1<br>__MACOSX/<br>__MACOSX/._test 1<br>test 2<br>__MACOSX/._test 2' == zip_string

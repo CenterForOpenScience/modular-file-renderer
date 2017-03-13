@@ -1,5 +1,6 @@
 import os
 import zipfile
+import markupsafe
 
 from mako.lookup import TemplateLookup
 
@@ -19,7 +20,7 @@ class ZipRenderer(extension.BaseRenderer):
         return self.TEMPLATE.render(zipped_filenames=self.format_zip(zip_file))
 
     def format_zip(self, zip_file):
-        return '<br>'.join(zip_file.namelist())
+        return '<br>'.join([markupsafe.escape(x) for x in  zip_file.namelist()])
 
     @property
     def file_required(self):

@@ -18,7 +18,6 @@ agent==0.1.2
 Pygments==2.0.2
 
 # Docx
-#git+https://github.com/jsocol/bleach.git
 pydocx==0.7.0
 
 # Image

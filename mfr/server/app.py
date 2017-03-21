@@ -14,6 +14,7 @@ from mfr.server.handlers.export import ExportHandler
 from mfr.server.handlers.render import RenderHandler
 from mfr.server.handlers.status import StatusHandler
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
+from version import __version__
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ def make_app(debug):
         ],
         debug=debug,
     )
-    app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=mfr.__version__)
+    app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=__version__)
     return app
 
 

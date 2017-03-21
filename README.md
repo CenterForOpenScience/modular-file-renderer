@@ -41,8 +41,10 @@ After installing python3.5, create the virtual environment with the following co
 pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python=`which python3.5` mfr
-pip install setuptools==30.4.0
+
+pip install setuptools==37.0.0
 pip install invoke==0.13.0
+
 invoke install
 invoke server
 ```

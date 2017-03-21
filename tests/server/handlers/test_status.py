@@ -1,4 +1,4 @@
-import mfr
+from version import __version__
 import json
 from tests import utils
 from tornado import testing
@@ -12,4 +12,4 @@ class TestStatusHandler(utils.HandlerTestCase):
         data = json.loads(resp.body.decode('utf-8'))
         assert resp.code == 200
         assert data['status'] == 'up'
-        assert data['version'] == mfr.__version__
+        assert data['version'] == __version__

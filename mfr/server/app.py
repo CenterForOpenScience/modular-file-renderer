@@ -7,7 +7,6 @@ import logging
 
 from raven.contrib.tornado import AsyncSentryClient
 
-import mfr
 from mfr import settings
 from mfr.server import settings as server_settings
 from mfr.server.handlers.export import ExportHandler

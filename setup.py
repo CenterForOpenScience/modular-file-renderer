@@ -1,7 +1,5 @@
 from setuptools import setup, find_packages
 
-from mfr import __version__
-
 
 def parse_requirements(requirements):
     with open(requirements) as f:
@@ -10,9 +8,14 @@ def parse_requirements(requirements):
 
 requirements = parse_requirements('requirements.txt')
 
+# Taken from option 3 of https://packaging.python.org/guides/single-sourcing-package-version/
+version = {}
+with open('mfr/version.py') as fp:
+    exec(fp.read(), version)
+
 setup(
     name='mfr',
-    version=__version__,
+    version=version['__version__'],
     namespace_packages=['mfr', 'mfr.extensions', 'mfr.providers'],
     description='Modular File Renderer',
     author='Center for Open Science',

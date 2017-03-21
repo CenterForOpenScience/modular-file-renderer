@@ -43,9 +43,7 @@ RUN usermod -d /home www-data \
         curl \
     && rm -rf /var/lib/apt/lists/* \
     && pip install -U pip \
-    && pip uninstall -y setuptools \
-    && rm -f /usr/local/lib/python3.5/site-packages/mfr-nspkg.pth \
-    && pip install setuptools==30.4.0 \
+    && pip install setuptools==37.0.0 \
     && mkdir -p /code
 
 ENV LIBREOFFICE_VERSION 6.0.1.1

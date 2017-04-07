@@ -42,7 +42,7 @@ setup(
         ],
         'mfr.exporters': [
             # google docs
-            '.gdraw = mfr.extensions.unoconv:UnoconvExporter',
+            '.gdraw = mfr.extensions.image:ImageExporter',
             '.gdoc = mfr.extensions.unoconv:UnoconvExporter',
             '.gsheet = mfr.extensions.unoconv:UnoconvExporter',
             '.gslides = mfr.extensions.unoconv:UnoconvExporter',

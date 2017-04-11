@@ -6,7 +6,7 @@
             Zip File:
         </h1>
         <p>
-            Download to view contents
+            Download the .zip file to view the contents.
         <p>
         <p>
             ${zipped_filenames}

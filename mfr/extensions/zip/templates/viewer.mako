@@ -2,9 +2,12 @@
 <link rel="stylesheet" href="static/css/default.css">
 <div style="word-wrap: break-word;" class="mfrViewer">
     <code>
+        <h1>
+            Zip File:
+        </h1>
         <p>
-            Zip File Contents:
-        </p>
+            Download to view contents
+        <p>
         <p>
             ${zipped_filenames}
         </p>

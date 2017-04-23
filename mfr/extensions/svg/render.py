@@ -14,11 +14,15 @@ class SvgRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        return self.TEMPLATE.render(base=self.assets_url, url=self.url)
+
+        with open(self.file_path, 'r') as fp:
+            svg = fp.read()
+
+        return self.TEMPLATE.render(base=self.assets_url, svg=svg)
 
     @property
     def file_required(self):
-        return False
+        return True
 
     @property
     def cache_result(self):

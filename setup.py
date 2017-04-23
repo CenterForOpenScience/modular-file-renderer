@@ -110,7 +110,7 @@ setup(
             '.std = mfr.extensions.unoconv:UnoconvExporter',
             '.sti = mfr.extensions.unoconv:UnoconvExporter',
             '.stw = mfr.extensions.unoconv:UnoconvExporter',
-            '.svg = mfr.extensions.unoconv:UnoconvExporter',
+            #'.svg = mfr.extensions.unoconv:UnoconvExporter',
             '.svm = mfr.extensions.unoconv:UnoconvExporter',
             '.swf = mfr.extensions.unoconv:UnoconvExporter',
             '.sxc = mfr.extensions.unoconv:UnoconvExporter',
@@ -646,7 +646,7 @@ setup(
             '.rst = mfr.extensions.rst:RstRenderer',
 
             # svg
-            # '.svg = mfr.extensions.svg:SvgRenderer',
+            '.svg = mfr.extensions.svg:SvgRenderer',
 
             # tabular
             '.csv = mfr.extensions.tabular:TabularRenderer',
@@ -711,7 +711,7 @@ setup(
             '.std = mfr.extensions.unoconv:UnoconvRenderer',
             '.sti = mfr.extensions.unoconv:UnoconvRenderer',
             '.stw = mfr.extensions.unoconv:UnoconvRenderer',
-            '.svg = mfr.extensions.unoconv:UnoconvRenderer',
+            #'.svg = mfr.extensions.unoconv:UnoconvRenderer',
             '.svm = mfr.extensions.unoconv:UnoconvRenderer',
             '.swf = mfr.extensions.unoconv:UnoconvRenderer',
             '.sxc = mfr.extensions.unoconv:UnoconvRenderer',

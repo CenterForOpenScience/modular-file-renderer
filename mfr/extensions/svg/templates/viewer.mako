@@ -1,14 +1,4 @@
-<img class="mfrViewer" data-src="${url}">
+${svg}
 
-<script>
-    (function () {
-        $(function () {
-            $.getScript('${base}/js/svg-injector.min.js',
-                function () {
-                    var mySVGsToInject = document.querySelectorAll('img.mfrViewer');
-                    SVGInjector(mySVGsToInject);
-                }
-            );
-        });
-    })();
-</script>
+<script src="/static/js/mfr.js"></script>
+<script src="/static/js/mfr.child.js"></script>

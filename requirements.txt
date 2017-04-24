@@ -1,6 +1,6 @@
 aiohttp==0.18.4
 chardet==2.3.0
-furl==0.4.2
+furl==0.5.7
 humanfriendly==2.1
 invoke==0.13.0
 mako==1.0.1

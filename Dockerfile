@@ -1,5 +1,23 @@
 FROM python:3.5-slim
 
+#
+# * example usage:
+#
+# $ docker build -t="mfr" .
+#
+# $ docker run -d -p 7778:7778 \
+#    -e SERVER_CONFIG_ADDRESS=0.0.0.0 \
+#    -e SERVER_CONFIG_PROVIDER_NAME=http \
+#    -e SERVER_CONFIG_ALLOWED_PROVIDER_DOMAINS=http://www.example.com/  \
+#    --name mfr_server \
+#    mfr
+#
+
+
+
+EXPOSE 7778
+CMD ["circusd", "--log-level=ERROR", "/etc/circus.ini"]
+
 RUN usermod -d /home www-data && chown www-data:www-data /home
 
 RUN apt-get update \
@@ -19,6 +37,8 @@ RUN apt-get update \
         libxml2-dev \
         libxslt1-dev \
         zlib1g-dev \
+    # installing vim so the mfr-test.json config can be customized
+        vim \
     # unoconv dependencies
     && apt-get install -y \
         unoconv \
@@ -68,6 +88,11 @@ ENV GIT_COMMIT ${GIT_COMMIT}
 
 RUN python setup.py develop
 
-EXPOSE 7778
+RUN pip install circus
 
-CMD ["gosu", "nobody", "invoke", "server"]
+COPY circus.ini /etc/circus.ini
+
+RUN mkdir -p /root/.cos/
+
+COPY travis-config.json /root/.cos/waterbutler-test.json
+COPY travis-config.json /root/.cos/mfr-test.json

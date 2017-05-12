@@ -13,7 +13,7 @@ class VideoRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        return self.TEMPLATE.render(base=self.assets_url, url=self.url)
+        return self.TEMPLATE.render(base=self.assets_url, url=self.metadata.download_url)
 
     @property
     def file_required(self):

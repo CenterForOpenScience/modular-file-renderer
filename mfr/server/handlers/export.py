@@ -3,7 +3,7 @@ import asyncio
 import logging
 
 import waterbutler.core.streams
-import waterbutler.core.exceptions
+from waterbutler.core.exceptions import InvalidParameters, DownloadError
 
 from mfr.server import settings
 from mfr.core import utils as utils
@@ -24,7 +24,11 @@ class ExportHandler(core.BaseHandler):
 
         await super().prepare()
 
-        self.format = self.request.query_arguments['format'][0].decode('utf-8')
+        if self.request.query_arguments.get('format'):
+            self.format = self.request.query_arguments['format'][0].decode('utf-8')
+        else:
+            raise InvalidParameters("Url requires query parameter 'format' with appropriate extension")
+
         self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
 
         self.cache_file_path = await self.cache_provider.validate_path(
@@ -52,7 +56,7 @@ class ExportHandler(core.BaseHandler):
         if settings.CACHE_ENABLED:
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
-            except waterbutler.core.exceptions.DownloadError as e:
+            except DownloadError as e:
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting export [{}]'.format(self.cache_file_path))
                 self.metrics.add('cache_file.result', 'miss')

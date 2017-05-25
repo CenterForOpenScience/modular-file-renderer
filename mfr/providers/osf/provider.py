@@ -64,25 +64,26 @@ class OsfProvider(provider.BaseProvider):
             # TODO Remove this when API v0 is officially deprecated
             self.metrics.add('metadata.wb_api', 'v0')
             metadata_url = download_url.replace('/file?', '/data?', 1)
-            metadata_request = await self._make_request('GET', metadata_url)
-            metadata = await metadata_request.json()
+            metadata_response = await self._make_request('GET', metadata_url)
+            metadata = await metadata_response.json()
+            await metadata_response.release()
         else:
             # URL is for WaterButler v1 API
             self.metrics.add('metadata.wb_api', 'v1')
-            metadata_request = await self._make_request('HEAD', download_url)
-            # To make changes to current code as minimal as possible
-            try:
-                metadata = {'data': json.loads(metadata_request.headers['x-waterbutler-metadata'])['attributes']}
-                await metadata_request.release()
-            except KeyError:
-                raise exceptions.MetadataError(
-                    'Failed to fetch metadata. Received response '
-                    'code {}'.format(str(metadata_request.status)),
+            metadata_response = await self._make_request('HEAD', download_url)
+            response_code = metadata_response.status
+            response_reason = metadata_response.reason
+            response_headers = metadata_response.headers
+            await metadata_response.release()
+            if response_code != 200:
+                raise exceptions.MetadataError('Failed to fetch file metadata from WaterButler. Received response: code {} {}'.format(str(response_code), str(response_reason)),
                     metadata_url=download_url,
-                    response=await metadata_request.text(),
+                    response=response_reason,
                     provider=self.NAME,
-                    code=400,
-                )
+                    code=400)
+
+            try:
+                metadata = {'data': json.loads(response_headers['x-waterbutler-metadata'])['attributes']}
             except ContentEncodingError:
                 pass  # hack: aiohttp tries to unzip empty body when Content-Encoding is set
 

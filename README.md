@@ -4,6 +4,8 @@
 
 `develop` Build Status: [![Build Status](https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=develop)](https://travis-ci.org/CenterForOpenScience/modular-file-renderer)
 
+[![Coverage Status](https://coveralls.io/repos/github/CenterForOpenScience/modular-file-renderer/badge.svg)](https://coveralls.io/github/CenterForOpenScience/modular-file-renderer)
+
 A Python package for rendering files to HTML via an embeddable iframe.
 
 ### Compatibility

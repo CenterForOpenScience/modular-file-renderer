@@ -6,6 +6,7 @@ import waterbutler.core.streams
 import waterbutler.core.exceptions
 
 from mfr.server import settings
+from mfr.extensions import settings as ext_settings
 from mfr.core import utils as utils
 from mfr.server.handlers import core
 
@@ -34,8 +35,15 @@ class RenderHandler(core.BaseHandler):
 
     async def get(self):
         """Return HTML that will display the given file."""
+        file_ext = self.metadata.ext
+        comp_ext = ext_settings.COMPRESSED_EXT
+        if self.metadata.ext in comp_ext.keys():
+            second_ext = '.{}'.format(self.metadata.name.split('.')[-1])
+            if second_ext in comp_ext[self.metadata.ext]:
+                file_ext = second_ext + file_ext
+
         renderer = utils.make_renderer(
-            self.metadata.ext,
+            file_ext,
             self.metadata,
             self.source_file_path.full_path,
             self.url,

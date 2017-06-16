@@ -688,6 +688,11 @@ setup(
             '.obj = mfr.extensions.jsc3d:JSC3DRenderer',
             '.stl = mfr.extensions.jsc3d:JSC3DRenderer',
 
+            # papaya
+            '.nii.gz = mfr.extensions.papaya:PapayaRenderer',
+            '.nii = mfr.extensions.papaya:PapayaRenderer',
+            '.dcm = mfr.extensions.papaya:PapayaRenderer',
+
             # pdb
             '.pdb = mfr.extensions.pdb:PdbRenderer',
 

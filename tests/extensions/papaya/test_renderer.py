@@ -40,6 +40,6 @@ class TestPapayaRenderer:
     def test_render_papaya(self, renderer, metadata, assets_url):
         body = renderer.render()
         print(body)
-        assert '<script type="text/javascript" src="http://mfr.osf.io/assets/papaya/papaya.js?build=1429"></script>' in body
+        assert '<script type="text/javascript" src="http://mfr.osf.io/assets/papaya/papaya.js"></script>' in body
         assert 'params["images"] = ["http://mfr.osf.io/assets/papaya/data/507643e2-c0fb-45e4-805e-96231c8251de.nii.gz"]' in body
         assert '<div class="papaya" data-params="params"></div>' in body

@@ -2,6 +2,16 @@
 ChangeLog
 *********
 
+0.21.1 (2017-07-20)
+===================
+- Fix: Quiet some overly-verbose error logging.
+
+0.21.0 (2017-04-07)
+===================
+- Feature: Turn on scrolling for the MFR iframe to support wide JASP files.
+- Fix: Fix rendering of Google Drawing (.gdraw) files by directing them to the image renderer
+rather than the unoconv renderer.
+
 0.20.1 (2017-03-02)
 ===================
 - Fix: Cast OSF file size metadata to an int before comparing to our maximum supported file size

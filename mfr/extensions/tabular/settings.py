@@ -16,6 +16,7 @@ LIBS = config.get('LIBS', {
     '.xls': [libs.xlsx_xlrd],
     '.dta': [libs.dta_pandas],
     '.sav': [libs.sav_stdlib],
+    '.mat': [libs.mat_h5py_scipy],
     # '.ods': [libs.ods_ezodf],
 })
 

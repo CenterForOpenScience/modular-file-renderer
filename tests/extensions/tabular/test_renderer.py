@@ -46,6 +46,25 @@ def invalid_xlsx_file_path():
 
 
 @pytest.fixture
+def invalid_mat73_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'invalidVer73.mat')
+
+
+@pytest.fixture
+def invalid_mat70_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'invalidVer70.mat')
+
+
+@pytest.fixture
+def test_mat73_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'testVer73.mat')
+
+
+@pytest.fixture
+def test_mat70_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'testVer70.mat')
+
+@pytest.fixture
 def url():
     return 'http://osf.io/file/test.csv'
 
@@ -116,4 +135,31 @@ class TestTabularXlsxRenderer:
         metadata = ProviderMetadata('test', '.xlsx', 'text/plain', '1234', 'http://wb.osf.io/file/test.xlsx?token=1234')
         renderer = TabularRenderer(metadata, invalid_xlsx_file_path, url, assets_url, export_url)
         with pytest.raises(XLRDError):
+            renderer.render()
+
+
+class TestTabularMatRenderer:
+
+    def test_render_tabular_mat70(self, test_mat70_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.mat', 'text/plain', '1234', 'http://wb.osf.io/file/testVer70.mat?token=1234')
+        renderer = TabularRenderer(metadata, test_mat70_file_path, url, assets_url, export_url)
+        body = renderer.render()
+        assert '<div id="mfrGrid" style="min-height: {}px;">\n    </div>'.format(settings.TABLE_HEIGHT) in body
+
+    def test_render_tabular_mat70_invalid(self, invalid_mat70_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.mat', 'text/plain', '1234', 'http://wb.osf.io/file/test.mat?token=1234')
+        renderer = TabularRenderer(metadata, invalid_mat70_file_path, url, assets_url, export_url)
+        with pytest.raises(exceptions.UnexpectedFormattingError):
+            renderer.render()
+    
+    def test_render_tabular_mat73(self, test_mat73_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.mat', 'text/plain', '1234', 'http://wb.osf.io/file/testVer70.mat?token=1234')
+        renderer = TabularRenderer(metadata, test_mat73_file_path, url, assets_url, export_url)
+        body = renderer.render()
+        assert '<div id="mfrGrid" style="min-height: {}px;">\n    </div>'.format(settings.TABLE_HEIGHT) in body
+
+    def test_render_tabular_mat73_invalid(self, invalid_mat73_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.mat', 'text/plain', '1234', 'http://wb.osf.io/file/test.mat?token=1234')
+        renderer = TabularRenderer(metadata, invalid_mat73_file_path, url, assets_url, export_url)
+        with pytest.raises(exceptions.UnexpectedFormattingError):
             renderer.render()

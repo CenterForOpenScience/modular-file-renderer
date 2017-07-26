@@ -35,3 +35,7 @@ def sav_pandas():
 def xlsx_xlrd():
     from ..libs.xlrd_tools import xlsx_xlrd
     return xlsx_xlrd
+
+def mat_h5py_scipy():
+    from ..libs.h5py_scipy_tools import mat_h5py_scipy
+    return mat_h5py_scipy

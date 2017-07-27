@@ -95,7 +95,11 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         self.metrics.merge({'encoding': encoding, 'default_lexer': False})
 
         try:
-            lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
+            # check if there is a lexer available for more obscure file types
+            if ext in settings.lexer_lib.keys():
+                lexer = pygments.lexers.get_lexer_by_name(settings.lexer_lib[ext])
+            else:
+                lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
         except ClassNotFound:
             self.metrics.add('default_lexer', True)
             lexer = self.DEFAULT_LEXER()

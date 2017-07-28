@@ -48,7 +48,7 @@ def make_exporter(name, source_file_path, output_file_path, format):
             namespace='mfr.exporters',
             name=normalized_name,
             invoke_on_load=True,
-            invoke_args=(source_file_path, output_file_path, format),
+            invoke_args=(normalized_name, source_file_path, output_file_path, format),
         ).driver
     except RuntimeError:
         raise exceptions.MakeExporterError(

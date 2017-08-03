@@ -80,6 +80,12 @@ class TabularRenderer(extension.BaseRenderer):
                         extension=self.metadata.ext,
                         formatting_function=str(function),
                     )
+                except ValueError:
+                    raise exceptions.UnexpectedFormattingError(
+                        'Cannot render file as .dta.',
+                        extension=self.metadata.ext,
+                        formatting_function=str(function),
+                    )
 
         # this will only occur if function_preference is an empty set
         # or all functions in the set raise an import error

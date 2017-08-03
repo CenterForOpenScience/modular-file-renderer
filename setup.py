@@ -112,7 +112,8 @@ setup(
             '.stw = mfr.extensions.unoconv:UnoconvExporter',
             '.svg = mfr.extensions.unoconv:UnoconvExporter',
             '.svm = mfr.extensions.unoconv:UnoconvExporter',
-            '.swf = mfr.extensions.unoconv:UnoconvExporter',
+            # Renders junk at the moment
+            # '.swf = mfr.extensions.unoconv:UnoconvExporter',
             '.sxc = mfr.extensions.unoconv:UnoconvExporter',
             '.sxd = mfr.extensions.unoconv:UnoconvExporter',
             '.sxi = mfr.extensions.unoconv:UnoconvExporter',
@@ -702,7 +703,7 @@ setup(
             '.tsv = mfr.extensions.tabular:TabularRenderer',
             '.xls = mfr.extensions.tabular:TabularRenderer',
             '.xlsx = mfr.extensions.tabular:TabularRenderer',
-            #'.dta = mfr.extensions.tabular:TabularRenderer',
+            '.dta = mfr.extensions.tabular:TabularRenderer',
             '.sav = mfr.extensions.tabular:TabularRenderer',
             #'.ods = mfr.extensions.tabular:TabularRenderer',
 
@@ -762,7 +763,8 @@ setup(
             '.stw = mfr.extensions.unoconv:UnoconvRenderer',
             '.svg = mfr.extensions.unoconv:UnoconvRenderer',
             '.svm = mfr.extensions.unoconv:UnoconvRenderer',
-            '.swf = mfr.extensions.unoconv:UnoconvRenderer',
+            # Renders junk at the moment
+            # '.swf = mfr.extensions.unoconv:UnoconvRenderer',
             '.sxc = mfr.extensions.unoconv:UnoconvRenderer',
             '.sxd = mfr.extensions.unoconv:UnoconvRenderer',
             '.sxi = mfr.extensions.unoconv:UnoconvRenderer',
@@ -785,6 +787,7 @@ setup(
             # video
             '.mp4 = mfr.extensions.video:VideoRenderer',
             '.m4v = mfr.extensions.video:VideoRenderer',
+            # Unable to support at this time
             #'.avi = mfr.extensions.video:VideoRenderer',
             '.ogv = mfr.extensions.video:VideoRenderer',
             #'.wmv = mfr.extensions.video:VideoRenderer',

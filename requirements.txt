@@ -21,6 +21,7 @@ Pygments==2.2.0
 pydocx==0.7.0
 
 # Image
+olefile==0.44
 Pillow==4.3.0
 psd-tools==1.4
 
@@ -32,6 +33,9 @@ traitlets==4.2.2
 jsonschema==2.4.0
 jinja2==2.7.3
 mistune==0.7
+
+# Pdf
+reportlab==3.4.0
 
 # Pptx
 # python-pptx==0.5.7

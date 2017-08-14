@@ -19,6 +19,7 @@ RUN usermod -d /home www-data \
         libfreetype6-dev \
         libjpeg-dev \
         libpng12-dev \
+        libtiff5-dev \
         libxml2-dev \
         libxslt1-dev \
         zlib1g-dev \

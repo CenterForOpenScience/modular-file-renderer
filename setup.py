@@ -54,8 +54,8 @@ setup(
             '.bmp = mfr.extensions.image:ImageExporter',
             '.gif = mfr.extensions.image:ImageExporter',
             '.psd = mfr.extensions.image:ImageExporter',
-            '.tif = mfr.extensions.image:ImageExporter',
-            '.tiff = mfr.extensions.image:ImageExporter',
+            '.tif = mfr.extensions.pdf:PdfExporter',
+            '.tiff = mfr.extensions.pdf:PdfExporter',
 
             # jsc3d
             '.stp = mfr.extensions.jsc3d:JSC3DExporter',
@@ -676,8 +676,8 @@ setup(
             '.ico = mfr.extensions.image:ImageRenderer',
             '.png = mfr.extensions.image:ImageRenderer',
             '.psd = mfr.extensions.image:ImageRenderer',
-            '.tif = mfr.extensions.image:ImageRenderer',
-            '.tiff = mfr.extensions.image:ImageRenderer',
+            '.tif = mfr.extensions.pdf:PdfRenderer',
+            '.tiff = mfr.extensions.pdf:PdfRenderer',
 
             # ipynb
             '.ipynb = mfr.extensions.ipynb:IpynbRenderer',

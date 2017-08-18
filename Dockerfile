@@ -19,6 +19,7 @@ RUN apt-get update \
         libxml2-dev \
         libxslt1-dev \
         zlib1g-dev \
+        freecad \
     # unoconv dependencies
     && apt-get install -y \
         unoconv \

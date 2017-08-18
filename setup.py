@@ -56,6 +56,10 @@ setup(
             '.tif = mfr.extensions.image:ImageExporter',
             '.tiff = mfr.extensions.image:ImageExporter',
 
+            # jsc3d
+            '.stp = mfr.extensions.jsc3d:JSC3DExporter',
+            '.step = mfr.extensions.jsc3d:JSC3DExporter',
+
             # unoconv
             # '.bib = mfr.extensions.unoconv:UnoconvExporter',
             # '.bmp = mfr.extensions.unoconv:UnoconvExporter',
@@ -684,6 +688,9 @@ setup(
             '.ctm = mfr.extensions.jsc3d:JSC3DRenderer',
             '.obj = mfr.extensions.jsc3d:JSC3DRenderer',
             '.stl = mfr.extensions.jsc3d:JSC3DRenderer',
+            '.stp = mfr.extensions.jsc3d:JSC3DRenderer',
+            '.step = mfr.extensions.jsc3d:JSC3DRenderer',
+
 
             # pdb
             '.pdb = mfr.extensions.pdb:PdbRenderer',

@@ -35,6 +35,9 @@ Some file types may not be in the correct list. Please search for the file type 
 ## JASP
 * .jasp
 
+## Jamovi
+* .omv
+
 ## Google Documents
 * .gdoc
 * .gsheet

@@ -58,7 +58,7 @@ The defaults should suffice for most local testing.  If you're running the OSF o
 ```json
 {
   "SERVER_CONFIG": {
-    "ALLOWED_PROVIDER_DOMAINS": ["http://localhost:9999/"]
+    "ALLOWED_PROVIDER_DOMAINS": "http://localhost:9999/"
   }
 }
 ```

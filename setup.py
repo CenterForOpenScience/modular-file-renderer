@@ -741,6 +741,9 @@ setup(
             #'.wmv = mfr.extensions.video:VideoRenderer',
             '.webm = mfr.extensions.video:VideoRenderer',
 
+            # jamovi
+            '.omv = mfr.extensions.jamovi.JamoviRenderer',
+
             # JASP
             '.jasp = mfr.extensions.jasp:JASPRenderer'
         ]

@@ -1,14 +1,13 @@
-import os
 import asyncio
 import logging
+import os
 
-import waterbutler.core.streams
 from waterbutler.core.exceptions import InvalidParameters, DownloadError
+import waterbutler.core.streams
 
+from mfr.core import utils
 from mfr.server import settings
-from mfr.core import utils as utils
 from mfr.server.handlers import core
-
 
 logger = logging.getLogger(__name__)
 
@@ -24,10 +23,11 @@ class ExportHandler(core.BaseHandler):
 
         await super().prepare()
 
-        if self.request.query_arguments.get('format'):
-            self.format = self.request.query_arguments['format'][0].decode('utf-8')
-        else:
-            raise InvalidParameters("Url requires query parameter 'format' with appropriate extension")
+        format = self.request.query_arguments.get('format', None)
+        if not format:
+            raise InvalidParameters("Invalid Request: <your error message>")
+        # TODO: do we need to catch exceptions for decoding?
+        self.format = format[0].decode('utf-8')
 
         self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
 

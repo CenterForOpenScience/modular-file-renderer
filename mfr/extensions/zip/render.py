@@ -5,6 +5,7 @@ import markupsafe
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
+from mfr.core.utils import sizeof_fmt
 
 
 class ZipRenderer(extension.BaseRenderer):
@@ -23,12 +24,16 @@ class ZipRenderer(extension.BaseRenderer):
 
         filelist = [file for file in zip_file.filelist if not file.filename.startswith('__MACOSX')]
 
-        message = '<table class="table table-hover"><thead><th>%-46s</th> <th>%19s</th> <th>%12s</th></thead>'\
+        message = '<table class="table table-hover">' \
+                  '<thead>' \
+                    '<th>%-46s</th><th>%19s</th><th>%12s</th>' \
+                  '</thead>'\
                   % ('File Name', 'Modified    ', 'Size')
 
         for zinfo in filelist:
             date = "%d-%02d-%02d %02d:%02d:%02d" % zinfo.date_time[:6]
-            message += "<tr><td>%-46s</td> <td>%s</td> <td>%12d<td></tr>" % (markupsafe.escape(zinfo.filename), date, zinfo.file_size)
+            message += "<tr><td>%-46s</td> <td>%s</td> <td>%s<td></tr>" %\
+                       (markupsafe.escape(zinfo.filename), date, sizeof_fmt(int(zinfo.file_size)))
 
         message += '</table>'
         return message

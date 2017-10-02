@@ -40,6 +40,10 @@ setup(
             'http = mfr.providers.http:HttpProvider',
             'osf = mfr.providers.osf:OsfProvider',
         ],
+        'mfr.public_renderers': [
+            '.docx = mfr.extensions.office365:Office365Renderer',
+
+        ],
         'mfr.exporters': [
             # google docs
             '.gdraw = mfr.extensions.image:ImageExporter',

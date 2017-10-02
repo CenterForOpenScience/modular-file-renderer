@@ -97,14 +97,16 @@ class OsfProvider(provider.BaseProvider):
         self.metrics.add('metadata.raw', metadata)
 
         # e.g.,
-        # metadata = {'data': {
-        #     'name': 'blah.png',
-        #     'contentType': 'image/png',
-        #     'etag': 'ABCD123456...',
-        #     'extra': {
-        #         ...
-        #     },
-        # }}
+        # metadata = {
+        #     'data': {
+        #         'name': 'blah.png',
+        #         'contentType': 'image/png',
+        #         'etag': 'ABCD123456...',
+        #         'extra': {
+        #             ...
+        #         },
+        #     }
+        # }
 
         name, ext = os.path.splitext(metadata['data']['name'])
         size = metadata['data']['size']
@@ -128,8 +130,29 @@ class OsfProvider(provider.BaseProvider):
         stable_str = '/{}/{}{}'.format(meta['resource'], meta['provider'], meta['path'])
         stable_id = hashlib.sha256(stable_str.encode('utf-8')).hexdigest()
         logger.debug('stable_identifier: str({}) hash({})'.format(stable_str, stable_id))
+        is_public = False
 
-        return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url, stable_id)
+        if 'public_file' in cleaned_url.args:
+            if cleaned_url.args['public_file'] not in ['0', '1']:
+                raise exceptions.QueryParameterError(
+                    'The `public_file` query paramter should either `0`, `1`, or unused. Instead '
+                    'got  {}'.format(cleaned_url.args['public_file']),
+                    url=download_url,
+                    provider=self.NAME,
+                    code=400,
+                )
+
+            is_public = cleaned_url.args['public_file'] == '1'
+
+        return provider.ProviderMetadata(
+            name,
+            ext,
+            content_type,
+            unique_key,
+            download_url,
+            stable_id,
+            is_public=is_public
+        )
 
     async def download(self):
         """Download file from WaterButler, returning stream."""

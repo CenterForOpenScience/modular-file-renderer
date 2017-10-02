@@ -78,6 +78,19 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
     :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
     normalized_name = (name and name.lower()) or 'none'
+    if metadata.is_public:
+        try:
+            return driver.DriverManager(
+                namespace='mfr.public_renderers',
+                name=normalized_name,
+                invoke_on_load=True,
+                invoke_args=(metadata, file_path, url, assets_url, export_url),
+            ).driver
+        except:
+            # Check for a public renderer, if one doesn't exist, use a regular one
+            # Real exceptions handled by main driver.DriverManager
+            pass
+
     try:
         return driver.DriverManager(
             namespace='mfr.renderers',

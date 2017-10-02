@@ -119,7 +119,23 @@ class OsfProvider(provider.BaseProvider):
             cleaned_url.args.pop(unneeded, None)
         self.metrics.add('metadata.clean_url_args', str(cleaned_url))
         unique_key = hashlib.sha256((metadata['data']['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
-        return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url)
+
+        is_public = False
+
+        if 'public_file' in cleaned_url.args:
+            if cleaned_url.args['public_file'] not in ['0', '1']:
+                raise exceptions.QueryParameterError(
+                    'The `public_file` query paramter should either `0`, `1`, or unused. Instead '
+                    'got  {}'.format(cleaned_url.args['public_file']),
+                    url=download_url,
+                    provider=self.NAME,
+                    code=400,
+                )
+
+            is_public = cleaned_url.args['public_file'] == '1'
+
+        return provider.ProviderMetadata(name, ext, content_type,
+                    unique_key, download_url, is_public=is_public)
 
     async def download(self):
         """Download file from WaterButler, returning stream."""

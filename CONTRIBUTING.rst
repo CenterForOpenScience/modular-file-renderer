@@ -8,6 +8,7 @@ In general
 - `PEP 8`_, when sensible.
 - Test ruthlessly. Write docs for new features.
 - Even more important than Test-Driven Development--*Human-Driven Development*.
+- If you add an extension to setup.py, add it to supportedextensions.md.
 - Please update AUTHORS.rst when you contribute.
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/

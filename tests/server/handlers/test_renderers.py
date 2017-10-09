@@ -1,9 +1,9 @@
-import mfr
 import json
-from tests import utils
+
 from tornado import testing
 import pkg_resources
 
+from tests import utils
 
 class TestRenderersHandler(utils.HandlerTestCase):
     @testing.gen_test

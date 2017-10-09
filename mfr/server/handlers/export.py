@@ -25,7 +25,8 @@ class ExportHandler(core.BaseHandler):
 
         format = self.request.query_arguments.get('format', None)
         if not format:
-            raise InvalidParameters("Invalid Request: <your error message>")
+            raise InvalidParameters("Invalid Request: Url requires query parameter 'format' with"
+                                    " appropriate extension")
         # TODO: do we need to catch exceptions for decoding?
         self.format = format[0].decode('utf-8')
 

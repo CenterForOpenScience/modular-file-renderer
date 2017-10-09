@@ -1,9 +1,10 @@
-import pytest
 from http import HTTPStatus
 
-from tornado.httpclient import HTTPError
-from tests import utils
+import pytest
 from tornado import testing
+from tornado.httpclient import HTTPError
+
+from tests import utils
 
 
 class TestRenderHandler(utils.HandlerTestCase):

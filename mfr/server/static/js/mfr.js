@@ -80,9 +80,11 @@
             self.pymParent.iframe.setAttribute('allowfullscreen', '');
             self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
             self.pymParent.iframe.setAttribute('scrolling', 'yes');
+            self.pymParent.iframe.setAttribute('horizontalscrolling', 'yes');
+            self.pymParent.iframe.setAttribute('verticalscrolling', 'yes');
 
             self.pymParent.el.appendChild(self.spinner);
-            $(self.pymParent.iframe).load(function () {
+            $(self.pymParent.iframe).on('load', function () {
                 self.pymParent.el.removeChild(self.spinner);
             });
 

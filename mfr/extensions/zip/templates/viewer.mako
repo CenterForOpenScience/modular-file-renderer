@@ -8,7 +8,7 @@
         </h1>
         <p>
             Download the .zip file to view the contents.
-        <p>
+        </p>
         <p>
             ${zipped_filenames}
         </p>

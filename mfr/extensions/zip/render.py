@@ -1,7 +1,7 @@
 import os
 import zipfile
-import markupsafe
 
+import markupsafe
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
@@ -22,7 +22,13 @@ class ZipRenderer(extension.BaseRenderer):
 
     def format_zip(self, zip_file):
 
+        if type(zip_file) != zipfile.ZipFile:
+            return 'This is not a valid zip file.'
+
         filelist = [file for file in zip_file.filelist if not file.filename.startswith('__MACOSX')]
+
+        if not filelist:
+            return 'This zip file is empty.'
 
         message = '<table class="table table-hover">' \
                   '<thead>' \

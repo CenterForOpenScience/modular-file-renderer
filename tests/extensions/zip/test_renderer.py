@@ -32,7 +32,7 @@ def zip_empty_file():
 
 @pytest.fixture
 def test_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'test.zip')
+    return os.path.join(BASE, 'files', 'test.zip')
 
 
 @pytest.fixture

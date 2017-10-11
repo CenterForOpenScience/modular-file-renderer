@@ -1,26 +1,45 @@
 import re
 import csv
 
-from mfr.extensions.tabular.exceptions import EmptyTableError, TabularRendererError
 from mfr.extensions.tabular import utilities
+from mfr.extensions.tabular.exceptions import EmptyTableError, TabularRendererError
 
 
 def csv_stdlib(fp):
-    """Read and convert a csv file to JSON format using the python standard library
+    data = fp.seek(2048)
+    fp.seek(0)
+    # set the dialect instead of sniffing for it.
+    # sniffing can cause things like spaces or characters to be the delimiter
+    dialect = csv.excel
+    try:
+        _set_dialect_quote_attrs(dialect, data)
+    except:
+        # if this errors it is not an exception
+        pass
+
+    reader = csv.DictReader(fp, dialect=dialect)
+    return parse_stdlib(reader)
+
+def tsv_stdlib(fp):
+    data = fp.seek(2048)
+    fp.seek(0)
+    # set the dialect instead of sniffing for it.
+    # sniffing can cause things like spaces or characters to be the delimiter
+    dialect = csv.excel_tab
+    try:
+        _set_dialect_quote_attrs(dialect, data)
+    except:
+        # if this errors it is not an exception
+        pass
+
+    reader = csv.DictReader(fp, dialect=dialect)
+    return parse_stdlib(reader)
+
+def parse_stdlib(reader):
+    """Read and convert a csv like file to JSON format using the python standard library
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    data = fp.read(2048)
-    fp.seek(0)
-
-    try:
-        dialect = csv.Sniffer().sniff(data)
-    except csv.Error:
-        dialect = csv.excel
-    else:
-        _set_dialect_quote_attrs(dialect, data)
-
-    reader = csv.DictReader(fp, dialect=dialect)
     columns = []
     # update the reader field names to avoid duplicate column names when performing row extraction
     for idx, fieldname in enumerate(reader.fieldnames or []):

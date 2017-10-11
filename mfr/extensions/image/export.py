@@ -7,6 +7,7 @@ from psd_tools import PSDImage
 
 from mfr.core import extension
 from mfr.extensions.image import exceptions
+from mfr.extensions.image.settings import EXPORT_BACKGROUND_COLOR
 
 
 class ImageExporter(extension.BaseExporter):
@@ -40,16 +41,19 @@ class ImageExporter(extension.BaseExporter):
                 ratio = min(max_size[0] / image.size[0], max_size[1] / image.size[1])
                 self.metrics.add('ratio', ratio)
                 if ratio < 1:
-                    image = image.resize((round(image.size[0] * ratio), round(image.size[1] * ratio)), Image.ANTIALIAS)
-            if type in ['jpeg', 'jpg']:
-                # handle transparency
-                image = image.convert('RGBA')
-                exported_image = Image.new("RGBA", image.size, (255, 255, 255))
-                exported_image.paste(image, image)
-            else:
-                exported_image = image
-            exported_image.save(self.output_file_path, type)
-            exported_image.close()
+                    image = image.resize((round(image.size[0] * ratio),
+                                round(image.size[1] * ratio)), Image.ANTIALIAS)
+            # handle transparency
+            if image.mode in ('RGBA', 'LA') and type in ['jpeg', 'jpg']:
+                # JPEG has no transparency, so anything that was transparent gets changed to
+                # EXPORT_BACKGROUND_COLOR. Default is white.
+                background = Image.new(image.mode[:-1], image.size, EXPORT_BACKGROUND_COLOR)
+                background.paste(image, image.split()[-1])
+                image = background
+
+            image.save(self.output_file_path, type)
+            image.close()
+
         except (UnicodeDecodeError, IOError) as err:
             name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.PillowImageError(

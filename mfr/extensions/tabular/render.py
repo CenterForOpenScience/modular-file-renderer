@@ -74,15 +74,9 @@ class TabularRenderer(extension.BaseRenderer):
                 self._renderer_tabular_metrics['importer'] = function.__name__
                 try:
                     return imported(fp)
-                except KeyError:
+                except (KeyError, ValueError):
                     raise exceptions.UnexpectedFormattingError(
                         'Unexpected formatting error.',
-                        extension=self.metadata.ext,
-                        formatting_function=str(function),
-                    )
-                except ValueError:
-                    raise exceptions.UnexpectedFormattingError(
-                        'Cannot render file as .dta.',
                         extension=self.metadata.ext,
                         formatting_function=str(function),
                     )

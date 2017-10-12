@@ -53,12 +53,12 @@ MFR configuration is done through a JSON file (`mfr-test.json`) that lives in th
 mkdir ~/.cos
 ```
 
-The defaults should suffice for most local testing.  If you're running the OSF on something other than `http://localhost:5000/`, you'll need to update the `ALLOWED_PROVIDER_DOMAINS` settings value:
+The defaults should suffice for most local testing.  If you're running the OSF or WaterButler on something other than `http://localhost:5000/` and `http://localhost:7777/`, you'll need to update the `ALLOWED_PROVIDER_DOMAINS` settings value. `ALLOWED_PROVIDER_DOMAINS` is a list formatted as a space-separated string.  This allows MFR to be configured via an environment variable (which are always strings), as is done in the OSF's `.docker-compose.mfr.env`.  Example of customized domains:
 
 ```json
 {
   "SERVER_CONFIG": {
-    "ALLOWED_PROVIDER_DOMAINS": ["http://localhost:9999/"]
+    "ALLOWED_PROVIDER_DOMAINS": "http://my_osf:5001/ http://my_wb:23405/"
   }
 }
 ```

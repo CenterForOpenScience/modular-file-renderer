@@ -1,14 +1,16 @@
 import os
-import subprocess
-
 import shutil
+import subprocess
+from http import HTTPStatus
 from tempfile import NamedTemporaryFile
-from mfr.core import extension
+
 from mfr.core import exceptions
-from mfr.extensions.jsc3d import settings
+from mfr.core.extension import BaseExporter
+from mfr.extensions.jsc3d.settings import (FREECAD_BIN,
+                            FREECAD_CONVERT_SCRIPT)
 
 
-class JSC3DExporter(extension.BaseExporter):
+class JSC3DExporter(BaseExporter):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -21,11 +23,11 @@ class JSC3DExporter(extension.BaseExporter):
                 shutil.copy2(self.source_file_path, temp_source_file.name)
 
                 subprocess.check_call([
-                    settings.FREECAD_BIN,
-                    settings.FREECAD_CONVERT_SCRIPT_BIN,
+                    FREECAD_BIN,
+                    FREECAD_CONVERT_SCRIPT,
                     temp_source_file.name,
                     self.output_file_path,
-                    # silnce output from freecadcmnd
+                    # silence output from freecadcmnd
                 ], stdout=subprocess.DEVNULL)
 
         except subprocess.CalledProcessError as err:
@@ -36,7 +38,7 @@ class JSC3DExporter(extension.BaseExporter):
                 cmd=str(err.cmd),
                 returncode=err.returncode,
                 path=str(self.source_file_path),
-                code=400,
+                code=HTTPStatus.BAD_REQUEST,
                 extension=extension or '',
                 exporter_class='js3d',
             )

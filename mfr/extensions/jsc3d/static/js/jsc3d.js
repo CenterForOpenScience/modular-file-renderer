@@ -5506,6 +5506,8 @@ JSC3D.StlLoader.prototype.loadFromUrl = function(urlName) {
 	//TODO: current blob implementation seems do not work correctly on IE10. Repair it or turn to an arraybuffer implementation.
 	var isIE10Compatible = false;//(isIE && parseInt(JSC3D.PlatformInfo.version) >= 10);
 	var xhr = new XMLHttpRequest;
+	//MFRTODO: this needs to be set back to `xhr.open('GET', encodeURI(urlName), true);`
+	// once furl gets upgraded
 	xhr.open('GET', urlName, true);
 	if(isIE10Compatible)
 		xhr.responseType = 'blob';	// use blob method to deal with STL files for IE >= 10

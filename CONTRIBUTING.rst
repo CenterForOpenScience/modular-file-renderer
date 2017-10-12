@@ -107,12 +107,12 @@ Manual Local Testing
 
 To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. 
 
-First, change the default provider to HTTP (in `/mfr/server/settings.py`) and update the provider domain whitelist:
+First, change the default provider to HTTP (in `/mfr/server/settings.py`) and update the provider domain in ALLOWED_PROVIDER_DOMAINS whitelist (a space separated string.):
 
 .. code-block:: python
 
     PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
-    ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', ['http://localhost:8000/'])
+    ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', 'http://localhost:5000/ http://localhost:7777')
 
 	
 

@@ -23,6 +23,8 @@ pydocx==0.7.0
 # Image
 Pillow==2.8.2
 psd-tools==1.4
+# This should enhance Pillows ability to work with tif files, but it may not do anything
+libtiff==0.4.1
 
 # IPython
 ipython==5.2.2

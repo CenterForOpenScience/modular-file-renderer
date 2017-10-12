@@ -2,11 +2,11 @@ from mfr.core.exceptions import ExporterError
 
 
 class PillowImageError(ExporterError):
-    """The Image related errors raised from a :class:`mfr.extentions.image`
+    """The Image related errors raised from a :class:`mfr.extentions.pdf`
     and relating to the Pillow Library should inherit from PillowImageError
     """
 
-    __TYPE = 'image_pillow'
+    __TYPE = 'pdf_pillow'
 
     def __init__(self, message, *args, export_format: str='', detected_format: str='',
                  original_exception: Exception=None, **kwargs):

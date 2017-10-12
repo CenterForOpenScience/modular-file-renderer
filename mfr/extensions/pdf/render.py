@@ -19,15 +19,17 @@ class PdfRenderer(extension.BaseRenderer):
             return self.TEMPLATE.render(base=self.assets_url, url=self.metadata.download_url)
 
         exported_url = furl.furl(self.export_url)
-        if settings.EXPORT_MAXIMUM_SIZE and settings.EXPORT_TYPE:
-            exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
-        elif settings.EXPORT_TYPE:
-            exported_url.args['format'] = settings.EXPORT_TYPE
-        else:
-            return self.TEMPLATE.render(base=self.assets_url, url=self.metadata.download_url)
+        if settings.EXPORT_TYPE:
+            if settings.EXPORT_MAXIMUM_SIZE:
+                exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
+                                                             settings.EXPORT_TYPE)
+            else:
+                exported_url.args['format'] = settings.EXPORT_TYPE
 
-        self.metrics.add('needs_export', True)
-        return self.TEMPLATE.render(base=self.assets_url, url=exported_url.url)
+            self.metrics.add('needs_export', True)
+            return self.TEMPLATE.render(base=self.assets_url, url=exported_url.url)
+
+        return self.TEMPLATE.render(base=self.assets_url, url=self.metadata.download_url)
 
     @property
     def file_required(self):

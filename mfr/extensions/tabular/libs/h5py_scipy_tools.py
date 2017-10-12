@@ -3,8 +3,9 @@ from collections import OrderedDict
 import h5py
 import scipy.io
 
-from mfr.extensions.tabular import exceptions
+from mfr.extensions.tabular import exceptions as tabular_exceptions
 from mfr.extensions.tabular.utilities import data_population, header_population
+
 
 def build_sheets(name, list_data, sheets):
     # add default header to fix rendering of some data formats
@@ -14,13 +15,14 @@ def build_sheets(name, list_data, sheets):
     sheets[str(name)] = (header, values)
     return sheets
 
+
 def mat_v73(fp):
     """Read and convert a mat v7.3+ file to JSON format using h5py
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
 
-    # workbook wont be empty. Will atleast have some sort of data in it
+    # workbook cannot be empty or none. Will atleast have some sort of data in it
     workbook = h5py.File(fp.name, 'r')
     sheets = OrderedDict()
     variables = workbook.items()
@@ -43,15 +45,14 @@ def mat_v7(fp):
     :return: tuple of table headers and data
     """
     try:
-        # workbook wont be empty, will always have header information
+        # workbook cannot be empty or none, will always have header information
         workbook = scipy.io.loadmat(fp.name)
-    except Exception as e:
-        if type(e) is NotImplementedError:
-            raise e
-        else:
-            raise(exceptions.UnexpectedFormattingError('''
-                Cannot render this file at this time.
-                 The file may not be a .mat file, or may be corrupt'''))
+    except NotImplementedError as e:
+        raise e
+    except Exception:
+        raise(tabular_exceptions.UnexpectedFormattingError(
+            'Cannot render this file at this time.'
+            ' The file may not be a .mat file, or may be corrupted'))
 
     sheets = OrderedDict()
 
@@ -67,6 +68,5 @@ def mat_v7(fp):
 def mat_h5py_scipy(fp):
     try:
         return mat_v7(fp)
-
     except NotImplementedError:
         return mat_v73(fp)

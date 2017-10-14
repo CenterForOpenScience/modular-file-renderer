@@ -1,12 +1,14 @@
-import os
 
-from mako.lookup import TemplateLookup
-from mfr.core import extension
-from mfr.extensions.jamovi import exceptions
+import os
 from zipfile import ZipFile, BadZipFile
 from distutils.version import LooseVersion
 
-from .html_processor import HTMLProcessor
+from mako.lookup import TemplateLookup
+
+from mfr.core import extension
+from mfr.extensions.jamovi import exceptions as jamovi_exceptions
+from mfr.extensions.jamovi.html_processor import HTMLProcessor
+
 
 class JamoviRenderer(extension.BaseRenderer):
 
@@ -28,7 +30,7 @@ class JamoviRenderer(extension.BaseRenderer):
                 body = self._render_html(zip_file, self.metadata.ext)
                 return self.TEMPLATE.render(base=self.assets_url, body=body)
         except BadZipFile as err:
-            raise exceptions.JamoviRendererError(
+            raise jamovi_exceptions.JamoviRendererError(
                 '{} {}.'.format(self.MESSAGE_FILE_CORRUPT, str(err)),
                 extension=self.metadata.ext,
                 corruption_type='bad_zip',
@@ -49,7 +51,7 @@ class JamoviRenderer(extension.BaseRenderer):
             with zip_file.open('index.html') as index_data:
                 index = index_data.read().decode('utf-8')
         except KeyError:
-            raise exceptions.JamoviRendererError(
+            raise jamovi_exceptions.JamoviRendererError(
                 self.MESSAGE_NO_PREVIEW,
             )
 
@@ -68,7 +70,7 @@ class JamoviRenderer(extension.BaseRenderer):
             with zip_file.open('META-INF/MANIFEST.MF') as manifest_data:
                 manifest = manifest_data.read().decode('utf-8')
         except KeyError:
-            raise exceptions.JamoviFileCorruptError(
+            raise jamovi_exceptions.JamoviFileCorruptError(
                 '{} Missing META-INF/MANIFEST.MF'.format(self.MESSAGE_FILE_CORRUPT),
                 extension=self.metadata.ext,
                 corruption_type='key_error',
@@ -88,7 +90,7 @@ class JamoviRenderer(extension.BaseRenderer):
                     dataArchiveVersionStr = value
                     break
         else:
-            raise exceptions.JamoviFileCorruptError(
+            raise jamovi_exceptions.JamoviFileCorruptError(
                 '{} Data-Archive-Version not found.'.format(self.MESSAGE_FILE_CORRUPT),
                 extension=self.metadata.ext,
                 corruption_type='manifest_parse_error',
@@ -99,14 +101,14 @@ class JamoviRenderer(extension.BaseRenderer):
         dataArchiveVersion = LooseVersion(dataArchiveVersionStr)
         try:
             if dataArchiveVersion < self.MINIMUM_VERSION:
-                raise exceptions.JamoviFileCorruptError(
+                raise jamovi_exceptions.JamoviFileCorruptError(
                     '{} Data-Archive-Version is too old.'.format(self.MESSAGE_FILE_CORRUPT),
                     extension=self.metadata.ext,
                     corruption_type='manifest_parse_error',
                     reason='Data-Archive-Version not found.',
                 )
         except TypeError:
-            raise exceptions.JamoviFileCorruptError(
+            raise jamovi_exceptions.JamoviFileCorruptError(
                 '{} Data-Archive-Version not parsable.'.format(self.MESSAGE_FILE_CORRUPT),
                 extension=self.metadata.ext,
                 corruption_type='manifest_parse_error',

@@ -742,7 +742,7 @@ setup(
             '.webm = mfr.extensions.video:VideoRenderer',
 
             # jamovi
-            '.omv = mfr.extensions.jamovi.JamoviRenderer',
+            '.omv = mfr.extensions.jamovi:JamoviRenderer',
 
             # JASP
             '.jasp = mfr.extensions.jasp:JASPRenderer'

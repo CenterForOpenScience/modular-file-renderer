@@ -3,6 +3,7 @@ import os
 from invoke import task
 
 WHEELHOUSE_PATH = os.environ.get('WHEELHOUSE')
+CONSTRAINTS_FILE = 'constraints.txt'
 
 
 def monkey_patch(ctx):
@@ -27,7 +28,7 @@ def monkey_patch(ctx):
 @task
 def wheelhouse(ctx, develop=False):
     req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = 'pip wheel --find-links={} -r {} --wheel-dir={}'.format(WHEELHOUSE_PATH, req_file, WHEELHOUSE_PATH)
+    cmd = 'pip wheel --find-links={} -r {} --wheel-dir={} -c {}'.format(WHEELHOUSE_PATH, req_file, WHEELHOUSE_PATH, CONSTRAINTS_FILE)
     ctx.run(cmd, pty=True)
 
 
@@ -35,7 +36,7 @@ def wheelhouse(ctx, develop=False):
 def install(ctx, develop=False):
     ctx.run('python setup.py develop')
     req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = 'pip install --upgrade -r {}'.format(req_file)
+    cmd = 'pip install --upgrade -r {} -c {}'.format(req_file, CONSTRAINTS_FILE)
 
     if WHEELHOUSE_PATH:
         cmd += ' --no-index --find-links={}'.format(WHEELHOUSE_PATH)

@@ -120,6 +120,7 @@ class TestCodeJamoviRenderer:
         body = renderer.render()
 
         assert '<script>' not in body
+        assert ' onclick="' not in body
 
 
     def test_render_jamovi_file_required(self, renderer):

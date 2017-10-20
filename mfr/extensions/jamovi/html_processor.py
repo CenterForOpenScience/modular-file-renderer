@@ -15,17 +15,24 @@ class HTMLProcessor(HTMLParser):
         self._html = StringIO()  # buffer for the processed HTML
         self._zip_file = zip_file
 
+        # used to exclude the contents of script and object tags
+        self._excl_nested_level = 0
+
     def set_src_source(self, zip_file):
         self._zip_file = zip_file
 
     def handle_starttag(self, tag, attrs):
         if tag == 'script' or tag == 'object':  # filter scripts and objects (attack vectors)
+            self._excl_nested_level += 1
             return
 
         self._html.write('<')
         self._html.write(tag)
 
         for attr in attrs:
+            if attr[0].startswith('on'):
+                # skip onclick="", on...="" attributes (attack vectors)
+                continue
             self._html.write(' ')
             self._html.write(attr[0])
             if attr[1] is not None:
@@ -49,6 +56,8 @@ class HTMLProcessor(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == 'script' or tag == 'object':
+            if self._excl_nested_level > 0:
+                self._excl_nested_level -= 1
             return
 
         self._html.write('</')
@@ -56,7 +65,8 @@ class HTMLProcessor(HTMLParser):
         self._html.write('>')
 
     def handle_data(self, data):
-        self._html.write(data)
+        if self._excl_nested_level == 0:
+            self._html.write(data)
 
     def final_html(self):
         return self._html.getvalue()

@@ -104,6 +104,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
         try:
             self.url = self.request.query_arguments['url'][0].decode('utf-8')
+            # TODO should probably use furl here, but maybe wait till after furl is upgraded
+            self.url += '&mfr=true'
         except KeyError:
             raise exceptions.ProviderError(
                 '"url" is a required argument.',

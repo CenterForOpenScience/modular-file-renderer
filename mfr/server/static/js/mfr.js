@@ -45,16 +45,15 @@
         return el;
     }
 
-    function _createSpinner(url, imgName) {
-        var parser = document.createElement('a');
-        parser.href = url;
-
+    function _createSpinner() {
+        // The the OSF asks for the CSS for this spinner (/static/css/mfr)
+        // MFR itself does not use it anywhere
         var spinner = document.createElement('div');
-        var img = document.createElement('img');
-        spinner.setAttribute('class', 'mfr-logo-spin text-center');
-        imgName = imgName || 'loading.png';
-        img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/' + imgName);
-        spinner.appendChild(img);
+        spinner.setAttribute('class', 'ball-pulse ball-dark text-center');
+        for(i=0; i < 3; i++){
+            spinner.appendChild(document.createElement('div'));
+        }
+
         return spinner;
     }
 
@@ -68,11 +67,13 @@
      * @param {String} imgName The filename of an image in mfr/server/static/images/ to use as a loading spinner
      */
     lib.Render = function (id, url, config, imgName) {
+        // we no longer use this, but need to support it as an arg till the OSF side is fixed
+        imgName = undefined;
         var self = this;
         self.id = id;
         self.url = url;
         self.config = config;
-        self.spinner = _createSpinner(url, imgName);
+        self.spinner = _createSpinner();
 
         self.init = function () {
             self.pymParent = new pym.Parent(self.id, self.url, self.config);

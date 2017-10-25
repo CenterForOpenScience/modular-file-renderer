@@ -1,70 +1,38 @@
-.mfr-logo-spin {
-    -webkit-animation: mfr-spin 3s infinite linear, mfr-opacity 3s infinite linear;
-    -moz-animation: mfr-spin 3s infinite linear mfr-opacity 3s infinite linear;
-    animation: mfr-spin 3s infinite linear, mfr-opacity 3s infinite linear;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    z-index: -1;
+
+/*The osf will ask for this file. It is never actually linked to anything specific in MFR.
+This CSS was stripped out of base.css from the osf-style repo.
+*/
+
+.ball-pulse > div:nth-child(0) {
+  -webkit-animation: scale 0.75s -0.36s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+          animation: scale 0.75s -0.36s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-@-moz-keyframes mfr-spin {
-    from {
-        -moz-transform: rotate(0deg);
-    }
-    to {
-        -moz-transform: rotate(360deg);
-    }
+.ball-pulse > div:nth-child(1) {
+  -webkit-animation: scale 0.75s -0.24s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+          animation: scale 0.75s -0.24s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-@-webkit-keyframes mfr-spin {
-    from {
-        -webkit-transform: rotate(0deg);
-    }
-    to {
-        -webkit-transform: rotate(360deg);
-    }
+.ball-pulse > div:nth-child(2) {
+  -webkit-animation: scale 0.75s -0.12s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+          animation: scale 0.75s -0.12s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-@keyframes mfr-spin {
-    from {
-        -webkit-transform: rotate(0deg);
-        transform:rotate(0deg);
-    }
-    to {
-        -webkit-transform: rotate(360deg);
-        transform:rotate(360deg);
-    }
+.ball-pulse > div:nth-child(3) {
+  -webkit-animation: scale 0.75s 0s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
+          animation: scale 0.75s 0s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-@-moz-keyframes mfr-opacity {
-    0% {
-        opacity : 0.1
-    }
-    50% {
-        opacity: 1
-    }
-    100% {
-        opacity: 0.1
-    }
+.ball-pulse > div {
+  background-color: #fff;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  margin: 2px;
+  -webkit-animation-fill-mode: both;
+          animation-fill-mode: both;
+  display: inline-block;
 }
-@-webkit-keyframes mfr-opacity {
-    0% {
-        opacity : 0.1
-    }
-    50% {
-        opacity: 1
-    }
-    100% {
-        opacity: 0.1
-    }
-}
-@keyframes mfr-opacity {
-    0% {
-        opacity : 0.1
-    }
-    50% {
-        opacity: 1
-    }
-    100% {
-        opacity: 0.1
-    }
+
+
+.ball-dark > div {
+  background-color: #337AB7;
 }
 
 .embed-responsive-pdf {

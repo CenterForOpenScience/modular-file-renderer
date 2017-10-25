@@ -82,6 +82,7 @@
             self.pymParent.iframe.setAttribute('scrolling', 'yes');
             self.pymParent.iframe.setAttribute('horizontalscrolling', 'yes');
             self.pymParent.iframe.setAttribute('verticalscrolling', 'yes');
+            self.pymParent.iframe.setAttribute('overflow', 'scroll');
 
             self.pymParent.el.appendChild(self.spinner);
             $(self.pymParent.iframe).load(function () {

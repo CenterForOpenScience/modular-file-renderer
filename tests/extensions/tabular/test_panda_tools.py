@@ -1,5 +1,7 @@
 import os
 
+import pytest
+
 from mfr.extensions.tabular.libs import panda_tools
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -30,6 +32,11 @@ class TestTabularPandaTools:
         sheet = sheets.popitem()[1]
         assert sheet[0][0] == {'field': 'one\ttwo\tthree', 'id': 'one\ttwo\tthree', 'name': 'one\ttwo\tthree', 'sortable': True}
         assert sheet[1][0] == {'one\ttwo\tthree': 'a\tb\tc'}
+
+    def test_invalid_dta(self):
+        with open(os.path.join(BASE, 'files', 'invalid.dta')) as fp:
+            with pytest.raises(ValueError):
+                panda_tools.dta_pandas(fp)
 
     def test_dta_pandas(self):
         with open(os.path.join(BASE, 'files', 'test.dta')) as fp:

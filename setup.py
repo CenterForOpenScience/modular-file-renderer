@@ -791,7 +791,10 @@ setup(
             '.webm = mfr.extensions.video:VideoRenderer',
 
             # JASP
-            '.jasp = mfr.extensions.jasp:JASPRenderer'
+            '.jasp = mfr.extensions.jasp:JASPRenderer',
+
+            # enml (Evernote)
+            '.enml = mfr.extensions.enml:EnmlRenderer',
         ]
     },
 )

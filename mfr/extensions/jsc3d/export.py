@@ -40,5 +40,5 @@ class JSC3DExporter(BaseExporter):
                 path=str(self.source_file_path),
                 code=HTTPStatus.BAD_REQUEST,
                 extension=extension or '',
-                exporter_class='js3d',
+                exporter_class='jsc3d',
             )

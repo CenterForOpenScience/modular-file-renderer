@@ -1,8 +1,9 @@
-import FreeCAD
+import sys
+
 import Part
 import Mesh
+import FreeCAD
 
-import sys
 
 in_fn, out_fn = sys.argv[2], sys.argv[3]
 

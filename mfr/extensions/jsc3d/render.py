@@ -1,8 +1,8 @@
 """3D renderer module """
 # Uses jsc3d: https://github.com/humu2009/jsc3d/tree/master/jsc3d
 import os
-import furl
 
+import furl
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension

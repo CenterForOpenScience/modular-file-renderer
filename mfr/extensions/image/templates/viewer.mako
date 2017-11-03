@@ -1,6 +1,6 @@
 
 
-<img style="max-width: 1200; max-height: 1200;" src="${url}">
+<img style="max-width: 75%;" src="${url}">
 
 <script src="/static/js/mfr.js"></script>
 <script src="/static/js/mfr.child.js"></script>

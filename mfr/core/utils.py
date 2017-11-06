@@ -1,3 +1,6 @@
+from time import time
+from os.path import getctime
+
 from stevedore import driver
 
 from mfr.core import exceptions
@@ -106,3 +109,8 @@ def sizeof_fmt(num, suffix='B'):
             return '%3.1f%s%s' % (num, unit, suffix)
         num /= 1000.0
     return '%.1f%s%s' % (num, 'Y', suffix)
+
+def file_expired(path: str, ttl: int) -> bool:
+    if (time() - getctime(path)) >= ttl:
+        return True
+    return False

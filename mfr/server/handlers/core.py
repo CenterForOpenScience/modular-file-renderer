@@ -132,6 +132,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         )
 
         self.source_file_id = uuid.uuid4()
+        self.add_header('X-MFR-REQUEST-ID', str(uuid.uuid4()))
 
     async def write_stream(self, stream):
         try:
@@ -192,6 +193,18 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                     Unable to render the requested file, please try again later.
                 </div>
             ''')
+
+    # avoid dumping duplicate information to application log
+    def log_exception(self, typ, value, tb):
+        if isinstance(value, tornado.web.HTTPError):
+            if value.log_message:
+                format = "%d %s: " + value.log_message
+                args = ([value.status_code, self._request_summary()] +
+                        list(value.args))
+                tornado.web.gen_log.warning(format, *args)
+        else:
+            tornado.web.app_log.error("Uncaught exception %s\n", self._request_summary(),
+                                       exc_info=(typ, value, tb))
 
     def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:

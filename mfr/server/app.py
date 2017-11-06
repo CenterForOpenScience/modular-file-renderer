@@ -1,4 +1,6 @@
+import signal
 import asyncio
+from functools import partial
 
 import tornado.web
 import tornado.httpserver
@@ -17,6 +19,17 @@ from mfr.server.handlers.core import ExtensionsStaticFileHandler
 
 logger = logging.getLogger(__name__)
 
+
+def sig_handler(sig, frame):
+    io_loop = tornado.ioloop.IOLoop.instance()
+
+    def stop_loop():
+        if len(asyncio.Task.all_tasks(io_loop)) == 0:
+            io_loop.stop()
+        else:
+            io_loop.call_later(1, stop_loop)
+
+    io_loop.add_callback_from_signal(stop_loop)
 
 def make_app(debug):
     app = tornado.web.Application(
@@ -55,5 +68,6 @@ def serve():
 
     logger.info("Listening on {0}:{1}".format(server_settings.ADDRESS, server_settings.PORT))
 
+    signal.signal(signal.SIGTERM, partial(sig_handler))
     asyncio.get_event_loop().set_debug(server_settings.DEBUG)
     asyncio.get_event_loop().run_forever()

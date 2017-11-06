@@ -85,7 +85,7 @@
             self.pymParent.iframe.setAttribute('overflow', 'scroll');
 
             self.pymParent.el.appendChild(self.spinner);
-            $(self.pymParent.iframe).load(function () {
+            $(self.pymParent.iframe).on('load', function () {
                 self.pymParent.el.removeChild(self.spinner);
             });
 

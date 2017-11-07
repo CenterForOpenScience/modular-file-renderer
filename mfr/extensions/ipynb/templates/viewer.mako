@@ -7,7 +7,7 @@
     ${body | n}
 </div>
 
-<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
 <script src="/static/js/mfr.js"></script>
 <script src="/static/js/mfr.child.js"></script>
 <script>

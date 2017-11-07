@@ -88,24 +88,3 @@ class TestZipRenderer:
         # hidden files should be hidden
         assert body.count('__MACOSX') == 0
 
-    def test_format_zip(self, renderer, zip_file):
-        zip_string = renderer.format_zip(zip_file)
-
-        parsed_html = BeautifulSoup(zip_string)
-        rows = parsed_html.findChildren('table')[0].findChildren(['tr'])
-
-        name = rows[2].findChildren('td')[0].get_text().strip()
-        assert 'test/test 1' == name
-
-        name = rows[3].findChildren('td')[0].get_text().strip()
-        assert 'test/test 2' == name
-
-    def test_format_zip_empty(self, renderer, zip_empty_file):
-        zip_string = renderer.format_zip(zip_empty_file)
-
-        assert zip_string == 'This zip file is empty.'
-
-    def test_non_zip_file(self, renderer):
-        zip_string = renderer.format_zip(b'')
-
-        assert zip_string == 'This is not a valid zip file.'

@@ -18,31 +18,14 @@ class ZipRenderer(extension.BaseRenderer):
     def render(self):
         zip_file = zipfile.ZipFile(self.file_path, 'r')
 
-        return self.TEMPLATE.render(zipped_filenames=self.format_zip(zip_file))
+        filelist = [{'name': markupsafe.escape(file.filename),
+                     'size': sizeof_fmt(int(file.file_size)),
+                     'date': "%d-%02d-%02d %02d:%02d:%02d" % file.date_time[:6]} for file in zip_file.filelist
+                    if not file.filename.startswith('__MACOSX')]
 
-    def format_zip(self, zip_file):
+        message = '' if filelist else 'This zip file is empty.'
 
-        if type(zip_file) != zipfile.ZipFile:
-            return 'This is not a valid zip file.'
-
-        filelist = [file for file in zip_file.filelist if not file.filename.startswith('__MACOSX')]
-
-        if not filelist:
-            return 'This zip file is empty.'
-
-        message = '<table class="table table-hover">' \
-                  '<thead>' \
-                    '<th>%-46s</th><th>%19s</th><th>%12s</th>' \
-                  '</thead>'\
-                  % ('File Name', 'Modified    ', 'Size')
-
-        for zinfo in filelist:
-            date = "%d-%02d-%02d %02d:%02d:%02d" % zinfo.date_time[:6]
-            message += "<tr><td>%-46s</td> <td>%s</td> <td>%s<td></tr>" %\
-                       (markupsafe.escape(zinfo.filename), date, sizeof_fmt(int(zinfo.file_size)))
-
-        message += '</table>'
-        return message
+        return self.TEMPLATE.render(zipped_filenames=filelist, message=message)
 
     @property
     def file_required(self):

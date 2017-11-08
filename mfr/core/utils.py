@@ -1,9 +1,7 @@
 from stevedore import driver
 
 from mfr.core import exceptions
-import logging
 
-logger = logging.getLogger(__name__)
 
 def make_provider(name, request, url):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
@@ -78,7 +76,6 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
     :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
     normalized_name = (name and name.lower()) or 'none'
-    logger.info(str(metadata.is_public))
     if metadata.is_public:
         try:
             return driver.DriverManager(

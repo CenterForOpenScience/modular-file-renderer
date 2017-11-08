@@ -117,6 +117,8 @@ class OsfProvider(provider.BaseProvider):
         self.metrics.add('metadata.clean_url_args', str(cleaned_url))
         unique_key = hashlib.sha256((metadata['data']['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
 
+        is_public = False
+
         if 'public_file' in cleaned_url.args:
             if cleaned_url.args['public_file'] not in ['0', '1']:
                 raise exceptions.QueryParameterError(
@@ -127,12 +129,7 @@ class OsfProvider(provider.BaseProvider):
                     code=400,
                 )
 
-            if cleaned_url.args['public_file'] == '1':
-                is_public = True
-            else:
-                is_public = False
-        else:
-            is_public = False
+            is_public = cleaned_url.args['public_file'] == '1'
 
         return provider.ProviderMetadata(name, ext, content_type,
                     unique_key, download_url, is_public=is_public)

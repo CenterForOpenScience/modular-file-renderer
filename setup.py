@@ -42,7 +42,6 @@ setup(
         ],
         'mfr.public_renderers': [
             '.docx = mfr.extensions.office365:Office365Renderer',
-
         ],
         'mfr.exporters': [
             # google docs

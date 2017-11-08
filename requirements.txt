@@ -22,6 +22,7 @@ pydocx==0.7.0
 
 # Image
 Pillow==2.8.2
+psd-tools==1.4
 
 # IPython
 ipython==5.2.2

@@ -25,5 +25,4 @@ class TestTabularMatTools:
             sheets = mat_h5py_scipy()(fp)
 
         sheet = sheets.popitem()[1]
-        print(sheet)
         assert sheet == ([{'id': 1, 'name': 1, 'field': 1, 'sortable': True}], [{1: 1.0}])

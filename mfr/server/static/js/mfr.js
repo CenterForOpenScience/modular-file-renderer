@@ -67,7 +67,9 @@
      * @param {Object} config Configuration to override the default settings.
      * @param {String} imgName The filename of an image in mfr/server/static/images/ to use as a loading spinner
      */
-    lib.Render = function (id, url, config, imgName=null) {
+    lib.Render = function (id, url, config, imgName) {
+        // we no longer use this, but need to support it as an arg till the OSF side is fixed
+        imgName = undefined;
         var self = this;
         self.id = id;
         self.url = url;

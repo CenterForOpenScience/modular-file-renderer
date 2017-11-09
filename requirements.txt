@@ -41,6 +41,8 @@ docutils==0.12
 # Tabular
 pandas==0.17.1
 xlrd==1.0.0
+h5py==2.7.0
+scipy==0.19.1
 
 # Md
 markdown==2.6.2

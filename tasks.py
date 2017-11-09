@@ -137,4 +137,3 @@ def cache_clean(folder, extension):
                 pool.spawn(delete_object, obj)
         objects = container.get_objects(prefix=folder, limit=5000, marker=objects[-1].name)
     pool.join()
-

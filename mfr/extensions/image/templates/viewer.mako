@@ -41,8 +41,8 @@
             }
             else{
                 thing -= .1;
-                if (thing < 1){
-                    thing = 1;
+                if (thing < .5){
+                    thing = .5;
                 }
             }
             

@@ -53,6 +53,7 @@ setup(
             '.png = mfr.extensions.image:ImageExporter',
             '.bmp = mfr.extensions.image:ImageExporter',
             '.gif = mfr.extensions.image:ImageExporter',
+            '.psd = mfr.extensions.image:ImageExporter',
             '.tif = mfr.extensions.image:ImageExporter',
             '.tiff = mfr.extensions.image:ImageExporter',
 
@@ -669,6 +670,7 @@ setup(
             '.gif = mfr.extensions.image:ImageRenderer',
             '.ico = mfr.extensions.image:ImageRenderer',
             '.png = mfr.extensions.image:ImageRenderer',
+            '.psd = mfr.extensions.image:ImageRenderer',
             '.tif = mfr.extensions.image:ImageRenderer',
             '.tiff = mfr.extensions.image:ImageRenderer',
 
@@ -791,7 +793,10 @@ setup(
             '.webm = mfr.extensions.video:VideoRenderer',
 
             # JASP
-            '.jasp = mfr.extensions.jasp:JASPRenderer'
+            '.jasp = mfr.extensions.jasp:JASPRenderer',
+
+            # Zip
+            '.zip = mfr.extensions.zip:ZipRenderer'
         ]
     },
 )

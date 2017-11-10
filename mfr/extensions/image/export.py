@@ -1,7 +1,9 @@
 import os
 import imghdr
+import warnings
 
 from PIL import Image
+from psd_tools import PSDImage
 
 from mfr.core import extension
 from mfr.extensions.image import exceptions
@@ -23,7 +25,16 @@ class ImageExporter(extension.BaseExporter):
             'max_size_h': max_size[1],
         })
         try:
-            image = Image.open(self.source_file_path)
+            if self.ext in ['.psd']:
+                # silence warnings from psd-tools
+                # Warnings warn of outdated depedency that is a pain to install
+                # and about colors being possibly wrong
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
+                    image = PSDImage.load(self.source_file_path).as_PIL()
+            else:
+                image = Image.open(self.source_file_path)
+
             if max_size:
                 # resize the image to the w/h maximum specified
                 ratio = min(max_size[0] / image.size[0], max_size[1] / image.size[1])

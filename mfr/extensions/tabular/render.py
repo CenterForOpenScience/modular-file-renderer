@@ -74,7 +74,7 @@ class TabularRenderer(extension.BaseRenderer):
                 self._renderer_tabular_metrics['importer'] = function.__name__
                 try:
                     return imported(fp)
-                except KeyError:
+                except (KeyError, ValueError):
                     raise exceptions.UnexpectedFormattingError(
                         'Unexpected formatting error.',
                         extension=self.metadata.ext,

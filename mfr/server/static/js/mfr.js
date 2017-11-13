@@ -80,6 +80,7 @@
             self.pymParent.iframe.setAttribute('allowfullscreen', '');
             self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
             self.pymParent.iframe.setAttribute('scrolling', 'yes');
+            self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts');
 
             self.pymParent.el.appendChild(self.spinner);
             $(self.pymParent.iframe).on('load', function () {

@@ -1,7 +1,8 @@
-from version import __version__
 import json
 from tests import utils
 from tornado import testing
+
+from version import __version__
 
 
 class TestStatusHandler(utils.HandlerTestCase):

@@ -1,4 +1,4 @@
-<div style="word-wrap: break-word; overflow: auto" class="mfrViewer">
+<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">
 ${body}
 </div>
 

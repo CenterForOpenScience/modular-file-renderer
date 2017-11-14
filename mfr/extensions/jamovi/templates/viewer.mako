@@ -1,5 +1,5 @@
 <div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">
-${body}
+  ${body}
 </div>
 
 <script src="/static/js/mfr.js"></script>

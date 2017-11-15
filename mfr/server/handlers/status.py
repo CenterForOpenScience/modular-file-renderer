@@ -1,6 +1,6 @@
 import tornado.web
 
-import mfr
+from version import __version__
 
 class StatusHandler(tornado.web.RequestHandler):
 
@@ -8,5 +8,5 @@ class StatusHandler(tornado.web.RequestHandler):
         """List information about modular-file-renderer status"""
         self.write({
             'status': 'up',
-            'version': mfr.__version__
+            'version': __version__
         })

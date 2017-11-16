@@ -40,13 +40,13 @@ def xlsx_xlrd(fp, max_iterations=5000):
         duplicate_fields = set([x for x in fields if fields.count(x) > 1])
         if len(duplicate_fields):
             counts = {}
-            for name in duplicate_fields:
-                counts[name] = 1
+            for field in duplicate_fields:
+                counts[field] = 1
 
-            for x in range(len(fields)):
-                if fields[x] in duplicate_fields:
-                    name = fields[x]
-                    increased_name = name + ' ({})'.format(counts[name])
+            for i, field in enumerate(fields):
+                if field in duplicate_fields:
+                    increased_name = field + ' ({})'.format(counts[field])
+
                     # this triggers if you try to rename a header, and that new name
                     # already exists in fields. it will then increment to look for the
                     # next available name.
@@ -54,12 +54,12 @@ def xlsx_xlrd(fp, max_iterations=5000):
                     while increased_name in fields:
                         iteration += 1
                         if iteration > max_iterations:
-                            increased_name = name + ' ({})'.format(uuid.uuid4())
+                            increased_name = field + ' ({})'.format(uuid.uuid4())
                         else:
-                            counts[name] += 1
-                            increased_name = name + ' ({})'.format(counts[name])
+                            counts[field] += 1
+                            increased_name = field + ' ({})'.format(counts[field])
 
-                    fields[x] = increased_name
+                    fields[i] = increased_name
         data = []
         for i in range(1, sheet.nrows):
             row = []

@@ -40,13 +40,13 @@ class TestTabularPandaTools:
         assert sheet[1][0] == {'Name': 1.0, 'Dup (1)': 2.0, 'Dup (2)': 3.0,
                             'Dup (3)': 4.0, 'Dup (4)': 5.0, 'Not Dup': 6.0}
 
-    # After demo it was suggested the iteration cap be raised. The value ended up to be about 5,000
-    # Unsure best way to test this case with such a high cap. Going to leave the test for now
-    # def test_xlsx_xlrd_duplicate_fields_handle_naming(self):
-    #     with open(os.path.join(BASE, 'files', 'test_duplicate_uuid.xlsx')) as fp:
-    #         sheets = xlrd_tools.xlsx_xlrd(fp)
-    #     print(sheets)
-    #     sheet = sheets.popitem()[1]
+    def test_xlsx_xlrd_duplicate_fields_handle_naming(self):
+        with open(os.path.join(BASE, 'files', 'test_duplicate_uuid.xlsx')) as fp:
+            sheets = xlrd_tools.xlsx_xlrd(fp, max_iterations=10)
 
-    #     assert sheet[0][1]['field'] != 'dup (12)'
-    #     assert len(sheet[0][1]['field']) > 24
+        sheet = sheets.popitem()[1]
+
+        # this if you raise max iterations, it will be named dup (13) instead of dup (<uuid>)
+        assert sheet[0][1]['field'] != 'dup (13)'
+        # using `len` is an easy way to see the uuid has been appended
+        assert len(sheet[0][1]['field']) > 24

@@ -8,7 +8,7 @@ from mfr.extensions.tabular.utilities import header_population
 from mfr.extensions.tabular.exceptions import TableTooBigError
 
 
-def xlsx_xlrd(fp):
+def xlsx_xlrd(fp, max_iterations=5000):
     """Read and convert a xlsx file to JSON format using the xlrd library.
     :param fp: File pointer object
     :return: tuple of table headers and data
@@ -53,7 +53,7 @@ def xlsx_xlrd(fp):
                     iteration = 0
                     while increased_name in fields:
                         iteration += 1
-                        if iteration > 5000:
+                        if iteration > max_iterations:
                             increased_name = name + ' ({})'.format(uuid.uuid4())
                         else:
                             counts[name] += 1

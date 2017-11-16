@@ -39,6 +39,6 @@ class TestPdfRenderer:
 
     def test_render_pdf(self, renderer, metadata, assets_url):
         body = renderer.render()
-        assert '<base href="{}/{}/web/">'.format(assets_url, 'pdf') in body
+        assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
         assert 'DEFAULT_URL = \'{}\''.format(metadata.download_url) in body

@@ -1,6 +1,7 @@
 -r requirements.txt
 
 -e git+https://github.com/centerforopenscience/aiohttpretty.git@0.0.2#egg=aiohttpretty
+beautifulsoup4
 colorlog==2.5.0
 flake8==3.0.4
 ipdb
@@ -9,4 +10,5 @@ pydevd==0.0.6
 pyflakes
 pytest==2.8.2
 pytest-cov==2.2.0
+python-coveralls==2.9.1
 pyzmq==14.4.1

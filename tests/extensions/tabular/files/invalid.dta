@@ -1,0 +1,8 @@
+,id,target,gender,likely_discriminated,promoted,responsible,compensated,would_apply,chances,attractive_employer,put_off_similar_jobs,work,work_experience,studies,age
+0,159.0,Erik,male,4.0,4.0,4.0,1.0,6.0,6.0,1.0,1.0,studier,mattlig,Psykologi,22.0
+1,97.0,Maria,male,5.0,4.0,6.0,4.0,4.0,4.0,2.0,1.0,studier,stor,Elektroteknik,25.0
+2,56.0,Erik,male,1.0,4.0,1.0,1.0,5.0,1.0,4.0,1.0,studier,lite,Medicin,23.0
+3,205.0,Maria,male,1.0,4.0,7.0,1.0,7.0,1.0,4.0,1.0,studier,mattlig,ekonomi och ledarskap,25.0
+4,206.0,Erik,male,1.0,1.0,1.0,1.0,7.0,4.0,4.0,1.0,studier,mattlig,miljö,25.0
+5,210.0,Erik,male,1.0,1.0,1.0,1.0,7.0,4.0,4.0,1.0,arbete,mattlig, ,34.0
+6,151.0,Maria,male,1.0,4.0,2.0,1.0,7.0,4.0,4.0,1.0,studier,mattlig,Strat komm,24.0

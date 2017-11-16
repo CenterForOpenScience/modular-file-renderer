@@ -1,0 +1,7 @@
+## Constraints file for resolving conflicts across packages. Used to resolve issues with sub-dependencies of an actual requirement.
+##  (eg when python-coveralls indirectly requires a version of requests)
+## "Constraints files are requirements files that only control which version of a requirement is installed, not whether it is installed or not."
+##     See https://pip-python3.readthedocs.org/en/latest/user_guide.html#constraints-files
+
+# Newer version of requests throw an error when using the version of chardet we pin to; this causes issues for python-coveralls
+requests==2.14.2

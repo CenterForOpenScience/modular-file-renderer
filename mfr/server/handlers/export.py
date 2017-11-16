@@ -42,7 +42,7 @@ class ExportHandler(core.BaseHandler):
 
         self.output_file_id = '{}.{}'.format(self.source_file_path.name, self.format)
         self.output_file_path = await self.local_cache_provider.validate_path(
-            '/export/{}.{}'.format(self.output_file_id, self.exporter_name)
+            '/export/{}'.format(self.output_file_id)
         )
         self.metrics.merge({
             'output_file': {

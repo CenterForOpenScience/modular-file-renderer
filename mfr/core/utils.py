@@ -112,7 +112,7 @@ def get_renderer_name(name):
 
     # ep.attrs is a tuple of attributes. There should only ever be one or `None`.
     # None case occurs when trying to render an unsupported file type
-    # entry_attrs is an itrable object, so we turn into a list to index it
+    # entry_attrs is an iterable object, so we turn into a list to index it
         return list(entry_attrs)[0].attrs[0]
 
     # This means the file type is not supported. Just return the blank string so `make_renderers` can

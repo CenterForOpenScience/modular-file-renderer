@@ -13,7 +13,6 @@ def build_sheets(name, list_data, sheets):
     values = data_population(list_data, headers=header)
     header = header_population(header)
     sheets[str(name)] = (header, values)
-    return sheets
 
 
 def mat_v73(fp):
@@ -33,7 +32,7 @@ def mat_v73(fp):
             # h5py Uses row-major ordering. this fixes it so it displays like it does in matlab
             # basically just flip it on its axis
             list_data = list(zip(*data.value.tolist()))
-            sheets = build_sheets(name, list_data, sheets)
+            build_sheets(name, list_data, sheets)
 
     return sheets
 
@@ -59,14 +58,14 @@ def mat_v7(fp):
         if key in ('__header__', '__version__', '__globals__'):
             continue
         list_data = workbook[key].tolist()
-        sheets = build_sheets(key, list_data, sheets)
+        build_sheets(key, list_data, sheets)
 
     return sheets
 
 def mat_h5py_scipy(fp):
     # Try to load the mat file with the v7 library first. If it gives a not implemented error
     # that means the file is in the v7.3 format, and we can use mat_v73 to load it.
-    # Valid .mat versions are 4, 6, 7, 7.3. matv3 handled 7 and below.
+    # Valid .mat versions are 4, 6, 7, 7.3. matv7 handles 7 and below.
     try:
         return mat_v7(fp)
     except NotImplementedError:

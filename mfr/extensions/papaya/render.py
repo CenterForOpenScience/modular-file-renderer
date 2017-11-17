@@ -6,13 +6,13 @@ from mako.lookup import TemplateLookup
 from mfr.core import utils
 from mfr.core import extension
 from mfr.extensions import settings as ext_settings
-from mfr.extensions.papaya import settings
+from mfr.extensions.papaya import settings as papaya_settings
 
 
 class PapayaRenderer(extension.BaseRenderer):
 
-    data_dir = settings.DATA_DIR
-    data_ttl = settings.DATA_TTL
+    data_dir = papaya_settings.DATA_DIR
+    data_ttl = papaya_settings.DATA_TTL
     comp_ext = ext_settings.COMPRESSED_EXT
 
     TEMPLATE = TemplateLookup(

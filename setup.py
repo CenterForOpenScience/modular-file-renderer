@@ -706,6 +706,7 @@ setup(
             '.xls = mfr.extensions.tabular:TabularRenderer',
             '.xlsx = mfr.extensions.tabular:TabularRenderer',
             '.dta = mfr.extensions.tabular:TabularRenderer',
+            '.mat = mfr.extensions.tabular:TabularRenderer',
             '.sav = mfr.extensions.tabular:TabularRenderer',
             #'.ods = mfr.extensions.tabular:TabularRenderer',
 

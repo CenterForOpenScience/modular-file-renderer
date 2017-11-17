@@ -10,6 +10,7 @@ from mfr.extensions.pdf import (settings,
 
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+
 # Should be the first 4 bytes of a pdf file
 PDF_SIG = b'25504446'
 
@@ -36,6 +37,8 @@ class TestPdfExporter:
         ('test.tif'),
         ('test_multipage.tif'),
         ('test_ratio.tif'),
+        # On old Pillow versions this would fail to open. Should open fin on 4.3.0
+        ('test_broken.tif'),
     ])
     def test_single_page_tiff(self, directory, file_name):
         source_file_path = os.path.join(BASE, 'files', file_name)
@@ -53,19 +56,6 @@ class TestPdfExporter:
         with open(output_file_path, 'rb') as file:
             # the first 4 bytes contain the signature
             assert binascii.hexlify(file.read(4)) == PDF_SIG
-
-    def test_broken_tiff(self, directory):
-        # Once Pillow is updated to 4.3, this test will fail and can be removed
-        source_file_path = os.path.join(BASE, 'files', 'test_broken.tif')
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
-        exporter = PdfExporter(source_file_path=source_file_path, ext='.tif',
-                               output_file_path=output_file_path, format=format)
-
-        assert not os.path.exists(output_file_path)
-
-        with pytest.raises(exceptions.PillowImageError):
-            exporter.export()
 
     def test_bad_tiff(self, directory):
         source_file_path = os.path.join(BASE, 'files', 'invalid.tif')

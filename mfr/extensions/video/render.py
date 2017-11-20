@@ -2,8 +2,8 @@ import os
 
 from mako.lookup import TemplateLookup
 
-from mfr.extensions.utils import download_from_template
 from mfr.core import extension
+from mfr.extensions.utils import munge_url_for_localdev
 
 
 class VideoRenderer(extension.BaseRenderer):
@@ -13,7 +13,7 @@ class VideoRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    @download_from_template
+    @munge_url_for_localdev
     def render(self):
         return self.TEMPLATE.render(url=self.download_url.geturl())
 

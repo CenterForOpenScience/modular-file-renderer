@@ -40,7 +40,7 @@ class TestVideoRenderer:
     def test_render_video(self, renderer, url):
         body = renderer.render()
         assert '<video controls' in body
-        assert 'src="{}"'.format(url) in body
+        assert 'src="{}"'.format(metadata().download_url) in body
 
     def test_render_video_file_required(self, renderer):
         assert renderer.file_required is False

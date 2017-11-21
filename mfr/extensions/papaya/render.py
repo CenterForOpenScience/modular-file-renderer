@@ -23,11 +23,8 @@ class PapayaRenderer(extension.BaseRenderer):
     def render(self):
         self.remove_old_files()
         file_name = os.path.basename(self.file_path)
-        if self.metadata.ext in self.comp_ext.keys():
-            second_ext = '.{}'.format(self.metadata.name.split('.')[-1])
-            if second_ext in self.comp_ext[self.metadata.ext]:
-                file_name = file_name + second_ext
-        file_name = file_name + self.metadata.ext
+        file_ext = utils.get_full_file_ext(self.metadata.ext, self.metadata.name)
+        file_name = file_name + file_ext
         shutil.copyfile(self.file_path, self.data_dir + file_name)
         return self.TEMPLATE.render(base=self.assets_url, file_name=file_name)
 

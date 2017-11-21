@@ -126,7 +126,7 @@ def file_expired(path: str, ttl: int) -> bool:
     return False
 
 
-def get_full_file_ext(metadata_ext: str, metadata_name: str) -> str:
+def get_full_file_ext(file_ext: str, file_name: str) -> str:
     """Helper method that checks if a secondary extension exists for a file
     with a compressed extension as primary. If so, returns the full extension.
 
@@ -136,8 +136,8 @@ def get_full_file_ext(metadata_ext: str, metadata_name: str) -> str:
     """
 
     compressed_ext = ext_settings.COMPRESSED_EXT
-    if metadata_ext in compressed_ext.keys():
-        secondary_ext = '.{}'.format(metadata_name.split('.')[-1])
-        if secondary_ext in compressed_ext[metadata_ext]:
-            return secondary_ext + metadata_ext
-    return metadata_ext
+    if file_ext in compressed_ext.keys():
+        secondary_ext = '.{}'.format(file_name.split('.')[-1])
+        if secondary_ext in compressed_ext[file_ext]:
+            return secondary_ext + file_ext
+    return file_ext

@@ -4,6 +4,7 @@ from os.path import getctime
 from stevedore import driver
 
 from mfr.core import exceptions
+from mfr.extensions import settings as ext_settings
 
 
 def make_provider(name, request, url):
@@ -100,6 +101,7 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             }
         )
 
+
 def sizeof_fmt(num, suffix='B'):
     if abs(num) < 1000:
         return '%3.0f%s' % (num, suffix)
@@ -110,7 +112,32 @@ def sizeof_fmt(num, suffix='B'):
         num /= 1000.0
     return '%.1f%s%s' % (num, 'Y', suffix)
 
+
 def file_expired(path: str, ttl: int) -> bool:
+    """Helper method that checks if a file's last change time has expired ttl.
+
+    :param path: the path of the file
+    :param ttl: the expiration time in seconds
+    :return: True if expired, False otherwise
+    """
+
     if (time() - getctime(path)) >= ttl:
         return True
     return False
+
+
+def get_full_file_ext(metadata_ext: str, metadata_name: str) -> str:
+    """Helper method that checks if a secondary extension exists for a file
+    with a compressed extension as primary. If so, returns the full extension.
+
+    :param metadata_ext: the file's primary extension
+    :param metadata_name: the file name that may contain a secondary extension
+    :return: the file's full extension
+    """
+
+    compressed_ext = ext_settings.COMPRESSED_EXT
+    if metadata_ext in compressed_ext.keys():
+        secondary_ext = '.{}'.format(metadata_name.split('.')[-1])
+        if secondary_ext in compressed_ext[metadata_ext]:
+            return secondary_ext + metadata_ext
+    return metadata_ext

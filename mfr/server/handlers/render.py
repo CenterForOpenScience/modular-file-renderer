@@ -34,15 +34,16 @@ class RenderHandler(core.BaseHandler):
 
     async def get(self):
         """Return HTML that will display the given file."""
+
+        file_ext = utils.get_full_file_ext(self.metadata.ext, self.metadata.name)
         renderer = utils.make_renderer(
-            self.metadata.ext,
+            file_ext,
             self.metadata,
             self.source_file_path.full_path,
             self.url,
             '{}://{}/assets'.format(self.request.protocol, self.request.host),
             self.request.uri.replace('/render?', '/export?', 1)
         )
-
         self.extension_metrics.add('class', renderer._get_module_name())
 
         if renderer.cache_result and settings.CACHE_ENABLED:

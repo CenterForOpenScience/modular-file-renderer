@@ -23,6 +23,9 @@ Some file types may not be in the correct list. Please search for the file type 
 ## 3D Images
 * .3ds
 * .ctm
+* .dcm
+* .nii
+* .nii.gz
 * .obj
 * .stl
 

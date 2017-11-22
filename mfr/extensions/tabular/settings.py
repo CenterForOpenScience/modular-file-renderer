@@ -10,7 +10,7 @@ TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 
 LIBS = config.get('LIBS', {
     '.csv': [libs.csv_stdlib],
-    '.tsv': [libs.csv_stdlib],
+    '.tsv': [libs.tsv_stdlib],
     '.gsheet': [libs.xlsx_xlrd],
     '.xlsx': [libs.xlsx_xlrd],
     '.xls': [libs.xlsx_xlrd],

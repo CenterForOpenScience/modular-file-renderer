@@ -1,11 +1,12 @@
 import os
+from http import HTTPStatus
 from collections import OrderedDict
 
 import pytest
 
 from mfr.extensions.tabular.libs import stdlib_tools
-from mfr.extensions.tabular.exceptions import EmptyTableError
-
+from mfr.extensions.tabular.exceptions import(EmptyTableError,
+                                              TabularRendererError)
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 
@@ -42,10 +43,16 @@ class TestTabularStdlibTools:
         with open(os.path.join(BASE, 'files', 'invalid.tsv')) as fp:
             with pytest.raises(EmptyTableError) as e:
                 stdlib_tools.tsv_stdlib(fp)
-                assert e.value.code == 400
+                assert e.value.code == HTTPStatus.BAD_REQUEST
 
     def test_csv_stdlib_exception_raises(self):
         with open(os.path.join(BASE, 'files', 'invalid.csv')) as fp:
             with pytest.raises(EmptyTableError) as e:
                 stdlib_tools.tsv_stdlib(fp)
-                assert e.value.code == 400
+                assert e.value.code == HTTPStatus.BAD_REQUEST
+
+    def test_csv_stdlib_other_exception_raises(self):
+        with open(os.path.join(BASE, 'files', 'invalid_null.csv')) as fp:
+            with pytest.raises(TabularRendererError) as e:
+                stdlib_tools.tsv_stdlib(fp)
+                assert e.value.code == HTTPStatus.BAD_REQUEST

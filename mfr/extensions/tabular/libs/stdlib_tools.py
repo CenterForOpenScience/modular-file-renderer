@@ -1,8 +1,10 @@
 import re
 import csv
+from http import HTTPStatus
 
 from mfr.extensions.tabular import utilities
-from mfr.extensions.tabular.exceptions import EmptyTableError, TabularRendererError
+from mfr.extensions.tabular.exceptions import (EmptyTableError,
+                                               TabularRendererError)
 
 
 def csv_stdlib(fp):
@@ -42,35 +44,48 @@ def parse_stdlib(reader):
     """
     columns = []
     # update the reader field names to avoid duplicate column names when performing row extraction
-    for idx, fieldname in enumerate(reader.fieldnames or []):
-        column_count = sum(1 for column in columns if fieldname == column['name'])
-        if column_count:
-            unique_fieldname = '{}-{}'.format(fieldname, column_count + 1)
-            reader.fieldnames[idx] = unique_fieldname
-        else:
-            unique_fieldname = fieldname
-        columns.append({
-            'id': unique_fieldname,
-            'field': unique_fieldname,
-            'name': fieldname,
-            'sortable': True,
-        })
-
     try:
+        for idx, fieldname in enumerate(reader.fieldnames or []):
+            column_count = sum(1 for column in columns if fieldname == column['name'])
+            if column_count:
+                unique_fieldname = '{}-{}'.format(fieldname, column_count + 1)
+                reader.fieldnames[idx] = unique_fieldname
+            else:
+                unique_fieldname = fieldname
+            columns.append({
+                'id': unique_fieldname,
+                'field': unique_fieldname,
+                'name': fieldname,
+                'sortable': True,
+            })
+
         rows = [row for row in reader]
     except csv.Error as e:
         if any("field larger than field limit" in errorMsg for errorMsg in e.args):
             raise TabularRendererError(
                 'This file contains a field too large to render. '
                 'Please download and view it locally.',
-                code=400,
+                code=HTTPStatus.BAD_REQUEST,
                 extension='csv',
             ) from e
         else:
-            raise TabularRendererError('csv.Error: {}'.format(e), extension='csv') from e
+            raise TabularRendererError('Cannot render file as csv/tsv. '
+                                       'The file may be empty or corrupt',
+                                       code=HTTPStatus.BAD_REQUEST,
+                                       extension='csv') from e
+
+    # Outside other except because the `if any` line causes more errors to be raised
+    # on certain exceptions
+    except Exception as e:
+        raise TabularRendererError('Cannot render file as csv/tsv. '
+                           'The file may be empty or corrupt',
+                           code=HTTPStatus.BAD_REQUEST,
+                           extension='csv') from e
 
     if not columns and not rows:
-        raise EmptyTableError('Table empty or corrupt.', extension='csv')
+        raise EmptyTableError('Cannot render file as csv/tsv. '
+                              'The file may be empty or corrupt',
+                              code=HTTPStatus.BAD_REQUEST, extension='csv')
 
     return {'Sheet 1': (columns, rows)}
 

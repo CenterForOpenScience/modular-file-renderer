@@ -24,6 +24,8 @@ Some file types may not be in the correct list. Please search for the file type 
 * .3ds
 * .ctm
 * .obj
+* .step
+* .stp
 * .stl
 
 ## Video

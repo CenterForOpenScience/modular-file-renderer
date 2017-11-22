@@ -2,6 +2,21 @@
 ChangeLog
 *********
 
+0.22.0 (2017-10-10)
+===================
+- Feature: Added support for rendering ~50 new plain-text file types via codepygments, including
+FASTA files, ImageJ macros, and Turtle files. (thanks, @AddisonSchiller!)
+- Feature: Add a unique request ID to MFR's response headers to help with tracking down errors.
+- Feature: Add a new task to clean the export and render caches. (thanks, @icereval!)
+- Fix: Error more gracefully when missing required query parameters.
+- Fix: Make scrollbars visible on IE11 when content overflows the iframe.
+- Fix: Fix ALLOWED_PROVIDER_DOMAINS example in MFR docs. (thanks, @jonathon-love for reporting!)
+- Code: Teach MFR to listen for a SIGTERM signal and exit immediately upon receiving it. This
+bypasses the 10 second wait for shutdown when running it in Docker.
+- Code: Add code-coverage checking via coveralls.io. (thanks, @abought!)
+- Code: Add Python 3.6 to travis testing matrix. (thanks, @abought!)
+- Code: Add a Pull Request template for GitHub. (thanks, @cslzchen!)
+
 0.21.2 (2017-09-13)
 ===================
 - Fix: Update jQuery onload invocation to be compatible with jQuery 3.  (thanks, @sloria!)

@@ -68,7 +68,7 @@ class TestCodeJASPRenderer:
 
     def test_render_JASP(self, renderer):
         body = renderer.render()
-        assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
+        assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
 
     def test_render_JASP_not_a_zip_file(self, metadata, not_a_zip_file_path, url, assets_url, export_url):
         try:

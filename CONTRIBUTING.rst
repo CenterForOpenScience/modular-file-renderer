@@ -8,6 +8,7 @@ In general
 - `PEP 8`_, when sensible.
 - Test ruthlessly. Write docs for new features.
 - Even more important than Test-Driven Development--*Human-Driven Development*.
+- If you add an extension to setup.py, add it to supportedextensions.md.
 - Please update AUTHORS.rst when you contribute.
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
@@ -107,14 +108,12 @@ Manual Local Testing
 
 To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. 
 
-First, change the default provider to HTTP (in `/mfr/server/settings.py`) and update the provider domain whitelist:
+First, change the default provider to HTTP (in `/mfr/server/settings.py`), then update the provider domain in the ``ALLOWED_PROVIDER_DOMAINS`` whitelist (a space-separated string):
 
 .. code-block:: python
 
     PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
-    ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', ['http://localhost:8000/'])
-
-	
+    ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', 'http://localhost:8000/')
 
 Because the MFR is passed a url to render, you also need to be running an http server.
 
@@ -130,13 +129,11 @@ Or for python 3
 
     python3 -m http.server 8000
 
-With both the SimpleHTTPServer the MFR server running, go to 
+With both the SimpleHTTPServer and the MFR server running, go to
 
 .. code-block:: bash
 
 	http://localhost:7778/render?url=http://localhost:8000/[filename].[ext]
-
-
 
 
 Writing A File Format Package

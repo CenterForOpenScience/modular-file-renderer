@@ -7,7 +7,7 @@ from tempfile import NamedTemporaryFile
 from mfr.core import exceptions
 from mfr.core.extension import BaseExporter
 from mfr.extensions.jsc3d.settings import (FREECAD_BIN,
-                            FREECAD_CONVERT_SCRIPT)
+                                           FREECAD_CONVERT_SCRIPT)
 
 
 class JSC3DExporter(BaseExporter):

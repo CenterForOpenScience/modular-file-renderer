@@ -48,7 +48,7 @@ def make_exporter(name, source_file_path, output_file_path, format):
             namespace='mfr.exporters',
             name=normalized_name,
             invoke_on_load=True,
-            invoke_args=(source_file_path, output_file_path, format),
+            invoke_args=(normalized_name, source_file_path, output_file_path, format),
         ).driver
     except RuntimeError:
         raise exceptions.MakeExporterError(
@@ -98,6 +98,9 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
         )
 
 def sizeof_fmt(num, suffix='B'):
+    if abs(num) < 1000:
+        return '%3.0f%s' % (num, suffix)
+
     for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
         if abs(num) < 1000.0:
             return '%3.1f%s%s' % (num, unit, suffix)

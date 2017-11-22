@@ -33,7 +33,7 @@ def dta_pandas(fp):
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    dataframe = pandas.read_stata(fp)
+    dataframe = pandas.read_stata(fp.name).replace(numpy.nan, '')
     return data_from_dataframe(dataframe)
 
 

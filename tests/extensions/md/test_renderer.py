@@ -1,4 +1,5 @@
 import os
+
 import pytest
 
 from mfr.core.provider import ProviderMetadata
@@ -48,38 +49,11 @@ class TestMdRenderer:
         assert renderer.cache_result is True
 
     def test_render_md(self, test_md_file_path, assets_url, export_url):
-        metadata = ProviderMetadata('test', '.md', 'text/plain', '1234', 'http://wb.osf.io/file/test.md?token=1234')
+        metadata = ProviderMetadata('test', '.md', 'text/plain',
+                                    '1234', 'http://wb.osf.io/file/test.md?token=1234')
         renderer = MdRenderer(metadata, test_md_file_path, url, assets_url, export_url)
         body = renderer.render()
-        inbody = """
-<h1>Heading</h1>
-<h2>Sub-heading</h2>
-<h3>Another deeper heading</h3>
-<p>Paragraphs are separated
-by a blank line.</p>
-<p>Leave 2 spaces at the end of a line to do a<br />
-line break</p>
-<p>Text attributes <em>italic</em>, <strong>bold</strong>, 
-<code>monospace</code>.</p>
-<p>A <a href="http://example.com">link</a>.
-[28]</p>
-<p>Shopping list:</p>
-<ul>
-<li>apples</li>
-<li>oranges</li>
-<li>pears</li>
-</ul>
-<p>Numbered list:</p>
-<ol>
-<li>apples</li>
-<li>oranges</li>
-<li>pears</li>
-</ol>
-<p>The rain---not the reign---in
-Spain.</p>
-<p>&lt;script&gt;
-alert("Hello world");
-&lt;/script&gt;</p>
-"""
+        # Harder to test now that the markdown is parsed javascript side
+        inbody = 'The rain---not the reign---in\nSpain.'
+        '\n\n&lt;script&gt;\nalert("Hello world");\n&lt;/script&gt;'
         assert inbody in body
-

@@ -1,25 +1,39 @@
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
-<link type="text/css" rel="stylesheet" href="/static/css/default.css">
-<link type="text/css" rel="stylesheet" href="/static/css/highlightjs-default.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,300' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<link type="text/css" rel="stylesheet" href="${base}/css/highlightjs-default.css">
+
+<link rel="stylesheet" href="${base}/css/default.css">
 
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']], processEscapes: true},
-        // Don't automatically typeset the whole page. Must explicitly use MathJax.Hub.Typeset
         messageStyle: "none",
         skipStartupTypeset: true
     });
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+<script type="text/javascript" 
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+></script>
 
-<div style="word-wrap: break-word;" class="mfrViewer" id="jaxified">
-${body}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+<div class="mfrViewer" id="jaxified">
+    ${body | h}
 </div>
 
 <script src="/static/js/mfr.js"></script>
 <script src="/static/js/mfr.child.js"></script>
-<script src="/static/js/mdbundle.js"></script>
+<script src="${base}/js/markdown-it.min.js"></script>
+<script src="${base}/js/markdown-it-mathjax.js"></script>
+<script src="${base}/js/markdown-it-sanitizer.min.js"></script>
+<script src="${base}/js/markdown-it-highlightjs.js"></script>
+<script src="${base}/js/markdown-it-ins-del.js"></script>
+<script src="${base}/js/markdown-it-toc.js"></script>
+<script src="${base}/js/md.js"></script>
 
 <script> 
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,"jaxified"]);

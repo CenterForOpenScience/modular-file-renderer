@@ -22,6 +22,7 @@ RUN usermod -d /home www-data \
         libxml2-dev \
         libxslt1-dev \
         zlib1g-dev \
+        freecad \
         # unoconv dependencies
         unoconv \
         # pspp dependencies

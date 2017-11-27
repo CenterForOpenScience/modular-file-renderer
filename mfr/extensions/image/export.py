@@ -44,7 +44,8 @@ class ImageExporter(extension.BaseExporter):
                     image = image.resize((round(image.size[0] * ratio),
                                 round(image.size[1] * ratio)), Image.ANTIALIAS)
             # handle transparency
-            if image.mode in ('RGBA', 'LA') and type in ['jpeg', 'jpg']:
+            # from https://github.com/python-pillow/Pillow/issues/2609
+            if image.mode in ('RGBA', 'RGBa', 'LA') and type in ['jpeg', 'jpg']:
                 # JPEG has no transparency, so anything that was transparent gets changed to
                 # EXPORT_BACKGROUND_COLOR. Default is white.
                 background = Image.new(image.mode[:-1], image.size, EXPORT_BACKGROUND_COLOR)
@@ -54,7 +55,7 @@ class ImageExporter(extension.BaseExporter):
             image.save(self.output_file_path, type)
             image.close()
 
-        except (UnicodeDecodeError, IOError) as err:
+        except (UnicodeDecodeError, IOError, FileNotFoundError, OSError) as err:
             name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '

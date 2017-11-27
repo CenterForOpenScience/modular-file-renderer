@@ -278,7 +278,7 @@ setup(
             '.fan = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.fancypack = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.fas = mfr.extensions.codepygments:CodePygmentsRenderer',
-            '.fasta= mfr.extensions.codepygments:CodePygmentsRenderer',
+            '.fasta = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.feature = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.fhtml = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.flx = mfr.extensions.codepygments:CodePygmentsRenderer',
@@ -794,6 +794,9 @@ setup(
             '.ogv = mfr.extensions.video:VideoRenderer',
             #'.wmv = mfr.extensions.video:VideoRenderer',
             '.webm = mfr.extensions.video:VideoRenderer',
+
+            # jamovi
+            '.omv = mfr.extensions.jamovi:JamoviRenderer',
 
             # JASP
             '.jasp = mfr.extensions.jasp:JASPRenderer',

@@ -63,7 +63,7 @@ class TabularRenderer(extension.BaseRenderer):
         :param ext: file extension
         :return: tuple of column headers and row data
         """
-        function_preference = settings.LIBS.get(ext)
+        function_preference = settings.LIBS.get(ext.lower())
 
         for function in function_preference:
             try:

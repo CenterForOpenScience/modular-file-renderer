@@ -120,15 +120,15 @@ async def _send_to_keen(payload, collection, project_id, write_key, action, doma
         return
 
 
-def _scrub_headers_for_keen(payload):
+def _scrub_headers_for_keen(payload, MAX_ITERATIONS=1000):
     """ Scrub unwanted keystring characters like \\.\\ from a keen payload """
 
     scrubbed_payload = {}
-    for key in payload:
+    for key in sorted(payload):
         scrubbed_key = key
 
         if '.' in key:
-            scrubbed_key = key.replace('.', '')
+            scrubbed_key = key.replace('.', '-')
 
         # if our new scrubbed key is already in the payload, we need to increment it
         if scrubbed_key in scrubbed_payload:
@@ -136,14 +136,16 @@ def _scrub_headers_for_keen(payload):
             incremented_key = scrubbed_key + ' ({})'.format(i)
             while incremented_key in scrubbed_payload:
                 i += 1
+                if i > MAX_ITERATIONS:
+                    incremented_key = None
+                    break
                 incremented_key = scrubbed_key + ' ({})'.format(i)
 
             scrubbed_key = incremented_key
-
-        scrubbed_payload[scrubbed_key] = payload[key]
+        if scrubbed_key is not None:
+            scrubbed_payload[scrubbed_key] = payload[key]
 
     return scrubbed_payload
-
 
 def _serialize_request(request):
     """Serialize the original request."""

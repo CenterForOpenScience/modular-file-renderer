@@ -22,6 +22,8 @@ RUN usermod -d /home www-data \
         libxml2-dev \
         libxslt1-dev \
         zlib1g-dev \
+        # convert .step to jsc3d-compatible format
+        freecad \
         # unoconv dependencies
         unoconv \
         # pspp dependencies

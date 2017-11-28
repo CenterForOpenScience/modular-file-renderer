@@ -13,6 +13,10 @@ def munge_url_for_localdev(url):
     url_obj = urlparse(url)
     if (settings.LOCAL_DEVELOPMENT and url_obj.hostname == settings.DOCKER_LOCAL_HOST):
             query_dict = parse_qs(url_obj.query, keep_blank_values=True)
+
+            # the 'mode' param will break image downloads from the osf
+            query_dict.pop('mode', None)
+
             url_obj = url_obj._replace(
                 query=urlencode(query_dict, doseq=True),
                 netloc='{}:{}'.format(settings.LOCAL_HOST, url_obj.port)

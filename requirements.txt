@@ -21,7 +21,7 @@ Pygments==2.2.0
 pydocx==0.7.0
 
 # Image
-Pillow==2.8.2
+Pillow==4.3.0
 psd-tools==1.4
 
 # IPython

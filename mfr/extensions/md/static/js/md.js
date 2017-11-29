@@ -5,7 +5,7 @@ var bootstrapTable = function(md) {
 };
 
 var markdown = new MarkdownIt('commonmark', {
-    html: false,
+    html: true,
     linkify: true
 })
     .use(window.markdownitToc)
@@ -18,4 +18,5 @@ var markdown = new MarkdownIt('commonmark', {
     .use(bootstrapTable)
     .disable('strikethrough');
 
-document.getElementById("jaxified").innerHTML = markdown.render(document.getElementById("jaxified").innerHTML)
+
+document.getElementById("jaxified").innerHTML = markdown.render(document.getElementById("jaxified").innerHTML);

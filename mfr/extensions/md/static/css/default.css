@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+
+/*Had quite a few css woes on this one
+Chrome has some scroll bar issues. This is mostly due to
+Iframe problems. There may be a better combination of CSS to get rid of this, 
+for now just going the best combination found.
+
+*/
+.mfrViewer {
+    font-family: 'Open Sans';
+    padding:1em;
+    background:#fefefe;
+    height: auto;
+    word-wrap: break-word;
+}
+

@@ -1,18 +1,10 @@
 import os
 
-import markdown
-from markdown.extensions import Extension
-
+import bleach
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
-
-
-class EscapeHtml(Extension):
-    def extendMarkdown(self, md, md_globals):
-        del md.preprocessors['html_block']
-        del md.inlinePatterns['html']
-
+from mfr.extensions.md.settings import BLEACH_WHITELIST
 
 class MdRenderer(extension.BaseRenderer):
 
@@ -23,12 +15,13 @@ class MdRenderer(extension.BaseRenderer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('markdown_version', markdown.version)
 
     def render(self):
         """Render a markdown file to html."""
         with open(self.file_path, 'r') as fp:
-            body = markdown.markdown(fp.read(), extensions=[EscapeHtml()])
+            # Bleach will bug out on unclosed tags. OSF wiki does not have this issue.
+            # This is due to versioning problems: https://github.com/mozilla/bleach/issues/271
+            body = bleach.clean(fp.read(), **BLEACH_WHITELIST)
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 
     @property

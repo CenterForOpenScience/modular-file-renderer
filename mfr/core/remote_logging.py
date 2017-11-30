@@ -120,6 +120,33 @@ async def _send_to_keen(payload, collection, project_id, write_key, action, doma
         return
 
 
+def _scrub_headers_for_keen(payload, MAX_ITERATIONS=50):
+    """ Scrub unwanted keystring characters like \\.\\ from a keen payload """
+
+    scrubbed_payload = {}
+    for key in sorted(payload):
+        scrubbed_key = key
+
+        if '.' in key:
+            scrubbed_key = key.replace('.', '-')
+
+        # if our new scrubbed key is already in the payload, we need to increment it
+        if scrubbed_key in scrubbed_payload:
+            i = 1
+            incremented_key = scrubbed_key + '-{}'.format(i)
+            while incremented_key in scrubbed_payload:
+                i += 1
+                if i > MAX_ITERATIONS:
+                    incremented_key = None
+                    break
+                incremented_key = scrubbed_key + '-{}'.format(i)
+
+            scrubbed_key = incremented_key
+        if scrubbed_key is not None:
+            scrubbed_payload[scrubbed_key] = payload[key]
+
+    return scrubbed_payload
+
 def _serialize_request(request):
     """Serialize the original request."""
     if request is None:
@@ -130,6 +157,7 @@ def _serialize_request(request):
         if k not in ('Authorization', 'Cookie', 'User-Agent',):
             headers_dict[k] = v
 
+    headers_dict = _scrub_headers_for_keen(headers_dict)
     serialized = {
         'tech': {
             'ip': request.remote_ip,

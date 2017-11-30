@@ -213,9 +213,8 @@
                             stop();
                             start(e);
                         })
-
+                        // end of custom MFR code.
                         .on(mousemove, zoom.move);
-
 
                 }
 

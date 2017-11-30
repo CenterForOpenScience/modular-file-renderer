@@ -1,5 +1,5 @@
 # MFR docker-compose README
-Note: check [here](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for more info on working with docker/docker-compose/docker-sync. 
+Note: These instructions are for running with the Open Science Framework and its docker-compose setup check [here](https://github.com/CenterForOpenScience/osf.io/blob/develop/README-docker-compose.md) for more info on working with docker/docker-compose/docker-sync. 
 
 ## Adding new extensions
 When adding a new extension you will need to add it properly in `setup.py` and then run a `invoke install`.

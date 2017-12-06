@@ -147,9 +147,8 @@ class MetadataError(ProviderError):
 
 
 class QueryParameterError(ProviderError):
-    """The MFR related errors raised from a :class:`mfr.core.provider` and relating to query parameters
-    should inherit from MetadataError
-    This error is thrown when a query parameter is used missused
+    """The MFR related errors raised from a :class:`mfr.core.provider`and relating to query
+    parameters. This error is thrown when the query has an invalid value.
     """
 
     __TYPE = 'query_parameter'

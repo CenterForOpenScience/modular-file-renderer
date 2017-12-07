@@ -76,14 +76,29 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
     :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
     normalized_name = (name and name.lower()) or 'none'
+    if metadata.is_public:
+        try:
+            # Use the public renderer if exist
+            return driver.DriverManager(
+                namespace='mfr.public_renderers',
+                name=normalized_name,
+                invoke_on_load=True,
+                invoke_args=(metadata, file_path, url, assets_url, export_url),
+            ).driver
+        except:
+            # If public render does not exist, use default renderer by MFR
+            # If public render exists but exceptions occurs, delay the exception handling
+            pass
+
     try:
+        # Use the default MFR handler
         return driver.DriverManager(
             namespace='mfr.renderers',
             name=normalized_name,
             invoke_on_load=True,
             invoke_args=(metadata, file_path, url, assets_url, export_url),
         ).driver
-    except RuntimeError:
+    except:
         raise exceptions.MakeRendererError(
             namespace='mfr.renderers',
             name=normalized_name,
@@ -96,6 +111,7 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
                 'export_url': export_url,
             }
         )
+
 
 def sizeof_fmt(num, suffix='B'):
     if abs(num) < 1000:

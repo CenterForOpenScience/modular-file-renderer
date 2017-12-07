@@ -145,6 +145,24 @@ class MetadataError(ProviderError):
             'response': self.response
         }])
 
+
+class QueryParameterError(ProviderError):
+    """The MFR related errors raised from a :class:`mfr.core.provider`and relating to query
+    parameters. This error is thrown when the query has an invalid value.
+    """
+
+    __TYPE = 'query_parameter'
+
+    def __init__(self, message, *args, url: str='', code: int=400, **kwargs):
+        super().__init__(message, code=code, *args, **kwargs)
+        self.url = url
+        self.return_code = code
+        self.attr_stack.append([self.__TYPE, {
+            'url': self.url,
+            'returncode': self.return_code,
+        }])
+
+
 class TooBigToRenderError(ProviderError):
     """If the user tries to render a file larger than a server specified maximum, throw a
     TooBigToRenderError.

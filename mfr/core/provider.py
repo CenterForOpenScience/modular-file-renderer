@@ -1,11 +1,12 @@
 import abc
+
+from aiohttp import HttpBadRequest
+import furl
 import markupsafe
 
-import furl
-
-from mfr.core import exceptions
-from mfr.server import settings
+from mfr.core import exceptions as core_exceptions
 from mfr.core.metrics import MetricsRecord
+from mfr.server import settings as server_settings
 
 
 class BaseProvider(metaclass=abc.ABCMeta):
@@ -17,12 +18,13 @@ class BaseProvider(metaclass=abc.ABCMeta):
     def __init__(self, request, url):
         self.request = request
         url_netloc = furl.furl(url).netloc
-        if url_netloc not in settings.ALLOWED_PROVIDER_NETLOCS:
-            raise exceptions.ProviderError(
+        if url_netloc not in server_settings.ALLOWED_PROVIDER_NETLOCS:
+            raise core_exceptions.ProviderError(
                 message="{} is not a permitted provider domain.".format(
                     markupsafe.escape(url_netloc)
                 ),
-                code=400
+                # TODO: using HTTPStatus.BAD_REQUEST fails tests, not sure why and I will take a another look later
+                code=HttpBadRequest.code
             )
         self.url = url
         self.provider_metrics = MetricsRecord('provider')
@@ -48,12 +50,13 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
 class ProviderMetadata:
 
-    def __init__(self, name, ext, content_type, unique_key, download_url):
+    def __init__(self, name, ext, content_type, unique_key, download_url, is_public=False):
         self.name = name
         self.ext = ext
         self.content_type = content_type
         self.unique_key = unique_key
         self.download_url = download_url
+        self.is_public = is_public
 
     def serialize(self):
         return {
@@ -62,4 +65,5 @@ class ProviderMetadata:
             'content_type': self.content_type,
             'unique_key': str(self.unique_key),
             'download_url': str(self.download_url),
+            'is_public': self.is_public,
         }

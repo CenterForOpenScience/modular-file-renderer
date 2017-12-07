@@ -7,7 +7,7 @@ from tornado.httpclient import HTTPError
 from tests import utils
 
 
-class TestRenderHandler(utils.HandlerTestCase):
+class TestQueryParamsHandler(utils.HandlerTestCase):
 
     @testing.gen_test
     def test_format_url(self):

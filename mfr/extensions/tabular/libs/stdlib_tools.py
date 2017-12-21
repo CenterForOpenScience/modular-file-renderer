@@ -1,4 +1,3 @@
-import re
 import csv
 from http import HTTPStatus
 
@@ -8,36 +7,30 @@ from mfr.extensions.tabular.exceptions import (EmptyTableError,
 
 
 def csv_stdlib(fp):
-    data = fp.seek(2048)
-    fp.seek(0)
-    # set the dialect instead of sniffing for it.
-    # sniffing can cause things like spaces or characters to be the delimiter
-    dialect = csv.excel
     try:
-        _set_dialect_quote_attrs(dialect, data)
+        # CSVs are always values seperated by commas
+        # sniff for quoting, and spaces after commas
+        dialect = csv.Sniffer().sniff(fp.read(), ',')
     except:
-        # if this errors it is not an exception
-        pass
+        dialect = csv.excel
+    fp.seek(0)
 
     reader = csv.DictReader(fp, dialect=dialect)
-    return parse_stdlib(reader)
+    return parse_stdlib(reader, 'csv')
 
 def tsv_stdlib(fp):
-    data = fp.seek(2048)
-    fp.seek(0)
-    # set the dialect instead of sniffing for it.
-    # sniffing can cause things like spaces or characters to be the delimiter
-    dialect = csv.excel_tab
     try:
-        _set_dialect_quote_attrs(dialect, data)
+        # TSVs are always values seperated by TABs
+        # sniff for quoting, and spaces after TABs
+        dialect = csv.Sniffer().sniff(fp.read(), '\t')
     except:
-        # if this errors it is not an exception
-        pass
+        dialect = csv.excel_tab
+    fp.seek(0)
 
     reader = csv.DictReader(fp, dialect=dialect)
-    return parse_stdlib(reader)
+    return parse_stdlib(reader, 'tsv')
 
-def parse_stdlib(reader):
+def parse_stdlib(reader, ext):
     """Read and convert a csv like file to JSON format using the python standard library
     :param fp: File pointer object
     :return: tuple of table headers and data
@@ -66,26 +59,29 @@ def parse_stdlib(reader):
                 'This file contains a field too large to render. '
                 'Please download and view it locally.',
                 code=HTTPStatus.BAD_REQUEST,
-                extension='csv',
+                extension=ext,
             ) from e
         else:
-            raise TabularRendererError('Cannot render file as csv/tsv. '
-                                       'The file may be empty or corrupt',
-                                       code=HTTPStatus.BAD_REQUEST,
-                                       extension='csv') from e
+            raise TabularRendererError(
+                'Cannot render file as {}. The file may be empty or corrupt'.format(ext),
+                code=HTTPStatus.BAD_REQUEST,
+                extension=ext
+            ) from e
 
     # Outside other except because the `if any` line causes more errors to be raised
     # on certain exceptions
     except Exception as e:
-        raise TabularRendererError('Cannot render file as csv/tsv. '
-                           'The file may be empty or corrupt',
-                           code=HTTPStatus.BAD_REQUEST,
-                           extension='csv') from e
+        raise TabularRendererError(
+            'Cannot render file as {}. The file may be empty or corrupt'.format(ext),
+            code=HTTPStatus.BAD_REQUEST,
+            extension=ext
+        ) from e
 
     if not columns and not rows:
-        raise EmptyTableError('Cannot render file as csv/tsv. '
-                              'The file may be empty or corrupt',
-                              code=HTTPStatus.BAD_REQUEST, extension='csv')
+        raise EmptyTableError(
+            'Cannot render file as {}. The file may be empty or corrupt'.format(ext),
+            code=HTTPStatus.BAD_REQUEST,
+            extension=ext)
 
     return {'Sheet 1': (columns, rows)}
 
@@ -101,26 +97,3 @@ def sav_stdlib(fp):
     with open(csv_file.name, 'r') as file:
         csv_file.close()
         return csv_stdlib(file)
-
-
-def _set_dialect_quote_attrs(dialect, data):
-    """Set quote-related dialect attributes based on up to 2kb of csv data.
-
-    The regular expressions search for things that look like the beginning of
-    a list, wrapped in a quotation mark that is not dialect.quotechar, with
-    list items wrapped in dialect.quotechar and seperated by commas.
-
-    Example matches include:
-        "['1', '2', '3'         for quotechar == '
-        '{"a", "b", "c"         for quotechar == "
-    """
-    if dialect.quotechar == '"':
-        if re.search('\'[[({]".+",', data):
-            dialect.quotechar = "'"
-        if re.search("'''[[({]\".+\",", data):
-            dialect.doublequote = True
-    elif dialect.quotechar == "'":
-        if re.search("\"[[({]'.+',", data):
-            dialect.quotechar = '"'
-        if re.search('"""[[({]\'.+\',', data):
-            dialect.doublequote = True

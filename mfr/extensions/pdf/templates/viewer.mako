@@ -37,11 +37,13 @@ http://sourceforge.net/adobe/cmap/wiki/License/
 
     <script src="debugger.js"></script>
     <script src="viewer.js"></script>
-    <!-- Set domain to domain suffix for iframe same-origin (https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy) -->
-    <script>window.document.domain = (location.host.match(/([^\.:]+\.?[^\.:]+)(?::\d+)?$/) || [])[1];</script>
   </head>
 
   <body tabindex="1" class="loadingInProgress">
+    <script type="application/json" class="js-hypothesis-config">
+        { "subFrameIdentifier": "${unique_key}" }
+    </script>
+    <script src="https://hypothes.is/embed.js"></script>
     <div id="outerContainer">
 
       <div id="sidebarContainer">

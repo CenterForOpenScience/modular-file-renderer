@@ -13,7 +13,7 @@ class PdfRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        return self.TEMPLATE.render(base=self.assets_url, url=self.metadata.download_url)
+        return self.TEMPLATE.render(base=self.assets_url, url=self.metadata.download_url, unique_key=self.metadata.unique_key)
 
     @property
     def file_required(self):

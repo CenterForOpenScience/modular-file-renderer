@@ -63,7 +63,7 @@ class TabularRenderer(extension.BaseRenderer):
         :param ext: file extension
         :return: tuple of column headers and row data
         """
-        function_preference = settings.LIBS.get(ext)
+        function_preference = settings.LIBS.get(ext.lower())
 
         for function in function_preference:
             try:
@@ -74,7 +74,7 @@ class TabularRenderer(extension.BaseRenderer):
                 self._renderer_tabular_metrics['importer'] = function.__name__
                 try:
                     return imported(fp)
-                except KeyError:
+                except (KeyError, ValueError):
                     raise exceptions.UnexpectedFormattingError(
                         'Unexpected formatting error.',
                         extension=self.metadata.ext,

@@ -30,3 +30,4 @@ Contributors
 - Rafael de Lucena Valle `@rafaeldelucena <https://github.com/rafaeldelucena>`_
 - Matthew Keitelman `@zamattiac <https://github.com/zamattiac>`_
 - John Tordoff `@Johnetordoff <https://github.com/Johnetordoff>`_
+- Addison Schiller `@AddisonSchiller <https://github.com/AddisonSchiller>`_

@@ -2,6 +2,31 @@
 ChangeLog
 *********
 
+0.23.0 (2018-01-19)
+===================
+- Feature: Add a renderer for zip files!  Viewing a zip file in MFR will list the names, modified
+dates, and sizes for all files in the zipball.  (thanks, @johnetordoff!)
+- Feature: Layered image files from Adobe Photoshop (*.psd) are now rendered by the image renderer.
+(thanks, @AddisonSchiller!)
+- Feature: Stata dataset files (.dta) are now supported by the tabular file renderer, similar to
+csv, tsv, and excel spreadsheets.  (thanks, @AddisonSchiller!)
+- Feature: Add a renderer for .omv files created in the Jamovi open statistical spreadsheet program.
+(thanks, @jonathon-love!)
+- Feature: Add two new endpoints (/renderers and /exporters) to provide a programmatic view of MFR's
+file type support.  Both endpoints return a JSON object mapping extensions to the renderer or
+exporter that handles them.  (thanks, @johnetordoff!)
+- Feature: Add a static list of supported file types (`supportedextensions.md`) to the project
+repository.  Includes a test to warn developers when they've failed to document a newly-added file
+type.  (thanks, @AddisonSchiller!)
+- Feature: Add basic sandboxing to iframes.  (thanks, @AddisonSchiller!)
+- Fix: Update the MathJax CDN url in the IPython notebook renderer.  (thanks, @AddisonSchiller!)
+- Fix: Support uppercased extensions (e.g. .CSV) for tabular files.  (thanks, @AddisonSchiller!)
+- Fix: Links in a pdf inside an iframe now open in a new tab instead of the iframe.  (thanks,
+@AddisonSchiller!)
+- Code: Catch OSF metadata request failures earlier and report them accurately.  (thanks,
+@TomBaxter!)
+- Code: Tidy up and reduce layers in the Dockerfile  (thanks, @binoculars!)
+
 0.22.0 (2017-10-10)
 ===================
 - Feature: Added support for rendering ~50 new plain-text file types via codepygments, including

@@ -1,6 +1,7 @@
 import base64
 from html.parser import HTMLParser
 from io import StringIO
+from urllib import parse
 
 
 class HTMLProcessor(HTMLParser):
@@ -46,7 +47,8 @@ class HTMLProcessor(HTMLParser):
         self._html.write('>')
 
     def _insert_data_uri(self, src):
-        with self._zip_file.open(src) as src_file:
+        url = parse.unquote(src)
+        with self._zip_file.open(url) as src_file:
             src_data = src_file.read()
             src_b64 = base64.b64encode(src_data)
 

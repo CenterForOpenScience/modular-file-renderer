@@ -19,6 +19,10 @@ def ok_path():
     return os.path.join(BASE_PATH, 'ok.omv')
 
 @pytest.fixture
+def ok_with_image_path():
+    return os.path.join(BASE_PATH, 'ok-with-image.omv')
+
+@pytest.fixture
 def not_a_zip_file_path():
     return os.path.join(BASE_PATH, 'not-a-zip-file.omv')
 
@@ -68,6 +72,13 @@ class TestCodeJamoviRenderer:
     def test_render_jamovi(self, renderer):
         body = renderer.render()
         assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
+
+    def test_render_jamovi_with_image(self, metadata, ok_with_image_path, url, assets_url,
+                                      export_url):
+        renderer = JamoviRenderer(metadata, ok_with_image_path, url, assets_url, export_url)
+        body = renderer.render()
+        assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
+        assert '<img src="data:image/png;base64,' in body
 
     def test_render_jamovi_not_a_zip_file(self, metadata, not_a_zip_file_path, url, assets_url,
                                           export_url):

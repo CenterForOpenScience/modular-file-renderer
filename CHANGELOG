@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+0.23.1 (2018-01-25)
+===================
+- Fix: Update the Jamovi renderer to handle images with spaces in their name.  (thanks,
+@jonathon-love!)
+
 0.23.0 (2018-01-19)
 ===================
 - Feature: Add a renderer for zip files!  Viewing a zip file in MFR will list the names, modified

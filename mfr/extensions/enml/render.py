@@ -1,17 +1,20 @@
 import os
 
 import markdown
-from markdown.extensions import Extension
+#from markdown.extensions import Extension
 
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
 
 
-class EscapeHtml(Extension):
-    def extendMarkdown(self, md, md_globals):
-        del md.preprocessors['html_block']
-        del md.inlinePatterns['html']
+# I think EscapeHtml is now extraneous
+# because enml is not markdown
+
+# class EscapeHtml(Extension):
+#     def extendMarkdown(self, md, md_globals):
+#         del md.preprocessors['html_block']
+#         del md.inlinePatterns['html']
 
 
 class EnmlRenderer(extension.BaseRenderer):

@@ -54,8 +54,12 @@ setup(
             '.bmp = mfr.extensions.image:ImageExporter',
             '.gif = mfr.extensions.image:ImageExporter',
             '.psd = mfr.extensions.image:ImageExporter',
-            '.tif = mfr.extensions.image:ImageExporter',
-            '.tiff = mfr.extensions.image:ImageExporter',
+            '.tif = mfr.extensions.pdf:PdfExporter',
+            '.tiff = mfr.extensions.pdf:PdfExporter',
+
+            # jsc3d
+            '.stp = mfr.extensions.jsc3d:JSC3DExporter',
+            '.step = mfr.extensions.jsc3d:JSC3DExporter',
 
             # unoconv
             # '.bib = mfr.extensions.unoconv:UnoconvExporter',
@@ -672,8 +676,8 @@ setup(
             '.ico = mfr.extensions.image:ImageRenderer',
             '.png = mfr.extensions.image:ImageRenderer',
             '.psd = mfr.extensions.image:ImageRenderer',
-            '.tif = mfr.extensions.image:ImageRenderer',
-            '.tiff = mfr.extensions.image:ImageRenderer',
+            '.tif = mfr.extensions.pdf:PdfRenderer',
+            '.tiff = mfr.extensions.pdf:PdfRenderer',
 
             # ipynb
             '.ipynb = mfr.extensions.ipynb:IpynbRenderer',
@@ -687,6 +691,9 @@ setup(
             '.ctm = mfr.extensions.jsc3d:JSC3DRenderer',
             '.obj = mfr.extensions.jsc3d:JSC3DRenderer',
             '.stl = mfr.extensions.jsc3d:JSC3DRenderer',
+            '.stp = mfr.extensions.jsc3d:JSC3DRenderer',
+            '.step = mfr.extensions.jsc3d:JSC3DRenderer',
+
 
             # pdb
             '.pdb = mfr.extensions.pdb:PdbRenderer',
@@ -706,6 +713,7 @@ setup(
             '.xls = mfr.extensions.tabular:TabularRenderer',
             '.xlsx = mfr.extensions.tabular:TabularRenderer',
             '.dta = mfr.extensions.tabular:TabularRenderer',
+            '.mat = mfr.extensions.tabular:TabularRenderer',
             '.sav = mfr.extensions.tabular:TabularRenderer',
             #'.ods = mfr.extensions.tabular:TabularRenderer',
 

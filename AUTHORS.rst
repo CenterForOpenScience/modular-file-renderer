@@ -10,12 +10,12 @@ Contributors
 - Austin Macdonald `@asmacdo <https://github.com/asmacdo>`_
 - Alex Schiller `@alexschiller <https://github.com/alexschiller>`_
 - Kurtis Jungersen `@kmjungersen <https://github.com/kmjungersen>`_
--  `@nvictus <https://github.com/nvictus>`_
+- Nezar Abdennur `@nvictus <https://github.com/nvictus>`_
 - Elijah Hamovitz `@Hamms <https://github.com/Hamms>`_
 - Tom Baxter `@TomBaxter <https://github.com/TomBaxter>`_
 - Joshua Carp `@jmcarp <https://github.com/jmcarp>`_
 - Eric Bower `@neurosnap <https://github.com/neurosnap>`_
--  `@linse <https://github.com/linse>`_
+- Stefanie Schirmer `@linse <https://github.com/linse>`_
 - Meli Lewis `@meli-lewis <https://github.com/meli-lewis>`_
 - Barrett Harber `@binoculars <https://github.com/binoculars>`_
 - Lyndsy Simon `@lyndsysimon <https://github.com/lyndsysimon>`_
@@ -31,3 +31,5 @@ Contributors
 - Matthew Keitelman `@zamattiac <https://github.com/zamattiac>`_
 - John Tordoff `@Johnetordoff <https://github.com/Johnetordoff>`_
 - Addison Schiller `@AddisonSchiller <https://github.com/AddisonSchiller>`_
+- Longze Chen `@cslzchen https://github.com/cslzchen`_
+- Jonathon Love `@jonathon-love https://github.com/jonathon-love`_

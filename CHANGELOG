@@ -2,6 +2,24 @@
 ChangeLog
 *********
 
+0.24.0 (2018-02-01)
+===================
+- Feature: MFR now renders tiff files containing multiple images!  The file will be exported to a
+multi-page PDF, with one image per page.  (thanks, @AddisonSchiller!)
+- Feature: Matlab data files (.mat) are now rendered using the tabular formatter.  (thanks,
+@AddisonSchiller!)
+- Feature: The 3D-object renderer now supports STEP (.step and .stp) files.  (thanks,
+@AddisonSchiller!)
+- Fix: Don't send invalid payloads to MFR's metrics-tracking service.  (thanks, @AddisonSchiller!)
+- Fix: Don't reload the entire page when clicking on a tab header in the tabular renderer.
+- Code: Upgrade Pillow dependency.  (thanks, @AddisonSchiller!)
+- Code: Upgrade MFR's pym.js version to latest.  (thanks, @johnetordoff!)
+- Code: Upgrade Codepygments dependency to get the newest code highlighters.  (thanks,
+@AddisonSchiller!)
+- Code: Support rendering videos, PDFs, PDBs, and 3D objects in a local development environment.
+(thanks, @TomBaxter!)
+- Docs: Add a guide for using MFR with the OSF via docker-compose.  (thanks, @AddisonSchiller!)
+
 0.23.1 (2018-01-25)
 ===================
 - Fix: Update the Jamovi renderer to handle images with spaces in their name.  (thanks,

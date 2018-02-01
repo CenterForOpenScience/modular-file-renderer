@@ -3,6 +3,7 @@ import os
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
+from mfr.extensions.utils import munge_url_for_localdev
 
 
 class VideoRenderer(extension.BaseRenderer):
@@ -13,7 +14,8 @@ class VideoRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        return self.TEMPLATE.render(base=self.assets_url, url=self.url)
+        download_url = munge_url_for_localdev(self.metadata.download_url)
+        return self.TEMPLATE.render(url=download_url.geturl())
 
     @property
     def file_required(self):

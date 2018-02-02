@@ -43,7 +43,20 @@ http://sourceforge.net/adobe/cmap/wiki/License/
     <script type="application/json" class="js-hypothesis-config">
         { "subFrameIdentifier": "${unique_key}" }
     </script>
+<!--
     <script src="https://hypothes.is/embed.js"></script>
+-->
+    <script>
+        function loadHypothesis() {
+            var scriptTag = document.createElement('script');
+            scriptTag.src = 'https://hypothes.is/embed.js';
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
+        }
+    </script>
+
+    <button style="padding:10px; margin:10px auto; display:block; font-weight:bold;" onclick="loadHypothesis()">Load Annotations</button>
+
     <div id="outerContainer">
 
       <div id="sidebarContainer">

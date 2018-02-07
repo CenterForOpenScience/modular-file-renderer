@@ -1,4 +1,5 @@
 import pytest
+import logging
 
 import furl
 
@@ -6,6 +7,8 @@ from mfr.core.provider import ProviderMetadata
 
 from mfr.extensions.image import ImageRenderer
 from mfr.extensions.image import settings
+
+logger = logging.getLogger(__name__)
 
 
 class TestImageRenderer:
@@ -22,7 +25,7 @@ class TestImageRenderer:
 
         body = renderer.render()
 
-        assert '<img style="max-width: 100%;" src="{}">'.format(url) in body
+        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(url) in body
 
     def test_render_image_export_type(self):
         settings.EXPORT_TYPE_MAP = {}
@@ -37,11 +40,11 @@ class TestImageRenderer:
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', export_url.url)
 
         exported_url = furl.furl(export_url.url)
-        exported_url.args['format'] =  settings.EXPORT_TYPE
+        exported_url.args['format'] = settings.EXPORT_TYPE
 
         body = renderer.render()
 
-        assert '<img style="max-width: 100%;" src="{}">'.format(exported_url) in body
+        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(exported_url) in body
 
     def test_render_image_export_size_and_type(self):
         settings.EXPORT_TYPE_MAP = {}
@@ -60,7 +63,7 @@ class TestImageRenderer:
 
         body = renderer.render()
 
-        assert '<img style="max-width: 100%;" src="{}">'.format(exported_url) in body
+        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(exported_url) in body
 
     def test_render_image_excluded_export_file_type(self):
         settings.EXPORT_EXCLUSIONS = ['.png']
@@ -74,7 +77,7 @@ class TestImageRenderer:
 
         body = renderer.render()
 
-        assert '<img style="max-width: 100%;" src="{}">'.format(url) in body
+        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(url) in body
 
     def test_render_image_export_maximum(self):
         settings.EXPORT_EXCLUSIONS = ['.png']
@@ -88,4 +91,4 @@ class TestImageRenderer:
 
         body = renderer.render()
 
-        assert '<img style="max-width: 100%;" src="{}">'.format(url) in body
+        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(url) in body

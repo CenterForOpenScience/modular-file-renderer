@@ -15,7 +15,7 @@
         callback: false,
         target: false,
         duration: 120,
-        on: "click",    // Decides when to enlarge. Options: grab, click, toggle and mouseover
+        on: "click",        // Decides when to enlarge. Options: grab, click, toggle and mouseover
         touch: true,        // Enables a touch fallback.
         onZoomIn: false,
         onZoomOut: false,
@@ -162,6 +162,7 @@
 
                 } else if (settings.on === "click") {
 
+                    // Added "mousewheel" event to enable further zoom when the images are enlarged
                     $source.on("click.zoom", function (e) {
                         if (!clicked) {
                             clicked = true;
@@ -201,14 +202,8 @@
                     // Preemptively call zoom.init() because IE7 will fire the mousemove handler
                     // before the hover handler.
                     zoom.init();
-
-                    // MFR Customization: add mousewheel zoom to mouseover
                     $source.on("mouseenter.zoom", start)
                         .on("mouseleave.zoom", stop)
-                        .on("mousewheel", function (e) {
-                            stop();
-                            start(e);
-                        })
                         .on(mousemove, zoom.move);
                 }
 

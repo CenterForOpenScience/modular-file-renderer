@@ -15,7 +15,7 @@
         callback: false,
         target: false,
         duration: 120,
-        on: "mouseover",    // Decides when to enlarge. Options: grab, click, toggle and mouseover
+        on: "click",    // Decides when to enlarge. Options: grab, click, toggle and mouseover
         touch: true,        // Enables a touch fallback.
         onZoomIn: false,
         onZoomOut: false,
@@ -166,8 +166,7 @@
                         if (!clicked) {
                             clicked = true;
                             start(e);
-                            $(document)
-                                .on(mousemove, zoom.move);
+                            $(document).on(mousemove, zoom.move);
                             $(document).one("click.zoom",
                                 function () {
                                     stop();
@@ -179,6 +178,11 @@
                         }
                         // do nothing if clicked is true, bubble the event up to the document to
                         // trigger the unbind.
+                    }).on("mousewheel", function (e) {
+                        if (clicked) {
+                            stop();
+                            start(e);
+                        }
                     });
 
                 } else if (settings.on === "toggle") {

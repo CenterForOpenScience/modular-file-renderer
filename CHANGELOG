@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+0.24.2 (2018-02-09)
+===================
+- Fix: Update UNOCONV_BIN setting to reflect the default pip install path.
+
 0.24.1 (2018-02-09)
 ===================
 - Fix: Specifically install LibreOffice 6.0.1.1 and install unoconv 0.8.2.

@@ -132,6 +132,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         )
 
         self.source_file_id = uuid.uuid4()
+        self.add_header('X-MFR-REQUEST-ID', str(uuid.uuid4()))
 
     async def write_stream(self, stream):
         try:

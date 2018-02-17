@@ -9,6 +9,7 @@
         Array.prototype.slice.call(anchors).forEach(function (el) {
             el.addEventListener('click', function (e) {
                 if (this.href !== undefined &&
+                    this.href !== "" &&
                     this.href[0] !== '#') {
                     e.preventDefault();
                     window.pymChild.sendMessage('location', this.href);

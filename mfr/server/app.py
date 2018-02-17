@@ -1,4 +1,6 @@
+import signal
 import asyncio
+from functools import partial
 
 import tornado.web
 import tornado.httpserver
@@ -13,10 +15,23 @@ from mfr.server import settings as server_settings
 from mfr.server.handlers.export import ExportHandler
 from mfr.server.handlers.render import RenderHandler
 from mfr.server.handlers.status import StatusHandler
+from mfr.server.handlers.exporters import ExportersHandler
+from mfr.server.handlers.renderers import RenderersHandler
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
 
 logger = logging.getLogger(__name__)
 
+
+def sig_handler(sig, frame):
+    io_loop = tornado.ioloop.IOLoop.instance()
+
+    def stop_loop():
+        if len(asyncio.Task.all_tasks(io_loop)) == 0:
+            io_loop.stop()
+        else:
+            io_loop.call_later(1, stop_loop)
+
+    io_loop.add_callback_from_signal(stop_loop)
 
 def make_app(debug):
     app = tornado.web.Application(
@@ -24,7 +39,9 @@ def make_app(debug):
             (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.STATIC_PATH}),
             (r'/assets/(.*?)/(.*\..*)', ExtensionsStaticFileHandler),
             (r'/export', ExportHandler),
+            (r'/exporters', ExportersHandler),
             (r'/render', RenderHandler),
+            (r'/renderers', RenderersHandler),
             (r'/status', StatusHandler),
         ],
         debug=debug,
@@ -55,5 +72,6 @@ def serve():
 
     logger.info("Listening on {0}:{1}".format(server_settings.ADDRESS, server_settings.PORT))
 
+    signal.signal(signal.SIGTERM, partial(sig_handler))
     asyncio.get_event_loop().set_debug(server_settings.DEBUG)
     asyncio.get_event_loop().run_forever()

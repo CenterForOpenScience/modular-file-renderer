@@ -2,6 +2,77 @@
 ChangeLog
 *********
 
+0.24.2 (2018-02-09)
+===================
+- Fix: Update UNOCONV_BIN setting to reflect the default pip install path.
+
+0.24.1 (2018-02-09)
+===================
+- Fix: Specifically install LibreOffice 6.0.1.1 and install unoconv 0.8.2.
+
+0.24.0 (2018-02-01)
+===================
+- Feature: MFR now renders tiff files containing multiple images!  The file will be exported to a
+multi-page PDF, with one image per page.  (thanks, @AddisonSchiller!)
+- Feature: Matlab data files (.mat) are now rendered using the tabular formatter.  (thanks,
+@AddisonSchiller!)
+- Feature: The 3D-object renderer now supports STEP (.step and .stp) files.  (thanks,
+@AddisonSchiller!)
+- Fix: Don't send invalid payloads to MFR's metrics-tracking service.  (thanks, @AddisonSchiller!)
+- Fix: Don't reload the entire page when clicking on a tab header in the tabular renderer.
+- Code: Upgrade Pillow dependency.  (thanks, @AddisonSchiller!)
+- Code: Upgrade MFR's pym.js version to latest.  (thanks, @johnetordoff!)
+- Code: Upgrade Codepygments dependency to get the newest code highlighters.  (thanks,
+@AddisonSchiller!)
+- Code: Support rendering videos, PDFs, PDBs, and 3D objects in a local development environment.
+(thanks, @TomBaxter!)
+- Docs: Add a guide for using MFR with the OSF via docker-compose.  (thanks, @AddisonSchiller!)
+
+0.23.1 (2018-01-25)
+===================
+- Fix: Update the Jamovi renderer to handle images with spaces in their name.  (thanks,
+@jonathon-love!)
+
+0.23.0 (2018-01-19)
+===================
+- Feature: Add a renderer for zip files!  Viewing a zip file in MFR will list the names, modified
+dates, and sizes for all files in the zipball.  (thanks, @johnetordoff!)
+- Feature: Layered image files from Adobe Photoshop (*.psd) are now rendered by the image renderer.
+(thanks, @AddisonSchiller!)
+- Feature: Stata dataset files (.dta) are now supported by the tabular file renderer, similar to
+csv, tsv, and excel spreadsheets.  (thanks, @AddisonSchiller!)
+- Feature: Add a renderer for .omv files created in the Jamovi open statistical spreadsheet program.
+(thanks, @jonathon-love!)
+- Feature: Add two new endpoints (/renderers and /exporters) to provide a programmatic view of MFR's
+file type support.  Both endpoints return a JSON object mapping extensions to the renderer or
+exporter that handles them.  (thanks, @johnetordoff!)
+- Feature: Add a static list of supported file types (`supportedextensions.md`) to the project
+repository.  Includes a test to warn developers when they've failed to document a newly-added file
+type.  (thanks, @AddisonSchiller!)
+- Feature: Add basic sandboxing to iframes.  (thanks, @AddisonSchiller!)
+- Fix: Update the MathJax CDN url in the IPython notebook renderer.  (thanks, @AddisonSchiller!)
+- Fix: Support uppercased extensions (e.g. .CSV) for tabular files.  (thanks, @AddisonSchiller!)
+- Fix: Links in a pdf inside an iframe now open in a new tab instead of the iframe.  (thanks,
+@AddisonSchiller!)
+- Code: Catch OSF metadata request failures earlier and report them accurately.  (thanks,
+@TomBaxter!)
+- Code: Tidy up and reduce layers in the Dockerfile  (thanks, @binoculars!)
+
+0.22.0 (2017-10-10)
+===================
+- Feature: Added support for rendering ~50 new plain-text file types via codepygments, including
+FASTA files, ImageJ macros, and Turtle files. (thanks, @AddisonSchiller!)
+- Feature: Add a unique request ID to MFR's response headers to help with tracking down errors.
+- Feature: Add a new task to clean the export and render caches. (thanks, @icereval!)
+- Fix: Error more gracefully when missing required query parameters.
+- Fix: Make scrollbars visible on IE11 when content overflows the iframe.
+- Fix: Fix ALLOWED_PROVIDER_DOMAINS example in MFR docs. (thanks, @jonathon-love for reporting!)
+- Code: Teach MFR to listen for a SIGTERM signal and exit immediately upon receiving it. This
+bypasses the 10 second wait for shutdown when running it in Docker.
+- Code: Add code-coverage checking via coveralls.io. (thanks, @abought!)
+- Code: Add Python 3.6 to travis testing matrix. (thanks, @abought!)
+- Code: Add a Pull Request template for GitHub. (thanks, @cslzchen!)
+
 0.21.2 (2017-09-13)
 ===================
 - Fix: Update jQuery onload invocation to be compatible with jQuery 3.  (thanks, @sloria!)

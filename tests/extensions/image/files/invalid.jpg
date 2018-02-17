@@ -1,0 +1,181 @@
+
+
+"""
+Exports Issues from a specified repository to a CSV file
+Uses basic authentication (Github username + password) to retrieve Issues
+from a repository that username has access to. Supports Github API v3.
+"""
+import re
+import csv
+import getpass
+
+import requests
+import dateutil.parser
+import sys
+
+GITHUB_USER = 'BRosenblatt'  # str(raw_input('Enter your username: '))
+GITHUB_PASSWORD = getpass.getpass()
+REPO = 'CenterForOpenScience/community'  # str(raw_input('Enter the repo name: '))  # format is username/repo
+ISSUES_FOR_REPO_URL = 'https://api.github.com/repos/%s/issues' % REPO
+AUTH = (GITHUB_USER, GITHUB_PASSWORD)
+JIRA_BOARD = 'FEATURE-'
+ATTACH_FOLDER = 'github-attachments'
+max_attach = 10
+user_map = {
+    "acdehaven": ["Alexander DeHaven", "adehaven"],
+    "saradbowman": ["Sara Bowman", "sara"],
+    "BRosenblatt": ["Rebecca Rosenblatt", "rebecca"],
+    "bnosek": ["Brian Nosek", "nosek"],
+    "BrandonCOS": ["Brandon Thorpe", "bthorpe"],
+    "csoderberg": ["Courtney Soderberg", "courtney"],
+    "esvenson": ["esvenson", "esvenson"],
+    "evomellor": ["David Mellor", "david"],
+    "JeffSpies": ["Jeffrey Spies", "jeff"],
+    "jenniferfsmith": ["jsmith", "jsmith"],
+    "jolene-esposito": ["Jolene Esposito", "jolene"],
+    "mattspitzer": ["Matt Spitzer", "matt.spitzer"],
+    "nicipfeiffer": ["Nici Pfeiffer", "nici"],
+    "nkmeyers": ["Natalie Meyers", "Natalie"],
+    "rustyspeidel": ["Rusty Speidel", "rusty"],
+    "TimErrington": ["Tim Errington", "tim"],
+    "wikey": ["Ian Sullivan", "isullivan"],
+    "faketest123": ["Mr Faketest", "fak"]
+}
+
+reload(sys) # noqa
+sys.setdefaultencoding('utf8')
+
+
+def jirafy(comment):
+    pass
+
+
+def write_issues(response):
+    "output a list of issues to csv"
+    if not r.status_code == 200:
+        raise Exception(r.status_code)
+    for issue in r.json():
+        labels = issue['labels']
+        label_string = ''
+        for label in labels:
+            label_string += label['name'].replace(' ', '_')
+        if issue['state'] == 'open':
+
+            comments = requests.get(issue['comments_url'], auth=AUTH).json()
+
+            i = 0
+            parsed_comments = []
+            attachments = []
+            date = dateutil.parser.parse(issue['created_at'])
+            issue_date = '{}/{}/{} {}:{}'.format(date.month, date.day, date.year, date.hour, date.minute)
+            try:
+                body = issue['body'].encode('utf-8')
+                body = body.replace(('https://github.com/CenterForOpenScience/osf.io/issues/'), '#')
+                m = re.findall(r'#(\d+)', body)
+                urls = re.findall(r'!\[(.*?)\]\((.*?)\)', body)
+                for item in m:
+                    body = body.replace(('#' + item), JIRA_BOARD + item)
+                mentions = re.findall(r'@(\w+)', body)
+                for item in mentions:
+                    if item in user_map:
+                        body = body.replace(('@' + item), '[~' + user_map[item][1] + ']')
+
+                j = 0
+                for item in urls:
+                    j += 1
+                    recon = '![' + item[0] + ']' + '(' + item[1] + ')'
+
+                    attachments.append(item[1])
+
+                    body = body.replace((recon), '!' + 'desc' + item[1] + '|thumbnail!')
+            except Exception:
+                print(Exception)
+                print(issue)
+                sys.exit(1)
+
+            for comment in comments:
+                text = comment['body'].encode('utf-8')
+                m = re.findall(r'#(\d+)', comment['body'].encode('utf-8'))
+                urls = re.findall(r'!\[(.*?)\]\((.*?)\)', comment['body'].encode('utf-8'))
+                date = dateutil.parser.parse(comment['created_at'])
+                parse_date = '{}/{}/{}'.format(date.month, date.day, date.year)
+                user = comment['user']['login']
+                try:
+                    user = user_map[user][1]
+                except:
+                    print("user conversion failed")
+                    print(user)
+                    user = comment['user']['login']
+                for item in m:
+                    text = text.replace(('#' + item), JIRA_BOARD + item)
+                mentions = re.findall(r'@(\w+)', comment['body'].encode('utf-8'))
+                for item in mentions:
+                    if item in user_map:
+                        text = text.replace(('@' + item), '[~' + user_map[item][1] + ']')
+                k = 0
+                for item in urls:
+                    k += 1
+
+                    recon = '![' + item[0] + ']' + '(' + item[1] + ')'
+
+                    attachments.append(item[1])
+
+                    text = text.replace((recon), '!' + str(i) + str(k) + '.png' + '|thumbnail!')
+
+                i += 1
+                try:
+                    parsed_comments.append("On" + parse_date.encode('utf-8') + ' [~' + user + '] said: {quote}' + text.encode('utf-8') + '{quote}' + '\n\n')
+                except Exception:
+                    print(Exception)
+                    print(comment)
+                    sys.exit(1)
+            c_string = ''
+            for item in parsed_comments:
+                c_string += item
+
+            row = [issue['title'].encode('utf-8'), issue['number'], issue_date, body, label_string.strip(', '), c_string]
+
+            i = 0
+            for thing in attachments:
+                i += 1
+                if i > max_attach:
+                    break
+                else:
+                    row.append(thing)
+
+            try:
+                csvout.writerow(row)
+            except Exception:
+                print(Exception)
+                print(row)
+                sys.exit(1)
+
+
+r = requests.get(ISSUES_FOR_REPO_URL, auth=AUTH)
+csvfile = '%s-issues.csv' % (REPO.replace('/', '-'))
+csvout = csv.writer(open(csvfile, 'wb'))
+row = ['Title', 'Id', 'Date Created', 'Description', 'Labels', 'Comments']
+
+for i in range(max_attach):
+    attach_header_name = 'attachment'
+    row.append(attach_header_name)
+
+csvout.writerow(row)
+write_issues(r)
+
+if 'link' in r.headers:
+    pages = dict(
+        [(rel[6:-1], url[url.index('<') + 1:-1]) for url, rel in
+            [link.split(';') for link in
+                r.headers['link'].split(',')]])
+    while 'last' in pages and 'next' in pages:
+        r = requests.get(pages['next'], auth=AUTH)
+        write_issues(r)
+
+        if pages['next'] == pages['last']:
+            break
+        else:
+            pages = dict(
+                [(rel[6:-1], url[url.index('<') + 1:-1]) for url, rel in
+                    [link.split(';') for link in
+                        r.headers['link'].split(',')]])

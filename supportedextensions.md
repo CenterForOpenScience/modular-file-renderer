@@ -609,3 +609,7 @@ Some file types may not be in the correct list. Please search for the file type 
 * .wps
 * .xlt
 * .xpm
+
+## Evernote Markup Language
+* .enml
+

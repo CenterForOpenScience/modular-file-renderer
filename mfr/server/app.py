@@ -18,6 +18,7 @@ from mfr.server.handlers.status import StatusHandler
 from mfr.server.handlers.exporters import ExportersHandler
 from mfr.server.handlers.renderers import RenderersHandler
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
+from mfr.server.handlers.core import PackedExtensionsStaticFileHandler
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,8 @@ def make_app(debug):
     app = tornado.web.Application(
         [
             (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.STATIC_PATH}),
-            (r'/assets/(.*?)/(.*\..*)', ExtensionsStaticFileHandler),
+            (r'/assets/(.*)/(.*\..*)', ExtensionsStaticFileHandler),
+            (r'/assets/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.EXT_STATIC_PATH}),
             (r'/export', ExportHandler),
             (r'/exporters', ExportersHandler),
             (r'/render', RenderHandler),

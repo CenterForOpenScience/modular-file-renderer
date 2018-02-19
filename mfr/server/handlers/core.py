@@ -269,6 +269,31 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         return metrics
 
 
+class PackedExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
+    """Extensions static path definitions
+    """
+
+    def initialize(self):
+        namespace = 'mfr.renderers'
+        module_path = 'mfr.extensions'
+
+    async def get(self, module_name, path):
+
+        try:
+            super().initialize(settings.STATIC_PATH)
+            return await super().get(path)
+        except Exception:
+            self.set_status(404)
+
+        try:
+            super().initialize(settings.EXT_STATIC_PATH)
+            import ipdb; ipdb.set_trace()
+            return await super().get(path)
+        except Exception:
+            self.set_status(404)
+
+
+
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     """Extensions static path definitions
     """
@@ -293,3 +318,4 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             return await super().get(path)
         except Exception:
             self.set_status(404)
+

@@ -1,0 +1,15 @@
+{
+  "extends": [
+    ../.eslintrc
+  ],
+
+  "env": {
+    "node": true,
+  },
+
+  "rules": {
+    "mozilla/use-includes-instead-of-indexOf": "off",
+
+    "object-shorthand": "off",
+  },
+}

@@ -67,7 +67,7 @@
      * @param {Object} config Configuration to override the default settings.
      * @param {String} imgName The filename of an image in mfr/server/static/images/ to use as a loading spinner
      */
-    lib.Render = function (id, url, config, imgName) {
+    lib.Render = function(id, url, config, imgName) {
         var self = this;
         self.id = id;
         self.url = url;
@@ -75,26 +75,49 @@
         self.spinner = _createSpinner(url, imgName);
 
         self.init = function () {
-            self.pymParent = new pym.Parent(self.id, self.url, self.config);
-            self.pymParent.iframe.setAttribute('allowfullscreen', '');
-            self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
-            self.pymParent.iframe.setAttribute('scrolling', 'yes');
-            self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
+            const node_id = window.contextVars.node.id;
+            const provider = window.contextVars.file.provider;
+            const file_id = window.contextVars.file.id;
+            const file_name = window.contextVars.file.name;
 
-            self.pymParent.el.appendChild(self.spinner);
-            $(self.pymParent.iframe).on('load', function () {
-                self.pymParent.el.removeChild(self.spinner);
-            });
+            
+            const split_file_name = file_name.split(".");
+            self.file_ext = split_file_name[split_file_name.length - 1];
 
-            self.pymParent.onMessage('embed', function(message) {
-                _addClass(self.pymParent.el, 'embed-responsive');
-                _addClass(self.pymParent.el, message);
-                _addClass(self.pymParent.iframe, 'embed-responsive-item');
-            });
+            const handlers = {
+                pdf: function() {
+                    console.log("ITS A PDF");
+                },
 
-            self.pymParent.onMessage('location', function(message) {
-                window.location = message;
-            });
+                default: function() {
+                    self.pymParent = new pym.Parent(self.id, self.url, self.config);
+                    self.pymParent.iframe.setAttribute('allowfullscreen', '');
+                    self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
+                    self.pymParent.iframe.setAttribute('scrolling', 'yes');
+                    self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
+
+                    self.pymParent.el.appendChild(self.spinner);
+                    $(self.pymParent.iframe).on('load', function () {
+                        self.pymParent.el.removeChild(self.spinner);
+                    });
+
+                    self.pymParent.onMessage('embed', function(message) {
+                        _addClass(self.pymParent.el, 'embed-responsive');
+                        _addClass(self.pymParent.el, message);
+                        _addClass(self.pymParent.iframe, 'embed-responsive-item');
+                    });
+
+                    self.pymParent.onMessage('location', function(message) {
+                        window.location = message;
+                    });
+                }
+
+            }
+
+            if (!(self.file_ext in handlers)) self.file_ext = "default";
+
+
+            handlers[self.file_ext]();
         };
 
         self.init();
@@ -108,6 +131,7 @@
         };
 
         self.resize = function () {
+            if (self.file_ext == "pdf") return;
             self.pymParent.sendMessage('resize', 'x');
         };
 

@@ -1,0 +1,29 @@
+{
+  "name": "modular-file-renderer",
+  "version": "1.0.0",
+  "description": "Modular File Renderer",
+  "main": "index.js",
+  "repository": "git@github.com:CenterForOpenScience/modular-file-renderer.git",
+  "author": "Center For Open Science",
+  "license": "Apache 2.0",
+  "private": false,
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "core-js": "^2.5.3",
+    "escodegen": "^1.9.0",
+    "npm": "^5.6.0",
+    "pdf": "https://github.com/hypothesis/pdf.js-hypothes.is.git",
+    "pdf.js": "https://github.com/mozilla/pdf.js.git",
+    "pdfjs-dist": "^2.0.376",
+    "pym.js": "^1.3.2",
+    "systemjs": "^0.21.0",
+    "systemjs-plugin-babel": "^0.0.25",
+    "webpack": "^3.11.0"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  }
+}

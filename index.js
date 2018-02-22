@@ -1,11 +1,13 @@
 // Mfr.js is a library which renders common file formats to be displayed in an iframe.
 
-import {
-    getDocument
-} from "pdfjs-lib";
+//import {
+//    getDocument
+//} from "pdfjs-lib";
 
 import {Parent} from "pym.js";
 
+import {PDFJS} from "pdfjs/display/global";
+PDFJS.workerSrc = "assets/pdf.worker.js";
 
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
@@ -96,7 +98,6 @@ import {Parent} from "pym.js";
                     xhr.open('GET', uri, true);
                     xhr.withCredentials = true;
                     xhr.onreadystatechange = function() {
-                        
                         if (xhr.readyState === 4 && xhr.status === 200) {
                             const frame = document.createElement("iframe");
                             frame.id = "mfrframe";
@@ -110,7 +111,34 @@ import {Parent} from "pym.js";
                 },
 
                 pdf: function() {
-                    debugger;
+                    self.pymParent = new Parent(self.id, self.url, self.config);
+                    self.pymParent.iframe.setAttribute('allowfullscreen', '');
+                    self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
+                    self.pymParent.iframe.setAttribute('scrolling', 'yes');
+                    //self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
+
+                    self.pymParent.el.appendChild(self.spinner);
+                    $(self.pymParent.iframe).on('load', function () {
+                        self.pymParent.el.removeChild(self.spinner);
+                    });
+
+                    self.pymParent.onMessage('embed', function(message) {
+                        _addClass(self.pymParent.el, 'embed-responsive');
+                        _addClass(self.pymParent.el, message);
+                        _addClass(self.pymParent.iframe, 'embed-responsive-item');
+                    });
+
+                    self.pymParent.onMessage('location', function(message) {
+                        debugger;
+                        window.location = message;
+                    });
+                    
+                    self.pymParent.onMessage('pdfappready', function(message) {
+                        debugger;
+                    })
+
+
+                    /*
                     var uri = `http://localhost:7777/v1/resources/${node_id}/providers/${provider}/${file_id}?direct=true`;
                     var loadingTask = getDocument({
                         url: uri,
@@ -136,11 +164,11 @@ import {Parent} from "pym.js";
                     }).catch(function (reason) {
                       console.error('Error: ' + reason);
                     });
+                    */
                     
                 },
 
                 default: function() {
-                    debugger;
                     self.pymParent = new Parent(self.id, self.url, self.config);
                     self.pymParent.iframe.setAttribute('allowfullscreen', '');
                     self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');

@@ -25,13 +25,13 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 
     <link rel="stylesheet" href="/assets/viewer.css">
-    <link rel="resource" type="application/l10n" href="/assets/locale.properties">
+    <link rel="resource" type="application/l10n" href="/assets/locale/locale.properties">
 
     <script>
         var DEFAULT_URL = '${url}';
     </script>
-
     <script src="/assets/pdf.js"></script>
+    <script src="/assets/hypothesis.js"></script>
 
 
   </head>
@@ -340,8 +340,8 @@ See https://github.com/adobe-type-tools/cmap-resources
              border-bottom: solid 1px #404040;
         }
     </style>
-    <script src="/static/js/mfr.js"></script>
-    <script src="/static/js/mfr.child.js"></script>
+    <script src="/assets/mfr.js"></script>
+    <script src="/assets/mfr.child.js"></script>
     <script>
         window.pymChild.sendMessage('embed', 'embed-responsive-pdf');
     </script>

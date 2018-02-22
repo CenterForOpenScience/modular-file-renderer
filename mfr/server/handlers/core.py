@@ -287,7 +287,6 @@ class PackedExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin
 
         try:
             super().initialize(settings.EXT_STATIC_PATH)
-            import ipdb; ipdb.set_trace()
             return await super().get(path)
         except Exception:
             self.set_status(404)

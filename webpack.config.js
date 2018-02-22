@@ -26,11 +26,14 @@ var bundleDefines = builder.merge(defines, {
 });
 
 const config = {
+
+    
     context: __dirname,
     entry: {
         mfr: "./index.js",
         pdf: "./mfr/extensions/pdf/client/index.js",
-        'mfr.worker': 'pdfjs/pdf.worker.entry'
+        'pdf.worker': 'pdfjs/pdf.worker.entry',
+        'mfr.child': "./index.child.js"
     },
     output: {
         filename: "./static/[name].js",
@@ -38,13 +41,18 @@ const config = {
     },
     resolve: {
         alias: {
-            'pdfjs': path.join(__dirname, 'node_modules/pdf.js/src'),
-            'pdfjs-web': path.join(__dirname, 'node_modules/pdf.js/web'),
+            'pdfjs': 'pdf.js/src',
+            'pdfjs-web': 'pdf.js/web',
             'pdfjs-lib': path.join(__dirname, 'pdfjs-lib.js')
         },
+        extensions: [ '.ts', '.tsx', ".js", ".json"],
+        modules: [
+            __dirname,
+            'node_modules'
+        ]
     },
     module: {
-        loaders: [
+        rules: [
             {
                 loader: 'babel-loader',
                 exclude: /src\/core\/(glyphlist|unicode)/, // babel is too slow

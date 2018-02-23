@@ -18032,6 +18032,10 @@ _global.PDFJS.workerSrc = "assets/pdf.worker.js";
           xhr.send();
         },
         pdf: function pdf() {
+          var scriptTag = document.createElement('script');
+          scriptTag.src = 'http://localhost:7778/assets/hypothesis.js';
+          var firstScriptTag = document.getElementsByTagName('script')[0];
+          firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
           self.pymParent = new _pym.Parent(self.id, self.url, self.config);
           self.pymParent.iframe.setAttribute('allowfullscreen', '');
           self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');

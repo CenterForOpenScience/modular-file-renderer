@@ -29,10 +29,17 @@ See https://github.com/adobe-type-tools/cmap-resources
 
     <script>
         var DEFAULT_URL = '${url}';
+        var PDF = {};
     </script>
     <script src="/assets/pdf.js"></script>
+    <script type="application/json" class="js-hypothesis-config">
+        {
+            "subFrameIdentifier": "${unique_key}",
+            "PDF": {}
+        
+        }
+    </script>
     <script src="/assets/hypothesis.js"></script>
-
 
   </head>
 

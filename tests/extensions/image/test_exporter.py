@@ -119,7 +119,7 @@ class TestImageExporter:
         assert output_pixels[0] == (255, 254, 232)
 
     def test_ratio(self, directory):
-        source_file_path = os.path.join(BASE, 'files', 'test_ratio.png')
+        source_file_path = os.path.join(BASE, 'files', 'test_ratio.jpg')
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = ImageExporter(source_file_path=source_file_path, ext='.png',
@@ -135,7 +135,7 @@ class TestImageExporter:
         source_image = Image.open(source_file_path)
 
         assert output_image.mode == 'RGB'
-        assert output_image.size == (1200, 1029)
+        assert output_image.size == (2400, 1600)
         assert output_image.palette == source_image.palette
         assert output_image.format.lower() == settings.EXPORT_TYPE
 

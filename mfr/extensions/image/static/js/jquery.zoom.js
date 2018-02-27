@@ -3,7 +3,11 @@
  *
  * Original Copy: https://github.com/jackmoore/zoom/blob/1.7.20/jquery.zoom.js
  * Version: https://github.com/jackmoore/zoom/releases/tag/1.7.20
- * Changes: customized for MFR and updated style
+ *
+ * The are two MFR customizations in this file, one for style and one for functionality
+ *
+ * 1. Updated code style according to `.eslintrc.js`
+ * 2. Added `.on("mousewheel", function (e) { ... })` to enable further zoom by mouse wheel scroll
  */
 
 (function ($) {
@@ -15,8 +19,8 @@
         callback: false,
         target: false,
         duration: 120,
-        on: "click",        // Decides when to enlarge. Options: grab, click, toggle and mouseover
-        touch: true,        // Enables a touch fallback.
+        on: "mouseover",
+        touch: true,
         onZoomIn: false,
         onZoomOut: false,
         magnify: 1
@@ -53,8 +57,7 @@
                 height: img.height * magnify,
                 border: "none",
                 maxWidth: "none",
-                maxHeight: "none",
-                overflow: "hidden"      // TODO: How does this customization affect the rendering?
+                maxHeight: "none"
             }).appendTo(target);
 
         return {
@@ -162,7 +165,6 @@
 
                 } else if (settings.on === "click") {
 
-                    // Added "mousewheel" event to enable further zoom when the images are enlarged
                     $source.on("click.zoom", function (e) {
                         if (!clicked) {
                             clicked = true;
@@ -179,9 +181,15 @@
                         }
                         // do nothing if clicked is true, bubble the event up to the document to
                         // trigger the unbind.
-                    }).on("mousewheel", function (e) {
+                    });
+
+                    // MFR customization: Allow further zoom using mouse wheel on the zoom image.
+                    // The zoom is only enabled when image is clicked.  I am not entirely sure how
+                    // `stop()` works but having it inside or outside the `if (clicked) { ... }`
+                    // statement does not make a difference.  TODO: need more investigation
+                    $source.on("mousewheel", function (e) {
+                        stop();
                         if (clicked) {
-                            stop();
                             start(e);
                         }
                     });

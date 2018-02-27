@@ -3,12 +3,8 @@
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 <script src="/static/js/bootstrap.min.js"></script>
 
-## Quirks 0:
-##
-## Need to add this block buffer so that the question circle does not overlap with the image. The
-## height will be set if zoom feature is enabled for the give image. The height is set to be 38px,
-## which includes 10px each for top and bottom margin, and 18px for the question circle icon.
-##
+## The block to hold the question circle, which prevents it from overlapping with the image and
+## of which the style will be updated if zoom is enabled
 <div id="popover-buffer" style="display: none"></div>
 <a id="popover-content" style="display: none" data-toggle="popover"
    data-trigger="hover" data-placement="left" data-html="true"
@@ -17,115 +13,109 @@
     <p><b> Zoom:</b> Click on the image and use the mouse wheel to zoom in and out</p>
     <p><b> Navigate:</b> Move the mouse cursor to navigate through the magnified image</p>
    "
->
-   <img src="${base}/images/question-circle.png">
-</a>
+><img src="${base}/images/question-circle.png"></a>
 
+## The image to render, which will be wrapped accordingly if zoom is enabled
 <img id="base-image" style="max-width: 100%" class="baseImage" src="${url}">
 
+## MFR scripts
 <script src="/static/js/mfr.js"></script>
 <script src="/static/js/mfr.child.js"></script>
 
-<script src="${base}/js/jquery.detectmobile.js"></script>
+## JQuery Zoom and Mouse Wheel scripts
 <script src="${base}/js/jquery.mousewheel.min.js"></script>
 <script src="${base}/js/jquery.zoom.js"></script>
 
+## The main script for enable Hi-Res and Zoom for rendered images
 <script>
-
+    ## Enforces strict mode
     "use strict";
 
+    ## Magnifiation parameters
     var magScale = 1;
     var magStep = 0.1;
     var maxScale = 3;
     var minScale = 1;
-
     var magHeight = null;
     var magWidth = null;
 
+    ## The height and width for the displaying part of the image
     var heightLimit = null;
     var widthLimit = null;
 
-    var heightThreshold = 200;
+    ## The minimal height requirement to enable the zoom feature for a image
+    ## For more information, refer to the line where it is used in this file
+    var minHeightToZoom = 200;
 
+    ## A flag indicating whether the image is already wrapped or not
     var wrapped = false;
 
-    ## Enable the zoom feature only for desktop browsers
-    if (!$.browser.mobile) {
+    $(document).ready(function() {
 
-        var popoverBuffer = $("#popover-buffer");
-        var popoverContent = $("#popover-content");
+        ## Reference on how mobile is detected: https://stackoverflow.com/a/10364620
+        var isMobile = window.matchMedia("only screen and (max-width: 760px)");
 
-        popoverBuffer.css({
-            "height": "38px"
-        });
+        ## Enable the zoom feature only for desktop browsers
+        if (!isMobile.matches) {
 
-        popoverContent.css({
-            "position": "absolute",
-            "top": "10px",
-            "right": "10px",
-            "cursor": "pointer"
-        });
-
-        $('[data-toggle="popover"]').popover();
-
-        $(document).ready(function() {
-
-            var is_chrome = !!window.chrome;
+            ## Update the style for instruction popover and enable it
+            var popoverBuffer = $("#popover-buffer");
+            var popoverContent = $("#popover-content");
+            popoverBuffer.css({"height": "38px"});
+            popoverContent.css({
+                "position": "absolute",
+                "top": "10px",
+                "right": "10px",
+                "cursor": "pointer"
+            });
+            $('[data-toggle="popover"]').popover();
 
             var baseImage = $("#base-image");
 
-            var addSpan = function() {
+            ## Quirks: the base image must be wrapped, see http://www.jacklmoore.com/zoom/
+            ##
+            ## The BASE image must be wrapped with a parent "container" and it must be the only (or
+            ## the first) image in it.  The `jquery.zoom` library performs the zoom on the parent
+            ## and grabs the first image it finds to create the zoom image.
+            ##
+            ## `addSpan()` performs the "wrap" accordingly to cater for most cases
+            var addSpan = function () {
 
-                if (!wrapped) {
-
-                    var baseImageHeight = parseInt(baseImage.css("height"));
-                    var baseImageWidth = parseInt(baseImage.css("width"));
-
-                    ## Quirk 1
-                    ##
-                    ## The BASE image must be wrapped with a parent "container" and it must be the
-                    ## only image in this parent.  The "JQuery Zoom" library performs the zoom
-                    ## function on the parent, in which it uses the first image it finds to create
-                    ## the ZOOM image.
-                    ##
-                    ## There are two issues if it is not wrapped. First, the ZOOM image will be the
-                    ## question cirle, which is the first image we have in the iframe. Second, the
-                    ## ZOOM image will take over the full space of the iframe.
-                    ##
-                    ## Quirk 2
-                    ##
-                    ## Wrapping <img> with <div> or <span> in Google Chrome makes the scroll bar in
-                    ## the <iframe> flickering when zoom is active. However, wrap it with <p> does
-                    ## not have the problem for most of the time.
-                    ##
-                    ## Quirk 3
-                    ##
-                    ## Weird behaviors SOMETIMES occur when the image is downsized due to smaller
-                    ## screen size. Thus, different wrapping are used.
-                    ##
-                    ## Quirk 4
-                    ##
-                    ## Werid behaviors ALWAYS occur when the image's height is less than 150. This
-                    ## number is obtained by experiments. Thus, zoom are disabled for such images.
-                    ##
-                    if (heightLimit === baseImageHeight || widthLimit === baseImageWidth) {
-                        baseImage.wrap("<div></div>").parent().css({
-                            "display": "block",
-                            "position": "relative",
-                            "overflow": "hidden"
-                        });
-                        baseImage.parent().wrap("<span></span>").parent().css("display", "inline-block");
-                    } else if (!is_chrome) {
-                        baseImage.wrap("<div></div>").parent().css("display", "inline-block");
-                    } else {
-                        baseImage.wrap("<p></p>")
-                    }
-
-                    wrapped = true;
+                ## Only wrap the image once
+                if (wrapped) {
+                    return;
                 }
+
+                ## Obtain the original height and width for the image loaded
+                var baseImageHeight = parseInt(baseImage.css("height"), 10);
+                var baseImageWidth = parseInt(baseImage.css("width"), 10);
+
+                ## Detect the Google Chrome browser
+                var isChrome = !!window.chrome;
+
+                ## Detect if the image is downsized due to screen size
+                var isActualSize = heightLimit === baseImageHeight || widthLimit === baseImageWidth;
+
+                if (isActualSize || !isChrome) {
+                    ## Use the default wrapping suggested by http://www.jacklmoore.com/zoom/ if
+                    ## either of the two conditions below holds:
+                    ## 1.   Images are downsized but not in Google Chrome. Please see the flickering
+                    ##      issue mentioned below.
+                    ## 2.   Images are displayed in its actual size. No issue for all supported
+                    ##      browsers.
+                    baseImage.wrap("<div></div>").parent().css("display", "inline-block");
+                } else {
+                    ## Quirks: Chrome has a flickering bug when images are wrapped with `<div>` or
+                    ## `<span>`.  During zoom the scroll bar keeps appearing and disappearing which
+                    ## causes the image to keep resizing.  Wrapping with `<p>` instead to solve this
+                    ## annoying issue.
+                    baseImage.wrap("<p></p>")
+                }
+
+                wrapped = true;
             };
 
-            var mouseZoom = function(event, delta) {
+            var mouseZoom = function (event, delta) {
 
                 ## Disable page scroll when the mouse cursor are above the image
                 event.preventDefault();
@@ -139,8 +129,8 @@
                 }
 
                 var image = $(".zoomImage");
-                magHeight = magHeight === null ? parseInt(image.css("height")) : magHeight;
-                magWidth = magWidth === null ? parseInt(image.css("width")) : magWidth;
+                magHeight = magHeight === null ? parseInt(image.css("height"), 10) : magHeight;
+                magWidth = magWidth === null ? parseInt(image.css("width"), 10) : magWidth;
 
                 image.css({
                     width: magWidth * magScale,
@@ -148,21 +138,39 @@
                 });
             };
 
-            ## Create an in memory copy of the image to avoid CSS issues, TODO: double check
-            $("<img>").attr("src", $(baseImage[0]).attr("src")).load(function() {
+            ## Quirks: Need to use an in-memory copy of the image to prevent the zoom image from
+            ##         moving around.  Without this in-memoery copy, the zoom image moves around
+            ##         horizontally and "centers" wherever the mouse cursor is.
+            $("<img>").attr("src", $(baseImage[0]).attr("src")).load(function () {
 
                 widthLimit = this.width;
                 heightLimit = this.height;
 
-                ## Enable zoom and display popover instructions only when images are eligible
-                if (heightLimit >= heightThreshold) {
-                    $(window).resize(addSpan);
-                    $("#popover-buffer").css("display", "block");
-                    $("#popover-content").css("display", "block");
-                    addSpan();
-                    baseImage.parent().zoom({magnify: magScale}).on("mousewheel", mouseZoom);
+                ## Quirks: Disable zoom and display instructions for images of height less than 200.
+                ## 1.   The original issue was when the height is less than 150 (not 200), the zoom
+                ##      image moves around and thus does not cover the base image fully. However,
+                ##      I cannot trigger this any more.
+                ## 2.   When the height is less than around 200 (a little bit less than 200), which
+                ##      is close to the height of the popover instruction when shown, the bottom
+                ##      part of the instruction block is cut off.  Users need to scroll down to see
+                ##      the full message.  In addition, the scroll bar overlaps with the question
+                ##      circle.
+                ## 3.   Images of height less than 200 are not worth zooming anyway.
+                if (heightLimit < minHeightToZoom) {
+                    return;
                 }
+
+                ## For images that are eligible to zoom:
+                ## 1. Display the question circle for popover zoom instructions
+                ## 2. Wrap the base image accordingly by calling `addSpan()`
+                ## 3. Call zoom on its parent with customized configs (scale and mouse click)
+                ## 4. Enable further zoom on mouse wheel
+                $(window).resize(addSpan);
+                $("#popover-buffer").css("display", "block");
+                $("#popover-content").css("display", "block");
+                addSpan();
+                baseImage.parent().zoom({magnify: magScale, on: 'click'}).on("mousewheel", mouseZoom);
             });
-        });
-    }
+        }
+    });
 </script>

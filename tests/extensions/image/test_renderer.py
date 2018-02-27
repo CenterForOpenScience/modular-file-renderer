@@ -1,5 +1,4 @@
 import pytest
-import logging
 
 import furl
 
@@ -7,8 +6,6 @@ from mfr.core.provider import ProviderMetadata
 
 from mfr.extensions.image import ImageRenderer
 from mfr.extensions.image import settings
-
-logger = logging.getLogger(__name__)
 
 
 class TestImageRenderer:

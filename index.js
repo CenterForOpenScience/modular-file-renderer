@@ -4,10 +4,15 @@
 //    getDocument
 //} from "pdfjs-lib";
 
+import "./config";
+import style from "./mfr/mfr.css";
 import {Parent} from "pym.js";
 
 import {PDFJS} from "pdfjs/display/global";
 PDFJS.workerSrc = "assets/pdf.worker.js";
+
+
+
 
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
@@ -55,10 +60,10 @@ PDFJS.workerSrc = "assets/pdf.worker.js";
         parser.href = url;
 
         var spinner = document.createElement('div');
-        var img = document.createElement('img');
+        var img = document.createElement('span');
         spinner.setAttribute('class', 'mfr-logo-spin text-center');
         imgName = imgName || 'loading.png';
-        img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/' + imgName);
+        //img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/' + imgName);
         spinner.appendChild(img);
         return spinner;
     }
@@ -103,7 +108,6 @@ PDFJS.workerSrc = "assets/pdf.worker.js";
                             frame.id = "mfrframe";
                             document.getElementById("mfrIframe").appendChild(frame);
                             document.getElementById("mfrframe").src = "data:text/html;charset=utf-8," + escape(xhr.responseText);
-                            debugger;
                             document.getElementById("mfrframe").sandbox = 'allow-forms allow-scripts'
                         }
                     }
@@ -112,14 +116,14 @@ PDFJS.workerSrc = "assets/pdf.worker.js";
 
                 pdf: function() {
                     var scriptTag = document.createElement('script');
-                    scriptTag.src = 'http://localhost:7778/assets/hypothesis.js';
+                    scriptTag.src = 'https://cdn.hypothes.is/hypothesis';
                     var firstScriptTag = document.getElementsByTagName('script')[0];
                     firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
                     self.pymParent = new Parent(self.id, self.url, self.config);
                     self.pymParent.iframe.setAttribute('allowfullscreen', '');
                     self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
                     self.pymParent.iframe.setAttribute('scrolling', 'yes');
-                    //self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
+                    self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
 
                     self.pymParent.el.appendChild(self.spinner);
                     $(self.pymParent.iframe).on('load', function () {
@@ -133,12 +137,10 @@ PDFJS.workerSrc = "assets/pdf.worker.js";
                     });
 
                     self.pymParent.onMessage('location', function(message) {
-                        debugger;
                         window.location = message;
                     });
                     
                     self.pymParent.onMessage('pdfappready', function(message) {
-                        debugger;
                     })
 
 

@@ -17,7 +17,7 @@ var DEFINES = {
   SKIP_BABEL: false,
 };
 
-var defines = builder.merge(DEFINES, { GENERIC: true, });
+var defines = builder.merge(DEFINES, {GENERIC: true});
 //var versionInfo = //JSON.parse(fs.readFileSync(BUILD_DIR + 'version.json').toString());
 
 var bundleDefines = builder.merge(defines, {
@@ -33,11 +33,14 @@ const config = {
         mfr: "./index.js",
         pdf: "./mfr/extensions/pdf/client/index.js",
         'pdf.worker': 'pdfjs/pdf.worker.entry',
-        'mfr.child': "./index.child.js"
+        'mfr.child': "./index.child.js",
+        codepygments: "./mfr/extensions/codepygments/static/css/default.css"
     },
     output: {
-        filename: "./static/[name].js",
-        chunkFilename: "./static/[hash].chunk.js"
+        path: path.resolve(__dirname, "dist"),
+        filename: "[name].js",
+        publicPath: '/assets/',
+        chunkFilename: "./dist/[hash].chunk.js"
     },
     resolve: {
         alias: {
@@ -62,6 +65,7 @@ const config = {
                 }
             },
             {
+                test: /\.js$/i,
                 loader: path.join(__dirname, 'node_modules/pdf.js/external/webpack/pdfjsdev-loader.js'),
                 options: {
                     rootPath: __dirname,
@@ -69,6 +73,15 @@ const config = {
                     defines: bundleDefines,
                 },
             },
+            {
+                test: /\.css$/i,
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test: /\.(png|jpg|gif|cur)$/,
+                use: [ 'file-loader' ],
+                
+            }
         ]
     }
 };

@@ -37,9 +37,7 @@ def sig_handler(sig, frame):
 def make_app(debug):
     app = tornado.web.Application(
         [
-            (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.STATIC_PATH}),
-            #(r'/assets/(.*)/(.*\..*)', ExtensionsStaticFileHandler),
-            (r'/assets/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.EXT_STATIC_PATH}),
+            (r'/assets/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.STATIC_PATH}),
             (r'/export', ExportHandler),
             (r'/exporters', ExportersHandler),
             (r'/render', RenderHandler),

@@ -16,8 +16,7 @@
    <img src="${base}/images/question-circle.png">
 </a>
 
-<script src="/static/js/mfr.js"></script>
-<script src="/static/js/mfr.child.js"></script>
+<script src="/assets/mfr.child.js"></script>
 
 <!--[if !IE]><!-->
 <script type="text/javascript" src="${base}/js/jsc3d.js"></script>

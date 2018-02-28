@@ -24,6 +24,8 @@
 
 };*/
 
+import styles from 'pdfjs-web/viewer.css';
+
 import {
     PDFJS
 } from "pdfjs-lib";

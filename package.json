@@ -14,6 +14,7 @@
     "babel-preset-env": "^1.6.1",
     "core-js": "^2.5.3",
     "escodegen": "^1.9.0",
+    "file-loader": "^1.1.10",
     "npm": "^5.6.0",
     "pdf": "https://github.com/hypothesis/pdf.js-hypothes.is.git",
     "pdf.js": "https://github.com/mozilla/pdf.js.git",
@@ -25,5 +26,9 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.10",
+    "style-loader": "^0.20.2"
   }
 }

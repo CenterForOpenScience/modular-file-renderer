@@ -1,5 +1,5 @@
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="${base}/css/ipynb.css">
+<link rel="stylesheet" href="/assets/ipynb.css">
 <link rel="stylesheet" href="${base}/css/pygments.css">
 <link rel="stylesheet" href="/static/css/default.css">
 
@@ -8,8 +8,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
-<script src="/static/js/mfr.js"></script>
-<script src="/static/js/mfr.child.js"></script>
+<script src="/assets/mfr.child.js"></script>
 <script>
     (function () {
         MathJax.Hub.Config({

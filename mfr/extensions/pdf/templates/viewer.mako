@@ -24,8 +24,8 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 
 
-    <link rel="stylesheet" href="/assets/viewer.css">
-    <link rel="resource" type="application/l10n" href="/assets/locale/locale.properties">
+    <link rel="stylesheet" href="/static/vendor/css/pdf/viewer.css">
+    <link rel="resource" type="application/l10n" href="/static/vendor/locale/locale.properties">
 
     <script>
         var DEFAULT_URL = '${url}';
@@ -39,7 +39,7 @@ See https://github.com/adobe-type-tools/cmap-resources
         
         }
     </script>
-    <script src="/assets/hypothesis.js"></script>
+    <script src="https://cdn.hypothes.is/hypothesis"></script>
 
   </head>
 
@@ -347,7 +347,6 @@ See https://github.com/adobe-type-tools/cmap-resources
              border-bottom: solid 1px #404040;
         }
     </style>
-    <script src="/assets/mfr.js"></script>
     <script src="/assets/mfr.child.js"></script>
     <script>
         window.pymChild.sendMessage('embed', 'embed-responsive-pdf');

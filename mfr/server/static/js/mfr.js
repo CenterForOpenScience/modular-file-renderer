@@ -112,7 +112,7 @@
 
                 html: function() {
                     var xhr = new XMLHttpRequest()
-                    xhr.open('GET', uri, true);
+                    xhr.open('GET', wb_file_url, true);
                     xhr.withCredentials = true;
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === 4 && xhr.status === 200) {

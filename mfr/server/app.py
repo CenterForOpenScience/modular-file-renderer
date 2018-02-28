@@ -17,8 +17,6 @@ from mfr.server.handlers.render import RenderHandler
 from mfr.server.handlers.status import StatusHandler
 from mfr.server.handlers.exporters import ExportersHandler
 from mfr.server.handlers.renderers import RenderersHandler
-from mfr.server.handlers.core import ExtensionsStaticFileHandler
-from mfr.server.handlers.core import PackedExtensionsStaticFileHandler
 
 logger = logging.getLogger(__name__)
 

@@ -30,10 +30,10 @@ const config = {
     
     context: __dirname,
     entry: {
-        mfr: "./index.js",
+        mfr: "./src/mfr/mfr.js",
         pdf: "./mfr/extensions/pdf/index.js",
         'pdf.worker': 'pdfjs/pdf.worker.entry',
-        'mfr.child': "./index.child.js",
+        'mfr.child': "./src/mfr/mfr.child.js",
         codepygments: "./mfr/extensions/codepygments/static/css/default.css"
     },
     output: {
@@ -46,7 +46,7 @@ const config = {
         alias: {
             'pdfjs': 'pdf.js/src',
             'pdfjs-web': 'pdf.js/web',
-            'pdfjs-lib': path.join(__dirname, 'pdfjs-lib.js')
+            'pdfjs-lib': path.join(__dirname, '/src/pdf/pdfjs-lib.js')
         },
         extensions: [ '.ts', '.tsx', ".js", ".json"],
         modules: [

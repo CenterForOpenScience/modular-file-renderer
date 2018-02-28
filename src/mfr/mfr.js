@@ -1,6 +1,6 @@
 // Mfr.js is a library which renders common file formats to be displayed in an iframe.
 
-import "./config";
+import "../config";
 import style from "./mfr/mfr.css";
 import {Parent} from "pym.js";
 

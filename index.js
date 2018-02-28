@@ -132,39 +132,7 @@ PDFJS.workerSrc = "assets/pdf.worker.js";
                     self.pymParent.onMessage('location', function(message) {
                         window.location = message;
                     });
-                    
-                    self.pymParent.onMessage('pdfappready', function(message) {
-                    })
 
-
-                    /*
-                    var uri = `http://localhost:7777/v1/resources/${node_id}/providers/${provider}/${file_id}?direct=true`;
-                    var loadingTask = getDocument({
-                        url: uri,
-                        withCredentials: true
-                    });
-                    loadingTask.promise.then(function (pdfDocument) {
-                      // Request a first page
-                      return pdfDocument.getPage(1).then(function (pdfPage) {
-                        // Display page on the existing canvas with 100% scale.
-                        var viewport = pdfPage.getViewport(1.0);
-                        var canvas = document.createElement("canvas")
-                        document.getElementById('mfrIframe').appendChild(canvas);
-                        debugger;
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
-                        var ctx = canvas.getContext('2d');
-                        var renderTask = pdfPage.render({
-                          canvasContext: ctx,
-                          viewport: viewport
-                        });
-                        return renderTask.promise;
-                      });
-                    }).catch(function (reason) {
-                      console.error('Error: ' + reason);
-                    });
-                    */
-                    
                 },
 
                 default: function() {

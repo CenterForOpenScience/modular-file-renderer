@@ -31,7 +31,7 @@ const config = {
     context: __dirname,
     entry: {
         mfr: "./index.js",
-        pdf: "./mfr/extensions/pdf/client/index.js",
+        pdf: "./mfr/extensions/pdf/index.js",
         'pdf.worker': 'pdfjs/pdf.worker.entry',
         'mfr.child': "./index.child.js",
         codepygments: "./mfr/extensions/codepygments/static/css/default.css"

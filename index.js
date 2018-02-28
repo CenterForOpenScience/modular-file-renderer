@@ -1,9 +1,5 @@
 // Mfr.js is a library which renders common file formats to be displayed in an iframe.
 
-//import {
-//    getDocument
-//} from "pdfjs-lib";
-
 import "./config";
 import style from "./mfr/mfr.css";
 import {Parent} from "pym.js";
@@ -56,14 +52,9 @@ PDFJS.workerSrc = "assets/pdf.worker.js";
     }
 
     function _createSpinner(url, imgName) {
-        var parser = document.createElement('a');
-        parser.href = url;
-
         var spinner = document.createElement('div');
         var img = document.createElement('span');
         spinner.setAttribute('class', 'mfr-logo-spin text-center');
-        imgName = imgName || 'loading.png';
-        //img.setAttribute('src', parser.protocol + '//' + parser.host + '/static/images/' + imgName);
         spinner.appendChild(img);
         return spinner;
     }
@@ -85,12 +76,14 @@ PDFJS.workerSrc = "assets/pdf.worker.js";
         self.spinner = _createSpinner(url, imgName);
 
         self.init = function () {
+            const wb_url = window.contextVars.waterbutlerURL;
             const node_id = window.contextVars.node.id;
             const provider = window.contextVars.file.provider;
             const file_id = window.contextVars.file.id;
             const file_name = window.contextVars.file.name;
-
-            const pdf_url = `http://localhost:7777/v1/resources/${node_id}/providers/${provider}/$Pfile_id}`;
+            console.log(__webpack_public_path__);
+            debugger;
+            const pdf_url = `${wb_url}/v1/resources/${node_id}/providers/${provider}/${file_id}`;
 
             const split_file_name = file_name.split(".");
             self.file_ext = split_file_name[split_file_name.length - 1];

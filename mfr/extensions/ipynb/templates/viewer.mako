@@ -1,12 +1,12 @@
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="/assets/ipynb.css">
-<link rel="stylesheet" href="${base}/css/pygments.css">
-<link rel="stylesheet" href="/static/css/default.css">
+<link rel="stylesheet" href="/assets/md.css">
 
 <div style="word-wrap: break-word;" class="mfrViewer mfr-ipynb-body">
     ${body | n}
 </div>
 
+<script src="/assets/pygments.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
 <script src="/assets/mfr.child.js"></script>
 <script>

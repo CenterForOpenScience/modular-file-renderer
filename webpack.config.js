@@ -72,6 +72,9 @@ const config = {
         }, {
             from: "src/img/question-circle.png",
             to: "question-circle.png"
+        }, {
+            from: "src/style/md.css",
+            to: ""
         }], {}),
         new webpack.ProvidePlugin({
             $: "jquery",

@@ -69,6 +69,9 @@ const config = {
             from: "src/pdb/*",
             to: "",
             flatten: true
+        }, {
+            from: "src/img/question-circle.png",
+            to: "question-circle.png"
         }], {}),
         new webpack.ProvidePlugin({
             $: "jquery",

@@ -1,11 +1,13 @@
-<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 <style type="text/css">
     .popover {
         max-width: 100%;
     }
 </style>
-<script src="/assets/jquery-1.11.3.min.js" type="text/javascript"></script>
-<script src="/assets/bootstrap.min.js" type="text/javascript"></script>
+
+<script>
+    window.fileUrl = '${url}';
+    window.ext = '${ext}';
+</script>
 
 <canvas id="mfrViewer" tabindex="-1"></canvas>
 <a style="position: absolute; top: 10px; right: 10px; cursor: pointer;"
@@ -13,8 +15,10 @@
    data-content="<p><b> Rotate:</b> Click and drag</p>
                  <p><b> Pan:</b> Ctrl + click and drag</p>
                  <p><b> Zoom:</b> Shift + click and drag up/down</p>">
-   <img src="${base}/images/question-circle.png">
+   <img src="/assets/question-circle.png">
 </a>
+
+<script src="/assets/jsc3d-init.js"></script>
 
 <script src="/assets/mfr.child.js"></script>
 
@@ -36,4 +40,3 @@
 <script src="/assets/jsc3d.ctm.js"></script>
 % endif
 
-<script src="/assets/jsc3d-init.js"></script>

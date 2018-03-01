@@ -1,3 +1,10 @@
+
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.css";
+
+
+debugger;
+
 // Runs when DOM is finished loading.
 $(function () {
     $('[data-toggle="popover"]').popover();
@@ -9,7 +16,7 @@ $(function () {
     canvas.height = 500;
 
     var viewer = new JSC3D.Viewer(canvas);
-    viewer.setParameter('SceneUrl', '${ext}');
+    viewer.setParameter('SceneUrl', window.ext);
     viewer.setParameter('InitRotationX', -15);
     viewer.setParameter('InitRotationY', 0);
     viewer.setParameter('InitRotationZ', 0);
@@ -28,7 +35,7 @@ $(function () {
             return viewer.reportProgress('Unable to load renderer for file of type \'' + fileExtName + '\'', 0);
         }
         var _loadFromUrl = loader.loadFromUrl;
-        loader.loadFromUrl = _loadFromUrl.bind(loader, '${url}');
+        loader.loadFromUrl = _loadFromUrl.bind(loader, window.fileUrl);
         return loader;
     };
 

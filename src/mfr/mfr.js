@@ -1,14 +1,13 @@
 // Mfr.js is a library which renders common file formats to be displayed in an iframe.
 
 import "../config";
-import style from "./mfr/mfr.css";
+import style from "../style/mfr.css";
+
 import {Parent} from "pym.js";
-
 import {PDFJS} from "pdfjs/display/global";
+
+
 PDFJS.workerSrc = "assets/pdf.worker.js";
-
-
-
 
 (function(factory) {
     if (typeof define === 'function' && define.amd) {

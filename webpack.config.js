@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var builder = require('./node_modules/pdf.js/external/builder/builder.js');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 
 // Configuration for preprocessor?
@@ -33,8 +34,10 @@ const config = {
         mfr: "./src/mfr/mfr.js",
         pdf: "./mfr/extensions/pdf/index.js",
         'pdf.worker': 'pdfjs/pdf.worker.entry',
-        'mfr.child': "./src/mfr/mfr.child.js",
-        codepygments: "./mfr/extensions/codepygments/static/css/default.css"
+        'mfr.child': "./src/mfr/child.js",
+        codepygments: "./mfr/extensions/codepygments/static/css/default.css",
+        "jsc3d-init": "./src/jsc3d/index.js",
+        tabular: "./src/tabular/index.js"
     },
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -54,6 +57,24 @@ const config = {
             'node_modules'
         ]
     },
+    plugins: [
+        new CopyWebpackPlugin([{
+            from: "node_modules/jsc3d/jsc3d/*.js",
+            to: "",
+            flatten: true
+        }, {
+            from: "node_modules/jquery/dist/jquery.min.js",
+            to: "jquery-1.11.3.min.js"
+        }, {
+            from: "src/pdb/*",
+            to: "",
+            flatten: true
+        }], {}),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        })
+    ],
     module: {
         rules: [
             {
@@ -78,7 +99,7 @@ const config = {
                 use: ['style-loader', 'css-loader'],
             },
             {
-                test: /\.(png|jpg|gif|cur)$/,
+                test: /\.(png|jpg|gif|cur|woff|woff2|ttf|eot|svg)$/,
                 use: [ 'file-loader' ],
                 
             }

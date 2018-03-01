@@ -7,7 +7,7 @@ from mfr import settings
 
 config = settings.child('SERVER_CONFIG')
 
-STATIC_PATH = config.get('STATIC_PATH', os.path.join(os.path.dirname(__file__), 'static'))
+STATIC_PATH = config.get('STATIC_PATH', os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dist'))
 
 ADDRESS = config.get('ADDRESS', 'localhost')
 PORT = config.get('PORT', 7778)

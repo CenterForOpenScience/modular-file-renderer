@@ -33,3 +33,4 @@ Contributors
 - Addison Schiller `@AddisonSchiller <https://github.com/AddisonSchiller>`_
 - Longze Chen `@cslzchen https://github.com/cslzchen`_
 - Jonathon Love `@jonathon-love https://github.com/jonathon-love`_
+- Joshua Bird `@birdbrained https://github.com/birdbrained`_

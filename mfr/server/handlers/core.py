@@ -268,28 +268,3 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         metrics['error'] = getattr(self, 'error_metrics') if hasattr(self, 'error_metrics') else None
         return metrics
 
-
-class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
-    """Extensions static path definitions
-    """
-
-    def initialize(self):
-        namespace = 'mfr.renderers'
-        module_path = 'mfr.extensions'
-        self.modules = {
-            ep.module_name.replace(module_path + '.', ''): os.path.join(ep.dist.location, 'mfr', 'extensions', ep.module_name.replace(module_path + '.', ''), 'static')
-            for ep in list(pkg_resources.iter_entry_points(namespace))
-        }
-
-    async def get(self, module_name, path):
-        try:
-            super().initialize(self.modules[module_name])
-            return await super().get(path)
-        except Exception:
-            self.set_status(404)
-
-        try:
-            super().initialize(settings.STATIC_PATH)
-            return await super().get(path)
-        except Exception:
-            self.set_status(404)

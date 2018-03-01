@@ -83,6 +83,10 @@ ENV GIT_COMMIT ${GIT_COMMIT}
 
 RUN python setup.py develop
 
+RUN apt-get install nodejs \
+    apt-get install npm \
+    && npm run build
+
 EXPOSE 7778
 
 CMD ["gosu", "www-data", "invoke", "server"]

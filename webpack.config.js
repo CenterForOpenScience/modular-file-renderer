@@ -59,7 +59,7 @@ const config = {
     },
     plugins: [
         new CopyWebpackPlugin([{
-            from: "node_modules/jsc3d/jsc3d/*.js",
+            from: "src/jsc3d/lib/*.js",
             to: "",
             flatten: true
         }, {

@@ -40,3 +40,8 @@
 <script src="/assets/jsc3d.ctm.js"></script>
 % endif
 
+<script>
+    console.log("FIRST");
+</script>
+
+

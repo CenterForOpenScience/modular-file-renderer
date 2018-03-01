@@ -3,10 +3,10 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
 
-debugger;
 
 // Runs when DOM is finished loading.
 $(function () {
+
     $('[data-toggle="popover"]').popover();
     $('#mfrViewer').bind('contextmenu', function () { return false; });
     window.focus();

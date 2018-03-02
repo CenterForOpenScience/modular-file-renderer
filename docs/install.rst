@@ -20,7 +20,7 @@ Install the versions of ``setuptools`` and ``invoke`` found in the requirements.
 
 .. code-block:: bash
 
-    pip install setuptools==30.4.0
+    pip install setuptools==37.0.0
     pip install invoke==0.13.0
 
 Install requirements:

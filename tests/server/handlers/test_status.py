@@ -1,7 +1,11 @@
-import mfr
 import json
-from tests import utils
+from http import HTTPStatus
+
 from tornado import testing
+
+from mfr.version import __version__
+
+from tests import utils
 
 
 class TestStatusHandler(utils.HandlerTestCase):
@@ -10,6 +14,6 @@ class TestStatusHandler(utils.HandlerTestCase):
         resp = yield self.http_client.fetch(self.get_url('/status'))
 
         data = json.loads(resp.body.decode('utf-8'))
-        assert resp.code == 200
+        assert resp.code == HTTPStatus.OK
         assert data['status'] == 'up'
-        assert data['version'] == mfr.__version__
+        assert data['version'] == __version__

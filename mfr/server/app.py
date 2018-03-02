@@ -1,15 +1,13 @@
 import signal
 import asyncio
+import logging
 from functools import partial
 
 import tornado.web
 import tornado.httpserver
 import tornado.platform.asyncio
-import logging
-
 from raven.contrib.tornado import AsyncSentryClient
 
-import mfr
 from mfr import settings
 from mfr.server import settings as server_settings
 from mfr.server.handlers.export import ExportHandler
@@ -18,6 +16,7 @@ from mfr.server.handlers.status import StatusHandler
 from mfr.server.handlers.exporters import ExportersHandler
 from mfr.server.handlers.renderers import RenderersHandler
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
+from mfr.version import __version__
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +32,7 @@ def sig_handler(sig, frame):
 
     io_loop.add_callback_from_signal(stop_loop)
 
+
 def make_app(debug):
     app = tornado.web.Application(
         [
@@ -46,7 +46,7 @@ def make_app(debug):
         ],
         debug=debug,
     )
-    app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=mfr.__version__)
+    app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=__version__)
     return app
 
 

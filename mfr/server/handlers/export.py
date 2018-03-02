@@ -29,11 +29,12 @@ class ExportHandler(core.BaseHandler):
                                     " appropriate extension")
         # TODO: do we need to catch exceptions for decoding?
         self.format = format[0].decode('utf-8')
+        self.exporter_name = utils.get_exporter_name(self.metadata.ext)
 
         self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
 
         self.cache_file_path = await self.cache_provider.validate_path(
-            '/export/{}'.format(self.cache_file_id)
+            '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)
         )
         self.source_file_path = await self.local_cache_provider.validate_path(
             '/export/{}'.format(self.source_file_id)

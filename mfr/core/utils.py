@@ -1,3 +1,4 @@
+import pkg_resources
 from stevedore import driver
 
 from mfr.core import exceptions
@@ -96,6 +97,46 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
                 'export_url': export_url,
             }
         )
+
+def get_renderer_name(name):
+    """ Return the name of the renderer used for a certain file extension.
+
+    :param str name: The name of the extension to get the renderer name for. (.jpg, .docx, etc)
+
+    :rtype : `str`
+    """
+
+    # This can give back empty tuples
+    try:
+        entry_attrs = pkg_resources.iter_entry_points(group='mfr.renderers', name=name)
+
+    # ep.attrs is a tuple of attributes. There should only ever be one or `None`.
+    # None case occurs when trying to render an unsupported file type
+    # entry_attrs is an iterable object, so we turn into a list to index it
+        return list(entry_attrs)[0].attrs[0]
+
+    # This means the file type is not supported. Just return the blank string so `make_renderers` can
+    # log a real exception with all the variables and names it has
+    except IndexError:
+        return ''
+
+def get_exporter_name(name):
+    """ Return the name of the exporter used for a certain file extension.
+
+    :param str name: The name of the extension to get the exporter name for. (.jpg, .docx, etc)
+
+    :rtype : `str`
+    """
+
+    # `make_renderer` should have already caught if an extension doesn't exist.
+
+    # should be a list of length one, since we don't have multiple entrypoints per group
+    entry_attrs = pkg_resources.iter_entry_points(group='mfr.exporters', name=name)
+
+    # ep.attrs is a tuple of attributes. There should only ever be one or `None`.
+    # For our case however there shouldn't be `None`
+    return list(entry_attrs)[0].attrs[0]
+
 
 def sizeof_fmt(num, suffix='B'):
     if abs(num) < 1000:

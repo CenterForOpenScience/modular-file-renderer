@@ -23,7 +23,11 @@ class PdfRenderer(extension.BaseRenderer):
         logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext, settings.EXPORT_SUPPORTED))
         if self.metadata.ext not in settings.EXPORT_SUPPORTED:
             logger.debug('Extension not found in supported list!')
-            return self.TEMPLATE.render(base=self.assets_url, url=download_url.geturl())
+            return self.TEMPLATE.render(
+                base=self.assets_url,
+                url=download_url.geturl(),
+                enable_hypothesis=settings.ENABLE_HYPOTHESIS
+            )
 
         logger.debug('Extension found in supported list!')
         exported_url = furl.furl(self.export_url)
@@ -35,9 +39,17 @@ class PdfRenderer(extension.BaseRenderer):
                 exported_url.args['format'] = settings.EXPORT_TYPE
 
             self.metrics.add('needs_export', True)
-            return self.TEMPLATE.render(base=self.assets_url, url=exported_url.url)
+            return self.TEMPLATE.render(
+                base=self.assets_url,
+                url=exported_url.url,
+                enable_hypothesis=settings.ENABLE_HYPOTHESIS
+            )
 
-        return self.TEMPLATE.render(base=self.assets_url, url=download_url.geturl())
+        return self.TEMPLATE.render(
+            base=self.assets_url,
+            url=download_url.geturl(),
+            enable_hypothesis=settings.ENABLE_HYPOTHESIS
+        )
 
     @property
     def file_required(self):

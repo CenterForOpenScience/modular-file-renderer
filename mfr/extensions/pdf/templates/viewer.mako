@@ -37,7 +37,9 @@ http://sourceforge.net/adobe/cmap/wiki/License/
 
     <script src="debugger.js"></script>
     <script src="viewer.js"></script>
-    <script src="https://hypothes.is/embed.js"></script>
+    % if enable_hypothesis:
+        <script src="https://hypothes.is/embed.js"></script>
+    % endif
   </head>
 
   <body tabindex="1" class="loadingInProgress">

@@ -39,6 +39,12 @@ http://sourceforge.net/adobe/cmap/wiki/License/
     <script src="viewer.js"></script>
     % if enable_hypothesis:
         <script src="https://hypothes.is/embed.js"></script>
+        <style>
+            #toolbarViewer {
+                position: relative;
+                margin-right: 36px;
+            }
+        </style>
     % endif
   </head>
 

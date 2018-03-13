@@ -26,7 +26,7 @@ class PdfRenderer(extension.BaseRenderer):
             return self.TEMPLATE.render(
                 base=self.assets_url,
                 url=download_url.geturl(),
-                enable_hypothesis = settings.ENABLE_HYPOTHESIS
+                enable_hypothesis=settings.ENABLE_HYPOTHESIS
             )
 
         logger.debug('Extension found in supported list!')
@@ -42,13 +42,13 @@ class PdfRenderer(extension.BaseRenderer):
             return self.TEMPLATE.render(
                 base=self.assets_url,
                 url=exported_url.url,
-                enable_hypothesis = settings.ENABLE_HYPOTHESIS
+                enable_hypothesis=settings.ENABLE_HYPOTHESIS
             )
 
         return self.TEMPLATE.render(
             base=self.assets_url,
             url=download_url.geturl(),
-            enable_hypothesis = settings.ENABLE_HYPOTHESIS
+            enable_hypothesis=settings.ENABLE_HYPOTHESIS
         )
 
     @property

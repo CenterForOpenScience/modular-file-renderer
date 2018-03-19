@@ -1,3 +1,10 @@
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
 <video controls height="100%">
   <source src="${url}">
   Your browser does not support the video tag.

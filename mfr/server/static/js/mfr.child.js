@@ -17,22 +17,6 @@
                 }
             });
         });
-
-        var video = document.querySelector('#video');
-        if (video) {
-            var preloader = document.querySelector('.preloader');
-
-            function checkLoad() {
-                if (video.readyState === 4) {
-                    preloader.parentNode.removeChild(preloader);
-                    video.css.opacity = "1.0";
-                } else {
-                    setTimeout(checkLoad, 100);
-                }
-            }
-
-            checkLoad();
-        }
     }, false);
 
     window.addEventListener('resize', function () {

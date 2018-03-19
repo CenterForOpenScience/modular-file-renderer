@@ -3,6 +3,11 @@
 This CSS was stripped out of base.css from the osf-style repo.
 */
 
+body {
+    margin: 0;
+    padding: 0;
+}
+
 .ball-pulse > div:nth-child(0) {
   -webkit-animation: scale 0.75s -0.36s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
           animation: scale 0.75s -0.36s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
@@ -35,6 +40,26 @@ This CSS was stripped out of base.css from the osf-style repo.
   background-color: #337AB7;
 }
 
+.ball-scale {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 250px;
+}
+
+.ball-scale > div {
+}
+
 .embed-responsive-pdf {
     padding-bottom: 95%;
+}
+
+#mfrIframe iframe {
+    display: none;
+}
+
+#mfrIframe {
+    min-height: 250px;
 }

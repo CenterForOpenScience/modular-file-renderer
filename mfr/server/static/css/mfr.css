@@ -3,23 +3,23 @@
 This CSS was stripped out of base.css from the osf-style repo.
 */
 
-.ball-pulse > div:nth-child(0) {
+#mfrIframe .ball-pulse > div:nth-child(0) {
   -webkit-animation: scale 0.75s -0.36s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
           animation: scale 0.75s -0.36s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-.ball-pulse > div:nth-child(1) {
+#mfrIframe .ball-pulse > div:nth-child(1) {
   -webkit-animation: scale 0.75s -0.24s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
           animation: scale 0.75s -0.24s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-.ball-pulse > div:nth-child(2) {
+#mfrIframe .ball-pulse > div:nth-child(2) {
   -webkit-animation: scale 0.75s -0.12s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
           animation: scale 0.75s -0.12s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-.ball-pulse > div:nth-child(3) {
+#mfrIframe .ball-pulse > div:nth-child(3) {
   -webkit-animation: scale 0.75s 0s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
           animation: scale 0.75s 0s infinite cubic-bezier(0.2, 0.68, 0.18, 1.08);
 }
-.ball-pulse > div {
+#mfrIframe .ball-pulse > div {
   background-color: #fff;
   width: 15px;
   height: 15px;
@@ -31,10 +31,29 @@ This CSS was stripped out of base.css from the osf-style repo.
 }
 
 
-.ball-dark > div {
+#mfrIframe .ball-dark > div {
   background-color: #337AB7;
 }
 
-.embed-responsive-pdf {
+#mfrIframe .ball-scale {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 250px;
+    top: 0;
+    left: 0;
+}
+
+#mfrIframe .embed-responsive-pdf {
     padding-bottom: 95%;
+}
+
+#mfrIframe iframe {
+    opacity: 0.0;
+}
+
+#mfrIframe {
+    min-height: 250px;
 }

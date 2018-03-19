@@ -5,7 +5,6 @@
 
     window.addEventListener('load', function () {
         window.pymChild.sendHeight();
-        window.pymChild.sendMessage('load', true);
         var anchors = document.getElementsByTagName('a');
         Array.prototype.slice.call(anchors).forEach(function (el) {
             el.addEventListener('click', function (e) {

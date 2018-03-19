@@ -80,9 +80,10 @@
             self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
 
             self.pymParent.el.appendChild(self.spinner);
-            $(self.pymParent.iframe).on('load', function () {
+            $(self.pymParent.iframe).on('load', function() {
                 self.pymParent.el.removeChild(self.spinner);
-            });
+                this.style.display = "block"
+            })
 
             self.pymParent.onMessage('embed', function(message) {
                 _addClass(self.pymParent.el, 'embed-responsive');

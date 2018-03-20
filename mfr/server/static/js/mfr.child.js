@@ -16,7 +16,7 @@
                 }
             });
         });
-    });
+    }, false);
 
     window.addEventListener('resize', function () {
         window.pymChild.sendHeight();

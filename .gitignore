@@ -71,4 +71,6 @@ player/static/mfr/*
 
 !.gitkeep
 
+node_modules/
+
 .cache

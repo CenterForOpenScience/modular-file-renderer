@@ -1,5 +1,5 @@
 
-<video id="video" controls height="100%">
+<video controls height="100%">
   <source src="${url}">
   Your browser does not support the video tag.
 </video>

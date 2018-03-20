@@ -42,6 +42,8 @@ This CSS was stripped out of base.css from the osf-style repo.
     align-items: center;
     width: 100%;
     height: 250px;
+    top: 0;
+    left: 0;
 }
 
 .ball-scale > div {
@@ -52,7 +54,7 @@ This CSS was stripped out of base.css from the osf-style repo.
 }
 
 #mfrIframe iframe {
-    display: none;
+    opacity: 0.0;
 }
 
 #mfrIframe {

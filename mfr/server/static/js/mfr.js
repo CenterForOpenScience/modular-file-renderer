@@ -82,7 +82,7 @@
             self.pymParent.el.appendChild(self.spinner);
             $(self.pymParent.iframe).on('load', function() {
                 self.pymParent.el.removeChild(self.spinner);
-                this.style.display = "block"
+                this.style.opacity = "1.0"
             })
 
             self.pymParent.onMessage('embed', function(message) {

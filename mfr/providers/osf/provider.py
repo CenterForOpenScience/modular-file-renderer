@@ -125,6 +125,7 @@ class OsfProvider(provider.BaseProvider):
         """Download file from WaterButler, returning stream."""
         download_url = await self._fetch_download_url()
         headers = {settings.MFR_IDENTIFYING_HEADER: '1'}
+        headers.update(self.request.headers)
         response = await self._make_request('GET', download_url, allow_redirects=False, headers=headers)
 
         if response.status >= 400:

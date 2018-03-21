@@ -42,8 +42,6 @@ This CSS was stripped out of base.css from the osf-style repo.
     align-items: center;
     width: 100%;
     height: 250px;
-    top: 0;
-    left: 0;
 }
 
 .embed-responsive-pdf {
@@ -51,7 +49,7 @@ This CSS was stripped out of base.css from the osf-style repo.
 }
 
 #mfrIframe iframe {
-    opacity: 0.0;
+    display: none;
 }
 
 #mfrIframe {

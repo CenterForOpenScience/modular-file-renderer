@@ -98,7 +98,8 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             }
         )
 
-def get_renderer_name(name):
+
+def get_renderer_name(name: str) -> str:
     """ Return the name of the renderer used for a certain file extension.
 
     :param str name: The name of the extension to get the renderer name for. (.jpg, .docx, etc)
@@ -106,21 +107,22 @@ def get_renderer_name(name):
     :rtype : `str`
     """
 
-    # This can give back empty tuples
-    try:
-        entry_attrs = pkg_resources.iter_entry_points(group='mfr.renderers', name=name)
+    # `ep_iterator` is an iterable object. Must convert it to a `list` for access.
+    # `list()` can only be called once because the iterator moves to the end after conversion.
+    ep_iterator = pkg_resources.iter_entry_points(group='mfr.renderers', name=name.lower())
+    ep_list = list(ep_iterator)
 
-        # ep.attrs is a tuple of attributes. There should only ever be one or `None`.
-        # None case occurs when trying to render an unsupported file type
-        # entry_attrs is an iterable object, so we turn into a list to index it
-        return list(entry_attrs)[0].attrs[0]
-
-    # This means the file type is not supported. Just return the blank string so `make_renderers`
-    # can log a real exception with all the variables and names it has
-    except IndexError:
+    # Empty list indicates unsupported file type.
+    # Return a blank string and let `make_renderer()` handle it.
+    if len(ep_list) == 0:
         return ''
 
-def get_exporter_name(name):
+    # If file type is supported, there must be only one element in the list.
+    assert len(ep_list) == 1
+    return ep_list[0].attrs[0]
+
+
+def get_exporter_name(name: str) -> str:
     """ Return the name of the exporter used for a certain file extension.
 
     :param str name: The name of the extension to get the exporter name for. (.jpg, .docx, etc)
@@ -128,14 +130,14 @@ def get_exporter_name(name):
     :rtype : `str`
     """
 
-    # `make_renderer` should have already caught if an extension doesn't exist.
+    # `ep_iterator` is an iterable object. Must convert it to a `list` for access.
+    # `list()` can only be called once because the iterator moves to the end after conversion.
+    ep_iterator = pkg_resources.iter_entry_points(group='mfr.exporters', name=name.lower())
+    ep_list = list(ep_iterator)
 
-    # should be a list of length one, since we don't have multiple entrypoints per group
-    entry_attrs = pkg_resources.iter_entry_points(group='mfr.exporters', name=name)
-
-    # ep.attrs is a tuple of attributes. There should only ever be one or `None`.
-    # For our case however there shouldn't be `None`
-    return list(entry_attrs)[0].attrs[0]
+    # `make_renderer()` is called before `make_exporter()` to ensure the file type is supported
+    assert len(ep_list) == 1
+    return ep_list[0].attrs[0]
 
 
 def sizeof_fmt(num, suffix='B'):

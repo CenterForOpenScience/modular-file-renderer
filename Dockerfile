@@ -46,14 +46,15 @@ RUN usermod -d /home www-data \
     && pip install setuptools==37.0.0 \
     && mkdir -p /code
 
-ENV LIBREOFFICE_VERSION 6.0.1.1
-ENV LIBREOFFICE_ARCHIVE LibreOffice_6.0.1.1_Linux_x86-64_deb.tar.gz
+ENV LIBREOFFICE_VERSION 6.0.2
+ENV LIBREOFFICE_ARCHIVE LibreOffice_6.0.2.1_Linux_x86-64_deb.tar.gz
+ENV LIBREOFFICE_MIRROR_URL https://ftp.osuosl.org/pub/tdf/libreoffice/testing/
 RUN apt-get update \
     && apt-get install -y \
         curl \
     && gpg --keyserver pool.sks-keyservers.net --recv-keys AFEEAEA3 \
-    && curl -SL "https://downloadarchive.documentfoundation.org/libreoffice/old/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE" -o $LIBREOFFICE_ARCHIVE \
-    && curl -SL "https://downloadarchive.documentfoundation.org/libreoffice/old/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE.asc" -o $LIBREOFFICE_ARCHIVE.asc \
+    && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE" -o $LIBREOFFICE_ARCHIVE \
+    && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE.asc" -o $LIBREOFFICE_ARCHIVE.asc \
     && gpg --verify "$LIBREOFFICE_ARCHIVE.asc" \
     && mkdir /tmp/libreoffice \
     && tar -xvf "$LIBREOFFICE_ARCHIVE" -C /tmp/libreoffice/ --strip-components=1 \

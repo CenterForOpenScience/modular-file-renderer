@@ -35,23 +35,6 @@ This CSS was stripped out of base.css from the osf-style repo.
   background-color: #337AB7;
 }
 
-.ball-scale {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 250px;
-}
-
 .embed-responsive-pdf {
     padding-bottom: 95%;
-}
-
-#mfrIframe iframe {
-    display: none;
-}
-
-#mfrIframe {
-    min-height: 250px;
 }

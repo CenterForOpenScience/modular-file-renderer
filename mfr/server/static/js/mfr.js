@@ -49,8 +49,11 @@
         // The the OSF asks for the CSS for this spinner (/static/css/mfr)
         // MFR itself does not use it anywhere
         var spinner = document.createElement('div');
-        spinner.setAttribute('class', 'ball-scale ball-dark ball-scale-blue text-center');
-        spinner.appendChild(document.createElement('div'));
+        spinner.setAttribute('class', 'ball-pulse ball-dark text-center');
+        for(i=0; i < 3; i++){
+            spinner.appendChild(document.createElement('div'));
+        }
+
         return spinner;
     }
 

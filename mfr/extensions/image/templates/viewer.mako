@@ -103,7 +103,11 @@
                     ##      issue mentioned below.
                     ## 2.   Images are displayed in its actual size. No issue for all supported
                     ##      browsers.
-                    baseImage.wrap("<div></div>").parent().css("display", "inline-block");
+                    baseImage.wrap("<div></div>").parent().css({
+                        "display": "inline-block",
+                        "max-width": "100%",  // need to be explicit for IE
+                        "height": "auto"      // need to be explicit for IE
+                    });
                 } else {
                     ## Quirks: Chrome has a flickering bug when images are wrapped with `<div>` or
                     ## `<span>`.  During zoom the scroll bar keeps appearing and disappearing which

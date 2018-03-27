@@ -29,9 +29,14 @@ class TableTooBigError(TabularRendererError):
 
     __TYPE = 'tabular_table_too_big'
 
-    def __init__(self, message, *args, code: int=400, **kwargs):
+    def __init__(self, message, *args, code: int=400, nbr_cols: int=0, nbr_rows: int=0, **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
-        self.attr_stack.append([self.__TYPE, {}])
+        self.nbr_cols = nbr_cols
+        self.nbr_rows = nbr_rows
+        self.attr_stack.append([self.__TYPE, {
+            'nbr_cols': self.nbr_cols,
+            'nbr_rows': self.nbr_rows
+        }])
 
 
 class UnexpectedFormattingError(TabularRendererError):

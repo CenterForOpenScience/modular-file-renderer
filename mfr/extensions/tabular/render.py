@@ -46,14 +46,23 @@ class TabularRenderer(extension.BaseRenderer):
         size = settings.SMALL_TABLE
         self._renderer_tabular_metrics['size'] = 'small'
         self._renderer_tabular_metrics['nbr_sheets'] = len(sheets)
-        for sheet in sheets:
-            sheet = sheets[sheet]  # Sheets are stored in key-value pairs of the form {sheet: (col, row)}
-            if len(sheet[0]) > 9:  # Check the number of columns
+        for sheet_title in sheets:
+            sheet = sheets[sheet_title]
+
+            # sheet is a two-element list.  sheet[0] is a list of dicts containing metadata about
+            # the column headers.  Each dict contains four keys: `field`, `name`, `sortable`, `id`.
+            # sheet[1] is a list of dicts where each dict contains the row data.  The keys are the
+            # fields the data belongs to and the values are the data values.
+
+            nbr_cols = len(sheet[0])
+            if nbr_cols > 9:
                 size = settings.BIG_TABLE
                 self._renderer_tabular_metrics['size'] = 'big'
 
-            if len(sheet[0]) > settings.MAX_SIZE or len(sheet[1]) > settings.MAX_SIZE:
-                raise exceptions.TableTooBigError('Table is too large to render.', extension=ext)
+            nbr_rows = len(sheet[1])
+            if nbr_cols > settings.MAX_SIZE or nbr_rows > settings.MAX_SIZE:
+                raise exceptions.TableTooBigError('Table is too large to render.', extension=ext,
+                                                  nbr_cols=nbr_cols, nbr_rows=nbr_rows)
 
         return sheets, size
 
@@ -61,7 +70,7 @@ class TabularRenderer(extension.BaseRenderer):
         """Determine the appropriate library and use it to populate rows and columns
         :param fp: file pointer
         :param ext: file extension
-        :return: tuple of column headers and row data
+        :return: a dict mapping sheet titles to tuples of column headers and row data
         """
         function_preference = settings.LIBS.get(ext.lower())
 

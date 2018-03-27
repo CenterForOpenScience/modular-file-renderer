@@ -47,3 +47,20 @@ class UnexpectedFormattingError(TabularRendererError):
         super().__init__(message, *args, code=code, **kwargs)
         self.formatting_function = formatting_function
         self.attr_stack.append([self.__TYPE, {'formatting_function': self.formatting_function}])
+
+
+class FileTooLargeError(TabularRendererError):
+
+    __TYPE = 'tabular_file_too_large'
+
+    def __init__(self, message, *args, code: int=400, file_size: int=None, max_size: int=None,
+                 **kwargs):
+        super().__init__(message, *args, code=code, **kwargs)
+
+        self.file_size = file_size
+        self.max_size = max_size
+
+        self.attr_stack.append([self.__TYPE, {
+            'file_size': self.file_size,
+            'max_size': self.max_size
+        }])

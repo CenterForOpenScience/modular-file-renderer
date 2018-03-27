@@ -1,11 +1,14 @@
-import os
 import json
+import logging
+import os
 
+from humanfriendly import format_size
 from mako.lookup import TemplateLookup
-from mfr.core import extension
 
-from mfr.extensions.tabular import settings
-from mfr.extensions.tabular import exceptions
+from mfr.core import extension
+from mfr.extensions.tabular import settings, exceptions
+
+logger = logging.getLogger(__name__)
 
 
 class TabularRenderer(extension.BaseRenderer):
@@ -16,6 +19,16 @@ class TabularRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
+        file_size = os.path.getsize(self.file_path)
+        if file_size > settings.MAX_FILE_SIZE:
+            raise exceptions.FileTooLargeError(
+                'Tabular files larger than {} are not rendered. Please download '
+                'the file to view.'.format(format_size(settings.MAX_FILE_SIZE, binary=True)),
+                file_size=file_size,
+                max_size=settings.MAX_FILE_SIZE,
+                extension=self.metadata.ext,
+            )
+
         with open(self.file_path, errors='replace') as fp:
             sheets, size = self._render_grid(fp, self.metadata.ext)
             return self.TEMPLATE.render(
@@ -34,7 +47,7 @@ class TabularRenderer(extension.BaseRenderer):
     def cache_result(self):
         return True
 
-    def _render_grid(self, fp, ext, *args, **kwargs):  # assets_path, ext):
+    def _render_grid(self, fp, ext, *args, **kwargs):
         """Render a tabular file to html
         :param fp: file pointer object
         :return: RenderResult object containing html and assets

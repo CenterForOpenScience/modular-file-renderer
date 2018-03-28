@@ -198,7 +198,7 @@
 						'.jstree-table-resizable-separator {cursor: col-resize; width: 10px;}',
 						'.jstree-table-separator-regular {border-color: #d0d0d0; border-style: solid;}',
 						'.jstree-table-cell-themeroller {border: none !important; background: transparent !important;}',
-						'.jstree-table-wrapper {table-layout: fixed; width: 100%; overflow: auto; position: relative;}',
+						'.jstree-table-wrapper {position: relative;}', // modified to remove scrollbar
 						'.jstree-table-midwrapper {display: table-row;}',
 						'.jstree-table-width-auto {width:auto;display:block;}',
 						'.jstree-table-column {display: table-cell; overflow: hidden;}',

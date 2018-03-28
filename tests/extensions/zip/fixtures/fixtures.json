@@ -1,0 +1,117 @@
+{
+   "file_tree":[
+      {
+         "text":"test.zip",
+         "icon":"http://mfr.osf.io/assets/zip/img/file_extension_zip.png",
+         "children":[
+            {
+               "text":"test",
+               "icon":"http://mfr.osf.io/assets/zip/img/folder.png",
+               "children":[
+                  {
+                     "text":".DS_Store",
+                     "icon":"http://mfr.osf.io/assets/zip/img/generic-file.png",
+                     "children":[
+
+                     ],
+                     "data":{
+                        "size":"6.1KB",
+                        "date":"2017-11-09 16:45:02"
+                     }
+                  },
+                  {
+                     "text":"dir 1",
+                     "icon":"http://mfr.osf.io/assets/zip/img/folder.png",
+                     "children":[
+                        {
+                           "text":"test 1",
+                           "icon":"http://mfr.osf.io/assets/zip/img/generic-file.png",
+                           "children":[
+
+                           ],
+                           "data":{
+                              "size":" 15B",
+                              "date":"2017-03-02 16:22:14"
+                           }
+                        },
+                        {
+                           "text":"test 3",
+                           "icon":"http://mfr.osf.io/assets/zip/img/generic-file.png",
+                           "children":[
+
+                           ],
+                           "data":{
+                              "size":" 15B",
+                              "date":"2017-03-02 16:22:14"
+                           }
+                        }
+                     ],
+                     "data":{
+                        "size":"",
+                        "date":"2017-11-09 16:44:34"
+                     }
+                  },
+                  {
+                     "text":"dir 2",
+                     "icon":"http://mfr.osf.io/assets/zip/img/folder.png",
+                     "children":[
+                        {
+                           "text":"test 4",
+                           "icon":"http://mfr.osf.io/assets/zip/img/generic-file.png",
+                           "children":[
+
+                           ],
+                           "data":{
+                              "size":" 15B",
+                              "date":"2017-03-02 16:22:14"
+                           }
+                        },
+                        {
+                           "text":"test 5",
+                           "icon":"http://mfr.osf.io/assets/zip/img/generic-file.png",
+                           "children":[
+
+                           ],
+                           "data":{
+                              "size":" 15B",
+                              "date":"2017-03-02 16:22:24"
+                           }
+                        }
+                     ],
+                     "data":{
+                        "size":"",
+                        "date":"2017-11-09 16:45:14"
+                     }
+                  },
+                  {
+                     "text":"test 1",
+                     "icon":"http://mfr.osf.io/assets/zip/img/generic-file.png",
+                     "children":[
+
+                     ],
+                     "data":{
+                        "size":" 15B",
+                        "date":"2017-03-02 16:22:14"
+                     }
+                  },
+                  {
+                     "text":"test 2",
+                     "icon":"http://mfr.osf.io/assets/zip/img/generic-file.png",
+                     "children":[
+
+                     ],
+                     "data":{
+                        "size":" 15B",
+                        "date":"2017-03-02 16:22:24"
+                     }
+                  }
+               ],
+               "data":{
+                  "size":"",
+                  "date":"2017-11-09 16:45:00"
+               }
+            }
+         ]
+      }
+   ]
+}

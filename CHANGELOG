@@ -2,6 +2,22 @@
 ChangeLog
 *********
 
+0.25.0 (2018-03-28)
+===================
+- Feature: Large files can now be zoomed!  Images are scaled to fit the window, but clicking on the
+image will show a higher-resolution version.  The mousewheel or two-finger drag will zoom in up to
+the maximum image size of 2400x2400px (increased from 1200x1200px).  The zoomed image can be panned
+around the display port by moving the mouse.
+- Feature: Refuse to render tabular files (.xls, .xlsx, .csv) larger than 10Mb. Rendering these
+files consumes a lot of memory and can crash MFR.
+- Feature: Cached files now have the renderer that generated them appended to their names.  This
+allows DevOps to do more targeted cache-cleaning after a feature release.
+- Fix: Make Libreoffice download mirror url configurable in the Dockerfile.  The current mirror
+was having difficulty serving requests for awhile.  This makes it easier to switch mirrors during
+times of trouble.  The official mirror is working again, and MFR will continue to use that.
+- Code: Update MFR to support setuptools versions greater than v30.4.0. MFR's `__version__`
+declaration has moved from `mfr.__init__` to `mfr.version`.  (thanks, @johnetordoff!)
+
 0.24.2 (2018-02-09)
 ===================
 - Fix: Update UNOCONV_BIN setting to reflect the default pip install path.

@@ -41,8 +41,10 @@ After installing python3.5, create the virtual environment with the following co
 pip install virtualenv
 pip install virtualenvwrapper
 mkvirtualenv --python=`which python3.5` mfr
-pip install setuptools==30.4.0
+
+pip install setuptools==37.0.0
 pip install invoke==0.13.0
+
 invoke install
 invoke server
 ```
@@ -86,8 +88,7 @@ invoke test
 
 ### Known issues
 
-- Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file
-`mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
+- **Updated, 2018-03-01:** *MFR has been updated to work with setuptools==37.0.0 as of MFR release v0.25. The following issue should not happen for new installs, but may occur if you downgrade to an older version.* Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file `mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.
 
 - The error `def create_default_context(purpose=ssl.Purpose.SERVER_AUTH, *, cafile=None, capath=None, cadata=None): SyntaxError: invalid syntax` is caused by inadvertently running the wrong version of Python. This can be caused by hashing the alias `inv`. To fix this run the command `hash -d inv` then run `inv server`.
 
@@ -99,7 +100,7 @@ Interested in adding support for a new provider or file format? Check out the CO
 
 ### License
 
-Copyright 2013-2017 Center for Open Science
+Copyright 2013-2018 Center for Open Science
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

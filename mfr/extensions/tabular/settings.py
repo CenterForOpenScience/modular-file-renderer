@@ -4,7 +4,8 @@ from mfr.extensions.tabular import libs
 
 config = settings.child('TABULAR_EXTENSION_CONFIG')
 
-MAX_SIZE = int(config.get('MAX_SIZE', 10000))
+MAX_FILE_SIZE = int(config.get('MAX_FILE_SIZE', 10 * 1024 * 1024))  # 10Mb
+MAX_SIZE = int(config.get('MAX_SIZE', 10000))  # max number of rows or columns allowed.
 TABLE_WIDTH = int(config.get('TABLE_WIDTH', 700))
 TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 

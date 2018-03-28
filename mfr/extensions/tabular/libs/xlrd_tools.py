@@ -19,7 +19,8 @@ def xlsx_xlrd(fp):
 
     for sheet in wb.sheets():
         if sheet.ncols > max_size or sheet.nrows > max_size:
-            raise TableTooBigError('Table is too large to render.', '.xlsx')
+            raise TableTooBigError('Table is too large to render.', '.xlsx',
+                                   nbr_cols=sheet.ncols, nbr_rows=sheet.nrows)
 
         if sheet.ncols < 1 or sheet.nrows < 1:
             sheets[sheet.name] = ([], [])

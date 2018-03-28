@@ -1,6 +1,8 @@
 -r requirements.txt
 
--e git+https://github.com/centerforopenscience/aiohttpretty.git@0.0.2#egg=aiohttpretty
+# aiohttpretty disabled due to no usage in MFR, re-enable when needed
+# git+https://github.com/centerforopenscience/aiohttpretty.git@0.1.0#egg=aiohttpretty
+
 beautifulsoup4
 colorlog==2.5.0
 flake8==3.0.4

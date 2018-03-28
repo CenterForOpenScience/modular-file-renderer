@@ -24,9 +24,11 @@ class RenderHandler(core.BaseHandler):
 
         await super().prepare()
 
+        self.renderer_name = utils.get_renderer_name(self.metadata.ext)
+
         self.cache_file_id = self.metadata.unique_key
         self.cache_file_path = await self.cache_provider.validate_path(
-            '/render/{}'.format(self.cache_file_id)
+            '/render/{}.{}'.format(self.cache_file_id, self.renderer_name)
         )
         self.source_file_path = await self.local_cache_provider.validate_path(
             '/render/{}'.format(self.source_file_id)

@@ -1,4 +1,5 @@
 import json
+import gc
 import logging
 import os
 
@@ -30,14 +31,23 @@ class TabularRenderer(extension.BaseRenderer):
             )
 
         with open(self.file_path, errors='replace') as fp:
-            sheets, size = self._render_grid(fp, self.metadata.ext)
-            return self.TEMPLATE.render(
-                base=self.assets_url,
-                width=settings.TABLE_WIDTH,
-                height=settings.TABLE_HEIGHT,
-                sheets=json.dumps(sheets),
-                options=json.dumps(size),
-            )
+            sheets, size, nbr_rows, nbr_cols = self._render_grid(fp, self.metadata.ext)
+            # gc.collect()
+            if sheets and size:
+                return self.TEMPLATE.render(
+                    base=self.assets_url,
+                    width=settings.TABLE_WIDTH,
+                    height=settings.TABLE_HEIGHT,
+                    sheets=json.dumps(sheets),
+                    options=json.dumps(size),
+                )
+        # gc.collect()
+        raise exceptions.TableTooBigError(
+            'Table is too large to render.',
+            extension=self.metadata.ext,
+            nbr_cols=nbr_cols,
+            nbr_rows=nbr_rows
+        )
 
     @property
     def file_required(self):
@@ -59,6 +69,11 @@ class TabularRenderer(extension.BaseRenderer):
         size = settings.SMALL_TABLE
         self._renderer_tabular_metrics['size'] = 'small'
         self._renderer_tabular_metrics['nbr_sheets'] = len(sheets)
+
+        table_too_big = False
+        nbr_cols = 0
+        nbr_rows = 0
+
         for sheet_title in sheets:
             sheet = sheets[sheet_title]
 
@@ -74,10 +89,13 @@ class TabularRenderer(extension.BaseRenderer):
 
             nbr_rows = len(sheet[1])
             if nbr_cols > settings.MAX_SIZE or nbr_rows > settings.MAX_SIZE:
-                raise exceptions.TableTooBigError('Table is too large to render.', extension=ext,
-                                                  nbr_cols=nbr_cols, nbr_rows=nbr_rows)
+                table_too_big = True
+                break
 
-        return sheets, size
+        if table_too_big:
+            return None, None, nbr_rows, nbr_cols
+
+        return sheets, size, None, None
 
     def _populate_data(self, fp, ext):
         """Determine the appropriate library and use it to populate rows and columns

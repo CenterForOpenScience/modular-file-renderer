@@ -19,8 +19,8 @@ def csv_stdlib(fp):
         dialect = csv.excel
     else:
         _set_dialect_quote_attrs(dialect, data)
-
     del data
+
     reader = csv.DictReader(fp, dialect=dialect)
     columns = []
     # update the reader field names to avoid duplicate column names when performing row extraction
@@ -41,6 +41,7 @@ def csv_stdlib(fp):
     try:
         rows = [row for row in reader]
     except csv.Error as e:
+        del reader
         if any("field larger than field limit" in errorMsg for errorMsg in e.args):
             raise TabularRendererError(
                 'This file contains a field too large to render. '
@@ -51,10 +52,9 @@ def csv_stdlib(fp):
         else:
             raise TabularRendererError('csv.Error: {}'.format(e), extension='csv') from e
 
+    del reader
     if not columns and not rows:
         raise EmptyTableError('Table empty or corrupt.', extension='csv')
-
-    del reader
     return {'Sheet 1': (columns, rows)}
 
 

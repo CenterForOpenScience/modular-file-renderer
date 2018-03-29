@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="static/css/default.css">
-<link rel="stylesheet" href="${base}/jstree-theme/style.css"/>
+<link rel="stylesheet" href="${base}/jstree-theme/style.min.css"/>
 
 <script src="/static/js/jquery-1.11.3.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>

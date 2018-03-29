@@ -32,16 +32,20 @@ class TabularRenderer(extension.BaseRenderer):
 
         with open(self.file_path, errors='replace') as fp:
             sheets, size, nbr_rows, nbr_cols = self._render_grid(fp, self.metadata.ext)
-            # gc.collect()
-            if sheets and size:
-                return self.TEMPLATE.render(
-                    base=self.assets_url,
-                    width=settings.TABLE_WIDTH,
-                    height=settings.TABLE_HEIGHT,
-                    sheets=json.dumps(sheets),
-                    options=json.dumps(size),
-                )
-        # gc.collect()
+
+        # Force GC
+        gc.collect()
+
+        if sheets and size:
+            return self.TEMPLATE.render(
+                base=self.assets_url,
+                width=settings.TABLE_WIDTH,
+                height=settings.TABLE_HEIGHT,
+                sheets=json.dumps(sheets),
+                options=json.dumps(size),
+            )
+
+        assert nbr_rows and nbr_cols
         raise exceptions.TableTooBigError(
             'Table is too large to render.',
             extension=self.metadata.ext,
@@ -93,6 +97,7 @@ class TabularRenderer(extension.BaseRenderer):
                 break
 
         if table_too_big:
+            del sheets
             return None, None, nbr_rows, nbr_cols
 
         return sheets, size, None, None

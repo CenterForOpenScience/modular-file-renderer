@@ -711,7 +711,7 @@ setup(
             # '.svg = mfr.extensions.svg:SvgRenderer',
 
             # tabular
-            '.csv = mfr.extensions.tabular:TabularRenderer',
+            # '.csv = mfr.extensions.tabular:TabularRenderer',
             '.tsv = mfr.extensions.tabular:TabularRenderer',
             '.xls = mfr.extensions.tabular:TabularRenderer',
             '.xlsx = mfr.extensions.tabular:TabularRenderer',

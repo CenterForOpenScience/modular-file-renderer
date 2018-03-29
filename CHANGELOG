@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+0.25.1 (2018-03-29)
+===================
+- Fix: Temporarily disable rendering for csv files. csv continues to cause resource issues for MFR
+and so will be disabled until those are resolved in another hotfix.
+
 0.25.0 (2018-03-28)
 ===================
 - Feature: Large files can now be zoomed!  Images are scaled to fit the window, but clicking on the

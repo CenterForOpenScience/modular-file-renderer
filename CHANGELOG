@@ -2,6 +2,12 @@
 ChangeLog
 *********
 
+0.25.2 (2018-03-29)
+===================
+- Fix: Release memory consumed during csv-rendering process and force a garbage-collect cycle to
+make it available for the next big render.
+- Fix: Re-enable rendering for csv files.
+
 0.25.1 (2018-03-29)
 ===================
 - Fix: Temporarily disable rendering for csv files. csv continues to cause resource issues for MFR

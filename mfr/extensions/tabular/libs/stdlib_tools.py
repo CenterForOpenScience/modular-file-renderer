@@ -52,7 +52,7 @@ def csv_stdlib(fp):
         else:
             raise TabularRendererError('csv.Error: {}'.format(e), extension='csv') from e
 
-    del reader
+    del reader  # noqa
     if not columns and not rows:
         raise EmptyTableError('Table empty or corrupt.', extension='csv')
     return {'Sheet 1': (columns, rows)}

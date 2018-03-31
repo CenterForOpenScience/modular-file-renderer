@@ -84,7 +84,7 @@ player/static/mfr/*
 
 # Node Modules
 ######################
-/node_modules/
+node_modules/
 
 # Asynchronous HTTP
 ######################

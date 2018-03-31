@@ -1,9 +1,9 @@
 import os
 import re
+import json
 from zipfile import ZipFile
 
 import pytest
-from bs4 import BeautifulSoup
 
 from mfr.core.provider import ProviderMetadata
 from mfr.extensions.zip import ZipRenderer
@@ -23,6 +23,10 @@ def metadata():
 @pytest.fixture
 def zip_file():
     return ZipFile(os.path.join(BASE, 'files', 'test.zip'), 'r')
+
+@pytest.fixture
+def zip_file_tree():
+    return ZipFile(os.path.join(BASE, 'files', 'test-tree.zip'), 'r')
 
 
 @pytest.fixture
@@ -55,36 +59,21 @@ def renderer(metadata, test_file_path, url, assets_url, export_url):
     return ZipRenderer(metadata, test_file_path, url, assets_url, export_url)
 
 
-
-def remove_whitespace(str):
-    str = re.sub('\n*', '', str)
-    return re.sub(r'\ {2,}', '', str)
+@pytest.fixture
+def file_tree():
+    with open(os.path.join(os.path.dirname(__file__), 'fixtures/fixtures.json'), 'r') as fp:
+        return json.load(fp)['file_tree']
 
 
 class TestZipRenderer:
 
     def test_render(self, renderer):
         body = renderer.render()
-        parsed_html = BeautifulSoup(body)
-        rows = parsed_html.findChildren('table')[0].findChildren(['tr'])
 
-        name = rows[2].findChildren('td')[0].get_text().strip()
-        assert 'test/test 1' == name
+    def test_filelist_to_tree(self, renderer, zip_file_tree, file_tree):
 
-        date_modified = rows[2].findChildren('td')[1].get_text().strip()
-        assert '2017-03-02 16:22:14' == date_modified
+        files = [file for file in zip_file_tree.filelist if not file.filename.startswith('__MACOSX')]
 
-        size = rows[2].findChildren('td')[2].get_text().strip()
-        assert '15B' == size
-
-        # non-expanded zip file should have no children
-        name = rows[4].findChildren('td')[0].get_text().strip()
-        assert 'test/zip file which is not expanded.zip' == name
-        assert body.count('zip file which is not expanded.zip') == 1
-
-        size = rows[4].findChildren('td')[2].get_text().strip()
-        assert '1.8KB' == size  # formatting of larger byte sizes
-
-        # hidden files should be hidden
-        assert body.count('__MACOSX') == 0
+        actual = renderer.filelist_to_tree(files)
+        assert actual == file_tree
 

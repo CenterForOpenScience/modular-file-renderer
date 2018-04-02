@@ -33,9 +33,12 @@ class ExportHandler(core.BaseHandler):
 
         self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
 
-        self.cache_file_path = await self.cache_provider.validate_path(
-            '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)
-        )
+        if self.exporter_name:
+            cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)
+        else:
+            cache_file_path_str = '/export/{}'.format(self.cache_file_id)
+        self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
+
         self.source_file_path = await self.local_cache_provider.validate_path(
             '/export/{}'.format(self.source_file_id)
         )

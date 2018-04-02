@@ -112,12 +112,11 @@ def get_renderer_name(name: str) -> str:
     ep_iterator = pkg_resources.iter_entry_points(group='mfr.renderers', name=name.lower())
     ep_list = list(ep_iterator)
 
-    # Empty list indicates unsupported file type.
-    # Return a blank string and let `make_renderer()` handle it.
+    # Empty list indicates unsupported file type.  Return '' and let `make_renderer()` handle it.
     if len(ep_list) == 0:
         return ''
 
-    # If file type is supported, there must be only one element in the list.
+    # If the file type is supported, there must be only one element in the list.
     assert len(ep_list) == 1
     return ep_list[0].attrs[0]
 
@@ -135,7 +134,11 @@ def get_exporter_name(name: str) -> str:
     ep_iterator = pkg_resources.iter_entry_points(group='mfr.exporters', name=name.lower())
     ep_list = list(ep_iterator)
 
-    # `make_renderer()` is called before `make_exporter()` to ensure the file type is supported
+    # Empty list indicates unsupported export type.  Return '' and let `make_exporter()` handle it.
+    if len(ep_list) == 0:
+        return ''
+
+    # If the export type is supported, there must be only one element in the list.
     assert len(ep_list) == 1
     return ep_list[0].attrs[0]
 

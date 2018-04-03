@@ -203,8 +203,10 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                         list(value.args))
                 tornado.web.gen_log.warning(format, *args)
         else:
-            tornado.web.app_log.error("Uncaught exception %s\n", self._request_summary(),
-                                       exc_info=(typ, value, tb))
+            tornado.web.app_log.error("[User-Agent: %s] Uncaught exception %s\n",
+                                      self.request.headers.get('User-Agent', '*none found*'),
+                                      self._request_summary(),
+                                      exc_info=(typ, value, tb))
 
     def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:

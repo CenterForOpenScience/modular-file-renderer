@@ -1,3 +1,4 @@
+import time
 import signal
 import asyncio
 import logging
@@ -19,6 +20,7 @@ from mfr.server.handlers.core import ExtensionsStaticFileHandler
 from mfr.version import __version__
 
 logger = logging.getLogger(__name__)
+access_logger = logging.getLogger('tornado.access')
 
 
 def sig_handler(sig, frame):
@@ -33,6 +35,16 @@ def sig_handler(sig, frame):
     io_loop.add_callback_from_signal(stop_loop)
 
 
+def almost_apache_style_log(handler):
+    '''without status code and body length'''
+    req = handler.request
+    access_logger.info('%s - - [%s +0800] "%s %s %s" - - "%s" "%s"' %
+                       (req.remote_ip, time.strftime("%d/%b/%Y:%X"), req.method,
+                        req.uri,
+                        req.version, getattr(req, 'referer', '-'),
+                        req.headers['User-Agent']))
+
+
 def make_app(debug):
     app = tornado.web.Application(
         [
@@ -45,6 +57,7 @@ def make_app(debug):
             (r'/status', StatusHandler),
         ],
         debug=debug,
+        log_function=almost_apache_style_log,
     )
     app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=__version__)
     return app

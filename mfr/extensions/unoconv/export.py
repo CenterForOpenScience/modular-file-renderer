@@ -11,7 +11,7 @@ class UnoconvExporter(extension.BaseExporter):
 
     def export(self):
         try:
-            subprocess.check_call([
+            subprocess.run([
                 settings.UNOCONV_BIN,
                 '-n',
                 '-c', 'socket,host={},port={};urp;StarOffice.ComponentContext'.format(settings.ADDRESS, settings.PORT),
@@ -19,7 +19,7 @@ class UnoconvExporter(extension.BaseExporter):
                 '-o', self.output_file_path,
                 '-vvv',
                 self.source_file_path
-            ])
+            ], check=True, timeout=settings.UNOCONV_TIMEOUT)
         except subprocess.CalledProcessError as err:
             name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.SubprocessError(

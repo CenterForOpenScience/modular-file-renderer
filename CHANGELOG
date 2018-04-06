@@ -2,6 +2,12 @@
 ChangeLog
 *********
 
+0.25.4 (2018-04-06)
+===================
+- Fix: When no exporter exists for the given extension, throw the "No supported exporter" error,
+instead of the non-specific "Please try again later" error.  This fixes a regression introduced
+in v0.25.0.
+
 0.25.3 (2018-04-03)
 ===================
 - Fix: Add a subprocess timeout to the unoconv exporter so MFR doesn't wait forever for a process

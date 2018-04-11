@@ -423,6 +423,9 @@ http://sourceforge.net/adobe/cmap/wiki/License/
         var DEFAULT_URL = '${url}';
         window.pymChild.sendMessage('embed', 'embed-responsive-pdf');
     </script>
+    % if enable_hypothesis:
+    <script src="/static/js/mfr.child.hypothesis.js"></script>
+    % endif
   </body>
 </html>
 

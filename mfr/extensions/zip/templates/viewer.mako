@@ -13,6 +13,7 @@
 </div>
 
 <script>
+
     $('#ziptree').jstree({
         "core" : {
             "data" : ${data},
@@ -22,21 +23,28 @@
             "search"
         ],
         'table': {
-		    'columns': [
-		        {'header': "Name", 'width': '100%'}, // these widths are strange but work.
-                {'header': "Size", 'width': 80, 'value': "size"},
-                {'header': "Date", 'width': 150, 'value': "date"}
-            ],
+            'columns': [
+                {'header': "Name", 'width': '100%'},
+                {'header': "Size", 'width': 100, 'value': "size"},
+                {'header': "Date", 'width': 250, 'value': "date"}
+            ]
         }
     });
+
     var to = false;
     $('#ziptree_search').keyup(function () {
-        if(to) { clearTimeout(to); }
-        to = setTimeout(function () {
-            var v = $('#ziptree_search').val();
-            $('#ziptree').jstree(true).search(v);
-        }, 250);
+        if (to) {
+            clearTimeout(to);
+        }
+        to = setTimeout(
+            function () {
+                var v = $('#ziptree_search').val();
+                $('#ziptree').jstree(true).search(v);
+            },
+            250
+        );
     });
+
 </script>
 
 <script src="/static/js/mfr.js"></script>

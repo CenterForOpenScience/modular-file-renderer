@@ -21,7 +21,7 @@ class ZipRenderer(BaseRenderer):
 
     @property
     def cache_result(self):
-        return False
+        return True
 
     def render(self):
 
@@ -99,7 +99,7 @@ class ZipRenderer(BaseRenderer):
 
         return [tree_root, ]
 
-    def update_node_with_attributes(self, node: dict, obj: ZipInfo, is_folder: bool) -> None:
+    def update_node_with_attributes(self, node: dict, obj: ZipInfo, is_folder: bool=True) -> None:
         """Update details (date, size, icon, etc.) of the node with the given object.
 
         :param node: the node to update

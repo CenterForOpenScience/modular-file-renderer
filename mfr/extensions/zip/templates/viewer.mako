@@ -26,7 +26,7 @@
             'columns': [
                 {'header': "Name", 'width': '100%'},
                 {'header': "Size", 'width': 100, 'value': "size"},
-                {'header': "Date", 'width': 250, 'value': "date"}
+                {'header': "Date", 'width': 200, 'value': "date"}
             ]
         }
     });

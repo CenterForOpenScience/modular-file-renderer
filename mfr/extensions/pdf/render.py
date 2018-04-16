@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 
 import furl
 from mako.lookup import TemplateLookup
@@ -20,10 +21,14 @@ class PdfRenderer(extension.BaseRenderer):
 
     def render(self):
         download_url = munge_url_for_localdev(self.metadata.download_url)
-        logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext, settings.EXPORT_SUPPORTED))
+        logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext,
+                                                                settings.EXPORT_SUPPORTED))
         if self.metadata.ext not in settings.EXPORT_SUPPORTED:
             logger.debug('Extension not found in supported list!')
-            return self.TEMPLATE.render(base=self.assets_url, url=download_url.geturl())
+            return self.TEMPLATE.render(
+                base=self.assets_url,
+                url=re.sub(r'\'', '\\\'', download_url.geturl())
+            )
 
         logger.debug('Extension found in supported list!')
         exported_url = furl.furl(self.export_url)

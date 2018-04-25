@@ -143,7 +143,7 @@ class OsfProvider(provider.BaseProvider):
             response = await aiohttp.request('GET', response.headers['location'])
             self.metrics.add('download.saw_redirect', True)
 
-        return streams.ResponseStreamReader(response, unsizable=True)
+        return streams.ResponseStreamReader(response)
 
     async def _fetch_download_url(self):
         """Provider needs a WaterButler URL to download and get metadata.  If ``url`` is already

@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+0.25.5 (2018-04-25)
+===================
+- Fix: Upgrade WaterButler dependency to take advantage of the new Google Cloud Storage provider.
+
 0.25.4 (2018-04-06)
 ===================
 - Fix: When no exporter exists for the given extension, throw the "No supported exporter" error,

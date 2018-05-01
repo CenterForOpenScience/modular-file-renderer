@@ -63,6 +63,15 @@ class SettingsDict(dict):
             )
         return retval
 
+    def get_object(self, key, default=None):
+        """Fetch a config value and interpret as a Python object or list. Since envvars are
+        always strings, interpret values of type `str` as JSON object or array. Otherwise assume
+        the type is already a python object."""
+        value = self.get(key, default)
+        if isinstance(value, str):
+            value = json.loads(value)
+        return value
+
     def get_nullable(self, key, default=None):
         """Fetch a config value and interpret the empty string as None. Useful for external code
         that expects an explicit None."""

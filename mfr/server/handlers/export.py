@@ -58,6 +58,13 @@ class ExportHandler(core.BaseHandler):
     async def get(self):
         """Export a file to the format specified via the associated extension library"""
 
+        # File is already in the requested format
+        if self.metadata.ext.lower() == ".{}".format(self.format.lower()):
+            await self.write_stream(await self.provider.download())
+            logger.info('Exported {} with no conversion.'.format(self.format))
+            self.metrics.add('export.conversion', 'noop')
+            return
+
         if settings.CACHE_ENABLED:
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)

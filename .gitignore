@@ -19,6 +19,7 @@ Thumbs.db
 ######################
 *.py[cod]
 **/*.pyc
+.mypy_cache
 
 # C extensions
 ######################

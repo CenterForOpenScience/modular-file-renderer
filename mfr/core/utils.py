@@ -18,7 +18,7 @@ def make_provider(name, request, url):
             namespace='mfr.providers',
             name=name.lower(),
             invoke_on_load=True,
-            invoke_args=(request, url, ),
+            invoke_args=(request, url)
         ).driver
     except RuntimeError:
         raise exceptions.MakeProviderError(
@@ -49,7 +49,7 @@ def make_exporter(name, source_file_path, output_file_path, format):
             namespace='mfr.exporters',
             name=normalized_name,
             invoke_on_load=True,
-            invoke_args=(normalized_name, source_file_path, output_file_path, format),
+            invoke_args=(normalized_name, source_file_path, output_file_path, format)
         ).driver
     except RuntimeError:
         raise exceptions.MakeExporterError(
@@ -62,6 +62,51 @@ def make_exporter(name, source_file_path, output_file_path, format):
                 'format': format,
             }
         )
+
+def bind_render(metadata, file_stream, url, assets_url, export_url):
+    normalized_name = (metadata.ext and metadata.ext.lower()) or 'none'
+    try:
+        return driver.DriverManager(
+            namespace='mfr.renderers',
+            name=normalized_name,
+            invoke_on_load=True,
+            invoke_args=(metadata, file_stream, url, assets_url, export_url),
+        ).driver
+    except RuntimeError:
+        raise exceptions.MakeRendererError(
+            namespace='mfr.renderers',
+            name=normalized_name,
+            invoke_on_load=True,
+            invoke_args={
+                'metadata': metadata.serialize(),
+                'file_stream': file_stream,
+                'url': url,
+                'assets_url': assets_url,
+                'export_url': export_url,
+            }
+        )
+
+def bind_convert(metadata, file_stream, format):
+    normalized_name = (metadata.ext and metadata.ext.lower()) or 'none'
+    try:
+        return driver.DriverManager(
+            namespace='mfr.exporters',
+            name=normalized_name,
+            invoke_on_load=True,
+            invoke_args=(metadata, file_stream, format)
+        ).driver
+    except RuntimeError:
+        raise exceptions.MakeExporterError(
+            namespace='mfr.exporters',
+            name=normalized_name,
+            invoke_on_load=True,
+            invoke_args={
+                'source_file_path': source_file_path,
+                'output_file_path': output_file_path,
+                'format': format,
+            }
+        )
+
 
 
 def make_renderer(name, metadata, file_path, url, assets_url, export_url):

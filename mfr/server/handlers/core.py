@@ -86,10 +86,22 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         self.handler_metrics = MetricsRecord('handler')
         self.handler_metrics.add('cache_file.result', None)
         self.handler_metrics.add('source_file.upload.required', True)
-
         self.metrics = self.handler_metrics.new_subrecord(self.NAME)
 
         self.extension_metrics = MetricsRecord('extension')
+        self._cache_provider = None
+
+    @property
+    def cache_provider(self):
+        if self._cache_provider is None:
+            self._cache_provider = waterbutler.core.utils.make_provider(
+                settings.CACHE_PROVIDER_NAME,
+                {},  # User information which can be left blank
+                settings.CACHE_PROVIDER_CREDENTIALS,
+                settings.CACHE_PROVIDER_SETTINGS
+            )
+        return self._cache_provider
+
 
     @abc.abstractproperty
     def NAME(self):
@@ -119,17 +131,6 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
         self.metadata = await self.provider.metadata()
         self.extension_metrics.add('ext', self.metadata.ext)
-
-        self.cache_provider = waterbutler.core.utils.make_provider(
-            settings.CACHE_PROVIDER_NAME,
-            {},  # User information which can be left blank
-            settings.CACHE_PROVIDER_CREDENTIALS,
-            settings.CACHE_PROVIDER_SETTINGS
-        )
-
-        self.local_cache_provider = waterbutler.core.utils.make_provider(
-            'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
-        )
 
         self.source_file_id = uuid.uuid4()
         self.add_header('X-MFR-REQUEST-ID', str(uuid.uuid4()))

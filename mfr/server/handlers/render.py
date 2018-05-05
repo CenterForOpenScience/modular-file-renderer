@@ -23,7 +23,6 @@ class RenderHandler(core.BaseHandler):
             return
 
         await super().prepare()
-
         self.renderer_name = utils.get_renderer_name(self.metadata.ext)
 
         self.cache_file_id = self.metadata.unique_key
@@ -32,51 +31,44 @@ class RenderHandler(core.BaseHandler):
             cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.renderer_name)
         else:
             cache_file_path_str = '/export/{}'.format(self.cache_file_id)
-        self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
-
-        self.source_file_path = await self.local_cache_provider.validate_path(
-            '/render/{}'.format(self.source_file_id)
-        )
 
     async def get(self):
         """Return HTML that will display the given file."""
-        renderer = utils.make_renderer(
-            self.metadata.ext,
+
+        # Make a render function that will return the rendered file as a string
+        # when invoked
+        render = utils.bind_render(
             self.metadata,
-            self.source_file_path.full_path,
+            await self.provider.download(),
             self.url,
             '{}://{}/assets'.format(self.request.protocol, self.request.host),
             self.request.uri.replace('/render?', '/export?', 1)
         )
 
-        self.extension_metrics.add('class', renderer._get_module_name())
+        if render.cache_result and settings.CACHE_ENABLED:
 
-        if renderer.cache_result and settings.CACHE_ENABLED:
+            # Try and use a cached version of the render
+            self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
+
+            # No cached version of the render (skip else)
             except waterbutler.core.exceptions.DownloadError as e:
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting render [{}]'.format(self.cache_file_path))
                 self.metrics.add('cache_file.result', 'miss')
+
+            # No exception; send the cached version
             else:
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
                 self.metrics.add('cache_file.result', 'hit')
                 return await self.write_stream(cached_stream)
 
-        if renderer.file_required:
-            await self.local_cache_provider.upload(
-                await self.provider.download(),
-                self.source_file_path
-            )
-        else:
-            self.metrics.add('source_file.upload.required', False)
+        # Perform the render and write the result to the response
+        await self.write_stream(await render())
 
-        loop = asyncio.get_event_loop()
-        rendition = await loop.run_in_executor(None, renderer.render)
-        self.renderer_metrics = renderer.renderer_metrics
-
-        # Spin off upload into non-blocking operation
-        if renderer.cache_result and settings.CACHE_ENABLED:
+        # Spin off upload of cached render into non-blocking operation
+        if render.cache_result and settings.CACHE_ENABLED:
             asyncio.ensure_future(
                 self.cache_provider.upload(
                     waterbutler.core.streams.StringStream(rendition),
@@ -84,7 +76,6 @@ class RenderHandler(core.BaseHandler):
                 )
             )
 
-        await self.write_stream(waterbutler.core.streams.StringStream(rendition))
 
     async def _cache_and_clean(self):
         if hasattr(self, 'source_file_path'):

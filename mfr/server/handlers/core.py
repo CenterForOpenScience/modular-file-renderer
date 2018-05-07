@@ -102,7 +102,6 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             )
         return self._cache_provider
 
-
     @abc.abstractproperty
     def NAME(self):
         raise NotImplementedError

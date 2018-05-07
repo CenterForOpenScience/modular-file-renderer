@@ -1,6 +1,6 @@
 import abc
 import asyncio
-
+from os import remove
 import uuid
 
 import waterbutler
@@ -10,12 +10,6 @@ from mfr.core import utils
 from mfr.core.metrics import MetricsRecord
 from mfr.server import settings
 
-
-class Cacheable(metaclass=abc.ABCMeta):
-
-    @abc.abstractproperty
-    def cache_result(self):
-        pass
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
@@ -39,11 +33,6 @@ class BaseExporter(metaclass=abc.ABCMeta):
             'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
         self.exporter_name = utils.get_exporter_name(self.metadata.ext)
-        if self.exporter_name:
-            cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)
-        else:
-            cache_file_path_str = '/export/{}'.format(self.cache_file_id)
-
         self.exporter_metrics = MetricsRecord('exporter')
         if self._get_module_name():
             self.metrics = self.exporter_metrics.new_subrecord(self._get_module_name())
@@ -108,7 +97,7 @@ class BaseExporter(metaclass=abc.ABCMeta):
             .replace('.export', '', 1)
 
 
-class BaseRenderer(Cacheable, metaclass=abc.ABCMeta):
+class BaseRenderer(metaclass=abc.ABCMeta):
 
     def __init__(self, metadata, file_stream, url, assets_url, export_url):
         self.metadata = metadata
@@ -156,8 +145,17 @@ class BaseRenderer(Cacheable, metaclass=abc.ABCMeta):
         loop = asyncio.get_event_loop()
         rendition = await loop.run_in_executor(None, self.render)
 
+        if self.file_required:
+            try:
+                remove(self.source_file_path.full_path)
+            except FileNotFoundError:
+                pass
 
         return StringStream(rendition)
+
+    @abc.abstractproperty
+    def cache_result(self):
+        pass
 
     @abc.abstractmethod
     def render(self):
@@ -170,7 +168,6 @@ class BaseRenderer(Cacheable, metaclass=abc.ABCMeta):
         only needs a url to the file.
         """
         pass
-
 
     def _get_module_name(self):
         return self.__module__ \

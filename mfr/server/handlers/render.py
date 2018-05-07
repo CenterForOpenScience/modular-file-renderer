@@ -1,4 +1,3 @@
-import os
 import asyncio
 import logging
 
@@ -27,11 +26,6 @@ class RenderHandler(core.BaseHandler):
 
         self.cache_file_id = self.metadata.unique_key
 
-        if self.renderer_name:
-            cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.renderer_name)
-        else:
-            cache_file_path_str = '/export/{}'.format(self.cache_file_id)
-
     async def get(self):
         """Return HTML that will display the given file."""
 
@@ -46,6 +40,11 @@ class RenderHandler(core.BaseHandler):
         )
 
         if render.cache_result and settings.CACHE_ENABLED:
+
+            if self.renderer_name:
+                cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.renderer_name)
+            else:
+                cache_file_path_str = '/export/{}'.format(self.cache_file_id)
 
             # Try and use a cached version of the render
             self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
@@ -65,7 +64,8 @@ class RenderHandler(core.BaseHandler):
                 return await self.write_stream(cached_stream)
 
         # Perform the render and write the result to the response
-        await self.write_stream(await render())
+        rendition = await render()
+        await self.write_stream(rendition)
 
         # Spin off upload of cached render into non-blocking operation
         if render.cache_result and settings.CACHE_ENABLED:
@@ -75,11 +75,3 @@ class RenderHandler(core.BaseHandler):
                     self.cache_file_path
                 )
             )
-
-
-    async def _cache_and_clean(self):
-        if hasattr(self, 'source_file_path'):
-            try:
-                os.remove(self.source_file_path.full_path)
-            except FileNotFoundError:
-                pass

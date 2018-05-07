@@ -101,12 +101,11 @@ def bind_convert(metadata, file_stream, format):
             name=normalized_name,
             invoke_on_load=True,
             invoke_args={
-                'source_file_path': source_file_path,
-                'output_file_path': output_file_path,
+                'metadata': metadata.serialize(),
+                'input_stream': file_stream,
                 'format': format,
             }
         )
-
 
 
 def make_renderer(name, metadata, file_path, url, assets_url, export_url):

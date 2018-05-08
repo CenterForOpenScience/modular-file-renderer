@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+0.25.7 (2018-05-08)
+===================
+- Feature: Allow settings config variables from the environment via JSON strings.  (thanks,
+@icereval!)
+
 0.25.6 (2018-05-08)
 ===================
 - Fix: Explictly declare google-auth dependency needed by WaterButler.

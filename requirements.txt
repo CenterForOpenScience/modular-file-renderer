@@ -12,6 +12,7 @@ tornado==4.3
 # WaterButler
 git+https://github.com/CenterForOpenScience/waterbutler.git@0.38.6#egg=waterbutler
 agent==0.1.2
+google-auth==1.4.1
 
 # CodePygments
 Pygments==2.2.0

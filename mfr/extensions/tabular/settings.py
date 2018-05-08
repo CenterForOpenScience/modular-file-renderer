@@ -9,7 +9,7 @@ MAX_SIZE = int(config.get('MAX_SIZE', 10000))  # max number of rows or columns a
 TABLE_WIDTH = int(config.get('TABLE_WIDTH', 700))
 TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 
-LIBS = config.get('LIBS', {
+LIBS = config.get_object('LIBS', {
     '.csv': [libs.csv_stdlib],
     '.tsv': [libs.csv_stdlib],
     '.gsheet': [libs.xlsx_xlrd],
@@ -21,7 +21,7 @@ LIBS = config.get('LIBS', {
     # '.ods': [libs.ods_ezodf],
 })
 
-SMALL_TABLE = config.get('SMALL_TABLE', {
+SMALL_TABLE = config.get_object('SMALL_TABLE', {
     'enableCellNavigation': True,
     'enableColumnReorder': False,
     'forceFitColumns': True,
@@ -29,7 +29,7 @@ SMALL_TABLE = config.get('SMALL_TABLE', {
     'multiColumnSort': True,
 })
 
-BIG_TABLE = config.get('BIG_TABLE', {
+BIG_TABLE = config.get_object('BIG_TABLE', {
     'enableCellNavigation': True,
     'enableColumnReorder': False,
     'syncColumnCellResize': True,

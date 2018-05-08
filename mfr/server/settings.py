@@ -27,10 +27,10 @@ PROVIDER_NAME = config.get('PROVIDER_NAME', 'osf')
 
 CACHE_ENABLED = config.get_bool('CACHE_ENABLED', False)
 CACHE_PROVIDER_NAME = config.get('CACHE_PROVIDER_NAME', 'filesystem')
-CACHE_PROVIDER_SETTINGS = config.get('CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfr/'})
-CACHE_PROVIDER_CREDENTIALS = config.get('CACHE_PROVIDER_CREDENTIALS', {})
+CACHE_PROVIDER_SETTINGS = config.get_object('CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfr/'})
+CACHE_PROVIDER_CREDENTIALS = config.get_object('CACHE_PROVIDER_CREDENTIALS', {})
 
-LOCAL_CACHE_PROVIDER_SETTINGS = config.get('LOCAL_CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfrlocalcache/'})
+LOCAL_CACHE_PROVIDER_SETTINGS = config.get_object('LOCAL_CACHE_PROVIDER_SETTINGS', {'folder': '/tmp/mfrlocalcache/'})
 
 ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', 'http://localhost:5000/ http://localhost:7777/').split(' ')
 ALLOWED_PROVIDER_NETLOCS = []

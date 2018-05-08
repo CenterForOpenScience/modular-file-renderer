@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+0.25.6 (2018-05-08)
+===================
+- Fix: Explictly declare google-auth dependency needed by WaterButler.
+
 0.25.5 (2018-04-25)
 ===================
 - Fix: Upgrade WaterButler dependency to take advantage of the new Google Cloud Storage provider.

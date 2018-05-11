@@ -143,7 +143,7 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
         )
 
 
-def get_renderer_name(name: str) -> str:
+def get_plugin_name(name: str, group: str) -> str:
     """ Return the name of the renderer used for a certain file extension.
 
     :param str name: The name of the extension to get the renderer name for. (.jpg, .docx, etc)
@@ -163,29 +163,6 @@ def get_renderer_name(name: str) -> str:
     # If the file type is supported, there must be only one element in the list.
     assert len(ep_list) == 1
     return ep_list[0].attrs[0]
-
-
-def get_exporter_name(name: str) -> str:
-    """ Return the name of the exporter used for a certain file extension.
-
-    :param str name: The name of the extension to get the exporter name for. (.jpg, .docx, etc)
-
-    :rtype : `str`
-    """
-
-    # `ep_iterator` is an iterable object. Must convert it to a `list` for access.
-    # `list()` can only be called once because the iterator moves to the end after conversion.
-    ep_iterator = pkg_resources.iter_entry_points(group='mfr.exporters', name=name.lower())
-    ep_list = list(ep_iterator)
-
-    # Empty list indicates unsupported export type.  Return '' and let `make_exporter()` handle it.
-    if len(ep_list) == 0:
-        return ''
-
-    # If the export type is supported, there must be only one element in the list.
-    assert len(ep_list) == 1
-    return ep_list[0].attrs[0]
-
 
 def sizeof_fmt(num, suffix='B'):
     if abs(num) < 1000:

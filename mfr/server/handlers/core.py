@@ -130,9 +130,34 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
         self.metadata = await self.provider.metadata()
         self.extension_metrics.add('ext', self.metadata.ext)
-
         self.source_file_id = uuid.uuid4()
         self.add_header('X-MFR-REQUEST-ID', str(uuid.uuid4()))
+
+    @property
+    def plugin_name(self):
+        try:
+            return self._plugin_name
+        except:
+            self._plugin_name = utils.get_plugin_name(self.metadata.ext, self.CACHED_PLUGIN_GROUP)
+            return self._plugin_name
+
+    @property
+    def cache_file_path(self):
+        """Stores a future that when awaited resolves to a validated path for the
+        MFR cache. The future is memoized so the path does not need to be validated
+        multiple times.
+        """
+        try:
+            return self._cache_file_path_future
+        except:
+            if self.plugin_name:
+                cache_path_str = '/export/{}.{}'.format(self.cache_file_id, self.plugin_name)
+            else:
+                cache_path_str = '/export/{}'.format(self.cache_file_id)
+            self._cache_file_path_future = asyncio.ensure_future(
+                self.cache_provider.validate_path(cache_path_str)
+            )
+            return self._cache_file_path_future
 
     async def write_stream(self, stream):
         try:

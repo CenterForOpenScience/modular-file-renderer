@@ -17,6 +17,8 @@ class ExportHandler(core.BaseHandler):
     ALLOWED_METHODS = ['GET']
 
     async def prepare(self):
+        """Set up the handler before actually accepting the request body
+        """
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
@@ -56,12 +58,7 @@ class ExportHandler(core.BaseHandler):
 
         # Try to get a cached version
         if settings.CACHE_ENABLED:
-            if self.exporter_name:
-                cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)
-            else:
-                cache_file_path_str = '/export/{}'.format(self.cache_file_id)
             try:
-                self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
                 await self.write_stream(self.cache_provider.download(self.cache_file_path))
                 logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
                 self.metrics.add('cache_file.result', 'hit')
@@ -74,7 +71,11 @@ class ExportHandler(core.BaseHandler):
                 self.metrics.add('cache_file.result', 'miss')
 
         # File isn't cached and it needs to be converted
-
+        # Put the export function into a variable just so it stays on the stack
+        # until this handler dies. Needed because the export instance is
+        # handling the file pointer and it closes it when it is collected. If
+        # we collect it too early, the stream won't be written to the response
+        # yet.
         export = utils.bind_convert(
             self.metadata,
             await self.provider.download(),
@@ -85,9 +86,15 @@ class ExportHandler(core.BaseHandler):
     async def _cache_and_clean(self):
         if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):
             with open(self.output_file_path.full_path, 'rb') as fp:
-                await self.cache_provider.upload(waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path)
+                await self.cache_provider.upload(
+                    waterbutler.core.streams.FileStreamReader(fp),
+                    self.cache_file_path
+                )
 
     def _set_headers(self):
-        self.set_header('Content-Disposition', 'attachment;filename="{}"'.format('{}.{}'.format(self.metadata.name.replace('"', '\\"'), self.format)))
+        self.set_header('Content-Disposition', 'attachment;filename="{}"'.format(
+            '{}.{}'.format(self.metadata.name.replace('"', '\\"'),
+            self.format)
+        ))
         if self.metadata.content_type:
             self.set_header('Content-Type', self.metadata.content_type)

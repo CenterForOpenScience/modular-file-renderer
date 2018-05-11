@@ -25,6 +25,7 @@ class RenderHandler(core.BaseHandler):
 
     NAME = 'render'
     ALLOWED_METHODS = ['GET']
+    CACHED_PLUGIN_GROUP = 'mfr.renderers'
 
     async def prepare(self):
         """Set up the handler before actually accepting the request body

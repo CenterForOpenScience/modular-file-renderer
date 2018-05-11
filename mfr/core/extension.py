@@ -13,12 +13,7 @@ from mfr.server import settings
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
-    @property
-    def file():
-        pass
-
     def __init__(self, metadata, input_stream, format):
-
         """Initialize the base exporter.
 
         :param ext: the name of the extension to be exported
@@ -26,7 +21,6 @@ class BaseExporter(metaclass=abc.ABCMeta):
         :param output_file_path: the path of the output file
         :param format: the format of the exported file (e.g. 1200*1200.jpg)
         """
-
         self.metadata = metadata
         self.ext = metadata.ext
         self.input_stream = input_stream
@@ -42,7 +36,8 @@ class BaseExporter(metaclass=abc.ABCMeta):
             self.metrics = self.exporter_metrics.new_subrecord(self._get_module_name())
 
     async def __call__(self):
-
+        """Returns a stream wrapping the exported version of the file.
+        """
         self.output_file_id = '{}.{}'.format((await self.source_wb_path).name, self.format)
         self.output_wb_path = await self.local_cache_provider.validate_path(
             '/export/{}'.format(self.output_file_id)
@@ -75,6 +70,9 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
     @property
     async def source_wb_path(self):
+        """Validate a local filesystem path using the filesystem provider. Used
+        to store a temporary file if it is needed by the exporter.
+        """
         try:
             return self._source_wb_path
         except:
@@ -85,6 +83,9 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
     @property
     async def source_file_path(self):
+        """Returns a path at which the source file is located. Ensures that the
+        file is at the location
+        """
         try:
             return self._source_file_path
         except:

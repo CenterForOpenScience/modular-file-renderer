@@ -33,36 +33,6 @@ def make_provider(name, request, url):
         )
 
 
-def make_exporter(name, source_file_path, output_file_path, format):
-    """Returns an instance of :class:`mfr.core.extension.BaseExporter`
-
-    :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
-    :param str source_file_path:
-    :param str output_file_path:
-    :param str format:
-
-    :rtype: :class:`mfr.core.extension.BaseExporter`
-    """
-    normalized_name = (name and name.lower()) or 'none'
-    try:
-        return driver.DriverManager(
-            namespace='mfr.exporters',
-            name=normalized_name,
-            invoke_on_load=True,
-            invoke_args=(normalized_name, source_file_path, output_file_path, format)
-        ).driver
-    except RuntimeError:
-        raise exceptions.MakeExporterError(
-            namespace='mfr.exporters',
-            name=normalized_name,
-            invoke_on_load=True,
-            invoke_args={
-                'source_file_path': source_file_path,
-                'output_file_path': output_file_path,
-                'format': format,
-            }
-        )
-
 def bind_render(metadata, file_stream, url, assets_url, export_url):
     normalized_name = (metadata.ext and metadata.ext.lower()) or 'none'
     try:
@@ -108,41 +78,6 @@ def bind_convert(metadata, file_stream, format):
         )
 
 
-def make_renderer(name, metadata, file_path, url, assets_url, export_url):
-    """Returns an instance of :class:`mfr.core.extension.BaseRenderer`
-
-    :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
-    :param: :class:`mfr.core.provider.ProviderMetadata` metadata:
-    :param str file_path:
-    :param str url:
-    :param str assets_url:
-    :param str export_url:
-
-    :rtype: :class:`mfr.core.extension.BaseRenderer`
-    """
-    normalized_name = (name and name.lower()) or 'none'
-    try:
-        return driver.DriverManager(
-            namespace='mfr.renderers',
-            name=normalized_name,
-            invoke_on_load=True,
-            invoke_args=(metadata, file_path, url, assets_url, export_url),
-        ).driver
-    except RuntimeError:
-        raise exceptions.MakeRendererError(
-            namespace='mfr.renderers',
-            name=normalized_name,
-            invoke_on_load=True,
-            invoke_args={
-                'metadata': metadata.serialize(),
-                'file_path': file_path,
-                'url': url,
-                'assets_url': assets_url,
-                'export_url': export_url,
-            }
-        )
-
-
 def get_plugin_name(name: str, group: str) -> str:
     """ Return the name of the renderer used for a certain file extension.
 
@@ -153,7 +88,7 @@ def get_plugin_name(name: str, group: str) -> str:
 
     # `ep_iterator` is an iterable object. Must convert it to a `list` for access.
     # `list()` can only be called once because the iterator moves to the end after conversion.
-    ep_iterator = pkg_resources.iter_entry_points(group='mfr.renderers', name=name.lower())
+    ep_iterator = pkg_resources.iter_entry_points(group=group, name=name.lower())
     ep_list = list(ep_iterator)
 
     # Empty list indicates unsupported file type.  Return '' and let `make_renderer()` handle it.

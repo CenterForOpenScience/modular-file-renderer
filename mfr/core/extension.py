@@ -13,12 +13,16 @@ from mfr.server import settings
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
+    @property
+    def file():
+        pass
+
     def __init__(self, metadata, input_stream, format):
 
         """Initialize the base exporter.
 
         :param ext: the name of the extension to be exported
-        :param source_file_path: the path of the input file
+        :param input_stream: input file as a stream
         :param output_file_path: the path of the output file
         :param format: the format of the exported file (e.g. 1200*1200.jpg)
         """
@@ -39,11 +43,7 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
     async def __call__(self):
 
-        self.source_wb_path = await self.local_cache_provider.validate_path(
-            '/export/{}'.format(self.source_file_id)
-        )
-        self.source_file_path = self.source_wb_path.full_path
-        self.output_file_id = '{}.{}'.format(self.source_wb_path.name, self.format)
+        self.output_file_id = '{}.{}'.format((await self.source_wb_path).name, self.format)
         self.output_wb_path = await self.local_cache_provider.validate_path(
             '/export/{}'.format(self.output_file_id)
         )
@@ -51,17 +51,11 @@ class BaseExporter(metaclass=abc.ABCMeta):
         self.exporter_metrics.merge({
             'class': self._get_module_name(),
             'format': self.format,
-            'source_path': str(self.source_wb_path),
+            'source_path': str(await self.source_wb_path),
             'output_path': str(self.output_wb_path),
             # 'error': 'error_t',
             # 'elapsed': 'elpased_t',
         })
-
-        # Put the file into the local cahe provider (local fs)
-        await self.local_cache_provider.upload(
-            self.input_stream,
-            self.source_wb_path
-        )
 
         # Note where the output file is for diagnostics
         self.exporter_metrics.merge({
@@ -74,11 +68,32 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
         # Execute the extension's export method asynchronously and wait for it
         # to finish
-        loop = asyncio.get_event_loop()
-        await loop.run_in_executor(None, self.export)
+        await self.export()
 
         # Return a stream of the converted file
-        return await self.write_to_stream()
+        return self.write_to_stream()
+
+    @property
+    async def source_wb_path(self):
+        try:
+            return self._source_wb_path
+        except:
+            self._source_wb_path = await self.local_cache_provider.validate_path(
+                '/export/{}'.format(self.source_file_id)
+            )
+            return self._source_wb_path
+
+    @property
+    async def source_file_path(self):
+        try:
+            return self._source_file_path
+        except:
+            self._source_file_path = (await self.source_wb_path).full_path
+            await self.local_cache_provider.upload(
+                self.input_stream,
+                await self.source_wb_path
+            )
+            return self._source_file_path
 
     def __del__(self):
         self.output_fp.close()
@@ -87,7 +102,7 @@ class BaseExporter(metaclass=abc.ABCMeta):
     def export(self):
         pass
 
-    async def write_to_stream(self):
+    def write_to_stream(self):
         self.output_fp = open(self.output_file_path, 'rb')
         return waterbutler.core.streams.FileStreamReader(self.output_fp)
 
@@ -101,11 +116,12 @@ class BaseRenderer(metaclass=abc.ABCMeta):
 
     def __init__(self, metadata, file_stream, url, assets_url, export_url):
         self.metadata = metadata
-        self.file_stream = file_stream
+        self.file_stream = file_stream  # A future that resolves to a file stream
         self.url = url
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
         self.export_url = export_url
         self.renderer_metrics = MetricsRecord('renderer')
+        self.source_file_id = uuid.uuid4()
         if self._get_module_name():
             self.metrics = self.renderer_metrics.new_subrecord(self._get_module_name())
 
@@ -127,31 +143,43 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         except AttributeError:
             pass
 
+    @property
+    def local_cache_provider(self):
+        if not self._local_cache_provider:
+            self._local_cache_provider = waterbutler.core.utils.make_provider(
+                'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
+            )
+        return self._local_cache_provider
+
+    async def get_source_file_path(self):
+        if self._source_file_path is None:
+            self._source_file_path = await self.local_cache_provider.validate_path(
+                '/render/{}'.format(self.source_file_id)
+            )
+        return self._source_file_path
+
     async def __call__(self):
 
         self.renderer_metrics.add('class', self._get_module_name())
 
         if self.file_required:
-            self.source_file_path = await self.local_cache_provider.validate_path(
-                '/render/{}'.format(self.source_file_id)
-            )
             await self.local_cache_provider.upload(
-                await self.provider.download(),
-                self.source_file_path
+                await self.file_stream,
+                await self.source_file_path
             )
         else:
             self.metrics.add('source_file.upload.required', False)
 
-        loop = asyncio.get_event_loop()
-        rendition = await loop.run_in_executor(None, self.render)
-
-        if self.file_required:
-            try:
-                remove(self.source_file_path.full_path)
-            except FileNotFoundError:
-                pass
+        rendition = self.render()
 
         return StringStream(rendition)
+
+    def __del(self):
+        if self.file_required:
+            try:
+                remove(self._source_file_path.full_path)
+            except FileNotFoundError:
+                pass
 
     @abc.abstractproperty
     def cache_result(self):

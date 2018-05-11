@@ -74,27 +74,18 @@ class ExportHandler(core.BaseHandler):
                 self.metrics.add('cache_file.result', 'miss')
 
         # File isn't cached and it needs to be converted
-        await self.write_stream(await utils.bind_convert(
+
+        export = utils.bind_convert(
             self.metadata,
             await self.provider.download(),
             self.format
-        )())
+        )
+        await self.write_stream(await export())
 
     async def _cache_and_clean(self):
         if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):
             with open(self.output_file_path.full_path, 'rb') as fp:
                 await self.cache_provider.upload(waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path)
-
-        if hasattr(self, 'source_file_path'):
-            try:
-                os.remove(self.source_file_path.full_path)
-            except FileNotFoundError:
-                pass
-
-            try:
-                os.remove(self.output_file_path.full_path)
-            except FileNotFoundError:
-                pass
 
     def _set_headers(self):
         self.set_header('Content-Disposition', 'attachment;filename="{}"'.format('{}.{}'.format(self.metadata.name.replace('"', '\\"'), self.format)))

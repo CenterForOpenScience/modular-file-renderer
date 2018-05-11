@@ -15,12 +15,12 @@ class JSC3DExporter(BaseExporter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def export(self):
+    async def export(self):
         try:
             # alter original source file with a named temp file, so freecad can read it properly
             with NamedTemporaryFile(mode='w+b') as temp_source_file:
-                temp_source_file.name = self.source_file_path + '.step'
-                shutil.copy2(self.source_file_path, temp_source_file.name)
+                temp_source_file.name = await self.source_file_path + '.step'
+                shutil.copy2(await self.source_file_path, temp_source_file.name)
 
                 subprocess.check_call([
                     FREECAD_BIN,
@@ -31,13 +31,13 @@ class JSC3DExporter(BaseExporter):
                 ], stdout=subprocess.DEVNULL)
 
         except subprocess.CalledProcessError as err:
-            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+            name, extension = os.path.splitext(os.path.split(await self.source_file_path)[-1])
             raise exceptions.SubprocessError(
                 'Unable to export the file in the requested format, please try again later.',
                 process='freecad',
                 cmd=str(err.cmd),
                 returncode=err.returncode,
-                path=str(self.source_file_path),
+                path=str(await self.source_file_path),
                 code=HTTPStatus.BAD_REQUEST,
                 extension=extension or '',
                 exporter_class='jsc3d',

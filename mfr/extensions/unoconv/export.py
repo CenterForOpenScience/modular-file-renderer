@@ -1,3 +1,4 @@
+import asyncio
 import os
 import subprocess
 
@@ -9,25 +10,30 @@ from mfr.extensions.unoconv import settings
 
 class UnoconvExporter(extension.BaseExporter):
 
-    def export(self):
+    async def export(self):
         try:
-            subprocess.run([
-                settings.UNOCONV_BIN,
-                '-n',
-                '-c', 'socket,host={},port={};urp;StarOffice.ComponentContext'.format(settings.ADDRESS, settings.PORT),
-                '-f', self.format,
-                '-o', self.output_file_path,
-                '-vvv',
-                self.source_file_path
-            ], check=True, timeout=settings.UNOCONV_TIMEOUT)
+            process = await asyncio.create_subprocess_exec(
+                *[
+                    settings.UNOCONV_BIN,
+                    '-n',
+                    '-c', 'socket,host={},port={};urp;StarOffice.ComponentContext'.format(settings.ADDRESS, settings.PORT),
+                    '-f', self.format,
+                    '-o', self.output_file_path,
+                    '-vvv',
+                    await self.source_file_path
+                ]#,
+                #check=True#,
+                #timeout=settings.UNOCONV_TIMEOUT
+            )
+            stdout, stderr = await process.communicate()
         except subprocess.CalledProcessError as err:
-            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+            name, extension = os.path.splitext(os.path.split(await self.source_file_path)[-1])
             raise exceptions.SubprocessError(
                 'Unable to export the file in the requested format, please try again later.',
                 process='unoconv',
                 cmd=str(err.cmd),
                 returncode=err.returncode,
-                path=str(self.source_file_path),
+                path=str(await self.source_file_path),
                 code=400,
                 extension=extension or '',
                 exporter_class='unoconv',

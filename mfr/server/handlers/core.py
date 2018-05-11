@@ -108,7 +108,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
     async def prepare(self):
         """Builds an MFR provider instance, to which it passes the the ``url`` query parameter.
-        From that, the file metadata is extracted.  Also builds cached waterbutler providers.
+        From that, the file metadata is extracted. Also builds cached waterbutler providers.
         """
         if self.request.method == 'OPTIONS':
             return

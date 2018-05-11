@@ -16,7 +16,7 @@ class ImageExporter(extension.BaseExporter):
         super().__init__(*args, **kwargs)
         self.metrics.add('pil_version', Image.VERSION)
 
-    def export(self):
+    async def export(self):
         parts = self.format.split('.')
         type = parts[-1].lower()
         max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None
@@ -32,9 +32,9 @@ class ImageExporter(extension.BaseExporter):
                 # and about colors being possibly wrong
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore")
-                    image = PSDImage.load(self.source_file_path).as_PIL()
+                    image = PSDImage.load(await self.source_file_path).as_PIL()
             else:
-                image = Image.open(self.source_file_path)
+                image = Image.open(await self.source_file_path)
 
             if max_size:
                 # resize the image to the w/h maximum specified
@@ -57,12 +57,12 @@ class ImageExporter(extension.BaseExporter):
             image.close()
 
         except (UnicodeDecodeError, IOError, FileNotFoundError, OSError) as err:
-            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+            name, extension = os.path.splitext(os.path.split(await self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid image.'.format(type),
                 export_format=type,
-                detected_format=imghdr.what(self.source_file_path),
+                detected_format=imghdr.what(await self.source_file_path),
                 original_exception=err,
                 code=400,
             )

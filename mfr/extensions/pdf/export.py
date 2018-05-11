@@ -1,3 +1,4 @@
+import asyncio
 import os
 import imghdr
 from http import HTTPStatus
@@ -62,7 +63,7 @@ class PdfExporter(extension.BaseExporter):
 
         c.save()
 
-    def export(self):
+    async def export(self):
         parts = self.format.split('.')
         export_type = parts[-1].lower()
         max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None
@@ -75,23 +76,23 @@ class PdfExporter(extension.BaseExporter):
 
         try:
             TiffImagePlugin.READ_LIBTIFF = True
-            image = Image.open(self.source_file_path)
+            image = Image.open(await self.source_file_path)
 
             if max_size:
                 # Done here just for metrics
                 ratio = min(max_size[0] / image.size[0], max_size[1] / image.size[1])
                 self.metrics.add('ratio', ratio)
 
-            self.tiff_to_pdf(image, max_size)
+            await asyncio.get_event_loop().run_in_executor(self.tiff_to_pdf, image, max_size)
             image.close()
 
         except (UnicodeDecodeError, IOError) as err:
-            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+            name, extension = os.path.splitext(os.path.split(await self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid tiff image.'.format(export_type),
                 export_format=export_type,
-                detected_format=imghdr.what(self.source_file_path),
+                detected_format=imghdr.what(await self.source_file_path),
                 original_exception=err,
                 code=HTTPStatus.BAD_REQUEST,
             )

@@ -267,7 +267,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             metrics['provider'] = self.provider.provider_metrics.serialize()
 
         # error_metrics is already serialized
-        metrics['error'] = getattr(self, 'error_metrics') if hasattr(self, 'error_metrics') else None
+        metrics['error'] = getattr(self, 'error_metrics', None)
         return metrics
 
 

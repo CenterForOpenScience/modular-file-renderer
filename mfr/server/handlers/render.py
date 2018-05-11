@@ -25,7 +25,6 @@ class RenderHandler(core.BaseHandler):
 
     NAME = 'render'
     ALLOWED_METHODS = ['GET']
-    CACHED_PLUGIN_GROUP = 'mfr.renderers'
 
     async def prepare(self):
         """Set up the handler before actually accepting the request body
@@ -74,24 +73,6 @@ class RenderHandler(core.BaseHandler):
         # Spin off upload of cached render into non-blocking operation
         if self.render.cache_result and settings.CACHE_ENABLED:
             self.cache_result(rendition)
-
-    @property
-    def cache_file_path(self):
-        """Stores a future that when awaited resolves to a validated path for the
-        MFR cache. The future is memoized so the path does not need to be validated
-        multiple times.
-        """
-        try:
-            return self._cache_file_path_future
-        except:
-            if self.renderer_name:
-                cache_path_str = '/export/{}.{}'.format(self.cache_file_id, self.renderer_name)
-            else:
-                cache_path_str = '/export/{}'.format(self.cache_file_id)
-            self._cache_file_path_future = asyncio.ensure_future(
-                self.cache_provider.validate_path(cache_path_str)
-            )
-            return self._cache_file_path_future
 
     async def get_cached_render(self):
         """Fetches and returns the response from the cache"""

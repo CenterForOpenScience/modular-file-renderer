@@ -114,8 +114,22 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
 
 class BaseRenderer(metaclass=abc.ABCMeta):
+    """The base renderer class. Sublasses of BaseRenderer should define a
+    render method that defines how the files it's capable of rendering actually
+    get rendered.
+
+    When the renderer is instantiated, several values are bound
+    to the instance to allow communication to the handler scope prior to
+    render.
+
+    The handler will then invoke the instance, as it is callable, which
+    will return a string rendition of the rendered file.
+    """
 
     def __init__(self, metadata, file_stream, url, assets_url, export_url):
+        """Set up the renderer. Puts arguments recieved (from probably the
+        handler) on the instance
+        """
         self.metadata = metadata
         self.file_stream = file_stream  # A future that resolves to a file stream
         self.url = url
@@ -123,6 +137,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         self.export_url = export_url
         self.renderer_metrics = MetricsRecord('renderer')
         self.source_file_id = uuid.uuid4()
+        self.lucal_file_used = False
         if self._get_module_name():
             self.metrics = self.renderer_metrics.new_subrecord(self._get_module_name())
 
@@ -146,36 +161,48 @@ class BaseRenderer(metaclass=abc.ABCMeta):
 
     @property
     def local_cache_provider(self):
-        if not self._local_cache_provider:
+        """Create a filesystem provider to be used for temporary files, memoize
+        it so subsequent accesses don make loads of them
+        """
+        try:
+            return self._local_cache_provider:
+        except:
             self._local_cache_provider = waterbutler.core.utils.make_provider(
                 'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
             )
-        return self._local_cache_provider
+            return self._local_cache_provider
 
-    async def get_source_file_path(self):
-        if self._source_file_path is None:
+    @property
+    async def source_file_path(self):
+        """Returns a local file path, ensuring the file exists there
+        """
+        try:
+            self._source_file_path
+        except:
             self._source_file_path = await self.local_cache_provider.validate_path(
                 '/render/{}'.format(self.source_file_id)
             )
-        return self._source_file_path
-
-    async def __call__(self):
-
-        self.renderer_metrics.add('class', self._get_module_name())
-
-        if self.file_required:
             await self.local_cache_provider.upload(
                 await self.file_stream,
-                await self.source_file_path
+                await self._source_file_path
             )
-        else:
-            self.metrics.add('source_file.upload.required', False)
+            self.local_file_used = True
+            return self._source_file_path
+
+    async def __call__(self):
+        """Perform the render and return a rendition as a string
+        """
+        self.renderer_metrics.add('class', self._get_module_name())
 
         rendition = self.render()
 
+        self.metrics.add('source_file.upload.required', self.local_file_used)
         return StringStream(rendition)
 
-    def __del(self):
+    def __del___(self):
+        """Runs during garbage collection. Make sure any files that were
+        created during the render get cleaned up too.
+        """
         if self.file_required:
             try:
                 remove(self._source_file_path.full_path)
@@ -184,10 +211,16 @@ class BaseRenderer(metaclass=abc.ABCMeta):
 
     @abc.abstractproperty
     def cache_result(self):
+        """A Boolean used to signal whether the result of a render may be
+        cached or not
+        """
         pass
 
     @abc.abstractmethod
     def render(self):
+        """The actual logic to perform the render, should be implemented by and
+        exension.
+        """
         pass
 
     @abc.abstractproperty
@@ -199,6 +232,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         pass
 
     def _get_module_name(self):
+        """Returns the name of the module for the extension"""
         return self.__module__ \
             .replace('mfr.extensions.', '', 1) \
             .replace('.render', '', 1)

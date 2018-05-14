@@ -86,10 +86,21 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         self.handler_metrics = MetricsRecord('handler')
         self.handler_metrics.add('cache_file.result', None)
         self.handler_metrics.add('source_file.upload.required', True)
-
         self.metrics = self.handler_metrics.new_subrecord(self.NAME)
 
         self.extension_metrics = MetricsRecord('extension')
+        self._cache_provider = None
+
+    @property
+    def cache_provider(self):
+        if self._cache_provider is None:
+            self._cache_provider = waterbutler.core.utils.make_provider(
+                settings.CACHE_PROVIDER_NAME,
+                {},  # User information which can be left blank
+                settings.CACHE_PROVIDER_CREDENTIALS,
+                settings.CACHE_PROVIDER_SETTINGS
+            )
+        return self._cache_provider
 
     @abc.abstractproperty
     def NAME(self):
@@ -97,7 +108,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
     async def prepare(self):
         """Builds an MFR provider instance, to which it passes the the ``url`` query parameter.
-        From that, the file metadata is extracted.  Also builds cached waterbutler providers.
+        From that, the file metadata is extracted. Also builds cached waterbutler providers.
         """
         if self.request.method == 'OPTIONS':
             return
@@ -119,20 +130,34 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
         self.metadata = await self.provider.metadata()
         self.extension_metrics.add('ext', self.metadata.ext)
-
-        self.cache_provider = waterbutler.core.utils.make_provider(
-            settings.CACHE_PROVIDER_NAME,
-            {},  # User information which can be left blank
-            settings.CACHE_PROVIDER_CREDENTIALS,
-            settings.CACHE_PROVIDER_SETTINGS
-        )
-
-        self.local_cache_provider = waterbutler.core.utils.make_provider(
-            'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
-        )
-
         self.source_file_id = uuid.uuid4()
         self.add_header('X-MFR-REQUEST-ID', str(uuid.uuid4()))
+
+    @property
+    def plugin_name(self):
+        try:
+            return self._plugin_name
+        except:
+            self._plugin_name = utils.get_plugin_name(self.metadata.ext, self.CACHED_PLUGIN_GROUP)
+            return self._plugin_name
+
+    @property
+    def cache_file_path(self):
+        """Stores a future that when awaited resolves to a validated path for the
+        MFR cache. The future is memoized so the path does not need to be validated
+        multiple times.
+        """
+        try:
+            return self._cache_file_path_future
+        except:
+            if self.plugin_name:
+                cache_path_str = '/export/{}.{}'.format(self.cache_file_id, self.plugin_name)
+            else:
+                cache_path_str = '/export/{}'.format(self.cache_file_id)
+            self._cache_file_path_future = asyncio.ensure_future(
+                self.cache_provider.validate_path(cache_path_str)
+            )
+            return self._cache_file_path_future
 
     async def write_stream(self, stream):
         try:
@@ -267,7 +292,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             metrics['provider'] = self.provider.provider_metrics.serialize()
 
         # error_metrics is already serialized
-        metrics['error'] = getattr(self, 'error_metrics') if hasattr(self, 'error_metrics') else None
+        metrics['error'] = getattr(self, 'error_metrics', None)
         return metrics
 
 

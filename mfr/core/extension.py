@@ -1,40 +1,111 @@
 import abc
+import asyncio
+from os import remove
+import uuid
 
+import waterbutler
+from waterbutler.core.streams import StringStream
+
+from mfr.core import utils
 from mfr.core.metrics import MetricsRecord
+from mfr.server import settings
 
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
-    def __init__(self, ext, source_file_path, output_file_path, format):
-
+    def __init__(self, metadata, input_stream, format):
         """Initialize the base exporter.
 
         :param ext: the name of the extension to be exported
-        :param source_file_path: the path of the input file
+        :param input_stream: input file as a stream
         :param output_file_path: the path of the output file
         :param format: the format of the exported file (e.g. 1200*1200.jpg)
         """
-
-        self.ext = ext
-        self.source_file_path = source_file_path
-        self.output_file_path = output_file_path
+        self.metadata = metadata
+        self.ext = metadata.ext
+        self.input_stream = input_stream
         self.format = format
+        self.source_file_id = uuid.uuid4()
+        self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
+        self.local_cache_provider = waterbutler.core.utils.make_provider(
+            'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
+        )
+        self.exporter_name = utils.get_exporter_name(self.metadata.ext)
         self.exporter_metrics = MetricsRecord('exporter')
         if self._get_module_name():
             self.metrics = self.exporter_metrics.new_subrecord(self._get_module_name())
 
+    async def __call__(self):
+        """Returns a stream wrapping the exported version of the file.
+        """
+        self.output_file_id = '{}.{}'.format((await self.source_wb_path).name, self.format)
+        self.output_wb_path = await self.local_cache_provider.validate_path(
+            '/export/{}'.format(self.output_file_id)
+        )
+        self.output_file_path = self.output_wb_path.full_path
         self.exporter_metrics.merge({
             'class': self._get_module_name(),
             'format': self.format,
-            'source_path': str(self.source_file_path),
-            'output_path': str(self.output_file_path),
+            'source_path': str(await self.source_wb_path),
+            'output_path': str(self.output_wb_path),
             # 'error': 'error_t',
             # 'elapsed': 'elpased_t',
         })
 
+        # Note where the output file is for diagnostics
+        self.exporter_metrics.merge({
+            'output_file': {
+                'id': self.output_file_id,
+                'path': str(self.output_wb_path),
+                'provider': self.local_cache_provider.NAME,
+            }
+        })
+
+        # Execute the extension's export method asynchronously and wait for it
+        # to finish
+        await self.export()
+
+        # Return a stream of the converted file
+        return self.write_to_stream()
+
+    @property
+    async def source_wb_path(self):
+        """Validate a local filesystem path using the filesystem provider. Used
+        to store a temporary file if it is needed by the exporter.
+        """
+        try:
+            return self._source_wb_path
+        except:
+            self._source_wb_path = await self.local_cache_provider.validate_path(
+                '/export/{}'.format(self.source_file_id)
+            )
+            return self._source_wb_path
+
+    @property
+    async def source_file_path(self):
+        """Returns a path at which the source file is located. Ensures that the
+        file is at the location
+        """
+        try:
+            return self._source_file_path
+        except:
+            self._source_file_path = (await self.source_wb_path).full_path
+            await self.local_cache_provider.upload(
+                self.input_stream,
+                await self.source_wb_path
+            )
+            return self._source_file_path
+
+    def __del__(self):
+        self.output_fp.close()
+
     @abc.abstractmethod
     def export(self):
         pass
+
+    def write_to_stream(self):
+        self.output_fp = open(self.output_file_path, 'rb')
+        return waterbutler.core.streams.FileStreamReader(self.output_fp)
 
     def _get_module_name(self):
         return self.__module__ \
@@ -43,14 +114,30 @@ class BaseExporter(metaclass=abc.ABCMeta):
 
 
 class BaseRenderer(metaclass=abc.ABCMeta):
+    """The base renderer class. Sublasses of BaseRenderer should define a
+    render method that defines how the files it's capable of rendering actually
+    get rendered.
 
-    def __init__(self, metadata, file_path, url, assets_url, export_url):
+    When the renderer is instantiated, several values are bound
+    to the instance to allow communication to the handler scope prior to
+    render.
+
+    The handler will then invoke the instance, as it is callable, which
+    will return a string rendition of the rendered file.
+    """
+
+    def __init__(self, metadata, file_stream, url, assets_url, export_url):
+        """Set up the renderer. Puts arguments recieved (from probably the
+        handler) on the instance
+        """
         self.metadata = metadata
-        self.file_path = file_path
+        self.file_stream = file_stream  # A future that resolves to a file stream
         self.url = url
         self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
         self.export_url = export_url
         self.renderer_metrics = MetricsRecord('renderer')
+        self.source_file_id = uuid.uuid4()
+        self.lucal_file_used = False
         if self._get_module_name():
             self.metrics = self.renderer_metrics.new_subrecord(self._get_module_name())
 
@@ -59,7 +146,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
             'ext': self.metadata.ext,
             'url': self.url,
             'export_url': self.export_url,
-            'file_path': self.file_path,
+            # 'file_path': self.file_path,
             # 'error': 'error_t',
             # 'elapsed': 'elpased_t',
         })
@@ -72,8 +159,68 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         except AttributeError:
             pass
 
+    @property
+    def local_cache_provider(self):
+        """Create a filesystem provider to be used for temporary files, memoize
+        it so subsequent accesses don make loads of them
+        """
+        try:
+            return self._local_cache_provider:
+        except:
+            self._local_cache_provider = waterbutler.core.utils.make_provider(
+                'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
+            )
+            return self._local_cache_provider
+
+    @property
+    async def source_file_path(self):
+        """Returns a local file path, ensuring the file exists there
+        """
+        try:
+            self._source_file_path
+        except:
+            self._source_file_path = await self.local_cache_provider.validate_path(
+                '/render/{}'.format(self.source_file_id)
+            )
+            await self.local_cache_provider.upload(
+                await self.file_stream,
+                await self._source_file_path
+            )
+            self.local_file_used = True
+            return self._source_file_path
+
+    async def __call__(self):
+        """Perform the render and return a rendition as a string
+        """
+        self.renderer_metrics.add('class', self._get_module_name())
+
+        rendition = self.render()
+
+        self.metrics.add('source_file.upload.required', self.local_file_used)
+        return StringStream(rendition)
+
+    def __del___(self):
+        """Runs during garbage collection. Make sure any files that were
+        created during the render get cleaned up too.
+        """
+        if self.file_required:
+            try:
+                remove(self._source_file_path.full_path)
+            except FileNotFoundError:
+                pass
+
+    @abc.abstractproperty
+    def cache_result(self):
+        """A Boolean used to signal whether the result of a render may be
+        cached or not
+        """
+        pass
+
     @abc.abstractmethod
     def render(self):
+        """The actual logic to perform the render, should be implemented by and
+        exension.
+        """
         pass
 
     @abc.abstractproperty
@@ -84,11 +231,8 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abc.abstractproperty
-    def cache_result(self):
-        pass
-
     def _get_module_name(self):
+        """Returns the name of the module for the extension"""
         return self.__module__ \
             .replace('mfr.extensions.', '', 1) \
             .replace('.render', '', 1)

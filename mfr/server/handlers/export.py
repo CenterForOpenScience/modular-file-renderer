@@ -1,4 +1,3 @@
-import asyncio
 import logging
 import os
 
@@ -18,6 +17,8 @@ class ExportHandler(core.BaseHandler):
     ALLOWED_METHODS = ['GET']
 
     async def prepare(self):
+        """Set up the handler before actually accepting the request body
+        """
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
@@ -33,30 +34,20 @@ class ExportHandler(core.BaseHandler):
 
         self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
 
-        if self.exporter_name:
-            cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)
-        else:
-            cache_file_path_str = '/export/{}'.format(self.cache_file_id)
-        self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
-
-        self.source_file_path = await self.local_cache_provider.validate_path(
-            '/export/{}'.format(self.source_file_id)
-        )
-
-        self.output_file_id = '{}.{}'.format(self.source_file_path.name, self.format)
-        self.output_file_path = await self.local_cache_provider.validate_path(
-            '/export/{}'.format(self.output_file_id)
-        )
-        self.metrics.merge({
-            'output_file': {
-                'id': self.output_file_id,
-                'path': str(self.output_file_path),
-                'provider': self.local_cache_provider.NAME,
-            }
-        })
-
     async def get(self):
-        """Export a file to the format specified via the associated extension library"""
+        """Export a file to the format specified via the associated extension
+        library.
+
+
+        First, try to export the file directly - this is only valid if the file is
+        already in the correct format.
+
+        Next, if caching is enabled, try to use a cached version.
+
+        Finally, do the actual conversion and export the converted file.
+        """
+
+        self._set_headers()
 
         # File is already in the requested format
         if self.metadata.ext.lower() == ".{}".format(self.format.lower()):
@@ -65,58 +56,45 @@ class ExportHandler(core.BaseHandler):
             self.metrics.add('export.conversion', 'noop')
             return
 
+        # Try to get a cached version
         if settings.CACHE_ENABLED:
             try:
-                cached_stream = await self.cache_provider.download(self.cache_file_path)
+                await self.write_stream(self.cache_provider.download(self.cache_file_path))
+                logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
+                self.metrics.add('cache_file.result', 'hit')
+                return
+
+            # Cache miss
             except DownloadError as e:
                 assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
                 logger.info('No cached file found; Starting export [{}]'.format(self.cache_file_path))
                 self.metrics.add('cache_file.result', 'miss')
-            else:
-                logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
-                self.metrics.add('cache_file.result', 'hit')
-                self._set_headers()
-                return await self.write_stream(cached_stream)
 
-        await self.local_cache_provider.upload(
+        # File isn't cached and it needs to be converted
+        # Put the export function into a variable just so it stays on the stack
+        # until this handler dies. Needed because the export instance is
+        # handling the file pointer and it closes it when it is collected. If
+        # we collect it too early, the stream won't be written to the response
+        # yet.
+        export = utils.bind_convert(
+            self.metadata,
             await self.provider.download(),
-            self.source_file_path
-        )
-
-        exporter = utils.make_exporter(
-            self.metadata.ext,
-            self.source_file_path.full_path,
-            self.output_file_path.full_path,
             self.format
         )
-
-        self.extension_metrics.add('class', exporter._get_module_name())
-
-        loop = asyncio.get_event_loop()
-        await loop.run_in_executor(None, exporter.export)
-        self.exporter_metrics = exporter.exporter_metrics
-
-        with open(self.output_file_path.full_path, 'rb') as fp:
-            self._set_headers()
-            await self.write_stream(waterbutler.core.streams.FileStreamReader(fp))
+        await self.write_stream(await export())
 
     async def _cache_and_clean(self):
         if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):
             with open(self.output_file_path.full_path, 'rb') as fp:
-                await self.cache_provider.upload(waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path)
-
-        if hasattr(self, 'source_file_path'):
-            try:
-                os.remove(self.source_file_path.full_path)
-            except FileNotFoundError:
-                pass
-
-            try:
-                os.remove(self.output_file_path.full_path)
-            except FileNotFoundError:
-                pass
+                await self.cache_provider.upload(
+                    waterbutler.core.streams.FileStreamReader(fp),
+                    self.cache_file_path
+                )
 
     def _set_headers(self):
-        self.set_header('Content-Disposition', 'attachment;filename="{}"'.format('{}.{}'.format(self.metadata.name.replace('"', '\\"'), self.format)))
+        self.set_header('Content-Disposition', 'attachment;filename="{}"'.format(
+            '{}.{}'.format(self.metadata.name.replace('"', '\\"'),
+            self.format)
+        ))
         if self.metadata.content_type:
             self.set_header('Content-Type', self.metadata.content_type)

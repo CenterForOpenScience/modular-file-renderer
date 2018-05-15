@@ -119,7 +119,9 @@ class TabularRenderer(extension.BaseRenderer):
                 self._renderer_tabular_metrics['importer'] = function.__name__
                 try:
                     return imported(fp)
-                except (KeyError, ValueError):
+                except (KeyError, ValueError) as err:
+                    logger.error('WB has encountered an unexpected error '
+                                 'when trying to render a tabular file: {}'.format(err))
                     raise exceptions.UnexpectedFormattingError(
                         'Unexpected formatting error.',
                         extension=self.metadata.ext,

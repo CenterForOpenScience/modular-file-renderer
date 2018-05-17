@@ -33,7 +33,7 @@ def make_provider(name, request, url):
         )
 
 
-def make_exporter(name, source_file_path, output_file_path, format, file_id=None):
+def make_exporter(name, source_file_path, output_file_path, format, metadata):
     """Returns an instance of :class:`mfr.core.extension.BaseExporter`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
@@ -49,8 +49,7 @@ def make_exporter(name, source_file_path, output_file_path, format, file_id=None
             namespace='mfr.exporters',
             name=normalized_name,
             invoke_on_load=True,
-            invoke_args=(normalized_name, source_file_path, output_file_path, format),
-            invoke_kwds={'file_id': file_id},
+            invoke_args=(normalized_name, source_file_path, output_file_path, format, metadata),
         ).driver
     except RuntimeError:
         raise exceptions.MakeExporterError(

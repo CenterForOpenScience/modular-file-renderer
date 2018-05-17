@@ -19,11 +19,16 @@ class ImageExporter(extension.BaseExporter):
     def export(self):
         parts = self.format.split('.')
         type = parts[-1].lower()
-        max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None
+        max_size = {
+            'w': None,
+            'h': None
+        }
+        if len(parts) == 2:
+            max_size['w'], max_size['h'] = [int(size) for size in parts[0].split('x')]
         self.metrics.merge({
             'type': type,
-            'max_size_w': max_size[0],
-            'max_size_h': max_size[1],
+            'max_size_w': max_size['w'],
+            'max_size_h': max_size['h'],
         })
         try:
             if self.ext in ['.psd']:
@@ -38,7 +43,7 @@ class ImageExporter(extension.BaseExporter):
 
             if max_size:
                 # resize the image to the w/h maximum specified
-                ratio = min(max_size[0] / image.size[0], max_size[1] / image.size[1])
+                ratio = min(max_size['w'] / image.size[0], max_size['h'] / image.size[1])
                 self.metrics.add('ratio', ratio)
                 if ratio < 1:
                     image = image.resize((round(image.size[0] * ratio),

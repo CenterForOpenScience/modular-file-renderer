@@ -31,7 +31,7 @@ class ExportHandler(core.BaseHandler):
         self.format = format[0].decode('utf-8')
         self.exporter_name = utils.get_exporter_name(self.metadata.ext)
 
-        self.cache_file_id = '{}.{}'.format(self.self.metadata.unique_key, self.format)
+        self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
 
         if self.exporter_name:
             cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)

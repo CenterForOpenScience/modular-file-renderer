@@ -35,7 +35,8 @@ class TestImageExporter:
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = ImageExporter(source_file_path=source_file_path, ext='.jpg',
-                                 output_file_path=output_file_path, format=format)
+                                 output_file_path=output_file_path, format=format,
+                                 metadata={})
 
         assert not os.path.exists(output_file_path)
 
@@ -64,7 +65,8 @@ class TestImageExporter:
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = ImageExporter(source_file_path=source_file_path, ext='.png',
-                                 output_file_path=output_file_path, format=format)
+                                 output_file_path=output_file_path, format=format,
+                                 metadata={})
 
         assert not os.path.exists(output_file_path)
 
@@ -98,7 +100,8 @@ class TestImageExporter:
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = ImageExporter(source_file_path=source_file_path, ext='.bmp',
-                                 output_file_path=output_file_path, format=format)
+                                 output_file_path=output_file_path, format=format,
+                                 metadata={})
 
         assert not os.path.exists(output_file_path)
 
@@ -123,7 +126,8 @@ class TestImageExporter:
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = ImageExporter(source_file_path=source_file_path, ext='.png',
-                                 output_file_path=output_file_path, format=format)
+                                 output_file_path=output_file_path, format=format,
+                                 metadata={})
 
         assert not os.path.exists(output_file_path)
 
@@ -146,7 +150,8 @@ class TestImageExporter:
                                         'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = ImageExporter(source_file_path=source_file_path, ext='.jpg',
-                                 output_file_path=output_file_path, format=format)
+                                 output_file_path=output_file_path, format=format,
+                                 metadata={})
 
         assert not os.path.exists(output_file_path)
         with pytest.raises(exceptions.PillowImageError) as e:
@@ -159,7 +164,8 @@ class TestImageExporter:
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = ImageExporter(source_file_path=source_file_path, ext='.jpg',
-                                 output_file_path=output_file_path, format=format)
+                                 output_file_path=output_file_path, format=format,
+                                 metadata={})
 
         assert not os.path.exists(output_file_path)
         with pytest.raises(exceptions.PillowImageError) as e:

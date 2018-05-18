@@ -5,7 +5,7 @@ from mfr.core.metrics import MetricsRecord
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
-    def __init__(self, ext, source_file_path, output_file_path, format):
+    def __init__(self, ext, source_file_path, output_file_path, format, metadata):
 
         """Initialize the base exporter.
 
@@ -19,6 +19,7 @@ class BaseExporter(metaclass=abc.ABCMeta):
         self.source_file_path = source_file_path
         self.output_file_path = output_file_path
         self.format = format
+        self.metadata = metadata
         self.exporter_metrics = MetricsRecord('exporter')
         if self._get_module_name():
             self.metrics = self.exporter_metrics.new_subrecord(self._get_module_name())

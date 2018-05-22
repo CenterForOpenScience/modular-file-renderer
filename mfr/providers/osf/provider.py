@@ -118,8 +118,11 @@ class OsfProvider(provider.BaseProvider):
         for unneeded in OsfProvider.UNNEEDED_URL_PARAMS:
             cleaned_url.args.pop(unneeded, None)
         self.metrics.add('metadata.clean_url_args', str(cleaned_url))
-        unique_key = hashlib.sha256((metadata['data']['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
-        return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url)
+        meta = metadata['data']
+        unique_key = hashlib.sha256((meta['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
+        stable_id = hashlib.sha256('/{}/{}/{}'.format(meta['resource'], meta['provider'], meta['path'])
+                                   .encode('utf-8')).hexdigest()
+        return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url, stable_id)
 
     async def download(self):
         """Download file from WaterButler, returning stream."""

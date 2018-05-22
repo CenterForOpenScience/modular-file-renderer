@@ -41,6 +41,6 @@ class UnoconvExporter(extension.BaseExporter):
             )
 
         pdf = PdfReader(self.output_file_path)
-        pdf.ID[0] = self.metadata.unique_key
+        pdf.ID[0] = self.metadata.stable_id
         pdf.ID[1] = self.metadata.unique_key
         PdfWriter(self.output_file_path, trailer=pdf).write()

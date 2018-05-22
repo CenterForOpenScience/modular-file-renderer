@@ -169,7 +169,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
                 current['materialized_type'] = '.'.join([x[0] for x in exc.attr_stack])
                 self.error_metrics = current
-            except Exception as exc:
+            except Exception:
                 pass
             self.set_status(exc.code)
             self.finish(exc.as_html())

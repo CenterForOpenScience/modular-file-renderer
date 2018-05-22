@@ -48,12 +48,13 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
 class ProviderMetadata:
 
-    def __init__(self, name, ext, content_type, unique_key, download_url):
+    def __init__(self, name, ext, content_type, unique_key, download_url, stable_id=None):
         self.name = name
         self.ext = ext
         self.content_type = content_type
         self.unique_key = unique_key
         self.download_url = download_url
+        self.stable_id = stable_id
 
     def serialize(self):
         return {
@@ -62,4 +63,5 @@ class ProviderMetadata:
             'content_type': self.content_type,
             'unique_key': str(self.unique_key),
             'download_url': str(self.download_url),
+            'stable_id': None if self.stable_id is None else str(self.stable_id),
         }

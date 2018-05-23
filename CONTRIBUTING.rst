@@ -2,25 +2,20 @@
 Contributing guidelines
 ***********************
 
-In general
-==========
-
 - `PEP 8`_, when sensible.
 - Test ruthlessly. Write docs for new features.
-- Even more important than Test-Driven Development--*Human-Driven Development*.
+- Make sure any new logic is easy for others to understand.
 - If you add an extension to setup.py, add it to supportedextensions.md.
 - Please update AUTHORS.rst when you contribute.
 
 .. _`PEP 8`: http://www.python.org/dev/peps/pep-0008/
 
-In particular
-=============
-
-
 Setting up for development
---------------------------
+==========================
 
-Clone the repo: ::
+Clone the repo:
+
+.. code-block:: bash
 
     $ git clone https://github.com/CenterForOpenScience/modular-file-renderer.git
     $ cd modular-file-renderer
@@ -28,200 +23,126 @@ Clone the repo: ::
 Configure development environment and install the development dependencies.
 
 .. note::
-
-    It is recommended that you use a `virtualenv`_ with `virtualenvwrapper`_ during development. Python 3.5 or greater, `R`_, and `pspp`_ are required.
-
-.. _virtualenv: http://www.virtualenv.org/en/latest/
-.. _virtualenvwrapper: https://pypi.python.org/pypi/virtualenvwrapper
+    Python 3.5 or greater, `R`_, and `pspp`_ are required.
+    Python 3.6 is reccomended. It's recommended that a python version manager such as pyenv is used. Additionally it is recommended that you use a virtual environment during development.
+.. _pyenv: https://github.com/pyenv/pyenv
+.. _pyenv-virtualenv: https://github.com/pyenv/pyenv-virtualenv
 .. _R: https://www.r-project.org/
 .. _pspp: https://www.gnu.org/software/pspp/
 
+For Mac OS, an example of the commands that might be run to set up MFR. Linux users will probably do the same thing but with a different package manager. If someone wants to update this guide, please do.
+
 .. code-block:: bash
 
-    # For Mac OS X: Install the latest version of python3.5
-    $ brew install python3
     $ brew install r pspp
-
-    # Linux users, probably the same thing but with apt-get
-    # If someone wants to update this guide, please do.
-
-    $ pip install virtualenv
-    $ pip install virtualenvwrapper
-    $ mkvirtualenv --python=`which python3` mfr
+    $ pyenv virtualenv 3.6.4 mfr && echo mfr > .python-version
     $ pip install setuptools==30.4.0
     $ pip install invoke==0.13.0
 
 
 Lastly, install mfr in development mode. ::
 
-    $ invoke install -d
-    $ invoke server
-   
+    $ inv install -d
+    $ inv server
+
 Running tests
--------------
+=============
 
 
 To run all tests (requires pytest) ::
 
-    $ invoke test
+    $ inv test
 
 You can also use pytest directly. ::
 
     $ py.test
 
 Writing tests
--------------
+=============
 
 Unit tests should be written for all rendering code.
 
-Tests should be encapsulated within a class and written as functions, like so:
+Tests should be encapsulated within a class and written as functions. There are a few `pytest fixtures`_ to help you mock files. You can use them by simply including them as parameters to your test functions.
 
 .. code-block:: python
 
     # in test_myformat.py
 
-    from mfr_something import render
+    from mfr.extensions.my_extension.render import MyExtensionRenderer
 
+    @pytest.fixture
+    def metadata():
+        return ProviderMetadata(
+            'file_name',
+            '.extension',
+            'text/plain',
+            '1234',
+            'http://wb.osf.io/file/file_name.extension?token=1234'
+        )
 
-    def test_render_html():
-        with open('testfile.mp4') as fp:
-            assert render.render_html(fp) == '<p>rendered testfile.mp4</p>'
+    def test_render_html(extension, metadata, file_path, assets_url, export_url):
+        assert MyExtensionRenderer(
+            extension,
+            file_metadata,
+            file_path,
+            assets_url
+        ).render() == '<p>Rendered file for my_extension</p>'
 
-There are a few `pytest fixtures`_ to help you mock files. You can use them by simply including them as parameters to your test functions. For example, the ``fakefile`` fixture is a fake file-like object whose name and content you can set to any value.
-
-The above test can be rewritten like so:
-
-.. code-block:: python
-
-    # in test_myformat.py
-
-    from mfr_something import render
-
-    def test_render_html(fakefile):
-        assert render.render_html(fakefile) == '<p>rendered testfile.mp4</p>'
+Check out pytest documentation to learn more about fixtures
 
 .. _pytest fixtures: https://pytest.org/latest/fixture.html
 
 
 Manual Local Testing
---------------------
+====================
 
-To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. 
-
-First, change the default provider to HTTP (in `/mfr/server/settings.py`), then update the provider domain in the ``ALLOWED_PROVIDER_DOMAINS`` whitelist (a space-separated string):
-
-.. code-block:: python
-
-    PROVIDER_NAME = config.get('PROVIDER_NAME', 'http')
-    ALLOWED_PROVIDER_DOMAINS = config.get('ALLOWED_PROVIDER_DOMAINS', 'http://localhost:8000/')
-
-Because the MFR is passed a url to render, you also need to be running an http server.
-
-From a directory with a file you want to render:
-
-.. code-block:: bash
-
-    python -m SimpleHTTPServer 8000
-
-Or for python 3
-
-.. code-block:: bash
-
-    python3 -m http.server 8000
-
-With both the SimpleHTTPServer and the MFR server running, go to
-
-.. code-block:: bash
-
-	http://localhost:7778/render?url=http://localhost:8000/[filename].[ext]
+To make sure a new renderer is functioning properly, it's recommended that you try to render a file of that type locally. The easiest way to do this would be to use the docker-compose files available inside the osf repository to get the MFR running, and then it should be straigtforward to interact with the service using a tool such as postman.
 
 
-Writing A File Format Package
------------------------------
+Writing an extension
+====================
 
-There are two main pieces of a file format package are
+An extension provides a 'renderer' and/or an 'exporter', and is registered in setup.py to allow the plugin to load when it is needed.
+Renderers and exporters sublasses `mfr.core.extension.BaseRenderer` or `mfr.core.extension.BaseExporter` respectively. A renderer takes a file path and some file metadata and returns a string of html that provides a representation of the file. The logic for the rendering happens in a renderer's `render` function. This is an abstrac base class method, and thus is required for the implementation of a rendererer. Similarly, `BaseExporter` has an `export` method. This method should take a file and convert it to the desired output, and create the newly converted file at the `ouput_file_path`.
 
-- Your custom rendering and/or exporting code
-- Your :class:`FileHandler <mfr.core.FileHandler>`
-
+Renderers have an abstract property `file_required`. This is used to determine if the renderer needs the actual content of the file in order to render it. Renderers also have a property cache_result; this is used to determine whether the ouput of the renderer may be cached to improve future requests for the rendered version of the file.
 
 Rendering Code
-++++++++++++++++++++++++
+--------------
 
-Renderers are simply callables (functions or methods) that take a file as their first argument and return
-
-Here is a very simple example of function that takes a filepointer and outputs a render result with an HTML image tag.
+Renderers subclass `mfr.core.extension.BaseRenderer`, and implement a render function, a `file_required` property, and a `cache_result` property.
 
 .. code-block:: python
 
-    def render_img_tag(filepointer):
-        filename = filepointer.name
-        content = '<img src="{filename}" />'.format(filename=filename)
-        return RenderResult(content)
+    import os
+    from mako.lookup import TemplateLookup
+    from mfr.core import extension
 
-You can also write renderers as methods.
+    class ImageRenderer(extension.BaseRenderer):
 
-.. code-block:: python
+        TEMPLATE = TemplateLookup(
+            directories=[
+                os.path.join(os.path.dirname(__file__), 'templates')
+            ]).get_template('viewer.mako')
 
-    # in mfr_video/render.py
+        def render(self):
+            return self.TEMPLATE.render(base=self.assets_url, url=self.url.geturl())
 
-    class VideoRenderer(object):
+        @property
+        def file_required(self):
+            return False
 
-        def render_html5_tag(self, fp):
-            content = '<video src="{filename}"></video>'.format(filename=fp.name)
-            return RenderResult(content)
-
-        def render_flash(self, fp):
-            # ...
-            pass
-
-
-The FileHandler
-+++++++++++++++
-
-A file handler is responsible for using your custom rendering and exporting code to actually render and export a file. When you call :func:`mfr.detect <mfr.detect>`, you receive a list of :class:`FileHandler <mfr.core.FileHandler>` classes.
-
-Your FileHandler **must** define a ``detect`` method which, given a file object, returns whether or not it can handle the file.
-
-**Your FileHandler class should be named Handler and should be defined in your `mfr_format/__init__.py` file.**
-
-.. code-block:: python
-
-    # in mfr_image/__init__.py
-
-    from mfr import FileHandler, get_file_extension
-
-    # Your custom code
-    from mfr_image.render import render_img_tag
-    from mfr_image.export import ImageExporter
-
-
-    class Handler(FileHandler):
-        renderers = {
-            'html': render_img_tag,
-        }
-
-        exporters = {
-            'png': ImageExporter().export_png,
-            'jpg': ImageExporter().export_jpg,
-            # ...
-        }
-
-        def detect(self, fp):
-            return get_file_extension(fp.name) in ['.jpg', '.png', ]  # and so on
-
+        @property
+        def cache_result(self):
+            return False
 
 
 Organization
-++++++++++++
+------------
 
-Each package has its own directory. At a minimum, your package should include:
+Each plugin has its own directory. At a minimum, a plugin should include:
 
-- ``__init__.py``: Where your :class:`FileHandler <mfr.core.FileHandler>`` subclass will live.
-- ``render-requirements.txt``: External dependencies for rendering functionality.
-- ``export-requirements.txt``: External dependencies for export functionality.
-
-Apart from those files, you  are free to organize your rendering and export code however you want.
+- ``__init__.py``: This should export the `mfr.core.extensions.BaseExporter` and `mfr.core.extensions.BaseRenderer` subclasses provided by the plugin
 
 A typical extension plugin directory structure might look like this:
 
@@ -258,7 +179,7 @@ A typical extension plugin directory structure might look like this:
 
 
 Documentation
--------------
+=============
 
 Contributions to the documentation are welcome. Documentation is written in `reStructured Text`_ (rST). A quick rST reference can be found `here <http://docutils.sourceforge.net/docs/user/rst/quickref.html>`_. Builds are powered by Sphinx_.
 

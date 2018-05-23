@@ -18,28 +18,17 @@ app.py
     from flask import Flask, url_for, send_from_directory, render_template
 
     import mfr
-    import mfr_image
+    import mfr.extensions.image as mfr_image
     import os
 
     app = Flask(__name__)
-
     @app.route('/view/<filename>')
     def view_file(filename):
-        with open(os.path.join('path/to/uploads/', filename)) as fp:
-            # Get first available handler for the file
-            handler = mfr.detect(fp)
-            if handler:
-                # some renderers, e.g. the image renderer, require a src argument
-                src = url_for('serve_file', filename=filename)
-                render_result = handler.render(fp, src=src)
-                return render_template('view_file.html', render_result=render_result)
-            else:
-                return 'Cannot render {filename}.'.format(filename=filename)
+        return mfr_image.render.ImageRenderer(os.path.join('path/to/uploads/', filename))
 
     @app.route('/files/<filename>')
     def serve_file(filename):
-        return send_from_directory(app.config['FILES_DIR'], filename)
-
+        return send_from_directory(os.path.join('path/to/uploads/'), filename))
 
     def main():
         # Configure MFR with correct static URL and folder

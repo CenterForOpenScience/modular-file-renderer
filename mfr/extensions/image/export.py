@@ -44,6 +44,13 @@ class ImageExporter(extension.BaseExporter):
                     image = image.resize((round(image.size[0] * ratio),
                                           round(image.size[1] * ratio)), Image.ANTIALIAS)
 
+            # Mode 'P' is for paletted images. They must be converted to RGB before exporting to
+            # jpeg, otherwise Pillow will throw an error.  This is a temporary workaround, as the
+            # conversion is imprecise and can be ugly.
+            # See: https://stackoverflow.com/q/21669657
+            if image.mode == 'P':
+                image = image.convert('RGB')
+
             # handle transparency
             # from https://github.com/python-pillow/Pillow/issues/2609
             if image.mode in ('RGBA', 'RGBa', 'LA') and type in ['jpeg', 'jpg']:

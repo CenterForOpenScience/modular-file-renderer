@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+0.25.8 (2018-05-25)
+===================
+- Fix: Render paletted pngs by converting them to RGB before saving as jpeg.
+- Code: Fix flake errors unrelated to this hotfix that were causing CI failures.
+
 0.25.7 (2018-05-08)
 ===================
 - Feature: Allow settings config variables from the environment via JSON strings.  (thanks,

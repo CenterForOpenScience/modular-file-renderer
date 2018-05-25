@@ -62,7 +62,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         content, encoding = None, 'utf-8'
         try:
             content = data.decode(encoding)
-        except UnicodeDecodeError as e:
+        except UnicodeDecodeError:
             detected_encoding = chardet.detect(data)
             encoding = detected_encoding.get('encoding', None)
             if encoding is None:

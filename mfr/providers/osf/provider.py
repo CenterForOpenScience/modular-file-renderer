@@ -69,7 +69,11 @@ class OsfProvider(provider.BaseProvider):
         else:
             # URL is for WaterButler v1 API
             self.metrics.add('metadata.wb_api', 'v1')
-            metadata_response = await self._make_request('HEAD', download_url)
+            metadata_response = await self._make_request(
+                'HEAD',
+                download_url,
+                headers={settings.MFR_ACTION_HEADER: self.action or ''}
+            )
             response_code = metadata_response.status
             response_reason = metadata_response.reason
             response_headers = metadata_response.headers

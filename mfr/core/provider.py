@@ -14,7 +14,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
     `mfr.server.settings.ALLOWED_PROVIDER_DOMAINS`.
     """
 
-    def __init__(self, request, url):
+    def __init__(self, request, url, action=None):
         self.request = request
         url_netloc = furl.furl(url).netloc
         if url_netloc not in settings.ALLOWED_PROVIDER_NETLOCS:
@@ -25,6 +25,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
                 code=400
             )
         self.url = url
+        self.action = action
         self.provider_metrics = MetricsRecord('provider')
         self.metrics = self.provider_metrics.new_subrecord(self.NAME)
 

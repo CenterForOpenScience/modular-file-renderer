@@ -30,8 +30,8 @@ class OsfProvider(provider.BaseProvider):
     UNNEEDED_URL_PARAMS = ('_', 'token', 'action', 'mode', 'displayName')
     NAME = 'osf'
 
-    def __init__(self, request, url):
-        super().__init__(request, url)
+    def __init__(self, request, url, action=None):
+        super().__init__(request, url, action)
         self.download_url = None
         self.headers = {}
 

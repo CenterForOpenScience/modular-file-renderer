@@ -1,4 +1,4 @@
-FROM python:3.5-slim
+FROM python:3.5-slim-jessie
 
 # ensure unoconv can locate the uno library
 ENV PYTHONPATH=/usr/lib/python3/dist-packages

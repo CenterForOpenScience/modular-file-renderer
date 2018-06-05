@@ -812,6 +812,9 @@ setup(
             # JASP
             '.jasp = mfr.extensions.jasp:JASPRenderer',
 
+            # enml (Evernote)
+            '.enml = mfr.extensions.enml:EnmlRenderer',
+
             # Zip
             '.zip = mfr.extensions.zip:ZipRenderer'
         ]

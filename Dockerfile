@@ -1,4 +1,4 @@
-FROM python:3.5-slim
+FROM python:3.5-slim-jessie
 
 # ensure unoconv can locate the uno library
 ENV PYTHONPATH=/usr/lib/python3/dist-packages
@@ -29,9 +29,18 @@ RUN usermod -d /home www-data \
         pspp \
         # gosu dependencies
         curl \
+        gnupg2 \
     # gosu
     && export GOSU_VERSION='1.10' \
-    && gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && for key in \
+      # GOSU
+      B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    ; do \
+      gpg --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+      gpg --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+      gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
+      gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" \
+    ; done \
     && curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
   	&& curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
   	&& gpg --verify /usr/local/bin/gosu.asc \

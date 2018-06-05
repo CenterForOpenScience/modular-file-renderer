@@ -41,13 +41,18 @@ class ImageExporter(extension.BaseExporter):
             else:
                 image = Image.open(self.source_file_path)
 
-            if max_size:
+            if not (max_size.get('w') or max_size.get('h')):
+                # If any of the dimensions for the resize aren't defined:
+                pass
+            else:
                 # resize the image to the w/h maximum specified
                 ratio = min(max_size['w'] / image.size[0], max_size['h'] / image.size[1])
                 self.metrics.add('ratio', ratio)
                 if ratio < 1:
-                    image = image.resize((round(image.size[0] * ratio),
-                                          round(image.size[1] * ratio)), Image.ANTIALIAS)
+                    image = image.resize(
+                        (round(image.size[0] * ratio), round(image.size[1] * ratio)),
+                        Image.ANTIALIAS
+                    )
 
             # Mode 'P' is for paletted images. They must be converted to RGB before exporting to
             # jpeg, otherwise Pillow will throw an error.  This is a temporary workaround, as the

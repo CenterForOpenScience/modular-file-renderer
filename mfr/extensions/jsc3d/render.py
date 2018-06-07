@@ -7,7 +7,7 @@ from mako.lookup import TemplateLookup
 
 from mfr.core import extension
 from mfr.extensions.jsc3d import settings
-from mfr.extensions.utils import munge_url_for_localdev
+from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
 
 
 class JSC3DRenderer(extension.BaseRenderer):
@@ -21,18 +21,20 @@ class JSC3DRenderer(extension.BaseRenderer):
         self.metrics.add('needs_export', False)
         if self.metadata.ext in settings.EXPORT_EXCLUSIONS:
             download_url = munge_url_for_localdev(self.metadata.download_url)
+            safe_url = escape_url_for_template(download_url.geturl())
             return self.TEMPLATE.render(
                 base=self.assets_url,
-                url=download_url.geturl(),
+                url=safe_url,
                 ext=self.metadata.ext.lower(),
             )
 
         exported_url = furl.furl(self.export_url)
         exported_url.args['format'] = settings.EXPORT_TYPE
         self.metrics.add('needs_export', True)
+        safe_url = escape_url_for_template(exported_url.url)
         return self.TEMPLATE.render(
             base=self.assets_url,
-            url=exported_url.url,
+            url=safe_url,
             ext=settings.EXPORT_TYPE,
         )
 

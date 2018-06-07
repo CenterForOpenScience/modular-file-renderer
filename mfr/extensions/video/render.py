@@ -3,7 +3,7 @@ import os
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
-from mfr.extensions.utils import munge_url_for_localdev
+from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
 
 
 class VideoRenderer(extension.BaseRenderer):
@@ -15,7 +15,8 @@ class VideoRenderer(extension.BaseRenderer):
 
     def render(self):
         download_url = munge_url_for_localdev(self.metadata.download_url)
-        return self.TEMPLATE.render(url=download_url.geturl())
+        safe_url = escape_url_for_template(download_url.geturl())
+        return self.TEMPLATE.render(url=safe_url)
 
     @property
     def file_required(self):

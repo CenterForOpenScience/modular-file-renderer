@@ -29,7 +29,7 @@ def munge_url_for_localdev(url: str) -> Tuple:
     return url_obj
 
 
-def escape_url_for_template(url: str, logs=False) -> str:
+def escape_url_for_template(url: str, logs: bool=True) -> str:
     """Escape (URL Encode) single and double quote(s) for the given URL.
 
     Download and export URLs may end up not properly encoded right before they are about to be sent

@@ -21,7 +21,7 @@ class PdfRenderer(extension.BaseRenderer):
     def render(self):
         download_url = munge_url_for_localdev(self.metadata.download_url)
         logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext, settings.EXPORT_SUPPORTED))
-        if self.metadata.ext not in settings.EXPORT_SUPPORTED:
+        if self.metadata.ext.lower() not in settings.EXPORT_SUPPORTED:
             logger.debug('Extension not found in supported list!')
             return self.TEMPLATE.render(
                 base=self.assets_url,

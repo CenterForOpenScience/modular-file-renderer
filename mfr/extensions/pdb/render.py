@@ -6,7 +6,7 @@ from mako.lookup import TemplateLookup
 
 from mfr.core import extension
 from mfr.extensions.pdb import settings
-from mfr.extensions.utils import munge_url_for_localdev
+from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
 
 
 class PdbRenderer(extension.BaseRenderer):
@@ -18,9 +18,10 @@ class PdbRenderer(extension.BaseRenderer):
 
     def render(self):
         download_url = munge_url_for_localdev(self.metadata.download_url)
+        safe_url = escape_url_for_template(download_url.geturl())
         return self.TEMPLATE.render(
             base=self.assets_url,
-            url=download_url.geturl(),
+            url=safe_url,
             options=json.dumps(settings.OPTIONS),
         )
 

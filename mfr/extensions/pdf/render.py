@@ -6,7 +6,7 @@ from mako.lookup import TemplateLookup
 
 from mfr.core import extension
 from mfr.extensions.pdf import settings
-from mfr.extensions.utils import munge_url_for_localdev
+from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
 
 logger = logging.getLogger(__name__)
 
@@ -19,14 +19,16 @@ class PdfRenderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
+
         download_url = munge_url_for_localdev(self.metadata.download_url)
-        logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext, settings.EXPORT_SUPPORTED))
+        logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext,
+                                                                settings.EXPORT_SUPPORTED))
         if self.metadata.ext.lower() not in settings.EXPORT_SUPPORTED:
             logger.debug('Extension not found in supported list!')
             return self.TEMPLATE.render(
                 base=self.assets_url,
-                url=download_url.geturl(),
-                enable_hypothesis=settings.ENABLE_HYPOTHESIS
+                url=escape_url_for_template(download_url.geturl()),
+                enable_hypothesis=settings.ENABLE_HYPOTHESIS,
             )
 
         logger.debug('Extension found in supported list!')
@@ -41,14 +43,15 @@ class PdfRenderer(extension.BaseRenderer):
             self.metrics.add('needs_export', True)
             return self.TEMPLATE.render(
                 base=self.assets_url,
-                url=exported_url.url,
+                url=escape_url_for_template(exported_url.url),
                 enable_hypothesis=settings.ENABLE_HYPOTHESIS
             )
 
+        # TODO: is this dead code? ``settings.EXPORT_TYPE`` is never None or empty
         return self.TEMPLATE.render(
             base=self.assets_url,
-            url=download_url.geturl(),
-            enable_hypothesis=settings.ENABLE_HYPOTHESIS
+            url=escape_url_for_template(download_url.geturl()),
+            enable_hypothesis=settings.ENABLE_HYPOTHESIS,
         )
 
     @property

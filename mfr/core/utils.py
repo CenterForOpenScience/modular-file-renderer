@@ -4,7 +4,7 @@ from stevedore import driver
 from mfr.core import exceptions
 
 
-def make_provider(name, request, url):
+def make_provider(name, request, url, action=None):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 
     :param str name: The name of the provider to instantiate. (osf)
@@ -19,6 +19,7 @@ def make_provider(name, request, url):
             name=name.lower(),
             invoke_on_load=True,
             invoke_args=(request, url, ),
+            invoke_kwds={'action': action},
         ).driver
     except RuntimeError:
         raise exceptions.MakeProviderError(

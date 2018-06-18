@@ -46,7 +46,6 @@ setup(
         'mfr.exporters': [
             # google docs
             '.gdraw = mfr.extensions.image:ImageExporter',
-            '.gdoc = mfr.extensions.unoconv:UnoconvExporter',
             '.gsheet = mfr.extensions.unoconv:UnoconvExporter',
             '.gslides = mfr.extensions.unoconv:UnoconvExporter',
 
@@ -667,7 +666,6 @@ setup(
 
             # google docs
             '.gdraw = mfr.extensions.image:ImageRenderer',
-            '.gdoc = mfr.extensions.unoconv:UnoconvRenderer',
             '.gsheet = mfr.extensions.tabular:TabularRenderer',
             '.gslides = mfr.extensions.unoconv:UnoconvRenderer',
 
@@ -703,6 +701,7 @@ setup(
 
             # pdf
             '.pdf = mfr.extensions.pdf:PdfRenderer',
+            '.gdoc = mfr.extensions.pdf:PdfRenderer',
 
             # rst
             '.rst = mfr.extensions.rst:RstRenderer',

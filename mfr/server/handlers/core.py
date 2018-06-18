@@ -1,20 +1,20 @@
-import os
 import abc
-import uuid
 import asyncio
+import os
 import pkg_resources
+import uuid
 
+from raven.contrib.tornado import SentryMixin
 import tornado.web
 import tornado.iostream
-from raven.contrib.tornado import SentryMixin
 
+import waterbutler.core.exceptions
 import waterbutler.core.utils
 import waterbutler.server.utils
-import waterbutler.core.exceptions
 
-from mfr.server import settings
-from mfr.core.metrics import MetricsRecord
 from mfr.core import utils, exceptions, remote_logging
+from mfr.core.metrics import MetricsRecord
+from mfr.server import settings
 
 CORS_ACCEPT_HEADERS = [
     'Range',
@@ -97,13 +97,15 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
     async def prepare(self):
         """Builds an MFR provider instance, to which it passes the the ``url`` query parameter.
-        From that, the file metadata is extracted.  Also builds cached waterbutler providers.
+        From that, the file metadata is extracted. Also builds cached waterbutler providers.
         """
+
         if self.request.method == 'OPTIONS':
             return
 
         try:
-            self.url = self.request.query_arguments['url'][0].decode('utf-8')
+            # retrieve the url from request query parameter and append `&mfr=ture`
+            self.url = self.request.query_arguments['url'][0].decode('utf-8') + '&mfr=true'
         except KeyError:
             raise exceptions.ProviderError(
                 '"url" is a required argument.',

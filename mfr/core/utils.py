@@ -4,7 +4,7 @@ from stevedore import driver
 from mfr.core import exceptions
 
 
-def make_provider(name, request, url):
+def make_provider(name, request, url, action=None):
     """Returns an instance of :class:`mfr.core.provider.BaseProvider`
 
     :param str name: The name of the provider to instantiate. (osf)
@@ -19,6 +19,7 @@ def make_provider(name, request, url):
             name=name.lower(),
             invoke_on_load=True,
             invoke_args=(request, url, ),
+            invoke_kwds={'action': action},
         ).driver
     except RuntimeError:
         raise exceptions.MakeProviderError(
@@ -33,7 +34,7 @@ def make_provider(name, request, url):
         )
 
 
-def make_exporter(name, source_file_path, output_file_path, format):
+def make_exporter(name, source_file_path, output_file_path, format, metadata):
     """Returns an instance of :class:`mfr.core.extension.BaseExporter`
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
@@ -49,7 +50,7 @@ def make_exporter(name, source_file_path, output_file_path, format):
             namespace='mfr.exporters',
             name=normalized_name,
             invoke_on_load=True,
-            invoke_args=(normalized_name, source_file_path, output_file_path, format),
+            invoke_args=(normalized_name, source_file_path, output_file_path, format, metadata),
         ).driver
     except RuntimeError:
         raise exceptions.MakeExporterError(

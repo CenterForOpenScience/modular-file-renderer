@@ -1,5 +1,6 @@
 ;(function() {
     'use strict';
+
     window.pymChild = new pym.Child();
 
     window.addEventListener('load', function () {

@@ -114,7 +114,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
             self.request,
-            self.url
+            self.url,
+            action=self.NAME,
         )
 
         self.metadata = await self.provider.metadata()

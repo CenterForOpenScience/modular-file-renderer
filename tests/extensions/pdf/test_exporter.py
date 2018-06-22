@@ -45,7 +45,8 @@ class TestPdfExporter:
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = PdfExporter(source_file_path=source_file_path, ext='.tif',
-                               output_file_path=output_file_path, format=format)
+                               output_file_path=output_file_path, format=format,
+                               metadata={'unique_key': 'moo moo moo'})
 
         assert not os.path.exists(output_file_path)
 
@@ -62,7 +63,8 @@ class TestPdfExporter:
         output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
         format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
         exporter = PdfExporter(source_file_path=source_file_path, ext='.tif',
-                               output_file_path=output_file_path, format=format)
+                               output_file_path=output_file_path, format=format,
+                               metadata={'unique_key': 'moo moo moo'})
 
         assert not os.path.exists(output_file_path)
 

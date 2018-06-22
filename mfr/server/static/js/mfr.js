@@ -111,6 +111,10 @@
             self.pymParent.sendMessage('resize', 'x');
         };
 
+        self.startHypothesis = function() {
+            self.pymParent.sendMessage('startHypothesis');
+        };
+
         return self;
     };
 

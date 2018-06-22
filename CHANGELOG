@@ -2,6 +2,17 @@
 ChangeLog
 *********
 
+0.26.0 (2018-06-22)
+===================
+- Feature: Teach MFR to identify itself when requesting metadata from WaterButler. This will allow
+WaterButler to signal to the OSF when a render or export request occurs, letting OSF tally better
+metrics on file views.
+- Feature: When asked to export a file in its current format, return the unmodified file instead of
+complaining about the extension not having a supported exporter.
+- Fix: Don't show scrollbars on videos. They should be entirely visible without scrolling.
+- Fix: Render .tif files when extension is capitalized.
+- Docs: Remove obsolete documentation, fix markup errors, and edit existing docs.
+
 0.25.11 (2018-06-08)
 ====================
 - Fix: Percent-encode quote characters in urls to avoid breaking some renderers.

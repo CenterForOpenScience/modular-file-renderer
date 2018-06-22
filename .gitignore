@@ -12,18 +12,21 @@ Thumbs.db
 *~
 
 # R
-#######################
+######################
 .Rhistory
 
 # Python
-#######################
+######################
 *.py[cod]
 **/*.pyc
+.mypy_cache
 
 # C extensions
+######################
 *.so
 
 # Packages
+######################
 *.egg
 *.egg-info
 dist
@@ -45,30 +48,45 @@ __pycache__
 .env
 
 # Installer logs
+######################
 pip-log.txt
 
 # Unit test / coverage reports
+######################
 .coverage
 .tox
 nosetests.xml
 
 # Translations
+######################
 *.mo
 
 # Mr Developer
+######################
 .mr.developer.cfg
 .project
 .pydevproject
 
 # Sphinx
+######################
 docs/_build
 README.html
 
 # Player files
+######################
 player/files/*
 player/mfr_config_local.py
 player/static/mfr/*
 
+# Misc
+######################
 !.gitkeep
-
 .cache
+
+# Node Modules
+######################
+node_modules/
+
+# Asynchronous HTTP
+######################
+/src/

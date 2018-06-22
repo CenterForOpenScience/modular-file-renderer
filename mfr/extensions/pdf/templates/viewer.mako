@@ -37,6 +37,16 @@ http://sourceforge.net/adobe/cmap/wiki/License/
 
     <script src="debugger.js"></script>
     <script src="viewer.js"></script>
+
+    % if enable_hypothesis:
+    <style>
+      body.show-hypothesis #toolbarViewer {
+        position: relative;
+        margin-right: 36px;
+      }
+    </style>
+    % endif
+
   </head>
 
   <body tabindex="1" class="loadingInProgress">
@@ -413,6 +423,9 @@ http://sourceforge.net/adobe/cmap/wiki/License/
         var DEFAULT_URL = '${url}';
         window.pymChild.sendMessage('embed', 'embed-responsive-pdf');
     </script>
+    % if enable_hypothesis:
+    <script src="/static/js/mfr.child.hypothesis.js"></script>
+    % endif
   </body>
 </html>
 

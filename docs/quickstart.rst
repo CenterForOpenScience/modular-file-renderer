@@ -85,9 +85,4 @@ Using Static Files
 
 Many renderers require static files (e.g. CSS and Javascript). To retrieve the static files for a file renderer, the object has a 'assets_url' that serves as the base path.
 
-Next Steps
-==========
-
-That's it for the quickstart. For more complete examples, check out the :ref:`examples <examples>` page.
-
 

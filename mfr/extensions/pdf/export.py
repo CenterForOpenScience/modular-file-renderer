@@ -4,6 +4,7 @@ import logging
 from http import HTTPStatus
 
 from PIL import Image, TiffImagePlugin
+from pdfrw import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 
 from mfr.core import extension
@@ -66,6 +67,13 @@ class PdfExporter(extension.BaseExporter):
         c.save()
 
     def export(self):
+        if self.ext.lower() == '.pdf':
+            pdf = PdfReader(self.source_file_path)
+            pdf.ID[0] = self.metadata.stable_id
+            pdf.ID[1] = self.metadata.unique_key
+            PdfWriter(self.output_file_path, trailer=pdf).write()
+            return
+
         logger.debug('pdf-export: format::{}'.format(self.format))
         parts = self.format.split('.')
         export_type = parts[-1].lower()

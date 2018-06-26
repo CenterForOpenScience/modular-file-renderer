@@ -59,6 +59,7 @@ class OsfProvider(provider.BaseProvider):
         differently.
         """
         download_url = await self._fetch_download_url()
+        logger.debug('download_url::{}'.format(download_url))
         if '/file?' in download_url:
             # URL is for WaterButler v0 API
             # TODO Remove this when API v0 is officially deprecated
@@ -177,6 +178,7 @@ class OsfProvider(provider.BaseProvider):
                 )
                 await request.release()
 
+                logger.debug('osf-download-resolver: request.status::{}'.format(request.status))
                 if request.status != 302:
                     raise exceptions.MetadataError(
                         request.reason,

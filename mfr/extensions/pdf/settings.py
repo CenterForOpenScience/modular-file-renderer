@@ -4,6 +4,7 @@ from mfr import settings
 config = settings.child('PDF_EXTENSION_CONFIG')
 
 EXPORT_TYPE = config.get('EXPORT_TYPE', 'pdf')
+assert EXPORT_TYPE  # mandatory config
 EXPORT_MAXIMUM_SIZE = config.get('EXPORT_MAXIMUM_SIZE', '1200x1200')
 
 ENABLE_HYPOTHESIS = config.get_bool('ENABLE_HYPOTHESIS', False)

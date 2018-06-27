@@ -424,6 +424,9 @@ http://sourceforge.net/adobe/cmap/wiki/License/
         window.pymChild.sendMessage('embed', 'embed-responsive-pdf');
     </script>
     % if enable_hypothesis:
+    <script>
+        window.MFR_STABLE_ID = '${stable_id}';
+    </script>
     <script src="/static/js/mfr.child.hypothesis.js"></script>
     % endif
   </body>

@@ -28,6 +28,7 @@ class PdfRenderer(extension.BaseRenderer):
             return self.TEMPLATE.render(
                 base=self.assets_url,
                 url=escape_url_for_template(download_url.geturl()),
+                stable_id=self.metadata.stable_id,
                 enable_hypothesis=settings.ENABLE_HYPOTHESIS,
             )
 
@@ -43,6 +44,7 @@ class PdfRenderer(extension.BaseRenderer):
         return self.TEMPLATE.render(
             base=self.assets_url,
             url=escape_url_for_template(exported_url.url),
+            stable_id=self.metadata.stable_id,
             enable_hypothesis=settings.ENABLE_HYPOTHESIS
         )
 

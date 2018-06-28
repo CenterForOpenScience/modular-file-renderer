@@ -33,25 +33,17 @@ class PdfRenderer(extension.BaseRenderer):
 
         logger.debug('Extension found in supported list!')
         exported_url = furl.furl(self.export_url)
-        if settings.EXPORT_TYPE:
-            if settings.EXPORT_MAXIMUM_SIZE:
-                exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
-                                                             settings.EXPORT_TYPE)
-            else:
-                exported_url.args['format'] = settings.EXPORT_TYPE
+        if self.metadata.ext.lower() in settings.EXPORT_NEEDS_SCALING:
+            exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
+                                                         settings.EXPORT_TYPE)
+        else:
+            exported_url.args['format'] = 'export.{}'.format(settings.EXPORT_TYPE)
 
-            self.metrics.add('needs_export', True)
-            return self.TEMPLATE.render(
-                base=self.assets_url,
-                url=escape_url_for_template(exported_url.url),
-                enable_hypothesis=settings.ENABLE_HYPOTHESIS
-            )
-
-        # TODO: is this dead code? ``settings.EXPORT_TYPE`` is never None or empty
+        self.metrics.add('needs_export', True)
         return self.TEMPLATE.render(
             base=self.assets_url,
-            url=escape_url_for_template(download_url.geturl()),
-            enable_hypothesis=settings.ENABLE_HYPOTHESIS,
+            url=escape_url_for_template(exported_url.url),
+            enable_hypothesis=settings.ENABLE_HYPOTHESIS
         )
 
     @property

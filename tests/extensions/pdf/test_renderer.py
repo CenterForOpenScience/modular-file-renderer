@@ -45,7 +45,7 @@ def assets_url():
 
 @pytest.fixture
 def export_url():
-    return 'http://mfr.osf.io/export?url=http://osf.io/file/test.pdf'
+    return 'http://mfr.osf.io/export?url=http://osf.io/file/test.pdf&format=export.pdf'
 
 
 @pytest.fixture
@@ -60,18 +60,22 @@ def tif_renderer(tif_metadata, tif_file_path, tif_url, assets_url, export_url):
 
 class TestPdfRenderer:
 
-    def test_render_pdf(self, renderer, metadata, assets_url):
+    def test_render_pdf(self, renderer, assets_url, export_url):
         body = renderer.render()
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
-        assert 'DEFAULT_URL = \'{}\''.format(metadata.download_url) in body
+        assert 'DEFAULT_URL = \'{}\''.format(export_url) in body
 
     def test_render_pdf_with_single_quote_in_name(self, assets_url):
 
-        download_url = 'http://wb.osf.io/file/te\'st.pdf?token=1234'
-        safe_download_url = 'http://wb.osf.io/file/te%27st.pdf?token=1234'
+        bad_download_url = 'http://osf.io/file/te\'st.pdf'
+        safe_download_url = 'http://osf.io/file/te%27st.pdf'
 
-        metadata = ProviderMetadata('te\'st', '.pdf', 'text/plain', '1234', download_url)
+        base_export_url = 'http://mfr.osf.io/export?url={}&format=export.pdf'
+        bad_export_url = base_export_url.format(bad_download_url)
+        safe_export_url = base_export_url.format(safe_download_url)
+
+        metadata = ProviderMetadata('te\'st', '.pdf', 'text/plain', '1234', bad_download_url)
         renderer = PdfRenderer(metadata, '/tmp/te\'st.pdf', 'http://osf.io/file/te\'st.pdf',
                                assets_url,
                                'http://mfr.osf.io/export?url=http://osf.io/file/te\'st.pdf')
@@ -80,13 +84,13 @@ class TestPdfRenderer:
 
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
-        assert 'DEFAULT_URL = \'{}\''.format(download_url) not in body
-        assert 'DEFAULT_URL = \'{}\''.format(safe_download_url) in body
+        assert 'DEFAULT_URL = \'{}\''.format(bad_export_url) not in body
+        assert 'DEFAULT_URL = \'{}\''.format(safe_export_url) in body
 
     def test_render_tif(self, tif_renderer, assets_url):
         exported_url = furl.furl(tif_renderer.export_url)
         exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
-                                                            settings.EXPORT_TYPE)
+                                                     settings.EXPORT_TYPE)
 
         body = tif_renderer.render()
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body

@@ -2,6 +2,7 @@ import os
 import abc
 import uuid
 import asyncio
+import logging
 import pkg_resources
 
 import tornado.web
@@ -30,6 +31,8 @@ CORS_EXPOSE_HEADERS = [
     'Content-Length',
     'Content-Encoding',
 ]
+
+logger = logging.getLogger(__name__)
 
 
 class CorsMixin:
@@ -110,6 +113,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 provider=settings.PROVIDER_NAME,
                 code=400,
             )
+        logging.debug('target_url::{}'.format(self.url))
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -120,6 +124,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
         self.metadata = await self.provider.metadata()
         self.extension_metrics.add('ext', self.metadata.ext)
+        logging.debug('extension::{}'.format(self.metadata.ext))
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,

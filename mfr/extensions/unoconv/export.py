@@ -1,12 +1,6 @@
 import os
 import subprocess
 
-from pdfrw import (
-    PdfReader,
-    PdfWriter
-)
-
-
 from mfr.core import extension
 from mfr.core import exceptions
 
@@ -39,8 +33,3 @@ class UnoconvExporter(extension.BaseExporter):
                 extension=extension or '',
                 exporter_class='unoconv',
             )
-
-        pdf = PdfReader(self.output_file_path)
-        pdf.ID[0] = self.metadata.stable_id
-        pdf.ID[1] = self.metadata.unique_key
-        PdfWriter(self.output_file_path, trailer=pdf).write()

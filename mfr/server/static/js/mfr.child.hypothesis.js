@@ -16,6 +16,13 @@
             return;
         }
 
+        // If a pdf is being rendered and MFR has provided a stable identifier, override the
+        // documentFingerprint with it before loading the hypothes.is client.  The client
+        // will use this ID to identify the document when fetching/saving annotations.
+        if (window.MFR_STABLE_ID && window.PDFViewerApplication) {
+            window.PDFViewerApplication.documentFingerprint = window.MFR_STABLE_ID;
+        }
+
         var script = window.document.createElement('script');
         script.type = 'text/javascript';
         script.src = 'https://hypothes.is/embed.js';

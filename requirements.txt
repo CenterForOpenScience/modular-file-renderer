@@ -37,7 +37,6 @@ mistune==0.7
 
 # Pdf
 reportlab==3.4.0
-pdfrw==0.4.0
 
 # Pptx
 # python-pptx==0.5.7

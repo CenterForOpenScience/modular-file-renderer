@@ -57,15 +57,12 @@ setup(
             '.bmp = mfr.extensions.image:ImageExporter',
             '.gif = mfr.extensions.image:ImageExporter',
             '.psd = mfr.extensions.image:ImageExporter',
+            '.tif = mfr.extensions.pdf:PdfExporter',
+            '.tiff = mfr.extensions.pdf:PdfExporter',
 
             # jsc3d
             '.stp = mfr.extensions.jsc3d:JSC3DExporter',
             '.step = mfr.extensions.jsc3d:JSC3DExporter',
-
-            # pdf
-            '.pdf = mfr.extensions.pdf:PdfExporter',
-            '.tif = mfr.extensions.pdf:PdfExporter',
-            '.tiff = mfr.extensions.pdf:PdfExporter',
 
             # unoconv
             # '.bib = mfr.extensions.unoconv:UnoconvExporter',

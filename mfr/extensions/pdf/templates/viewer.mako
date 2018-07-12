@@ -426,9 +426,9 @@ http://sourceforge.net/adobe/cmap/wiki/License/
     % if enable_hypothesis:
     <script>
         window.MFR_STABLE_ID = '${stable_id}';
+        window.MFR_FILE_NAME = '${file_name}';
     </script>
     <script src="/static/js/mfr.child.hypothesis.js"></script>
     % endif
   </body>
 </html>
-

@@ -29,6 +29,9 @@ class PdfRenderer(extension.BaseRenderer):
                 base=self.assets_url,
                 url=escape_url_for_template(download_url.geturl()),
                 stable_id=self.metadata.stable_id,
+                file_name=escape_url_for_template(
+                    '{}{}'.format(self.metadata.name, self.metadata.ext)
+                ),
                 enable_hypothesis=settings.ENABLE_HYPOTHESIS,
             )
 

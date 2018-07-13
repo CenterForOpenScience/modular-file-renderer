@@ -30,7 +30,12 @@
                 window.PDFViewerApplication.documentFingerprint = window.MFR_STABLE_ID;
             }
             if (window.MFR_FILE_NAME) {
-                window.PDFViewerApplication.documentInfo.Title = window.MFR_FILE_NAME;
+                if (window.PDFViewerApplication.documentInfo) {
+                    window.PDFViewerApplication.documentInfo.Title = window.MFR_FILE_NAME;
+                }
+                else {
+                    window.PDFViewerApplication.documentInfo = {"Title": window.MFR_FILE_NAME};
+                }
                 document.title = window.MFR_FILE_NAME;
             }
             window.PDFViewerApplication.url = document.referrer;

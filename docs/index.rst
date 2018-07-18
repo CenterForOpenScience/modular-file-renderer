@@ -24,6 +24,7 @@ Guide
    install
    quickstart
    overview
+   integrations
    code
 
 Project info

@@ -21,6 +21,9 @@ class PdfRenderer(extension.BaseRenderer):
     def render(self):
 
         download_url = munge_url_for_localdev(self.metadata.download_url)
+        escaped_name = escape_url_for_template(
+            '{}{}'.format(self.metadata.name, self.metadata.ext)
+        )
         logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext,
                                                                 settings.EXPORT_SUPPORTED))
         if self.metadata.ext.lower() not in settings.EXPORT_SUPPORTED:
@@ -29,9 +32,7 @@ class PdfRenderer(extension.BaseRenderer):
                 base=self.assets_url,
                 url=escape_url_for_template(download_url.geturl()),
                 stable_id=self.metadata.stable_id,
-                file_name=escape_url_for_template(
-                    '{}{}'.format(self.metadata.name, self.metadata.ext)
-                ),
+                file_name=escaped_name,
                 enable_hypothesis=settings.ENABLE_HYPOTHESIS,
             )
 
@@ -48,7 +49,8 @@ class PdfRenderer(extension.BaseRenderer):
             base=self.assets_url,
             url=escape_url_for_template(exported_url.url),
             stable_id=self.metadata.stable_id,
-            enable_hypothesis=settings.ENABLE_HYPOTHESIS
+            file_name=escaped_name,
+            enable_hypothesis=settings.ENABLE_HYPOTHESIS,
         )
 
     @property

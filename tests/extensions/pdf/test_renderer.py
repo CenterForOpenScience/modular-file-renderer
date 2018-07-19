@@ -86,7 +86,7 @@ class TestPdfRenderer:
     def test_render_tif(self, tif_renderer, assets_url):
         exported_url = furl.furl(tif_renderer.export_url)
         exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
-                                                            settings.EXPORT_TYPE)
+                                                     settings.EXPORT_TYPE)
 
         body = tif_renderer.render()
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body

@@ -1,5 +1,6 @@
 import os
 import imghdr
+import logging
 from http import HTTPStatus
 
 from PIL import Image, TiffImagePlugin
@@ -8,6 +9,8 @@ from reportlab.pdfgen import canvas
 from mfr.core import extension
 from mfr.extensions.pdf import exceptions
 from mfr.extensions.pdf.settings import EXPORT_MAX_PAGES
+
+logger = logging.getLogger(__name__)
 
 
 class PdfExporter(extension.BaseExporter):
@@ -63,6 +66,7 @@ class PdfExporter(extension.BaseExporter):
         c.save()
 
     def export(self):
+        logger.debug('pdf-export: format::{}'.format(self.format))
         parts = self.format.split('.')
         export_type = parts[-1].lower()
         max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None

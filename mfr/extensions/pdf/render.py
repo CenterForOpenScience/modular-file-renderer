@@ -21,6 +21,9 @@ class PdfRenderer(extension.BaseRenderer):
     def render(self):
 
         download_url = munge_url_for_localdev(self.metadata.download_url)
+        escaped_name = escape_url_for_template(
+            '{}{}'.format(self.metadata.name, self.metadata.ext)
+        )
         logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext,
                                                                 settings.EXPORT_SUPPORTED))
         if self.metadata.ext.lower() not in settings.EXPORT_SUPPORTED:
@@ -28,29 +31,25 @@ class PdfRenderer(extension.BaseRenderer):
             return self.TEMPLATE.render(
                 base=self.assets_url,
                 url=escape_url_for_template(download_url.geturl()),
+                stable_id=self.metadata.stable_id,
+                file_name=escaped_name,
                 enable_hypothesis=settings.ENABLE_HYPOTHESIS,
             )
 
         logger.debug('Extension found in supported list!')
         exported_url = furl.furl(self.export_url)
-        if settings.EXPORT_TYPE:
-            if settings.EXPORT_MAXIMUM_SIZE:
-                exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
-                                                             settings.EXPORT_TYPE)
-            else:
-                exported_url.args['format'] = settings.EXPORT_TYPE
+        if settings.EXPORT_MAXIMUM_SIZE:
+            exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
+                                                         settings.EXPORT_TYPE)
+        else:
+            exported_url.args['format'] = settings.EXPORT_TYPE
 
-            self.metrics.add('needs_export', True)
-            return self.TEMPLATE.render(
-                base=self.assets_url,
-                url=escape_url_for_template(exported_url.url),
-                enable_hypothesis=settings.ENABLE_HYPOTHESIS
-            )
-
-        # TODO: is this dead code? ``settings.EXPORT_TYPE`` is never None or empty
+        self.metrics.add('needs_export', True)
         return self.TEMPLATE.render(
             base=self.assets_url,
-            url=escape_url_for_template(download_url.geturl()),
+            url=escape_url_for_template(exported_url.url),
+            stable_id=self.metadata.stable_id,
+            file_name=escaped_name,
             enable_hypothesis=settings.ENABLE_HYPOTHESIS,
         )
 

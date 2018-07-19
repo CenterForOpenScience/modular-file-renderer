@@ -59,6 +59,7 @@ class OsfProvider(provider.BaseProvider):
         differently.
         """
         download_url = await self._fetch_download_url()
+        logger.debug('download_url::{}'.format(download_url))
         if '/file?' in download_url:
             # URL is for WaterButler v0 API
             # TODO Remove this when API v0 is officially deprecated
@@ -124,8 +125,10 @@ class OsfProvider(provider.BaseProvider):
         self.metrics.add('metadata.clean_url_args', str(cleaned_url))
         meta = metadata['data']
         unique_key = hashlib.sha256((meta['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
-        stable_id = hashlib.sha256('/{}/{}/{}'.format(meta['resource'], meta['provider'], meta['path'])
-                                   .encode('utf-8')).hexdigest()
+        stable_str = '/{}/{}{}'.format(meta['resource'], meta['provider'], meta['path'])
+        stable_id = hashlib.sha256(stable_str.encode('utf-8')).hexdigest()
+        logger.debug('stable_identifier: str({}) hash({})'.format(stable_str, stable_id))
+
         return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url, stable_id)
 
     async def download(self):
@@ -177,6 +180,7 @@ class OsfProvider(provider.BaseProvider):
                 )
                 await request.release()
 
+                logger.debug('osf-download-resolver: request.status::{}'.format(request.status))
                 if request.status != 302:
                     raise exceptions.MetadataError(
                         request.reason,

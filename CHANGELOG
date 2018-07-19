@@ -2,6 +2,16 @@
 ChangeLog
 *********
 
+0.27.0 (2018-07-19)
+===================
+- Feature: Support the Hypothes.is annotator toolbar on pdfs and files converted to pdf.  This is
+not enabled by default; see `docs/integrations.rst` for instructions on enabling it.  NB: the
+default urls, page titles, and document ids that hypothes.is gets from the rendered document when
+running in an MFR context are not very useful, so MFR will try to provide more appropriate values to
+the annotator.  These may not be valid for all use cases, please see the document mentioned
+above for details.  (h/t @jamescdavis for helping to debug a race condition in the loader!)
+- Code: Don't let pytest descend into node_modules/.  (thanks, @birdbrained!)
+
 0.26.0 (2018-06-22)
 ===================
 - Feature: Teach MFR to identify itself when requesting metadata from WaterButler. This will allow

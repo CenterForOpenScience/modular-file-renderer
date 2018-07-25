@@ -35,7 +35,8 @@ async def log_analytics(request, metrics, is_error=False):
             {  # private
                 'name': 'keen:ip_to_geo',
                 'input': {
-                    'ip': 'tech.ip'
+                    'ip': 'tech.ip',
+                    'remove_ip_property': True,
                 },
                 'output': 'geo',
             },
@@ -178,7 +179,7 @@ def _build_public_file_payload(action, request, file_metadata):
         'request': {
             'url': request['request']['url']
         },
-        'anon': {
+        'anon': {  # intended for anonymized geolocation, never implemented
             'country': None,
             'continent': None,
         },

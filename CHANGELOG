@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+0.27.1 (2018-07-25)
+===================
+- Feature: Tell Keen analytics to strip ip on upload.
+
 0.27.0 (2018-07-19)
 ===================
 - Feature: Support the Hypothes.is annotator toolbar on pdfs and files converted to pdf.  This is

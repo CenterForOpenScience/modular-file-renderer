@@ -40,9 +40,8 @@ http://sourceforge.net/adobe/cmap/wiki/License/
 
     % if enable_hypothesis:
     <style>
-      body.show-hypothesis #toolbarViewer {
-        position: relative;
-        margin-right: 36px;
+      body.show-hypothesis .annotator-frame {
+        margin-top: 32px;
       }
     </style>
     % endif

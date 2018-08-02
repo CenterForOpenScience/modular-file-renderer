@@ -18,12 +18,14 @@ class ImageExporter(extension.BaseExporter):
 
     def export(self):
         parts = self.format.split('.')
-        type = parts[-1].lower()
-        max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None
+        image_type = parts[-1].lower()
+        max_size = {'w': None, 'h': None}
+        if len(parts) == 2:
+            max_size['w'], max_size['h'] = [int(size) for size in parts[0].split('x')]
         self.metrics.merge({
-            'type': type,
-            'max_size_w': max_size[0],
-            'max_size_h': max_size[1],
+            'type': image_type,
+            'max_size_w': max_size['w'],
+            'max_size_h': max_size['h'],
         })
         try:
             if self.ext in ['.psd']:
@@ -36,13 +38,14 @@ class ImageExporter(extension.BaseExporter):
             else:
                 image = Image.open(self.source_file_path)
 
-            if max_size:
+            # Only resize when both dimensions are available
+            if max_size.get('w') and max_size.get('h'):
                 # resize the image to the w/h maximum specified
-                ratio = min(max_size[0] / image.size[0], max_size[1] / image.size[1])
+                ratio = min(max_size['w'] / image.size[0], max_size['h'] / image.size[1])
                 self.metrics.add('ratio', ratio)
                 if ratio < 1:
-                    image = image.resize((round(image.size[0] * ratio),
-                                          round(image.size[1] * ratio)), Image.ANTIALIAS)
+                    size_tuple = (round(image.size[0] * ratio), round(image.size[1] * ratio))
+                    image = image.resize(size_tuple, Image.ANTIALIAS)
 
             # Mode 'P' is for paletted images. They must be converted to RGB before exporting to
             # jpeg, otherwise Pillow will throw an error.  This is a temporary workaround, as the
@@ -53,22 +56,22 @@ class ImageExporter(extension.BaseExporter):
 
             # handle transparency
             # from https://github.com/python-pillow/Pillow/issues/2609
-            if image.mode in ('RGBA', 'RGBa', 'LA') and type in ['jpeg', 'jpg']:
+            if image.mode in ('RGBA', 'RGBa', 'LA') and image_type in ['jpeg', 'jpg']:
                 # JPEG has no transparency, so anything that was transparent gets changed to
                 # EXPORT_BACKGROUND_COLOR. Default is white.
                 background = Image.new(image.mode[:-1], image.size, EXPORT_BACKGROUND_COLOR)
                 background.paste(image, image.split()[-1])
                 image = background
 
-            image.save(self.output_file_path, type)
+            image.save(self.output_file_path, image_type)
             image.close()
 
         except (UnicodeDecodeError, IOError, FileNotFoundError, OSError) as err:
-            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+            os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '
-                'file is a valid image.'.format(type),
-                export_format=type,
+                'file is a valid image.'.format(image_type),
+                export_format=image_type,
                 detected_format=imghdr.what(self.source_file_path),
                 original_exception=err,
                 code=400,

@@ -6,7 +6,7 @@ from abc import (
 
 from aiohttp import HttpBadRequest
 from furl import furl
-from markupsafe import escape
+import markupsafe
 
 from mfr.core.exceptions import ProviderError
 from mfr.core.metrics import MetricsRecord
@@ -25,7 +25,7 @@ class BaseProvider(metaclass=ABCMeta):
         if netloc not in ALLOWED_PROVIDER_NETLOCS:
             raise ProviderError(
                 message="{} is not a permitted provider domain.".format(
-                    escape(netloc)
+                    markupsafe.escape(netloc)
                 ),
                 # TODO: using HTTPStatus.BAD_REQUEST fails tests, not sure why and I will take a another look later
                 code=HttpBadRequest.code

@@ -157,13 +157,13 @@ class QueryParameterError(ProviderError):
         super().__init__(message, code=code, *args, **kwargs)
         self.url = url
         self.return_code = code
-        self.attr_stack.append([
+        self.attr_stack.append((
             self.__TYPE,
             {
                 'url': self.url,
                 'returncode': self.return_code,
             }
-        ])
+        ))
 
 
 class TooBigToRenderError(ProviderError):

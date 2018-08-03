@@ -92,8 +92,11 @@ class OsfProvider(BaseProvider):
             await metadata_response.release()
             if response_code != HTTPStatus.OK:
                 raise MetadataError(
-                    'Failed to fetch file metadata from WaterButler. Received response: ',
-                    'code {} {}'.format(str(response_code), str(response_reason)),
+                    '''Failed to fetch file metadata from WaterButler.
+                    Received response: code {} {}'''.format(
+                        str(response_code),
+                        str(response_reason)
+                    ),
                     metadata_url=download_url,
                     response=response_reason,
                     provider=self.NAME,
@@ -125,9 +128,10 @@ class OsfProvider(BaseProvider):
         max_file_size = MAX_FILE_SIZE_TO_RENDER.get(ext)
         if max_file_size and size and int(size) > max_file_size:
             raise TooBigToRenderError(
-                "This file with extension '{ext}' exceeds the size limit of {max_size} and will not "
-                "be rendered. To view this file download it and view it "
-                "offline.".format(ext=ext, max_size=sizeof_fmt(max_file_size)),
+                '''This file with extension '{ext}' exceeds the size limit of {max_size} and will
+                not be rendered. To view this file download it and view it offline.'''.format(
+                    ext=ext, max_size=sizeof_fmt(max_file_size)
+                ),
                 requested_size=int(size), maximum_size=max_file_size,
             )
 

@@ -1,14 +1,14 @@
 import os
 from urllib import parse
 
-import furl
+from furl import furl
 from mako.lookup import TemplateLookup
 
-from mfr.core import extension
-from mfr.extensions.office365 import settings as office365_settings
+from mfr.core.extension import BaseRenderer
+from mfr.extensions.office365.settings import OFFICE_BASE_URL
 
 
-class Office365Renderer(extension.BaseRenderer):
+class Office365Renderer(BaseRenderer):
     """A renderer for .docx files that are publicly available.
 
     Office online can render `.docx` files to `.pdf` for us. This renderer will only be made
@@ -17,7 +17,6 @@ class Office365Renderer(extension.BaseRenderer):
     render MUST be public.
 
     Note: this renderer DOES NOT work locally.
-
     """
 
     TEMPLATE = TemplateLookup(
@@ -26,10 +25,11 @@ class Office365Renderer(extension.BaseRenderer):
         ]).get_template('viewer.mako')
 
     def render(self):
-        download_url = furl.furl(self.metadata.download_url).set(query='').url
-        encoded_download_url = parse.quote(download_url)
-        office_render_url = office365_settings.OFFICE_BASE_URL + encoded_download_url
-        return self.TEMPLATE.render(base=self.assets_url, url=office_render_url)
+        download_url = furl(self.metadata.download_url).set(query='').url
+        return self.TEMPLATE.render(
+            base=self.assets_url,
+            url=OFFICE_BASE_URL + parse.quote(download_url)
+        )
 
     @property
     def file_required(self):

@@ -1,15 +1,19 @@
-import abc
+from abc import (
+    ABCMeta,
+    abstractmethod,
+    abstractproperty
+)
 
 from aiohttp import HttpBadRequest
-import furl
-import markupsafe
+from furl import furl
+from markupsafe import escape
 
-from mfr.core import exceptions as core_exceptions
+from mfr.core.exceptions import ProviderError
 from mfr.core.metrics import MetricsRecord
-from mfr.server import settings as server_settings
+from mfr.server.settings import ALLOWED_PROVIDER_NETLOCS
 
 
-class BaseProvider(metaclass=abc.ABCMeta):
+class BaseProvider(metaclass=ABCMeta):
     """Base class for MFR Providers.  Requires ``download`` and ``metadata`` methods.
     Validates that the given file url is hosted at a domain listed in
     `mfr.server.settings.ALLOWED_PROVIDER_DOMAINS`.
@@ -17,11 +21,11 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
     def __init__(self, request, url, action=None):
         self.request = request
-        url_netloc = furl.furl(url).netloc
-        if url_netloc not in server_settings.ALLOWED_PROVIDER_NETLOCS:
-            raise core_exceptions.ProviderError(
+        netloc = furl(url).netloc
+        if netloc not in ALLOWED_PROVIDER_NETLOCS:
+            raise ProviderError(
                 message="{} is not a permitted provider domain.".format(
-                    markupsafe.escape(url_netloc)
+                    escape(netloc)
                 ),
                 # TODO: using HTTPStatus.BAD_REQUEST fails tests, not sure why and I will take a another look later
                 code=HttpBadRequest.code
@@ -36,15 +40,15 @@ class BaseProvider(metaclass=abc.ABCMeta):
             'url': str(self.url),
         })
 
-    @abc.abstractproperty
+    @abstractproperty
     def NAME(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def metadata(self):
         pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def download(self):
         pass
 

@@ -16,7 +16,11 @@ class Office365Renderer(BaseRenderer):
     office online URL into an `iframe` and returns the template. The file it is trying to
     render MUST be public.
 
-    Note: this renderer DOES NOT work locally.
+    Note: The url for the file to convert must be available publicly on the
+    internet in order for the renderer to access it. This means files stored on
+    OSF storage locally will not render unless the local server is listening on
+    external connections and waterbutler is providing urls that are externally
+    accessible.
     """
 
     TEMPLATE = TemplateLookup(

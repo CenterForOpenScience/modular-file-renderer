@@ -1,33 +1,44 @@
-import os
 import json
 import hashlib
+from http import HTTPStatus
 import logging
-from urllib.parse import urlparse
 import mimetypes
+import os
+from urllib.parse import urlparse
 
 import furl
 import aiohttp
 from aiohttp.errors import ContentEncodingError
 
-from waterbutler.core import streams
+from waterbutler.core.streams import ResponseStreamReader
 
-from mfr.core import exceptions
-from mfr.core import provider
+from mfr.core.exceptions import (
+    DownloadError,
+    MetadataError,
+    TooBigToRenderError,
+    QueryParameterError
+)
+from mfr.core.provider import (
+    BaseProvider,
+    ProviderMetadata
+)
 from mfr.core.utils import sizeof_fmt
-from mfr.providers.osf import settings
+from mfr.providers.osf.settings import (
+    MFR_ACTION_HEADER,
+    MFR_IDENTIFYING_HEADER
+)
 from mfr.settings import MAX_FILE_SIZE_TO_RENDER
-from mfr.core.exceptions import TooBigToRenderError
 
 logger = logging.getLogger(__name__)
 
 
-class OsfProvider(provider.BaseProvider):
+class OsfProvider(BaseProvider):
     """Open Science Framework (https://osf.io) -aware provider.  Knows the OSF ecosystem and
     can request specific metadata for the file referenced by the URL.  Can correctly propagate
     OSF authorization to verify ownership and permisssions of file.
     """
 
-    UNNEEDED_URL_PARAMS = ('_', 'token', 'action', 'mode', 'displayName')
+    UNNEEDED_URL_PARAMS = {'_', 'token', 'action', 'mode', 'displayName'}
     NAME = 'osf'
 
     def __init__(self, request, url, action=None):
@@ -73,20 +84,23 @@ class OsfProvider(provider.BaseProvider):
             metadata_response = await self._make_request(
                 'HEAD',
                 download_url,
-                headers={settings.MFR_ACTION_HEADER: self.action or ''}
+                headers={MFR_ACTION_HEADER: self.action or ''}
             )
             response_code = metadata_response.status
             response_reason = metadata_response.reason
             response_headers = metadata_response.headers
             await metadata_response.release()
-            if response_code != 200:
-                raise exceptions.MetadataError(
-                    'Failed to fetch file metadata from WaterButler. Received response: ',
-                    'code {} {}'.format(str(response_code), str(response_reason)),
+            if response_code != HTTPStatus.OK:
+                raise MetadataError(
+                    '''Failed to fetch file metadata from WaterButler.
+                    Received response: code {} {}'''.format(
+                        str(response_code),
+                        str(response_reason)
+                    ),
                     metadata_url=download_url,
                     response=response_reason,
                     provider=self.NAME,
-                    code=400
+                    code=HTTPStatus.BAD_REQUEST
                 )
 
             try:
@@ -97,14 +111,16 @@ class OsfProvider(provider.BaseProvider):
         self.metrics.add('metadata.raw', metadata)
 
         # e.g.,
-        # metadata = {'data': {
-        #     'name': 'blah.png',
-        #     'contentType': 'image/png',
-        #     'etag': 'ABCD123456...',
-        #     'extra': {
-        #         ...
-        #     },
-        # }}
+        # metadata = {
+        #     'data': {
+        #         'name': 'blah.png',
+        #         'contentType': 'image/png',
+        #         'etag': 'ABCD123456...',
+        #         'extra': {
+        #             ...
+        #         },
+        #     }
+        # }
 
         name, ext = os.path.splitext(metadata['data']['name'])
         size = metadata['data']['size']
@@ -112,9 +128,10 @@ class OsfProvider(provider.BaseProvider):
         max_file_size = MAX_FILE_SIZE_TO_RENDER.get(ext)
         if max_file_size and size and int(size) > max_file_size:
             raise TooBigToRenderError(
-                "This file with extension '{ext}' exceeds the size limit of {max_size} and will not "
-                "be rendered. To view this file download it and view it "
-                "offline.".format(ext=ext, max_size=sizeof_fmt(max_file_size)),
+                '''This file with extension '{ext}' exceeds the size limit of {max_size} and will
+                not be rendered. To view this file download it and view it offline.'''.format(
+                    ext=ext, max_size=sizeof_fmt(max_file_size)
+                ),
                 requested_size=int(size), maximum_size=max_file_size,
             )
 
@@ -128,19 +145,38 @@ class OsfProvider(provider.BaseProvider):
         stable_str = '/{}/{}{}'.format(meta['resource'], meta['provider'], meta['path'])
         stable_id = hashlib.sha256(stable_str.encode('utf-8')).hexdigest()
         logger.debug('stable_identifier: str({}) hash({})'.format(stable_str, stable_id))
+        is_public = False
+        public_file = cleaned_url.args.get('public_file', None)
+        if public_file:
+            if public_file not in {'True', 'False'}:
+                raise QueryParameterError(
+                    'Invalid value for query parameter `public_file`: {}'.format(cleaned_url.args['public_file']),
+                    url=download_url,
+                    provider=self.NAME,
+                    code=HTTPStatus.BAD_REQUEST,
+                )
+            is_public = public_file == 'True'
 
-        return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url, stable_id)
+        return ProviderMetadata(
+            name,
+            ext,
+            content_type,
+            unique_key,
+            download_url,
+            stable_id,
+            is_public=is_public
+        )
 
     async def download(self):
         """Download file from WaterButler, returning stream."""
         download_url = await self._fetch_download_url()
-        headers = {settings.MFR_IDENTIFYING_HEADER: '1'}
+        headers = {MFR_IDENTIFYING_HEADER: '1'}
         response = await self._make_request('GET', download_url, allow_redirects=False, headers=headers)
 
-        if response.status >= 400:
+        if response.status >= HTTPStatus.BAD_REQUEST:
             resp_text = await response.text()
             logger.error('Unable to download file: ({}) {}'.format(response.status, resp_text))
-            raise exceptions.DownloadError(
+            raise DownloadError(
                 'Unable to download the requested file, please try again later.',
                 download_url=download_url,
                 response=resp_text,
@@ -148,12 +184,12 @@ class OsfProvider(provider.BaseProvider):
             )
 
         self.metrics.add('download.saw_redirect', False)
-        if response.status in (302, 301):
+        if response.status in {HTTPStatus.MOVED_PERMANENTLY, HTTPStatus.FOUND}:
             await response.release()
             response = await aiohttp.request('GET', response.headers['location'])
             self.metrics.add('download.saw_redirect', True)
 
-        return streams.ResponseStreamReader(response)
+        return ResponseStreamReader(response)
 
     async def _fetch_download_url(self):
         """Provider needs a WaterButler URL to download and get metadata.  If ``url`` is already
@@ -181,8 +217,8 @@ class OsfProvider(provider.BaseProvider):
                 await request.release()
 
                 logger.debug('osf-download-resolver: request.status::{}'.format(request.status))
-                if request.status != 302:
-                    raise exceptions.MetadataError(
+                if request.status != HTTPStatus.FOUND:
+                    raise MetadataError(
                         request.reason,
                         metadata_url=self.url,
                         provider=self.NAME,

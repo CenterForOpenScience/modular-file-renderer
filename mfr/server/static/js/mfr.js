@@ -75,26 +75,61 @@
         self.spinner = _createSpinner(url, imgName);
 
         self.init = function () {
-            self.pymParent = new pym.Parent(self.id, self.url, self.config);
-            self.pymParent.iframe.setAttribute('allowfullscreen', '');
-            self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
-            self.pymParent.iframe.setAttribute('scrolling', 'yes');
-            self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
 
-            self.pymParent.el.appendChild(self.spinner);
-            $(self.pymParent.iframe).on('load', function () {
-                self.pymParent.el.removeChild(self.spinner);
-            });
+            const wb_url = window.contextVars.waterbutlerURL;
+            const node_id = window.contextVars.node.id;
+            const provider = window.contextVars.file.provider;
+            const file_id = window.contextVars.file.id;
+            const file_name = window.contextVars.file.name;
 
-            self.pymParent.onMessage('embed', function(message) {
-                _addClass(self.pymParent.el, 'embed-responsive');
-                _addClass(self.pymParent.el, message);
-                _addClass(self.pymParent.iframe, 'embed-responsive-item');
-            });
+            const wb_file_url = `${wb_url}/v1/resources/${node_id}/providers/${provider}/${file_id}`;
 
-            self.pymParent.onMessage('location', function(message) {
-                window.location = message;
-            });
+            const handlers = {
+
+                default: function() {
+
+                    self.pymParent = new pym.Parent(self.id, self.url, self.config);
+                    self.pymParent.iframe.setAttribute('allowfullscreen', '');
+                    self.pymParent.iframe.setAttribute('webkitallowfullscreen', '');
+                    self.pymParent.iframe.setAttribute('scrolling', 'yes');
+                    self.pymParent.iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-same-origin');
+
+                    self.pymParent.el.appendChild(self.spinner);
+                    $(self.pymParent.iframe).on('load', function () {
+                        self.pymParent.el.removeChild(self.spinner);
+                    });
+
+                    self.pymParent.onMessage('embed', function(message) {
+                        _addClass(self.pymParent.el, 'embed-responsive');
+                        _addClass(self.pymParent.el, message);
+                        _addClass(self.pymParent.iframe, 'embed-responsive-item');
+                    });
+
+                    self.pymParent.onMessage('location', function(message) {
+                        window.location = message;
+                    });
+                },
+
+                html: function() {
+                    var xhr = new XMLHttpRequest()
+                    xhr.open('GET', wb_file_url, true);
+                    xhr.withCredentials = true;
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            const frame = document.createElement("iframe");
+                            frame.id = "mfrframe";
+                            document.getElementById("mfrIframe").appendChild(frame);
+                            document.getElementById("mfrframe").src = "data:text/html;charset=utf-8," + escape(xhr.responseText);
+                            document.getElementById("mfrframe").sandbox = 'allow-forms allow-scripts'
+                        }
+                    }
+                    xhr.send()
+                }
+            }
+
+            if (!(self.file_ext in handlers)) self.file_ext = "default";
+            handlers[self.file_ext]();
+
         };
 
         self.init();

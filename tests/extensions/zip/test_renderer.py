@@ -44,7 +44,12 @@ def empty_file_obj_name_list():
 
 @pytest.fixture
 def test_file_obj_list(test_file):
-    return ZipRenderer.sanitize_obj_list(test_file.filelist)
+    return ZipRenderer.sanitize_obj_list(test_file.filelist, sort=False)
+
+
+@pytest.fixture
+def test_file_sorted_obj_list(test_file):
+    return ZipRenderer.sanitize_obj_list(test_file.filelist, sort=True)
 
 
 @pytest.fixture
@@ -54,8 +59,14 @@ def test_file_obj_tree():
 
 
 @pytest.fixture
+def test_file_obj_tree_sorted():
+    with open(os.path.join(os.path.dirname(__file__), 'fixtures/obj_tree.json'), 'r') as fp:
+        return json.load(fp)['test_file_tree_sorted']
+
+
+@pytest.fixture
 def empty_file_obj_list(empty_file):
-    return ZipRenderer.sanitize_obj_list(empty_file.filelist)
+    return ZipRenderer.sanitize_obj_list(empty_file.filelist, sort=False)
 
 
 @pytest.fixture
@@ -160,6 +171,11 @@ class TestZipRenderer:
         obj_name_list = [obj.filename for obj in obj_list if obj]
         assert sorted(obj_name_list) == sorted(test_file_obj_name_list)
 
+    def test_sanitize_and_sort_obj_list(self, test_file, test_file_obj_name_list):
+        sorted_obj_list = ZipRenderer.sanitize_obj_list(test_file.filelist, sort=True)
+        sorted_obj_name_list = [obj.filename for obj in sorted_obj_list if obj]
+        assert sorted_obj_name_list == sorted(test_file_obj_name_list)
+
     def test_sanitize_obj_list_empty(self, empty_file, empty_file_obj_name_list):
         obj_list = ZipRenderer.sanitize_obj_list(empty_file.filelist)
         obj_name_list = [obj.filename for obj in obj_list if obj]
@@ -196,11 +212,22 @@ class TestZipRenderer:
         assert node_to_update.get('data', {}) == existing_folder_to_update['data']
         assert node_to_update.get('icon', {}) == existing_folder_to_update['icon']
 
-    def test_obj_list_to_tree(self, test_file_obj_list, test_file_renderer, test_file_obj_tree):
-        obj_tree = test_file_renderer.obj_list_to_tree(test_file_obj_list)
+    def test_unsorted_obj_list_to_tree(self, test_file_obj_list, test_file_renderer,
+                                       test_file_obj_tree):
+        obj_tree = test_file_renderer.unsorted_obj_list_to_tree(test_file_obj_list)
         assert obj_tree == test_file_obj_tree
 
-    def test_obj_list_to_tree_empty(self, empty_file_obj_list, empty_file_renderer,
-                                    empty_file_obj_tree):
-        obj_tree = empty_file_renderer.obj_list_to_tree(empty_file_obj_list)
+    def test_sorted_obj_list_to_tree(self, test_file_sorted_obj_list, test_file_renderer,
+                                     test_file_obj_tree_sorted):
+        obj_tree = test_file_renderer.sorted_obj_list_to_tree(test_file_sorted_obj_list)
+        assert obj_tree == test_file_obj_tree_sorted
+
+    def test_unsorted_obj_list_to_tree_empty(self, empty_file_obj_list, empty_file_renderer,
+                                             empty_file_obj_tree):
+        obj_tree = empty_file_renderer.unsorted_obj_list_to_tree(empty_file_obj_list)
+        assert obj_tree == empty_file_obj_tree
+
+    def test_sorted_obj_list_to_tree_empty(self, empty_file_obj_list, empty_file_renderer,
+                                           empty_file_obj_tree):
+        obj_tree = empty_file_renderer.sorted_obj_list_to_tree(empty_file_obj_list)
         assert obj_tree == empty_file_obj_tree

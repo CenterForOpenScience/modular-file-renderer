@@ -149,6 +149,156 @@
             ]
         }
     ],
+    "test_file_tree_sorted": [
+        {
+            "icon": "http://mfr.osf.io/assets/zip/img/file-ext-zip.png",
+            "text": "test.zip",
+            "children": [
+                {
+                    "icon": "http://mfr.osf.io/assets/zip/img/folder.png",
+                    "text": "zip-test",
+                    "data": {
+                        "size": "",
+                        "date": "2018-04-16 11:52:50"
+                    },
+                    "children": [
+                        {
+                            "icon": "http://mfr.osf.io/assets/zip/img/file-ext-generic.png",
+                            "text": "file-generic-ext.mfr",
+                            "data": {
+                                "size": " 29B",
+                                "date": "2018-03-27 15:42:32"
+                            },
+                            "children": []
+                        },
+                        {
+                            "icon": "http://mfr.osf.io/assets/zip/img/file-ext-generic.png",
+                            "text": "file-no-ext",
+                            "data": {
+                                "size": " 19B",
+                                "date": "2018-03-27 15:42:32"
+                            },
+                            "children": []
+                        },
+                        {
+                            "icon": "http://mfr.osf.io/assets/zip/img/folder.png",
+                            "text": "folder-1",
+                            "data": {
+                                "size": "",
+                                "date": "2018-04-16 11:50:48"
+                            },
+                            "children": [
+                                {
+                                    "icon": "http://mfr.osf.io/assets/zip/img/file-ext-png.png",
+                                    "text": "image-1.png",
+                                    "data": {
+                                        "size": " 19B",
+                                        "date": "2018-03-27 15:42:32"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "icon": "http://mfr.osf.io/assets/zip/img/file-ext-txt.png",
+                                    "text": "text-1.txt",
+                                    "data": {
+                                        "size": " 35B",
+                                        "date": "2018-03-27 15:42:32"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "icon": "http://mfr.osf.io/assets/zip/img/folder.png",
+                            "text": "folder-2",
+                            "data": {
+                                "size": "",
+                                "date": "2018-04-16 11:56:50"
+                            },
+                            "children": [
+                                {
+                                    "icon": "http://mfr.osf.io/assets/zip/img/folder.png",
+                                    "text": "folder-2-1",
+                                    "data": {
+                                        "size": "",
+                                        "date": "2018-04-16 11:56:56"
+                                    },
+                                    "children": [
+                                        {
+                                            "icon": "http://mfr.osf.io/assets/zip/img/file-ext-jpg.png",
+                                            "text": "image-2.jpg",
+                                            "data": {
+                                                "size": " 26B",
+                                                "date": "2018-03-27 15:42:32"
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "icon": "http://mfr.osf.io/assets/zip/img/file-ext-pdf.png",
+                                    "text": "text-2.pdf",
+                                    "data": {
+                                        "size": " 37B",
+                                        "date": "2018-03-27 15:42:32"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "icon": "http://mfr.osf.io/assets/zip/img/folder.png",
+                            "text": "folder-3",
+                            "data": {
+                                "size": "",
+                                "date": "2018-04-16 17:07:48"
+                            },
+                            "children": [
+                                {
+                                    "icon": "http://mfr.osf.io/assets/zip/img/folder.png",
+                                    "text": "folder-3-1",
+                                    "data": {
+                                        "size": "",
+                                        "date": "2018-04-16 11:56:56"
+                                    },
+                                    "children": [
+                                        {
+                                            "icon": "http://mfr.osf.io/assets/zip/img/folder.png",
+                                            "text": "folder-3-1-1",
+                                            "data": {
+                                                "size": "",
+                                                "date": "2018-04-16 11:57:12"
+                                            },
+                                            "children": [
+                                                {
+                                                    "icon": "http://mfr.osf.io/assets/zip/img/file-ext-bmp.png",
+                                                    "text": "image-3.bmp",
+                                                    "data": {
+                                                        "size": " 17B",
+                                                        "date": "2018-03-27 15:42:32"
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "icon": "http://mfr.osf.io/assets/zip/img/file-ext-docx.png",
+                                            "text": "text-3.docx",
+                                            "data": {
+                                                "size": " 19B",
+                                                "date": "2018-03-27 15:42:32"
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     "empty_file_tree": [
         {
             "text": "test.zip",

@@ -52,7 +52,6 @@ class ZipRenderer(BaseRenderer):
         # Iterate through each path and build the tree
         for obj in sorted_obj_list:
             path_from_root = obj.filename
-            print(path_from_root)
             path_segments = [segment for segment in path_from_root.split('/') if segment]
             # Find the parent node of the current object, always start from the root node
             parent = tree_root

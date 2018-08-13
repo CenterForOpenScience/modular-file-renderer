@@ -54,15 +54,9 @@ class ZipRenderer(BaseRenderer):
             path_from_root = obj.filename
             print(path_from_root)
             path_segments = [segment for segment in path_from_root.split('/') if segment]
-            # Ignore the root tree node
-            if len(path_segments) == 1:
-                continue
             # Find the parent node of the current object, always start from the root node
             parent = tree_root
             for index, segment in enumerate(path_segments):
-                # the first segment is the tree node, skip
-                if index == 0:
-                    continue
                 # last segment is the current object, parents must have been found, end loop
                 if index == len(path_segments) - 1:
                     break

@@ -49,11 +49,27 @@ def flake(ctx):
 
 
 @task
-def test(ctx, verbose=False):
+def test(ctx, verbose=False, nocov=False, extension=None, path=None):
+    """Run full or customized tests for MFR.
+    :param ctx: the ``invoke`` context
+    :param verbose: the flag to increase verbosity
+    :param nocov: the flag to disable coverage
+    :param extension: limit the tests to the given extension only
+    :param path: limit the tests to the given path only
+    :return: None
+    """
     flake(ctx)
-    cmd = 'py.test --cov-report term-missing --cov mfr tests'
-    if verbose:
-        cmd += ' -v'
+    # `--extension=` and `--path=` are mutually exclusive options
+    assert not (extension and path)
+    if path:
+        path = '/{}'.format(path) if path else ''
+    elif extension:
+        path = '/extensions/{}/'.format(extension) if extension else ''
+    else:
+        path = ''
+    coverage = ' --cov-report term-missing --cov mfr' if not nocov else ''
+    verbose = '-v' if verbose else ''
+    cmd = 'py.test{} tests{} {}'.format(coverage, path, verbose)
     ctx.run(cmd, pty=True)
 
 

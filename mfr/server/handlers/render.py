@@ -40,14 +40,9 @@ class RenderHandler(core.BaseHandler):
 
     async def get(self):
         """Return HTML that will display the given file."""
-        renderer = utils.make_renderer(
-            self.metadata.ext,
-            self.metadata,
-            self.source_file_path.full_path,
-            self.url,
-            '{}://{}/assets'.format(self.request.protocol, self.request.host),
-            self.request.uri.replace('/render?', '/export?', 1)
-        )
+        import pdb
+        pdb.set_trace()
+        renderer = utils.make_renderer(self.metadata.ext, self.metadata, self.source_file_path.full_path, self.url, '{}://{}/assets'.format(self.request.protocol, self.request.host), self.request.uri.replace('/render?', '/export?', 1))
 
         self.extension_metrics.add('class', renderer._get_module_name())
 

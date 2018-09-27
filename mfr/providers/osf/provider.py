@@ -70,6 +70,8 @@ class OsfProvider(provider.BaseProvider):
         else:
             # URL is for WaterButler v1 API
             self.metrics.add('metadata.wb_api', 'v1')
+            import pdb
+            #pdb.set_trace()
             metadata_response = await self._make_request(
                 'HEAD',
                 download_url,
@@ -170,6 +172,8 @@ class OsfProvider(provider.BaseProvider):
             else:
                 self.metrics.add('download_url.orig_type', 'osf')
                 # make request to osf, don't follow, store waterbutler download url
+                import pdb
+                #pdb.set_trace()
                 request = await self._make_request(
                     'GET',
                     self.url,
@@ -188,6 +192,7 @@ class OsfProvider(provider.BaseProvider):
                         provider=self.NAME,
                         code=request.status,
                     )
+                #pdb.set_trace()
                 self.download_url = request.headers['location']
 
             self.metrics.add('download_url.derived_url', str(self.download_url))

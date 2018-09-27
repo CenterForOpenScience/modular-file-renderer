@@ -44,6 +44,7 @@ setup(
             'osf = mfr.providers.osf:OsfProvider',
         ],
         'mfr.exporters': [
+            'none = mfr.extensions.default:DefaultExporter',
             # google docs
             '.gdraw = mfr.extensions.image:ImageExporter',
             '.gdoc = mfr.extensions.unoconv:UnoconvExporter',
@@ -148,7 +149,8 @@ setup(
             '.wav = mfr.extensions.audio:AudioRenderer',
 
             # code pygments
-            'none = mfr.extensions.codepygments:CodePygmentsRenderer',
+            'none = mfr.extensions.default:DefaultRenderer',
+            'default = mfr.extensions.default:DefaultRenderer',
             '.1 = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.2 = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.3 = mfr.extensions.codepygments:CodePygmentsRenderer',

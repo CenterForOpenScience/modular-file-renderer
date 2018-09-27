@@ -39,8 +39,6 @@ class RenderHandler(core.BaseHandler):
 
     async def get(self):
         """Return HTML that will display the given file."""
-        import pdb
-        pdb.set_trace()
         renderer = utils.make_renderer(
             self.metadata.ext,
             self.metadata,

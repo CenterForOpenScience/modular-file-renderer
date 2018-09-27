@@ -115,8 +115,6 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             )
         logging.debug('target_url::{}'.format(self.url))
 
-        import pdb;
-        #pdb.set_trace()
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
             self.request,

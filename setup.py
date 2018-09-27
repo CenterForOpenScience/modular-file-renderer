@@ -150,7 +150,6 @@ setup(
 
             # code pygments
             'none = mfr.extensions.default:DefaultRenderer',
-            'default = mfr.extensions.default:DefaultRenderer',
             '.1 = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.2 = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.3 = mfr.extensions.codepygments:CodePygmentsRenderer',

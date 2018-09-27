@@ -25,7 +25,6 @@ class RenderHandler(core.BaseHandler):
         await super().prepare()
 
         self.renderer_name = utils.get_renderer_name(self.metadata.ext)
-
         self.cache_file_id = self.metadata.unique_key
 
         if self.renderer_name:
@@ -42,7 +41,14 @@ class RenderHandler(core.BaseHandler):
         """Return HTML that will display the given file."""
         import pdb
         pdb.set_trace()
-        renderer = utils.make_renderer(self.metadata.ext, self.metadata, self.source_file_path.full_path, self.url, '{}://{}/assets'.format(self.request.protocol, self.request.host), self.request.uri.replace('/render?', '/export?', 1))
+        renderer = utils.make_renderer(
+            self.metadata.ext,
+            self.metadata,
+            self.source_file_path.full_path,
+            self.url,
+            '{}://{}/assets'.format(self.request.protocol, self.request.host),
+            self.request.uri.replace('/render?', '/export?', 1)
+        )
 
         self.extension_metrics.add('class', renderer._get_module_name())
 

@@ -22,8 +22,6 @@ def make_provider(name, request, url, action=None):
             invoke_kwds={'action': action},
         ).driver
     except RuntimeError as err:
-        import pdb
-        #pdb.set_trace()
         raise exceptions.MakeProviderError(
             '"{}" is not a supported provider'.format(name.lower()),
             namespace='mfr.providers',

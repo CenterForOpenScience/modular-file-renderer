@@ -73,7 +73,7 @@ class OsfProvider(provider.BaseProvider):
             metadata_response = await self._make_request(
                 'HEAD',
                 download_url,
-                headers={settings.MFR_ACTION_HEADER: self.action or ''}
+                headers=({settings.MFR_ACTION_HEADER: self.action} if self.action else None)
             )
             response_code = metadata_response.status
             response_reason = metadata_response.reason

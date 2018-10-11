@@ -110,20 +110,22 @@ class TabularRenderer(extension.BaseRenderer):
         """
         function_preference = settings.LIBS.get(ext.lower())
 
-        for function in function_preference:
+        for populate_func in function_preference:
             try:
-                imported = function()
+                imported = populate_func()
             except ImportError:
                 pass
             else:
-                self._renderer_tabular_metrics['importer'] = function.__name__
+                self._renderer_tabular_metrics['importer'] = populate_func.__name__
                 try:
                     return imported(fp)
-                except (KeyError, ValueError):
+                except (KeyError, ValueError) as err:
+                    logger.error('WB has encountered an unexpected error '
+                                 'when trying to render a tabular file: {}'.format(err))
                     raise exceptions.UnexpectedFormattingError(
                         'Unexpected formatting error.',
                         extension=self.metadata.ext,
-                        formatting_function=str(function),
+                        formatting_function=str(populate_func),
                     )
 
         # this will only occur if function_preference is an empty set

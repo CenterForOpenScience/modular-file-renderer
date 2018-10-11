@@ -2,6 +2,15 @@
 ChangeLog
 *********
 
+18.0.0 (2018-10-11)
+===================
+- UPDATE: MFR is now following the CalVer (https://calver.org/) versioning scheme to match the
+OSF.  All new versions will use the `YY.MINOR.MICRO` format.
+- Fix: Move Hypothes.is toolbar toggle button down, so that it doesn't block the pdf.js controls on
+tiny mobile screens.
+- Fix: Don't crash when the image exporter receives a misformatted dimensions argument.
+- Fix: Show informative errors to users when a tabular file rendering action fails.
+
 0.27.1 (2018-07-25)
 ===================
 - Feature: Tell Keen analytics to strip ip on upload.

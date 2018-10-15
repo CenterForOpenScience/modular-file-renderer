@@ -37,3 +37,4 @@ BIG_TABLE = config.get_object('BIG_TABLE', {
 })
 
 PSPP_CONVERT_BIN = config.get('PSPP_CONVERT_BIN', '/usr/bin/pspp-convert')
+PSPP_CONVERT_TIMEOUT = int(config.get('PSPP_CONVERT_TIMEOUT', 30))  # In seconds

@@ -4,10 +4,11 @@
  * Original Copy: https://github.com/jackmoore/zoom/blob/1.7.20/jquery.zoom.js
  * Version: https://github.com/jackmoore/zoom/releases/tag/1.7.20
  *
- * The are two MFR customizations in this file, one for style and one for functionality
+ * The are three MFR customizations in this file, two for style and one for functionality
  *
  * 1. Updated code style according to `.eslintrc.js`
  * 2. Added `.on("mousewheel", function (e) { ... })` to enable further zoom by mouse wheel scroll
+ * 3. Set "background-color: white" for "zoomImage" to handle images with transparent background
  */
 
 (function ($) {
@@ -53,6 +54,7 @@
                 top: 0,
                 left: 0,
                 opacity: 0,
+                "background-color": "white",
                 width: img.width * magnify,
                 height: img.height * magnify,
                 border: "none",

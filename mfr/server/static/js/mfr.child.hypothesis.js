@@ -62,7 +62,23 @@
             window.document.head.appendChild(script);
             window.document.body.classList.add('show-hypothesis');
             hypothesisLoaded = true;
-        });
 
+            var sidePanelOpened = false;
+            var sendAnalyticsIfExpanded = function (expanded) { 
+                if (expanded && !sidePanelOpened) {
+                    sidePanelOpened = expanded;
+                    ga('send', 'event', {
+                        eventCategory: 'Hypothesis',
+                        eventAction: 'Open Hypothesis Panel',
+                        eventLabel: window.DEFAULT_URL.split('/')[5],
+                    });
+                }
+            };
+            window.hypothesisConfig = function () {
+                return {
+                  "onLayoutChange": function (layout) { return sendAnalyticsIfExpanded(layout.expanded); }
+                };
+            };
+        });
     };
 })();

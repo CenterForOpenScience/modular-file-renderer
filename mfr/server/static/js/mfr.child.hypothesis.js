@@ -64,13 +64,24 @@
             hypothesisLoaded = true;
 
             var sidePanelOpened = false;
+            // window.DEFAULT_URL should be the wb link in this format:
+            // https://<wb-domain>/v1/resources/<preprint-guid>/providers/osfstorage/<file-id>?direct=&mode=render
+            // TODO: parse and validate the WB URL before retrieving the preprints GUID
+            var wbLink = window.DEFAULT_URL;
+            var preprintGuid;
+            if (wbLink.split('/').length >= 6) {
+                preprintGuid = wbLink.split('/')[5];
+            } else {
+                preprintGuid = 'preprint-guid-unknown';
+            }
             var sendAnalyticsIfExpanded = function (expanded) { 
                 if (expanded && !sidePanelOpened) {
                     sidePanelOpened = expanded;
                     ga('send', 'event', {
                         eventCategory: 'Hypothesis',
                         eventAction: 'Open Hypothesis Panel',
-                        eventLabel: window.DEFAULT_URL.split('/')[5],
+                        //`eventLabel` is the guid of the preprint to which the file belongs
+                        eventLabel: preprintGuid,
                     });
                 }
             };

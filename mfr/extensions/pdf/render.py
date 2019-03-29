@@ -7,6 +7,7 @@ from mako.lookup import TemplateLookup
 from mfr.core import extension
 from mfr.extensions.pdf import settings
 from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
+from mfr.settings import GOOGLE_ANALYTICS_TRACKING_ID
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ class PdfRenderer(extension.BaseRenderer):
         if self.metadata.ext.lower() not in settings.EXPORT_SUPPORTED:
             logger.debug('Extension not found in supported list!')
             return self.TEMPLATE.render(
+                ga_tracking_id=GOOGLE_ANALYTICS_TRACKING_ID,
                 base=self.assets_url,
                 url=escape_url_for_template(download_url.geturl()),
                 stable_id=self.metadata.stable_id,
@@ -46,6 +48,7 @@ class PdfRenderer(extension.BaseRenderer):
 
         self.metrics.add('needs_export', True)
         return self.TEMPLATE.render(
+            ga_tracking_id=GOOGLE_ANALYTICS_TRACKING_ID,
             base=self.assets_url,
             url=escape_url_for_template(exported_url.url),
             stable_id=self.metadata.stable_id,

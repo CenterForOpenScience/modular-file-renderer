@@ -1,4 +1,4 @@
-FROM python:3.5-slim-jessie
+FROM python:3.5-slim-stretch
 
 # ensure unoconv can locate the uno library
 ENV PYTHONPATH=/usr/lib/python3/dist-packages
@@ -18,7 +18,7 @@ RUN usermod -d /home www-data \
         libevent-dev \
         libfreetype6-dev \
         libjpeg-dev \
-        libpng12-dev \
+        libpng-dev \
         libtiff5-dev \
         libxml2-dev \
         libxslt1-dev \
@@ -32,14 +32,13 @@ RUN usermod -d /home www-data \
         gnupg2 \
     # gosu
     && export GOSU_VERSION='1.10' \
-    && for key in \
-      # GOSU
-      B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && mkdir ~/.gnupg && chmod 600 ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
+    && for server in hkp://ipv4.pool.sks-keyservers.net:80 \
+                     hkp://ha.pool.sks-keyservers.net:80 \
+                     hkp://pgp.mit.edu:80 \
+                     hkp://keyserver.pgp.com:80 \
     ; do \
-      gpg --keyserver hkp://ipv4.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-      gpg --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys "$key" || \
-      gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" || \
-      gpg --keyserver hkp://keyserver.pgp.com:80 --recv-keys "$key" \
+      gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || echo "Trying new server..." \
     ; done \
     && curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
   	&& curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
@@ -50,29 +49,38 @@ RUN usermod -d /home www-data \
     && apt-get clean \
     && apt-get autoremove -y \
         curl \
+        gnupg2 \
     && rm -rf /var/lib/apt/lists/* \
     && pip install -U pip \
     && pip install setuptools==37.0.0 \
     && mkdir -p /code
 
-ENV LIBREOFFICE_VERSION 6.0.2.1
-ENV LIBREOFFICE_ARCHIVE LibreOffice_6.0.2.1_Linux_x86-64_deb.tar.gz
-ENV LIBREOFFICE_MIRROR_URL https://downloadarchive.documentfoundation.org/libreoffice/old/
+ENV LIBREOFFICE_VERSION 6.1.5
+ENV LIBREOFFICE_ARCHIVE LibreOffice_6.1.5_Linux_x86-64_deb.tar.gz
+ENV LIBREOFFICE_MIRROR_URL https://download.documentfoundation.org/libreoffice/stable/
 RUN apt-get update \
     && apt-get install -y \
         curl \
-    && gpg --keyserver pool.sks-keyservers.net --recv-keys AFEEAEA3 \
+        gnupg2 \
+    && for server in hkp://ipv4.pool.sks-keyservers.net:80 \
+                     hkp://ha.pool.sks-keyservers.net:80 \
+                     hkp://pgp.mit.edu:80 \
+                     hkp://keyserver.pgp.com:80 \
+    ; do \
+      gpg --keyserver "$server" --recv-keys AFEEAEA3 && break || echo "Trying new server..." \
+    ; done \
     && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE" -o $LIBREOFFICE_ARCHIVE \
-    && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE.asc" -o $LIBREOFFICE_ARCHIVE.asc \
-    && gpg --verify "$LIBREOFFICE_ARCHIVE.asc" \
-    && mkdir /tmp/libreoffice \
-    && tar -xvf "$LIBREOFFICE_ARCHIVE" -C /tmp/libreoffice/ --strip-components=1 \
-    && dpkg -i /tmp/libreoffice/**/*.deb \
-    && rm $LIBREOFFICE_ARCHIVE* \
-    && rm -Rf /tmp/libreoffice \
+        && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE.asc" -o $LIBREOFFICE_ARCHIVE.asc \
+        && gpg --verify "$LIBREOFFICE_ARCHIVE.asc" \
+        && mkdir /tmp/libreoffice \
+        && tar -xvf "$LIBREOFFICE_ARCHIVE" -C /tmp/libreoffice/ --strip-components=1 \
+        && dpkg -i /tmp/libreoffice/**/*.deb \
+        && rm $LIBREOFFICE_ARCHIVE* \
+        && rm -Rf /tmp/libreoffice \
     && apt-get clean \
     && apt-get autoremove -y \
         curl \
+        gnupg2 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install unoconv==0.8.2

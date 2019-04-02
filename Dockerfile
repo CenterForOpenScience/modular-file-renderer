@@ -70,13 +70,13 @@ RUN apt-get update \
       gpg --keyserver "$server" --recv-keys AFEEAEA3 && break || echo "Trying new server..." \
     ; done \
     && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE" -o $LIBREOFFICE_ARCHIVE \
-    && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE.asc" -o $LIBREOFFICE_ARCHIVE.asc \
-    && gpg --verify "$LIBREOFFICE_ARCHIVE.asc" \
-    && mkdir /tmp/libreoffice \
-    && tar -xvf "$LIBREOFFICE_ARCHIVE" -C /tmp/libreoffice/ --strip-components=1 \
-    && dpkg -i /tmp/libreoffice/**/*.deb \
-    && rm $LIBREOFFICE_ARCHIVE* \
-    && rm -Rf /tmp/libreoffice \
+        && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE.asc" -o $LIBREOFFICE_ARCHIVE.asc \
+        && gpg --verify "$LIBREOFFICE_ARCHIVE.asc" \
+        && mkdir /tmp/libreoffice \
+        && tar -xvf "$LIBREOFFICE_ARCHIVE" -C /tmp/libreoffice/ --strip-components=1 \
+        && dpkg -i /tmp/libreoffice/**/*.deb \
+        && rm $LIBREOFFICE_ARCHIVE* \
+        && rm -Rf /tmp/libreoffice \
     && apt-get clean \
     && apt-get autoremove -y \
         curl \

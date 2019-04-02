@@ -50,6 +50,7 @@ RUN usermod -d /home www-data \
     && apt-get clean \
     && apt-get autoremove -y \
         curl \
+        gnupg2 \
     && rm -rf /var/lib/apt/lists/* \
     && pip install -U pip \
     && pip install setuptools==37.0.0 \
@@ -61,6 +62,7 @@ ENV LIBREOFFICE_MIRROR_URL https://download.documentfoundation.org/libreoffice/s
 RUN apt-get update \
     && apt-get install -y \
         curl \
+        gnupg2 \
     && gpg --keyserver pool.sks-keyservers.net --recv-keys AFEEAEA3 \
     && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE" -o $LIBREOFFICE_ARCHIVE \
     && curl -SL "$LIBREOFFICE_MIRROR_URL/$LIBREOFFICE_VERSION/deb/x86_64/$LIBREOFFICE_ARCHIVE.asc" -o $LIBREOFFICE_ARCHIVE.asc \
@@ -73,6 +75,7 @@ RUN apt-get update \
     && apt-get clean \
     && apt-get autoremove -y \
         curl \
+        gnupg2 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install unoconv==0.8.2

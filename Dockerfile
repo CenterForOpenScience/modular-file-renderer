@@ -55,9 +55,9 @@ RUN usermod -d /home www-data \
     && pip install setuptools==37.0.0 \
     && mkdir -p /code
 
-ENV LIBREOFFICE_VERSION 6.0.2.1
-ENV LIBREOFFICE_ARCHIVE LibreOffice_6.0.2.1_Linux_x86-64_deb.tar.gz
-ENV LIBREOFFICE_MIRROR_URL https://downloadarchive.documentfoundation.org/libreoffice/old/
+ENV LIBREOFFICE_VERSION 6.1.5
+ENV LIBREOFFICE_ARCHIVE LibreOffice_6.1.5_Linux_x86-64_deb.tar.gz
+ENV LIBREOFFICE_MIRROR_URL https://download.documentfoundation.org/libreoffice/stable/
 RUN apt-get update \
     && apt-get install -y \
         curl \

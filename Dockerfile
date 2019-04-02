@@ -1,4 +1,4 @@
-FROM python:3.5-slim-jessie
+FROM python:3.5-slim-stretch
 
 # ensure unoconv can locate the uno library
 ENV PYTHONPATH=/usr/lib/python3/dist-packages
@@ -18,7 +18,7 @@ RUN usermod -d /home www-data \
         libevent-dev \
         libfreetype6-dev \
         libjpeg-dev \
-        libpng12-dev \
+        libpng-dev \
         libtiff5-dev \
         libxml2-dev \
         libxslt1-dev \

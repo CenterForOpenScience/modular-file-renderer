@@ -2,6 +2,19 @@
 ChangeLog
 *********
 
+19.0.0 (2019-06-19)
+===================
+- Fix: Add white background to transparent .gifs to improve zooming appearance.  The zooming code
+keeps a copy of the image behind the zoomed version to improve performance.  If the image is
+transparent the actual-size copy will be visible behind the zoomed version.  Making the background
+opaque hides the original.
+- Feature: Track when the hypothes.is sidebar is opened via Google Analytics.  (thanks, @adlius!)
+- Feature: Add timeouts to renderers that shell out to external processes for conversion.  If a
+conversion takes longer than the configured number of seconds, MFR will return an error message
+instead of waiting forever.  (thanks, @ExProbitasFiducia!)
+- Code: Remove Rackspace cache-management tasks.  MFR is now hosted on GoogleCloud, and these are no
+longer needed.  (thanks, @ExProbitasFiducia!)
+
 18.0.0 (2018-10-11)
 ===================
 - UPDATE: MFR is now following the CalVer (https://calver.org/) versioning scheme to match the

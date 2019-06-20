@@ -2,6 +2,11 @@
 ChangeLog
 *********
 
+19.0.1 (2019-06-20)
+===================
+- Fix: Update Dockerfile to install LibreOffice v6.1.6.  v6.1.5 is no longer available from their
+archive.
+
 19.0.0 (2019-06-19)
 ===================
 - Fix: Add white background to transparent .gifs to improve zooming appearance.  The zooming code

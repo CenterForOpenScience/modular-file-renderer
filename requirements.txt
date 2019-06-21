@@ -32,8 +32,8 @@ nbconvert==4.2.0
 nbformat==4.1.0
 traitlets==4.2.2
 jsonschema==2.4.0
-jinja2==2.7.3
-mistune==0.7
+jinja2==2.10.1
+mistune==0.8.1
 
 # Pdf
 reportlab==3.4.0

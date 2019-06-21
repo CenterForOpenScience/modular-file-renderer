@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+19.0.2 (2019-06-21)
+===================
+- Fix: Update MFR dependencies on jinja and mistune python libraries.
+
 19.0.1 (2019-06-20)
 ===================
 - Fix: Update Dockerfile to install LibreOffice v6.1.6.  v6.1.5 is no longer available from their

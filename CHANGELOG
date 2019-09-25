@@ -2,6 +2,13 @@
 ChangeLog
 *********
 
+19.1.0 (2019-09-25)
+===================
+- Feature: Update MFR's Dockerfile to be based off of Debian Buster and install LibreOffice via
+apt-get.  It had been pulling down a LibreOffice .deb from LO's archive, but they only make the most
+recent patch version available.  This meant that the Dockerfile had to be update with every patch
+release.  The version in Debian Buster is v6.1.5.
+
 19.0.2 (2019-06-21)
 ===================
 - Fix: Update MFR dependencies on jinja and mistune python libraries.

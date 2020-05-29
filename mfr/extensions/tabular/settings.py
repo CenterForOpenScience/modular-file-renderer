@@ -4,10 +4,12 @@ from mfr.extensions.tabular import libs
 
 config = settings.child('TABULAR_EXTENSION_CONFIG')
 
-MAX_FILE_SIZE = int(config.get('MAX_FILE_SIZE', 10 * 1024 * 1024))  # 10Mb
+MAX_FILE_SIZE = int(config.get('MAX_FILE_SIZE', 10 * 1024 * 1024))  # 10MB
 MAX_SIZE = int(config.get('MAX_SIZE', 10000))  # max number of rows or columns allowed.
 TABLE_WIDTH = int(config.get('TABLE_WIDTH', 700))
 TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
+
+INIT_SNIFF_SIZE = int(config.get('INIT_SNIFF_SIZE', 2 * 1024))  # 2KB
 
 LIBS = config.get_object('LIBS', {
     '.csv': [libs.csv_stdlib],

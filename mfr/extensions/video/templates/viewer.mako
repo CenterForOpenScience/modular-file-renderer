@@ -6,7 +6,7 @@
     }
 </style>
 
-<video controls height="100%">
+<video controls poster="/static/images/vid-thumbnail.png" preload="none" height="100%">
   <source src="${url}">
   Your browser does not support the video tag.
 </video>

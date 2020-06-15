@@ -33,21 +33,27 @@ class TabularRenderer(extension.BaseRenderer):
         with open(self.file_path, errors='replace') as fp:
             sheets, size, nbr_rows, nbr_cols = self._render_grid(fp, self.metadata.ext)
 
-        # Force GC
-        gc.collect()
-
         if sheets and size:
+            json_sheets = json.dumps(sheets)
+            del sheets
+            # Forcing garbage collection accelerates the memory free/release process with a small
+            # but acceptable cost in performance
+            nbr_objs = gc.collect()
+            logger.debug('Number of unreachable objects collected: {}'.format(nbr_objs))
             return self.TEMPLATE.render(
                 base=self.assets_url,
                 width=settings.TABLE_WIDTH,
                 height=settings.TABLE_HEIGHT,
-                sheets=json.dumps(sheets),
+                sheets=json_sheets,
                 options=json.dumps(size),
             )
 
+        nbr_objs = gc.collect()
+        logger.debug('Number of unreachable objects collected: {}'.format(nbr_objs))
         assert nbr_rows and nbr_cols
         raise exceptions.TableTooBigError(
-            'Table is too large to render.',
+            'Table with more than {} rows or columns are not rendered. Please download the file to '
+            'view.'.format(settings.MAX_SIZE),
             extension=self.metadata.ext,
             nbr_cols=nbr_cols,
             nbr_rows=nbr_rows

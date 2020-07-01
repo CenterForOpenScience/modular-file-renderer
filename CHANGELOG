@@ -2,6 +2,13 @@
 ChangeLog
 *********
 
+20.0.0 (2020-07-01)
+===================
+- Happy Canada Day, everyone!
+- Feature: Stop preloading videos in MFR to save bandwidth/memory.  Instead display a static poster
+with the COS logo. (thanks ro @allsey87 for the suggestion and thanks to @Johnetordoff for the
+alley-oop!)
+
 19.1.0 (2019-09-25)
 ===================
 - Feature: Update MFR's Dockerfile to be based off of Debian Buster and install LibreOffice via

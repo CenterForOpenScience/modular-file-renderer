@@ -1,9 +1,9 @@
-import waterbutler.core.exceptions
+from waterbutler.core.exceptions import PluginError as WaterButlerPluginError
 
 from mfr import settings
 
 
-class PluginError(waterbutler.core.exceptions.PluginError):
+class PluginError(WaterButlerPluginError):
     """The MFR related errors raised from a plugin should inherit from PluginError
     """
 
@@ -12,8 +12,8 @@ class PluginError(waterbutler.core.exceptions.PluginError):
     def __init__(self, message, *args, code=500, **kwargs):
         super().__init__(message, code)
         self.attr_stack = [
-            ['error', {'message': self.message, 'code': self.code}],
-            [self.__TYPE, {}],
+            ('error', {'message': self.message, 'code': self.code}),
+            (self.__TYPE, {}),
         ]
 
     def as_html(self):
@@ -48,7 +48,7 @@ class ExtensionError(PluginError):
     def __init__(self, message, *args, extension: str='', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.extension = extension
-        self.attr_stack.append([self.__TYPE, {'extension': self.extension}])
+        self.attr_stack.append((self.__TYPE, {'extension': self.extension}))
 
 
 class RendererError(ExtensionError):
@@ -61,7 +61,7 @@ class RendererError(ExtensionError):
     def __init__(self, message, *args, renderer_class: str='', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.renderer_class = renderer_class
-        self.attr_stack.append([self.__TYPE, {'class': self.renderer_class}])
+        self.attr_stack.append((self.__TYPE, {'class': self.renderer_class}))
 
 
 class ExporterError(ExtensionError):
@@ -74,7 +74,7 @@ class ExporterError(ExtensionError):
     def __init__(self, message, *args, exporter_class: str='', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.exporter_class = exporter_class
-        self.attr_stack.append([self.__TYPE, {'exporter_class': self.exporter_class}])
+        self.attr_stack.append((self.__TYPE, {'exporter_class': self.exporter_class}))
 
 
 class SubprocessError(ExporterError):
@@ -91,12 +91,15 @@ class SubprocessError(ExporterError):
         self.cmd = cmd
         self.return_code = returncode
         self.path = path
-        self.attr_stack.append([self.__TYPE, {
-            'process': self.process,
-            'cmd': self.cmd,
-            'returncode': self.return_code,
-            'path': self.path,
-        }])
+        self.attr_stack.append((
+            self.__TYPE,
+            {
+                'process': self.process,
+                'cmd': self.cmd,
+                'returncode': self.return_code,
+                'path': self.path,
+            }
+        ))
 
 
 class ProviderError(PluginError):
@@ -109,7 +112,7 @@ class ProviderError(PluginError):
     def __init__(self, message, *args, provider: str='', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.provider = provider
-        self.attr_stack.append([self.__TYPE, {'provider': self.provider}])
+        self.attr_stack.append((self.__TYPE, {'provider': self.provider}))
 
 
 class DownloadError(ProviderError):
@@ -123,10 +126,13 @@ class DownloadError(ProviderError):
         super().__init__(message, *args, **kwargs)
         self.download_url = download_url
         self.response = response
-        self.attr_stack.append([self.__TYPE, {
-            'download_url': self.download_url,
-            'response': self.response
-        }])
+        self.attr_stack.append((
+            self.__TYPE,
+            {
+                'download_url': self.download_url,
+                'response': self.response
+            }
+        ))
 
 
 class MetadataError(ProviderError):
@@ -140,10 +146,13 @@ class MetadataError(ProviderError):
         super().__init__(message, *args, **kwargs)
         self.metadata_url = metadata_url
         self.response = response
-        self.attr_stack.append([self.__TYPE, {
-            'metadata_url': self.metadata_url,
-            'response': self.response
-        }])
+        self.attr_stack.append((
+            self.__TYPE,
+            {
+                'metadata_url': self.metadata_url,
+                'response': self.response
+            }
+        ))
 
 class TooBigToRenderError(ProviderError):
     """If the user tries to render a file larger than a server specified maximum, throw a
@@ -157,10 +166,13 @@ class TooBigToRenderError(ProviderError):
         super().__init__(message, *args, code=code, **kwargs)
         self.requested_size = requested_size
         self.maximum_size = maximum_size
-        self.attr_stack.append([self.__TYPE, {
-            'requested_size': self.requested_size,
-            'maximum_size': self.maximum_size,
-        }])
+        self.attr_stack.append((
+            self.__TYPE,
+            {
+                'requested_size': self.requested_size,
+                'maximum_size': self.maximum_size,
+            }
+        ))
 
 
 class DriverManagerError(PluginError):
@@ -175,13 +187,15 @@ class DriverManagerError(PluginError):
         self.name = name
         self.invoke_on_load = invoke_on_load
         self.invoke_args = invoke_args or {}
-
-        self.attr_stack.append([self.__TYPE, {
-            'namespace': self.namespace,
-            'name': self.name,
-            'invoke_on_load': self.invoke_on_load,
-            'invoke_args': self.invoke_args,
-        }])
+        self.attr_stack.append((
+            self.__TYPE,
+            {
+                'namespace': self.namespace,
+                'name': self.name,
+                'invoke_on_load': self.invoke_on_load,
+                'invoke_args': self.invoke_args,
+            }
+        ))
 
 
 class MakeProviderError(DriverManagerError):
@@ -202,10 +216,8 @@ class UnsupportedExtensionError(DriverManagerError):
 
     def __init__(self, *args, code: int=400, handler_type: str='', **kwargs):
         super().__init__(*args, code=code, **kwargs)
-
         self.handler_type = handler_type
-
-        self.attr_stack.append([self.__TYPE, {'handler_type': self.handler_type}])
+        self.attr_stack.append((self.__TYPE, {'handler_type': self.handler_type}))
 
 
 class MakeRendererError(UnsupportedExtensionError):

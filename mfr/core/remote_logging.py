@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 async def log_analytics(request, metrics, is_error=False):
     """Send events to Keen describing the action that occurred."""
-    if settings.KEEN_PRIVATE_PROJECT_ID is None:
+    if not settings.KEEN_ENABLE_LOGGING:
         return
 
     keen_payload = copy.deepcopy(metrics)
@@ -78,11 +78,17 @@ async def log_analytics(request, metrics, is_error=False):
 
     # send the private payload
     private_collection = 'mfr_errors' if is_error else 'mfr_action'
-    await _send_to_keen(keen_payload, private_collection, settings.KEEN_PRIVATE_PROJECT_ID,
-                        settings.KEEN_PRIVATE_WRITE_KEY, keen_payload['handler']['type'],
-                        domain='private')
+    if ((is_error and settings.KEEN_PRIVATE_LOG_ERRORS) or settings.KEEN_PRIVATE_LOG_VIEWS):
+        await _send_to_keen(keen_payload, private_collection, settings.KEEN_PRIVATE_PROJECT_ID,
+                            settings.KEEN_PRIVATE_WRITE_KEY, keen_payload['handler']['type'],
+                            domain='private')
 
-    if keen_payload['handler']['type'] != 'render' or file_metadata is None or is_error:
+    if (
+        keen_payload['handler']['type'] != 'render' or
+        file_metadata is None or
+        is_error or
+        not settings.KEEN_PUBLIC_LOG_VIEWS
+    ):
         return
 
     # build and ship the public file stats payload

@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+20.0.1 (2020-10-21)
+===================
+- Feature: Add flags to toggle logging of MFR events to specific Keen collections.
+
 20.0.0 (2020-07-01)
 ===================
 - Happy Canada Day, everyone!

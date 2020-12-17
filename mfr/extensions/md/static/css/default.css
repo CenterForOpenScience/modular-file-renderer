@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+.mfrViewer {
+    font-family: 'Open Sans';
+    padding: 1em;
+    background: #fefefe;
+    height: auto;
+    word-wrap: break-word;
+}

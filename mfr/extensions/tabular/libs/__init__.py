@@ -8,6 +8,11 @@ def csv_stdlib():
     return csv_stdlib
 
 
+def tsv_stdlib():
+    from ..libs.stdlib_tools import tsv_stdlib
+    return tsv_stdlib
+
+
 def csv_pandas():
     from ..libs.panda_tools import csv_pandas
     return csv_pandas

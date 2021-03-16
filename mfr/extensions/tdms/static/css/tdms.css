@@ -1,0 +1,11 @@
+.tl { position: absolute; top: 0; left: 0; right: 30%; bottom: 30%;
+      background: red; border:solid #000; border-width: 0 10px 10px 0; }
+
+.tr { position: absolute; top: 0; left: 70%; right: 0; bottom: 30%;
+      background: blue; border:solid #000; border-width: 0 0 10px 0; }
+
+.bl { position: absolute; top: 70%; left: 0; right: 30%; bottom: 0;
+      background: yellow; border:solid #000; border-width: 0 10px 0 0; }
+
+.br { position: absolute; top: 70%; left: 70%; right: 0; bottom: 0;
+      background: green; }

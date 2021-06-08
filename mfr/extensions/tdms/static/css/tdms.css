@@ -1,11 +1,155 @@
-.tl { position: absolute; top: 0; left: 0; right: 30%; bottom: 30%;
-      background: red; border:solid #000; border-width: 0 10px 10px 0; }
+/* ---- Quadrant Grid Layout ------------------------------------------------ */
+#topLeft {
+    max-height: 50%;
+}
 
-.tr { position: absolute; top: 0; left: 70%; right: 0; bottom: 30%;
-      background: blue; border:solid #000; border-width: 0 0 10px 0; }
+#bottomLeft {
+    border-top: solid #000 0.5px;
+}
 
-.bl { position: absolute; top: 70%; left: 0; right: 30%; bottom: 0;
-      background: yellow; border:solid #000; border-width: 0 10px 0 0; }
+#topRight {
+    height: 50%;
+    overflow: hidden;
+    background-color: white;
+}
 
-.br { position: absolute; top: 70%; left: 70%; right: 0; bottom: 0;
-      background: green; }
+#bottomRight {
+    height: 50%;
+    border-top: solid #000 0.5px;
+}
+
+.quadrant {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 100%;
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    border: solid #000 0.5px;
+    background-color: #F5F5F5;
+}
+
+/* ---- Fixed Title Bar above Scrolling Content ------------------------------*/
+
+.titleBar {
+    margin: 0;
+    padding: 0 1.5vw 0 1.5vw;
+    background-color: #FFFFFF;
+    border-bottom: solid #000 0.5px;
+}
+
+.miniTitleBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-shrink: 0;
+    align-items: center;
+    border-bottom: solid #000 0.5px;
+    margin: 0;
+    padding: 0 6vw 0 1.5vw;
+    height: 6vh;
+    cursor: pointer;
+    position: sticky;
+}
+
+.belowTitle {
+    overflow-y: auto;
+    visibility: visible;
+}
+
+/* ---- Tables -------------------------------------------------------------- */
+
+table {
+    width: 100%;
+}
+
+table, th, td {
+    border-left: 0.5px solid black;
+    border-bottom: 0.5px solid black;
+    border-collapse: collapse;
+    padding: 6px 0 6px 8px;
+    margin: 0;
+}
+
+tr:nth-child(even) {
+    background: #FFFFFF;
+}
+
+tr:nth-child(odd) {
+    background: #F5F5F5;
+}
+
+th {
+    text-align: center;
+    background-color: #EBEBEB;
+}
+
+.group {
+    background: #EBEBEB !important;
+    display: table-row;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.channel {
+    background: #FFFFFF !important;
+    display: none;
+    cursor: pointer;
+}
+
+.channel > td {
+    padding-left: 5%;
+}
+
+.property {
+    background: #F5F5F5 !important;
+    display: none;
+    cursor: pointer;
+}
+
+.property > td:nth-child(odd) {
+    padding-left: 10%;
+}
+
+#propertyTable td {
+    width: 50%;
+}
+
+/* ---- Miscellaneous ------------------------------------------------------- */
+
+body {
+    height: 800px;
+}
+
+#plot {
+    height: auto;
+    width: 100%;
+}
+
+.button {
+    text-align: center;
+    font-weight: bold;
+    font-size: 18pt;
+    border-left: none;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

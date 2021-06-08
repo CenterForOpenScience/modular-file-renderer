@@ -53,6 +53,9 @@ Some file types may not be in the correct list. Please search for the file type 
 ## PDB
 * .pdb
 
+## Data
+* .tdms
+
 ## PDF
 * .pdf
 

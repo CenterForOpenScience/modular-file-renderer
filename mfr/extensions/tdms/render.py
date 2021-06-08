@@ -1,16 +1,16 @@
 import os
+import base64
+from io import BytesIO
 
 import nptdms
-from nptdms import TdmsFile
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import datetime
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
-
-# class EscapeHtml(Extension):
-#    def extendMarkdown(self, md, md_globals):
-#        del md.preprocessors['html_block']
-#        del md.inlinePatterns['html']
-
+from mfr.core import utils
 
 class TdmsRenderer(extension.BaseRenderer):
 
@@ -25,30 +25,105 @@ class TdmsRenderer(extension.BaseRenderer):
 
     def render(self):
         """Render a tdms file to html."""
+        maxTableLength = 100  # maximum rows to include in data table
+        minDigitLength = 4  # minumum digits before scientific notation is used
+        formatString = "{:." + str(minDigitLength) + "g}"
 
-        tdms_file = TdmsFile.open(self.file_path, raw_timestamps=True)
+        fig, ax = plt.subplots()  # create matplotlib figure object
+        ax.grid(True, alpha=0.1)  # specify matplotlib grid properties
 
-        body = "<div><ul>"
-        for property, value in tdms_file.properties.items():
-            body += "<li><b>File</b> = " + str(value) + "</li>\n\n"
-        body += "</ul></div><div><ul>"
+        # empty data structures to be filled with file data in loops
+        channelNames = []
+        lineCollections = []
+        properties = ""
+        data = pd.DataFrame()
+
+        tdms_file = nptdms.TdmsFile.open(self.file_path, raw_timestamps=True)
+        fileMetadata = TdmsRenderer.formatMetadata(tdms_file.properties.items())
+
+        # Parse group data and metadata and generate html
         for group in tdms_file.groups():
-            body += "<li><b>Channel group</b> = " + group.name + "</li>\n"
-            body += "<ul>"
+            groupClass = group.name.replace(" ", "")
+            buttonId = groupClass + "Button"
+            showHide = "showHide(\'" + groupClass + "\', \'" + buttonId + "\')"
+            rowTag = "<tr class=\'group\' onclick=\"" + showHide + "\">"
+            buttonTag = "<td class=\'button\' id=\'" + buttonId + "\'>+</td>"
+            properties += rowTag + "<td>Group " + group.name + "</td>"
+            properties += buttonTag + "</tr>"
+
+            # Parse channel data and metadata and generate html
             for channel in group.channels():
-                body += "<li><b>Channel</b> = " + channel.name + "</li>\n"
-                body += "<ul>"
-                # Access dictionary of properties:
+                channelClass = channel.name.replace(" ", "")
+                buttonId = channel.name.replace(" ", "") + "Button"
+                showHide = "showHide(\'" + channelClass + "\', \'" + buttonId + "\')"
+                rowTag = "<tr class=\'channel " + groupClass + "\' onclick=\"" + showHide + "\">"
+                buttonTag = "<td class=\'button\' id=\'" + buttonId + "\'>+</td>"
+                properties += rowTag + "<td>Channel " + channel.name + "</td>" + buttonTag + "</tr>"
+                channelLength = len(channel)
+
+                # Parse dictionary of properties:
                 for property, value in channel.properties.items():
-                    body += "<li>" + property + " = " + str(value) + "</li>\n\n"
+                    rowTag = "<tr class=\'property " + channelClass + " " + groupClass + "Child\'>"
+                    leftCol = rowTag + "<td>" + property + "</td>"
+                    if utils.isfloat(value):  # reformat float values
+                        value = formatString.format(float(value))
+                    rightCol = "<td>" + str(value) + "</td></tr>"
+                    properties += leftCol + rightCol
 
                 # Access numpy array of data for channel:
-                # body = body + str(channel[:]) + ""
-                body += "</ul>"
-            body += "</ul>"
-        body += "</ul></div>"
+                if (channelLength > 1):  # Only access channels with datasets > 1
+                    # Plotting on a time axis
+                    if (channel.properties['wf_start_time'] and channel.properties['wf_increment']):
+                        start = channel.properties['wf_start_time'].as_datetime()
+                        start = (start - datetime.datetime(1904, 1, 1)).total_seconds()
+                        increment = channel.properties['wf_increment']
+                        stop = start + increment * channelLength
+                        timeAxis = np.linspace(start, stop, channelLength)
+                        line = ax.plot(timeAxis, channel, linewidth=2, label=channel.name)
+                        plt.xticks(rotation=45)
+                        plt.xlabel("Time (s)")
+                    else:
+                        line = ax.plot(channel, linewidth=2, label=channel.name)
 
-        return self.TEMPLATE.render(base=self.assets_url, body=body)
+                    lineCollections.append(line)
+                    channelNames.append(channel.name)
+                    data[channel.name] = channel[:maxTableLength]
+
+        ax.legend(channelNames, bbox_to_anchor=(1, 1))
+        plotFile = BytesIO()  # create byte sream object
+        fig.savefig(plotFile, format='png', bbox_inches='tight')  # export plot to png in byte stream
+        encoded = base64.b64encode(plotFile.getvalue()).decode('utf-8')  # encode base 64 byte stream data
+        plot = '\'data:image/png;base64,{}\''.format(encoded)  # format encoded data as string
+        table = data.to_html()  # export pandas DataFrame to HTML
+
+        return self.TEMPLATE.render(base=self.assets_url, fileMetadata=fileMetadata, properties=properties, plot=plot, table=table)
+
+    def formatMetadata(items):
+        # Parse property value pairs in file level metadata and generate html
+
+        minDigitLength = 4  # minumum digits before scientific notation is used
+        formatString = "{:." + str(minDigitLength) + "G}"
+        fileMetadata = ""
+
+        for property, value in items:
+            value = str(value)
+            if value.find("\n") > 1:
+                value = value.split("\n")
+                fileMetadata += "<li>" + value[0] + "</li>"
+                fileMetadata += "<ul>"
+                for v in value[1:]:
+                    v = v.replace("\\n", " ").replace("\"", "").split("=")
+                    v[0] = "".join(v[0].split(".")[1:])
+                    v[1] = v[1].strip()
+                    if utils.isfloat(v[1]):  # reformat float values
+                        v[1] = formatString.format(float(v[1]))
+                    fileMetadata += "<li>" + "= ".join(v) + "</li>"
+                fileMetadata += "</ul>"
+            else:
+                fileMetadata += "<li>" + str(property) + ": " + value + "</li>"
+        fileMetadata += "</ul>"
+
+        return fileMetadata
 
     @property
     def file_required(self):

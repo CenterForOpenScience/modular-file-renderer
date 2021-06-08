@@ -25,7 +25,6 @@ class RenderHandler(core.BaseHandler):
         await super().prepare()
 
         self.renderer_name = utils.get_renderer_name(self.metadata.ext)
-
         self.cache_file_id = self.metadata.unique_key
 
         if self.renderer_name:

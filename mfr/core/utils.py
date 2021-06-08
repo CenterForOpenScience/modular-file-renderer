@@ -21,7 +21,7 @@ def make_provider(name, request, url, action=None):
             invoke_args=(request, url, ),
             invoke_kwds={'action': action},
         ).driver
-    except RuntimeError:
+    except RuntimeError as err:
         raise exceptions.MakeProviderError(
             '"{}" is not a supported provider'.format(name.lower()),
             namespace='mfr.providers',

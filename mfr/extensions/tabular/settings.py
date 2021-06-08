@@ -12,7 +12,7 @@ TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 LIBS = config.get_object('LIBS', {
     '.csv': [libs.csv_stdlib],
     '.tsv': [libs.csv_stdlib],
-    '.gsheet': [libs.xlsx_xlrd],
+    'application/vnd.google-apps.spreadsheet': [libs.xlsx_xlrd],
     '.xlsx': [libs.xlsx_xlrd],
     '.xls': [libs.xlsx_xlrd],
     '.dta': [libs.dta_pandas],

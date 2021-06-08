@@ -109,6 +109,8 @@ class TabularRenderer(extension.BaseRenderer):
         :return: a dict mapping sheet titles to tuples of column headers and row data
         """
         function_preference = settings.LIBS.get(ext.lower())
+        if not function_preference:
+            function_preference = settings.LIBS.get(self.metadata.content_type)
 
         for populate_func in function_preference:
             try:

@@ -662,6 +662,9 @@ setup(
             #'.todo.txt = mfr.extensions.codepygments:CodePygmentsRenderer',
             #'.vimrc' = mfr.extensions.codepygments:CodePygmentsRenderer',
 
+            #tdms
+            '.tdms = mfr.extensions.tdms:TdmsRenderer',
+
             # docx
             # '.docx = mfr.extensions.docx:DocxRenderer',
 

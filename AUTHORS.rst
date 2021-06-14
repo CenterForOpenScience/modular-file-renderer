@@ -34,3 +34,4 @@ Contributors
 - Longze Chen `@cslzchen <https://github.com/cslzchen>`_
 - Jonathon Love `@jonathon-love <https://github.com/jonathon-love>`_
 - Josh Bird `@birdbrained <https://github.com/birdbrained>`_
+- Connor Bailey `@cbbcbail <https://github.com/cbbcbail>`_

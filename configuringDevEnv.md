@@ -12,11 +12,17 @@ $ cd osf.io}
 - Grant Docker minimum resources of 1 CPU, 8GB memory, 2GB swap, and 32GB disk image size
 
 - Alias the loopback interface:
+
 $ export libdir='/Library/LaunchDaemons'
+
 $ export file='com.runlevel1.lo0.192.168.168.167.plist'
-$ sudo cp $file $libdir}
+
+$ sudo cp $file $libdir
+
 $ sudo chmod 0644 $libdir/$file
+
 $ sudo chown root:wheel $libdir/$file
+
 $ sudo launchctl load $libdir/$file
 
 - Configure application:

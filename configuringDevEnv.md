@@ -4,9 +4,7 @@ Instructions for MacOS Big Sur compiled from [**README-docker-compose.md**](http
 
 
 - Clone the repository:
-
   - ```$ git clone [osf.io]```
-
   - ```$ cd osf.io```
 
 - Install the Docker Client
@@ -15,7 +13,7 @@ Instructions for MacOS Big Sur compiled from [**README-docker-compose.md**](http
 
 - Alias the loopback interface:
 
-```$ export libdir='/Library/LaunchDaemons'```
+  - ```$ export libdir='/Library/LaunchDaemons'```
 
 ```$ export file='com.runlevel1.lo0.192.168.168.167.plist'```
 

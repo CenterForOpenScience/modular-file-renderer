@@ -45,7 +45,7 @@ Instructions for MacOS Big Sur compiled by from https://github.com/CenterForOpen
 
     - Copy the confirmation link and paste into the browser to confirm the account then log in using the email address used to create the account. This allows test files, projects, and folders to be created and accessed through the normal methods.
 
-Instructions for building and testing the modified MFR container:
+## Instructions for building and testing the modified MFR container:
 
     - Go to the modular-file-renderer directory
     - $ docker image build -t mfr:local .
@@ -56,21 +56,21 @@ Instructions for building and testing the modified MFR container:
     - Restart the Docker application
 
 
-In order to verify that the version of MFR you are running is the correct, most up to date version:
+## In order to verify that the version of MFR you are running is the correct, most up to date version:
 
     - Modify the version number in modular-file-renderer/mfr/version.py to indicate that changes have been made.
     - Check the version of the container at http://localhost:7778/status
     - If the status version number matches the modified version number, you know that the modified version of the MFR container has been successfully built and deployed by Docker.
 
 
-#Debugging Problems
+## Debugging Problems
 
     - Running out of memory in Docker can be solved by doing a system prune of the containers and reinstalling them. Allocating more memory in Docker is a good idea:
 
     $ docker system prune -a
 
 
-#Configuring the MFR development environment:
+# Configuring the MFR development environment:
 
     Instructions for MacOS Big Sur compiled from https://github.com/CenterForOpenScience/modular-file-renderer/blob/develop/CONTRIBUTING.rst, https://github.com/CenterForOpenScience/modular-file-renderer/blob/develop/README.md, the https://modular-file-renderer.readthedocs.io/en/latest/install.html\#install and https://modular-file-renderer.readthedocs.io/en/latest/contributing.html and modified to fix errors.
 

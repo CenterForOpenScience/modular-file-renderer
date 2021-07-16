@@ -14,8 +14,7 @@ $ cd osf.io}
 - Alias the loopback interface:
 
 ```$ export libdir='/Library/LaunchDaemons'```
-
-$ export file='com.runlevel1.lo0.192.168.168.167.plist'
+```$ export file='com.runlevel1.lo0.192.168.168.167.plist'```
 
 $ sudo cp $file $libdir
 

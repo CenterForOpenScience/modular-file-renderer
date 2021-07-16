@@ -63,7 +63,7 @@ Instructions for MacOS Big Sur compiled from [**README-docker-compose.md**](http
 ## Debugging Problems
 
 - Running out of memory in Docker can be solved by doing a system prune of the containers and reinstalling them. Allocating more memory in Docker is a good idea.
-- $ docker system prune -a
+- ```$ docker system prune -a```
 
 
 # Configuring the development environment for MFR:
@@ -78,8 +78,8 @@ Instructions for MacOS Big Sur compiled from []**CONTRIBUTING.rst**](https://git
   - ```$ brew install python3 r pspp unoconv pyenv```
 
 - Add the following initialization lines to either the **~/.bashrc** or **~/.zprofile** files for either bash or zsh shells respectively:
-```**eval "$(pyenv init -)"**
-**eval "$(pyenv virtualenv-init -)"**```
+**eval "$(pyenv init -)"**
+**eval "$(pyenv virtualenv-init -)"**
 
 - ```$ source ~/.[bashrc or zprofile]```
 - ```$ pyenv virtualenv 3.6.4 mfr```

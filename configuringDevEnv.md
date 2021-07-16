@@ -78,8 +78,10 @@ Instructions for MacOS Big Sur compiled from []**CONTRIBUTING.rst**](https://git
   - ```$ brew install python3 r pspp unoconv pyenv```
 
 - Add the following initialization lines to either the **~/.bashrc** or **~/.zprofile** files for either bash or zsh shells respectively:
-**eval "$(pyenv init -)"**
-**eval "$(pyenv virtualenv-init -)"**
+```
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+```
 
 - ```$ source ~/.[bashrc or zprofile]```
 - ```$ pyenv virtualenv 3.6.4 mfr```

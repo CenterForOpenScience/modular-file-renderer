@@ -4,8 +4,10 @@ Instructions for MacOS Big Sur compiled from [**README-docker-compose.md**](http
 
 
 - Clone the repository:
-$ git clone [osf.io]
-$ cd osf.io}
+
+  - ```$ git clone [osf.io]```
+
+  - ```$ cd osf.io```
 
 - Install the Docker Client
 

@@ -1,10 +1,8 @@
 # MFR (Modular File Renderer)
 
-`master` Build Status: [![Build Status](https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=master)](https://travis-ci.org/CenterForOpenScience/modular-file-renderer)
+`master` Build Status: ![Build Status](https://github.com/CenterForOpenScience/modular-file-renderer/actions/workflows/test-build.yml/badge.svg?branch=master)[![Coverage Status](https://coveralls.io/repos/github/CenterForOpenScience/modular-file-renderer/badge.svg?branch=master)](https://coveralls.io/github/CenterForOpenScience/modular-file-renderer?branch=master)
 
-`develop` Build Status: [![Build Status](https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=develop)](https://travis-ci.org/CenterForOpenScience/modular-file-renderer)
-
-[![Coverage Status](https://coveralls.io/repos/github/CenterForOpenScience/modular-file-renderer/badge.svg)](https://coveralls.io/github/CenterForOpenScience/modular-file-renderer)
+`develop` Build Status: ![Build Status](https://github.com/CenterForOpenScience/modular-file-renderer/actions/workflows/test-build.yml/badge.svg?branch=develop)[![Coverage Status](https://coveralls.io/repos/github/CenterForOpenScience/modular-file-renderer/badge.svg?branch=develop)](https://coveralls.io/github/CenterForOpenScience/modular-file-renderer?branch=develop)
 
 A Python package for rendering files to HTML via an embeddable iframe.
 

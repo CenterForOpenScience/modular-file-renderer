@@ -1,4 +1,5 @@
 import os
+import logging
 
 import chardet
 from humanfriendly import format_size
@@ -12,6 +13,8 @@ from mako.lookup import TemplateLookup
 from mfr.core import extension
 from mfr.extensions.codepygments import settings
 from mfr.extensions.codepygments import exceptions
+
+logger = logging.getLogger(__name__)
 
 
 class CodePygmentsRenderer(extension.BaseRenderer):
@@ -98,9 +101,12 @@ class CodePygmentsRenderer(extension.BaseRenderer):
             # check if there is a lexer available for more obscure file types
             if ext in settings.lexer_lib.keys():
                 lexer = pygments.lexers.get_lexer_by_name(settings.lexer_lib[ext])
+                logger.debug('found pygments lexer by name')
             else:
                 lexer = pygments.lexers.guess_lexer_for_filename(ext, content)
+                logger.debug('found pygments lexer by guessing')
         except ClassNotFound:
+            logger.debug('pygments lexer class not found! using default')
             self.metrics.add('default_lexer', True)
             lexer = self.DEFAULT_LEXER()
 

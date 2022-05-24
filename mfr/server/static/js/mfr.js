@@ -112,6 +112,7 @@
         };
 
         self.startHypothesis = function() {
+            self.pymParent.sendMessage('setParentUrl', window.location.toString());
             self.pymParent.sendMessage('startHypothesis');
         };
 

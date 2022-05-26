@@ -116,6 +116,7 @@ Some file types may not be in the correct list. Please search for the file type 
 * .bf
 * .bib
 * .bmx
+* .boa
 * .boo
 * .boxs
 * .bro

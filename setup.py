@@ -195,6 +195,7 @@ setup(
             '.bf = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.bib = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.bmx = mfr.extensions.codepygments:CodePygmentsRenderer',
+            '.boa = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.boo = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.boxs = mfr.extensions.codepygments:CodePygmentsRenderer',
             '.bro = mfr.extensions.codepygments:CodePygmentsRenderer',

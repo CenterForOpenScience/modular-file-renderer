@@ -15,7 +15,7 @@ agent==0.1.2
 google-auth==1.4.1
 
 # CodePygments
-Pygments==2.2.0
+Pygments==2.12.0
 
 # Docx
 #git+https://github.com/jsocol/bleach.git

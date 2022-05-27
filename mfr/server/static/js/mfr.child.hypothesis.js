@@ -2,14 +2,22 @@
     'use strict';
 
     var hypothesisLoaded = false;
+    var parentWindowUrl = undefined;
+
+    window.pymChild.onMessage('setParentUrl', setParentWindowUrl);
 
     window.pymChild.onMessage('startHypothesis', startHypothesis);
 
     window.addEventListener('message', function(event) {
-        if (event.data === 'startHypothesis') {
+        if (event.data.type === 'startHypothesis') {
+            setParentWindowUrl(event.data.parentUrl);
             startHypothesis(event);
         }
     });
+
+    function setParentWindowUrl(parentUrl) {
+        parentWindowUrl = parentUrl;
+    }
 
     function startHypothesis(event) {
         if (hypothesisLoaded) {
@@ -53,7 +61,7 @@
             // point to the export/download url, meaning the annotations could never be viewed in
             // context.  By linking to the referrer, the annotations can be viewed in the context of
             // the preprint.
-            window.PDFViewerApplication.url = document.referrer;
+            window.PDFViewerApplication.url = parentWindowUrl;
 
             // Load the hypothes.is client
             var script = window.document.createElement('script');

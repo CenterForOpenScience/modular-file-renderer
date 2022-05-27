@@ -1,16 +1,14 @@
 # MFR (Modular File Renderer)
 
-`master` Build Status: [![Build Status](https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=master)](https://travis-ci.org/CenterForOpenScience/modular-file-renderer)
+`master` Build Status: ![Build Status](https://github.com/CenterForOpenScience/modular-file-renderer/actions/workflows/test-build.yml/badge.svg?branch=master)[![Coverage Status](https://coveralls.io/repos/github/CenterForOpenScience/modular-file-renderer/badge.svg?branch=master)](https://coveralls.io/github/CenterForOpenScience/modular-file-renderer?branch=master)
 
-`develop` Build Status: [![Build Status](https://travis-ci.org/CenterForOpenScience/modular-file-renderer.svg?branch=develop)](https://travis-ci.org/CenterForOpenScience/modular-file-renderer)
-
-[![Coverage Status](https://coveralls.io/repos/github/CenterForOpenScience/modular-file-renderer/badge.svg)](https://coveralls.io/github/CenterForOpenScience/modular-file-renderer)
+`develop` Build Status: ![Build Status](https://github.com/CenterForOpenScience/modular-file-renderer/actions/workflows/test-build.yml/badge.svg?branch=develop)[![Coverage Status](https://coveralls.io/repos/github/CenterForOpenScience/modular-file-renderer/badge.svg?branch=develop)](https://coveralls.io/github/CenterForOpenScience/modular-file-renderer?branch=develop)
 
 A Python package for rendering files to HTML via an embeddable iframe.
 
 ### Compatibility
 
-MFR is compatible with Python 3.5 (tested up to 3.5.3) and 3.6.
+MFR is compatible with Python 3.6.
 
 ### Documentation
 
@@ -18,7 +16,7 @@ Documentation available at: http://modular-file-renderer.readthedocs.io/en/lates
 
 ### Setting up
 
-Install the latest version of python3.5.
+Install the latest version of python3.6.
 
 For MacOSX users:
 
@@ -35,12 +33,12 @@ apt-get install python3
 apt-get install pspp unoconv
 ```
 
-After installing python3.5, create the virtual environment with the following commands:
+After installing python3.6, create the virtual environment with the following commands:
 
 ```bash
 pip install virtualenv
 pip install virtualenvwrapper
-mkvirtualenv --python=`which python3.5` mfr
+mkvirtualenv --python=`which python3.6` mfr
 
 pip install setuptools==37.0.0
 pip install invoke==0.13.0
@@ -100,7 +98,7 @@ Interested in adding support for a new provider or file format? Check out the CO
 
 ### License
 
-Copyright 2013-2018 Center for Open Science
+Copyright 2013-2022 Center for Open Science
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -1,4 +1,4 @@
-FROM python:3.5-slim-buster
+FROM python:3.6-slim-buster
 
 # ensure unoconv can locate the uno library
 ENV PYTHONPATH /usr/lib/python3/dist-packages
@@ -25,49 +25,32 @@ RUN usermod -d /home www-data \
         libxml2-dev \
         libxslt1-dev \
         zlib1g-dev \
+        gnupg2 \
         # convert .step to jsc3d-compatible format
         freecad \
         # pspp dependencies
         pspp \
         # unoconv dependencies
         libreoffice \
-        # gosu dependencies
-        curl \
-        gnupg2 \
-    # gosu
-    && export GOSU_VERSION='1.10' \
-    && mkdir ~/.gnupg && chmod 600 ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
-    && for server in hkp://ipv4.pool.sks-keyservers.net:80 \
-                     hkp://ha.pool.sks-keyservers.net:80 \
-                     hkp://pgp.mit.edu:80 \
-                     hkp://keyserver.pgp.com:80 \
-    ; do \
-      gpg --keyserver "$server" --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 && break || echo "Trying new server..." \
-    ; done \
-    && curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
-  	&& curl -o /usr/local/bin/gosu.asc -SL "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
-  	&& gpg --verify /usr/local/bin/gosu.asc \
-  	&& rm /usr/local/bin/gosu.asc \
-  	&& chmod +x /usr/local/bin/gosu \
-    # /gosu
+        # grab gosu for easy step-down from root
+        gosu \
     && apt-get clean \
     && apt-get autoremove -y \
-        curl \
-        gnupg2 \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip install -U pip \
-    && pip install setuptools==37.0.0 \
-    && mkdir -p /code \
-    && pip install unoconv==0.8.2
+    && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /code
 WORKDIR /code
 
-COPY ./requirements.txt ./
+RUN pip install -U pip==18.1
+RUN pip install setuptools==37.0.0
+RUN pip install unoconv==0.8.2
+
+COPY ./requirements.txt /code/
 
 RUN pip install --no-cache-dir -r ./requirements.txt
 
 # Copy the rest of the code over
-COPY ./ ./
+COPY ./ /code/
 
 ARG GIT_COMMIT=
 ENV GIT_COMMIT ${GIT_COMMIT}

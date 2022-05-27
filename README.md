@@ -8,7 +8,7 @@ A Python package for rendering files to HTML via an embeddable iframe.
 
 ### Compatibility
 
-MFR is compatible with Python 3.5 (tested up to 3.5.3) and 3.6.
+MFR is compatible with Python 3.6.
 
 ### Documentation
 
@@ -16,7 +16,7 @@ Documentation available at: http://modular-file-renderer.readthedocs.io/en/lates
 
 ### Setting up
 
-Install the latest version of python3.5.
+Install the latest version of python3.6.
 
 For MacOSX users:
 
@@ -33,12 +33,12 @@ apt-get install python3
 apt-get install pspp unoconv
 ```
 
-After installing python3.5, create the virtual environment with the following commands:
+After installing python3.6, create the virtual environment with the following commands:
 
 ```bash
 pip install virtualenv
 pip install virtualenvwrapper
-mkvirtualenv --python=`which python3.5` mfr
+mkvirtualenv --python=`which python3.6` mfr
 
 pip install setuptools==37.0.0
 pip install invoke==0.13.0
@@ -98,7 +98,7 @@ Interested in adding support for a new provider or file format? Check out the CO
 
 ### License
 
-Copyright 2013-2018 Center for Open Science
+Copyright 2013-2022 Center for Open Science
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

@@ -2,6 +2,16 @@
 ChangeLog
 *********
 
+22.0.0 (2022-05-27)
+===================
+- Feature: Improve Hypothes.is annotations by allowing the parent frame to pass in its url when
+turning on the annotator.
+- Feature: Enable syntax highlighting for .boa files (https://boa.cs.iastate.edu/) and bump Pygments
+dep to 2.12.0.
+- Code: Upgrade MFR's Dockerfile to be based off python3.6 and Debian buster.  Remove manual gosu
+installation and fetch from apt-get instead.  python3.6 is now the only supported python version.
+- Code: Migrate CI from TravisCI to Github Actions.
+
 20.0.1 (2020-10-21)
 ===================
 - Feature: Add flags to toggle logging of MFR events to specific Keen collections.

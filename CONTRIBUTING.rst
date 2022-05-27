@@ -23,8 +23,8 @@ Clone the repo:
 Configure development environment and install the development dependencies.
 
 .. note::
-    Python 3.5 or greater, `R`_, and `pspp`_ are required.
-    Python 3.6 is reccomended. It's recommended that a python version manager such as `pyenv`_ is used and that you use a virtual environment such as `pyenv-virtualenv`_ during development.
+    Python 3.6 or greater, `R`_, and `pspp`_ are required.
+    It's recommended that a python version manager such as `pyenv`_ is used and that you use a virtual environment such as `pyenv-virtualenv`_ during development.
 
 .. _R: https://www.r-project.org/
 .. _pspp: https://www.gnu.org/software/pspp/

@@ -65,7 +65,7 @@ class TestZipRenderer:
 
     def test_render(self, renderer):
         body = renderer.render()
-        parsed_html = BeautifulSoup(body)
+        parsed_html = BeautifulSoup(body, "html.parser")
         rows = parsed_html.findChildren('table')[0].findChildren(['tr'])
 
         name = rows[2].findChildren('td')[0].get_text().strip()

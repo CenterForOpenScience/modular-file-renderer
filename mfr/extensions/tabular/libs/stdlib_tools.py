@@ -1,58 +1,88 @@
-import re
 import csv
+from http import HTTPStatus
 
-from mfr.extensions.tabular.exceptions import EmptyTableError, TabularRendererError
 from mfr.extensions.tabular import utilities
+from mfr.extensions.tabular.exceptions import (EmptyTableError,
+                                               TabularRendererError)
 
 
 def csv_stdlib(fp):
-    """Read and convert a csv file to JSON format using the python standard library
-    :param fp: File pointer object
-    :return: tuple of table headers and data
-    """
-    data = fp.read(2048)
+    try:
+        # CSVs are always values seperated by commas
+        # sniff for quoting, and spaces after commas
+        dialect = csv.Sniffer().sniff(fp.read(), ',')
+    except:
+        dialect = csv.excel
     fp.seek(0)
 
+    reader = csv.DictReader(fp, dialect=dialect)
+    return parse_stdlib(reader, 'csv')
+
+def tsv_stdlib(fp):
     try:
-        dialect = csv.Sniffer().sniff(data)
-    except csv.Error:
-        dialect = csv.excel
-    else:
-        _set_dialect_quote_attrs(dialect, data)
+        # TSVs are always values seperated by TABs
+        # sniff for quoting, and spaces after TABs
+        dialect = csv.Sniffer().sniff(fp.read(), '\t')
+    except:
+        dialect = csv.excel_tab
+    fp.seek(0)
 
     del data
     reader = csv.DictReader(fp, dialect=dialect)
+    return parse_stdlib(reader, 'tsv')
+
+def parse_stdlib(reader, ext):
+    """Read and convert a csv like file to JSON format using the python standard library
+    :param fp: File pointer object
+    :return: tuple of table headers and data
+    """
     columns = []
     # update the reader field names to avoid duplicate column names when performing row extraction
-    for idx, fieldname in enumerate(reader.fieldnames or []):
-        column_count = sum(1 for column in columns if fieldname == column['name'])
-        if column_count:
-            unique_fieldname = '{}-{}'.format(fieldname, column_count + 1)
-            reader.fieldnames[idx] = unique_fieldname
-        else:
-            unique_fieldname = fieldname
-        columns.append({
-            'id': unique_fieldname,
-            'field': unique_fieldname,
-            'name': fieldname,
-            'sortable': True,
-        })
-
     try:
+        for idx, fieldname in enumerate(reader.fieldnames or []):
+            column_count = sum(1 for column in columns if fieldname == column['name'])
+            if column_count:
+                unique_fieldname = '{}-{}'.format(fieldname, column_count + 1)
+                reader.fieldnames[idx] = unique_fieldname
+            else:
+                unique_fieldname = fieldname
+            columns.append({
+                'id': unique_fieldname,
+                'field': unique_fieldname,
+                'name': fieldname,
+                'sortable': True,
+            })
+
         rows = [row for row in reader]
     except csv.Error as e:
         if any("field larger than field limit" in errorMsg for errorMsg in e.args):
             raise TabularRendererError(
                 'This file contains a field too large to render. '
                 'Please download and view it locally.',
-                code=400,
-                extension='csv',
+                code=HTTPStatus.BAD_REQUEST,
+                extension=ext,
             ) from e
         else:
-            raise TabularRendererError('csv.Error: {}'.format(e), extension='csv') from e
+            raise TabularRendererError(
+                'Cannot render file as {}. The file may be empty or corrupt'.format(ext),
+                code=HTTPStatus.BAD_REQUEST,
+                extension=ext
+            ) from e
+
+    # Outside other except because the `if any` line causes more errors to be raised
+    # on certain exceptions
+    except Exception as e:
+        raise TabularRendererError(
+            'Cannot render file as {}. The file may be empty or corrupt'.format(ext),
+            code=HTTPStatus.BAD_REQUEST,
+            extension=ext
+        ) from e
 
     if not columns and not rows:
-        raise EmptyTableError('Table empty or corrupt.', extension='csv')
+        raise EmptyTableError(
+            'Cannot render file as {}. The file may be empty or corrupt'.format(ext),
+            code=HTTPStatus.BAD_REQUEST,
+            extension=ext)
 
     del reader
     return {'Sheet 1': (columns, rows)}
@@ -69,26 +99,3 @@ def sav_stdlib(fp):
     with open(csv_file.name, 'r') as file:
         csv_file.close()
         return csv_stdlib(file)
-
-
-def _set_dialect_quote_attrs(dialect, data):
-    """Set quote-related dialect attributes based on up to 2kb of csv data.
-
-    The regular expressions search for things that look like the beginning of
-    a list, wrapped in a quotation mark that is not dialect.quotechar, with
-    list items wrapped in dialect.quotechar and seperated by commas.
-
-    Example matches include:
-        "['1', '2', '3'         for quotechar == '
-        '{"a", "b", "c"         for quotechar == "
-    """
-    if dialect.quotechar == '"':
-        if re.search('\'[[({]".+",', data):
-            dialect.quotechar = "'"
-        if re.search("'''[[({]\".+\",", data):
-            dialect.doublequote = True
-    elif dialect.quotechar == "'":
-        if re.search("\"[[({]'.+',", data):
-            dialect.quotechar = '"'
-        if re.search('"""[[({]\'.+\',', data):
-            dialect.doublequote = True

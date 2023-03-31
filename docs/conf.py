@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'mfr'
-copyright = u'2018, Center For Open Science'
+copyright = u'2023, Center For Open Science'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

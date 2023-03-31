@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+23.0.0 (2023-03-30)
+===================
+- Docs: Basic repository maintenance for 2023; update copyright dates and update COS jobs url.
+
 22.0.0 (2022-05-27)
 ===================
 - Feature: Improve Hypothes.is annotations by allowing the parent frame to pass in its url when

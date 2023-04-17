@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+23.1.0 (2023-04-17)
+===================
+- Fix: Improve support for special characters in tabular renderer sheet names.  (thanks, @aaxelb!)
+
 23.0.0 (2023-03-30)
 ===================
 - Docs: Basic repository maintenance for 2023; update copyright dates and update COS jobs url.

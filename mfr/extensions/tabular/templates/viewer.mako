@@ -33,11 +33,12 @@
 
         for (var sheetName in sheets){
             var sheet = sheets[sheetName];
-            sheetName = sheetName.replace( /(:|\.|\[|\]|,|@|&|\ |'|"|%|\;)/g, '_' ); //Handle characters that can't be in DOM ID's
-            $("#tabular-tabs").append('<li role="presentation" style="display:inline-block; float: none;"><a id="' + sheetName + '" aria-controls="' + sheetName + '" role="tab" data-toggle="tab">'+ sheetName + '</a></li>');
-            gridArr[sheetName] = [sheet[0], sheet[1]];
+            // Handle characters that can't be in DOM ID's
+            var sheetCoded = window.btoa(encodeURIComponent(sheetName)).replace(/=/g, '');
+            $("#tabular-tabs").append('<li role="presentation" style="display:inline-block; float: none;"><a id="' + sheetCoded + '" aria-controls="' + sheetCoded + '" role="tab" data-toggle="tab">'+ sheetName + '</a></li>');
+            gridArr[sheetCoded] = [sheet[0], sheet[1]];
 
-            $('#'+sheetName).click(function (e) {
+            $('#'+sheetCoded).click(function (e) {
                 e.preventDefault();
                 var columns = gridArr[$(this).attr('id')][0];
                 var rows = gridArr[$(this).attr('id')][1];

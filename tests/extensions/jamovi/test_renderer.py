@@ -15,8 +15,12 @@ def metadata():
                             'http://wb.osf.io/file/jamovi.omv?token=1337')
 
 @pytest.fixture
-def ok_path():
-    return os.path.join(BASE_PATH, 'ok.omv')
+def ok_path_new_manifest():
+    return os.path.join(BASE_PATH, 'ok-new-manifest.omv')
+
+@pytest.fixture
+def ok_path_old_manifest():
+    return os.path.join(BASE_PATH, 'ok-old-manifest.omv')
 
 @pytest.fixture
 def ok_with_image_path():

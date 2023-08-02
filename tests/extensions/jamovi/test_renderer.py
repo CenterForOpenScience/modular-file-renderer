@@ -67,8 +67,8 @@ def extension():
     return '.omv'
 
 @pytest.fixture
-def renderer(metadata, ok_path, url, assets_url, export_url):
-    return JamoviRenderer(metadata, ok_path, url, assets_url, export_url)
+def renderer(metadata, ok_path_new_manifest, url, assets_url, export_url):
+    return JamoviRenderer(metadata, ok_path_new_manifest, url, assets_url, export_url)
 
 
 class TestCodeJamoviRenderer:

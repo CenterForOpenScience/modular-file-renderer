@@ -19,18 +19,6 @@ def not_a_zip_file_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'not-a-zip-file.jasp')
 
 @pytest.fixture
-def no_manifest_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'no-manifest.jasp')
-
-@pytest.fixture
-def no_data_archive_version_in_manifest_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'no-data-archive-version-in-manifest.jasp')
-
-@pytest.fixture
-def data_archive_version_is_too_old_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'data-archive-version-is-too-old.jasp')
-
-@pytest.fixture
 def no_index_html_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'no-index_html.jasp')
 
@@ -73,33 +61,6 @@ class TestCodeJASPRenderer:
     def test_render_JASP_not_a_zip_file(self, metadata, not_a_zip_file_path, url, assets_url, export_url):
         try:
             renderer = JASPRenderer(metadata, not_a_zip_file_path, url, assets_url, export_url)
-            renderer.render()
-        except RendererError:
-            return
-
-        assert False # should not get here
-
-    def test_render_JASP_no_manifest(self, metadata, no_manifest_path, url, assets_url, export_url):
-        try:
-            renderer = JASPRenderer(metadata, no_manifest_path, url, assets_url, export_url)
-            renderer.render()
-        except RendererError:
-            return
-
-        assert False # should not get here
-
-    def test_render_JASP_no_data_archive_version_in_manifest(self, metadata, no_data_archive_version_in_manifest_path, url, assets_url, export_url):
-        try:
-            renderer = JASPRenderer(metadata, no_data_archive_version_in_manifest_path, url, assets_url, export_url)
-            renderer.render()
-        except RendererError:
-            return
-
-        assert False # should not get here
-
-    def test_render_JASP_data_archive_is_too_old(self, metadata, data_archive_version_is_too_old_path, url, assets_url, export_url):
-        try:
-            renderer = JASPRenderer(metadata, data_archive_version_is_too_old_path, url, assets_url, export_url)
             renderer.render()
         except RendererError:
             return

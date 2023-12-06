@@ -15,6 +15,10 @@ def ok_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'ok.jasp')
 
 @pytest.fixture
+def new_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'new.jasp')
+
+@pytest.fixture
 def not_a_zip_file_path():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'not-a-zip-file.jasp')
 
@@ -82,11 +86,13 @@ class TestCodeJASPRenderer:
 
         assert '<script src="link-to-something-malicious.js">' not in body
   
+    def test_render_JASP_new(self, metadata, new_path, url, assets_url, export_url):
+        renderer = JASPRenderer(metadata, new_path, url, assets_url, export_url)
+        body = renderer.render()
+        '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
 
     def test_render_JASP_file_required(self, renderer):
         assert renderer.file_required is True
 
     def test_render_JASP_cache_result(self, renderer):
         assert renderer.cache_result is True
-
-

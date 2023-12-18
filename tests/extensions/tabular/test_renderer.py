@@ -25,8 +25,18 @@ def test_csv_file_path():
 
 
 @pytest.fixture
-def invalid_csv_file_path():
-    return os.path.join(PATH, 'files', 'invalid.csv')
+def empty_csv_file_path():
+    return os.path.join(PATH, 'files', 'empty.csv')
+
+
+@pytest.fixture
+def one_line_csv_file_path():
+    return os.path.join(PATH, 'files', 'one_line.csv')
+
+
+@pytest.fixture
+def long_row_csv_file_path():
+    return os.path.join(PATH, 'files', 'long_row.csv')
 
 
 @pytest.fixture
@@ -107,10 +117,26 @@ class TestTabularCsvRenderer:
         body = renderer.render()
         assert BODY in body
 
-    def test_render_tabular_csv_invalid(self, invalid_csv_file_path, assets_url, export_url):
+    def test_render_tabular_csv_one_line(self, one_line_csv_file_path, assets_url, export_url):
         metadata = ProviderMetadata('test', '.csv', 'text/plain', '1234',
                                     'http://wb.osf.io/file/test.csv?token=1234')
-        renderer = TabularRenderer(metadata, invalid_csv_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(metadata, one_line_csv_file_path, url, assets_url, export_url)
+        body = renderer.render()
+        assert BODY in body
+
+    def test_render_tabular_csv_long_row(self, long_row_csv_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.csv', 'text/plain', '1234',
+                                    'http://wb.osf.io/file/test.csv?token=1234')
+        renderer = TabularRenderer(metadata, long_row_csv_file_path, url, assets_url, export_url)
+        body = renderer.render()
+        assert BODY in body
+
+    # There is way to test an "invalid" CSV unless the file is empty since the CSV sniffer attempts
+    # to make the best guess syntactically even if the file is semantically invalid.
+    def test_render_tabular_csv_empty(self, empty_csv_file_path, assets_url, export_url):
+        metadata = ProviderMetadata('test', '.csv', 'text/plain', '1234',
+                                    'http://wb.osf.io/file/test.csv?token=1234')
+        renderer = TabularRenderer(metadata, empty_csv_file_path, url, assets_url, export_url)
         with pytest.raises(exceptions.EmptyTableError):
             renderer.render()
 

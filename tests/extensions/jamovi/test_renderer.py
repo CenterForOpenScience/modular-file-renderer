@@ -15,11 +15,11 @@ def metadata():
                             'http://wb.osf.io/file/jamovi.omv?token=1337')
 
 @pytest.fixture
-def ok_path_new_manifest():
+def ok_new_manifest_path():
     return os.path.join(BASE_PATH, 'ok-new-manifest.omv')
 
 @pytest.fixture
-def ok_path_old_manifest():
+def ok_old_manifest_path():
     return os.path.join(BASE_PATH, 'ok-old-manifest.omv')
 
 @pytest.fixture
@@ -67,13 +67,18 @@ def extension():
     return '.omv'
 
 @pytest.fixture
-def renderer(metadata, ok_path_new_manifest, url, assets_url, export_url):
-    return JamoviRenderer(metadata, ok_path_new_manifest, url, assets_url, export_url)
+def renderer(metadata, ok_new_manifest_path, url, assets_url, export_url):
+    return JamoviRenderer(metadata, ok_new_manifest_path, url, assets_url, export_url)
 
 
 class TestCodeJamoviRenderer:
 
     def test_render_jamovi(self, renderer):
+        body = renderer.render()
+        assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
+
+    def test_render_jamovi_old_manifest(self, metadata, ok_old_manifest_path, url, assets_url, export_url):
+        renderer = JamoviRenderer(metadata, ok_old_manifest_path, url, assets_url, export_url)
         body = renderer.render()
         assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
 

@@ -11,8 +11,12 @@ def metadata():
     return ProviderMetadata('JASP', '.jasp', 'application/octet-stream', '1234', 'http://wb.osf.io/file/JASP.jasp?token=1234')
 
 @pytest.fixture
-def ok_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'ok.jasp')
+def ok_old_manifest_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'ok-old-manifest.jasp')
+
+@pytest.fixture
+def ok_new_manifest_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'ok-new-manifest.jasp')
 
 @pytest.fixture
 def not_a_zip_file_path():
@@ -60,13 +64,18 @@ def extension():
 
 
 @pytest.fixture
-def renderer(metadata, ok_path, url, assets_url, export_url):
-    return JASPRenderer(metadata, ok_path, url, assets_url, export_url)
+def renderer(metadata, ok_new_manifest_path, url, assets_url, export_url):
+    return JASPRenderer(metadata, ok_new_manifest_path, url, assets_url, export_url)
 
 
 class TestCodeJASPRenderer:
 
     def test_render_JASP(self, renderer):
+        body = renderer.render()
+        assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
+
+    def test_render_JASP_old_manifest(self, metadata, ok_old_manifest_path, url, assets_url, export_url):
+        renderer = JASPRenderer(metadata, ok_old_manifest_path, url, assets_url, export_url)
         body = renderer.render()
         assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
 

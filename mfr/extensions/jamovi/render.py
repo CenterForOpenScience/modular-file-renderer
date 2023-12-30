@@ -66,14 +66,20 @@ class JamoviRenderer(extension.BaseRenderer):
         """
         # Extract manifest file content
         try:
-            with zip_file.open('META-INF/MANIFEST.MF') as manifest_data:
-                manifest = manifest_data.read().decode('utf-8')
+            try:
+                # new manifest location
+                with zip_file.open('meta') as manifest_data:
+                    manifest = manifest_data.read().decode('utf-8')
+            except KeyError:
+                # old manifest location
+                with zip_file.open('META-INF/MANIFEST.MF') as manifest_data:
+                    manifest = manifest_data.read().decode('utf-8')
         except KeyError:
             raise jamovi_exceptions.JamoviFileCorruptError(
-                '{} Missing META-INF/MANIFEST.MF'.format(self.MESSAGE_FILE_CORRUPT),
+                '{} Missing manifest'.format(self.MESSAGE_FILE_CORRUPT),
                 extension=self.metadata.ext,
                 corruption_type='key_error',
-                reason='zip missing ./META-INF/MANIFEST.MF',
+                reason='zip missing manifest',
             )
 
         lines = manifest.split('\n')

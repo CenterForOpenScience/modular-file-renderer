@@ -2,6 +2,13 @@
 ChangeLog
 *********
 
+24.0.0 (2024-01-02)
+===================
+- Fix: Install ca-certificates-java in Dockerfile to fix image build.
+- Fix: Support newer manifest locations for jamovi files (PR#369). (thanks, @jonathon-love!)
+- Fix: Support new manifest type and location for JASP-stats files. (thanks, @JorisGoosen and
+@RensDofferhoff!)
+
 23.1.0 (2023-04-17)
 ===================
 - Fix: Improve support for special characters in tabular renderer sheet names.  (thanks, @aaxelb!)

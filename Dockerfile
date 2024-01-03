@@ -8,6 +8,8 @@ RUN usermod -d /home www-data \
     # -slim images strip man dirs, but java won't install unless this dir exists.
     && mkdir -p /usr/share/man/man1 \
     && apt-get update \
+    # HACK: work around bug in install java (dep of libreoffice)
+    && apt-get install -y ca-certificates-java \
     # mfr dependencies
     && apt-get install -y \
         git \

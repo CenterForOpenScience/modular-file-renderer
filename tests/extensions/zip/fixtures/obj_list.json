@@ -1,0 +1,22 @@
+{
+    "test_file_list": [
+        "zip-test/",
+        "zip-test/file-generic-ext.mfr",
+        "zip-test/folder-3/",
+        "zip-test/folder-3/folder-3-1/",
+        "zip-test/folder-3/folder-3-1/text-3.docx",
+        "zip-test/folder-3/folder-3-1/folder-3-1-1/",
+        "zip-test/folder-3/folder-3-1/folder-3-1-1/image-3.bmp",
+        "zip-test/folder-2/",
+        "zip-test/folder-2/text-2.pdf",
+        "zip-test/folder-2/folder-2-1/",
+        "zip-test/folder-2/folder-2-1/image-2.jpg",
+        "zip-test/file-no-ext",
+        "zip-test/folder-1/",
+        "zip-test/folder-1/text-1.txt",
+        "zip-test/folder-1/image-1.png"
+    ],
+    "empty_file_list": [
+        "zip-empty/"
+    ]
+}

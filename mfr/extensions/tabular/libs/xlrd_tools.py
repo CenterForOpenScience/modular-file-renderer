@@ -1,13 +1,15 @@
-import xlrd
+import uuid
 from collections import OrderedDict
-from ..exceptions import TableTooBigError
 
-from ..utilities import header_population
+import xlrd
+
 from mfr.extensions.tabular.compat import range, basestring
+from mfr.extensions.tabular.utilities import header_population
+from mfr.extensions.tabular.exceptions import TableTooBigError
 
 
-def xlsx_xlrd(fp):
-    """Read and convert a xlsx file to JSON format using the xlrd library
+def xlsx_xlrd(fp, max_iterations=5000):
+    """Read and convert a xlsx file to JSON format using the xlrd library.
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
@@ -35,6 +37,30 @@ def xlsx_xlrd(fp):
             for index, value in enumerate(fields)
         ]
 
+        # Duplicate header fields create errors, we need to rename them
+        duplicate_fields = set([x for x in fields if fields.count(x) > 1])
+        if len(duplicate_fields):
+            counts = {}
+            for field in duplicate_fields:
+                counts[field] = 1
+
+            for i, field in enumerate(fields):
+                if field in duplicate_fields:
+                    increased_name = field + ' ({})'.format(counts[field])
+
+                    # this triggers if you try to rename a header, and that new name
+                    # already exists in fields. it will then increment to look for the
+                    # next available name.
+                    iteration = 0
+                    while increased_name in fields:
+                        iteration += 1
+                        if iteration > max_iterations:
+                            increased_name = field + ' ({})'.format(uuid.uuid4())
+                        else:
+                            counts[field] += 1
+                            increased_name = field + ' ({})'.format(counts[field])
+
+                    fields[i] = increased_name
         data = []
         for i in range(1, sheet.nrows):
             row = []

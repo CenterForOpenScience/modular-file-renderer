@@ -34,7 +34,7 @@ class BaseProvider(metaclass=abc.ABCMeta):
             'url': str(self.url),
         })
 
-    @abc.abstractproperty
+    @abc.abstractmethod
     def NAME(self):
         raise NotImplementedError
 

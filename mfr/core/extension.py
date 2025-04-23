@@ -77,7 +77,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
     def render(self):
         pass
 
-    @abc.abstractproperty
+    @abc.abstractmethod
     def file_required(self):
         """Does the rendering html need the raw file content to display correctly?
         Syntax-highlighted text files do.  Standard image formats do not, since an <img> tag
@@ -85,7 +85,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abc.abstractproperty
+    @abc.abstractmethod
     def cache_result(self):
         pass
 

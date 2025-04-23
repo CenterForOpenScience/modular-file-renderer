@@ -94,7 +94,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
 
         self.extension_metrics = MetricsRecord('extension')
 
-    @abc.abstractproperty
+    @abc.abstractmethod
     def NAME(self):
         raise NotImplementedError
 

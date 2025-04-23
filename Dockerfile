@@ -1,4 +1,4 @@
-FROM python:3.6-slim-buster
+FROM python:3.13-slim
 
 # ensure unoconv can locate the uno library
 ENV PYTHONPATH /usr/lib/python3/dist-packages
@@ -43,9 +43,9 @@ RUN usermod -d /home www-data \
 RUN mkdir -p /code
 WORKDIR /code
 
-RUN pip install -U pip==18.1
-RUN pip install setuptools==37.0.0
-RUN pip install unoconv==0.8.2
+RUN pip install -U pip==24.0
+RUN pip install setuptools==69.5.1
+RUN pip install unoconv==0.9.0
 
 COPY ./requirements.txt /code/
 

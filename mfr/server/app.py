@@ -7,7 +7,10 @@ from functools import partial
 import tornado.web
 import tornado.httpserver
 import tornado.platform.asyncio
-from raven.contrib.tornado import AsyncSentryClient
+
+import sentry_sdk
+from sentry_sdk.integrations.tornado import TornadoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
 
 from mfr import settings
 from mfr.server import settings as server_settings
@@ -46,6 +49,15 @@ def almost_apache_style_log(handler):
 
 
 def make_app(debug):
+    sentry_logging = LoggingIntegration(
+        level=logging.INFO,  # Capture INFO level and above as breadcrumbs
+        event_level=None,  # Do not send logs of any level as events
+    )
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        release=__version__,
+        integrations=[TornadoIntegration(), sentry_logging, ],
+    )
     app = tornado.web.Application(
         [
             (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.STATIC_PATH}),
@@ -59,7 +71,6 @@ def make_app(debug):
         debug=debug,
         log_function=almost_apache_style_log,
     )
-    app.sentry_client = AsyncSentryClient(settings.SENTRY_DSN, release=__version__)
     return app
 
 

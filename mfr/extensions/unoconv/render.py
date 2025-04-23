@@ -51,7 +51,8 @@ class UnoconvRenderer(extension.BaseRenderer):
                 self.metadata.ext,
                 self.file_path,
                 self.export_file_path,
-                self.map['format']
+                self.map['format'],
+                self.metadata,
             )
             exporter.export()
 

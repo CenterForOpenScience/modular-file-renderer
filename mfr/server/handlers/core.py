@@ -93,9 +93,12 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         self.metrics = self.handler_metrics.new_subrecord(self.NAME)
 
         self.extension_metrics = MetricsRecord('extension')
+        self.url = ''
+
 
     @abc.abstractmethod
     def NAME(self):
+        # Todo: not see Name implementation in child classes
         raise NotImplementedError
 
     async def prepare(self):

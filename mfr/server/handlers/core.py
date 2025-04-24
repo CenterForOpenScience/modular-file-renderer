@@ -207,10 +207,10 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
     def log_exception(self, typ, value, tb):
         if isinstance(value, tornado.web.HTTPError):
             if value.log_message:
-                format = "%d %s: " + value.log_message
+                log_message_format = "%d %s: " + value.log_message
                 args = ([value.status_code, self._request_summary()] +
                         list(value.args))
-                tornado.web.gen_log.warning(format, *args)
+                tornado.web.gen_log.warning(log_message_format, *args)
         else:
             tornado.web.app_log.error("[User-Agent: %s] Uncaught exception %s\n",
                                       self.request.headers.get('User-Agent', '*none found*'),

@@ -10,6 +10,7 @@ def make_provider(name, request, url, action=None):
     :param str name: The name of the provider to instantiate. (osf)
     :param request:
     :param dict url:
+    :param action:
 
     :rtype: :class:`mfr.core.provider.BaseProvider`
     """
@@ -41,6 +42,7 @@ def make_exporter(name, source_file_path, output_file_path, file_format, metadat
     :param str source_file_path:
     :param str output_file_path:
     :param str file_format:
+    :param metadata:
 
     :rtype: :class:`mfr.core.extension.BaseExporter`
     """
@@ -70,6 +72,7 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
 
     :param str name: The name of the extension to instantiate. (.jpg, .docx, etc)
     :param: :class:`mfr.core.provider.ProviderMetadata` metadata:
+    :param metadata:
     :param str file_path:
     :param str url:
     :param str assets_url:

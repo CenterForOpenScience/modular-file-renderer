@@ -162,6 +162,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
             return
 
     def write_error(self, status_code, exc_info):
+
+        # TODO: verify that `exc_info` arg is compatible with tornado 6.4.2 sig
         etype, exc, _ = exc_info
         scope = sentry_sdk.get_current_scope()
         scope.set_tag('class', etype.__name_)
@@ -295,6 +297,7 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     """
 
     def initialize(self):
+        # Todo: the method args differ in comparison with StaticFileHandler
         namespace = 'mfr.renderers'
         module_path = 'mfr.extensions'
 
@@ -308,6 +311,7 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             self.modules[module] = static_path
 
     async def get(self, module_name, path):
+        # Todo: the method args differ in comparison with StaticFileHandler, maybe it is ok
         try:
             super().initialize(self.modules[module_name])
             return await super().get(path)

@@ -90,7 +90,6 @@ class PdfExporter(extension.BaseExporter):
             image.close()
 
         except (UnicodeDecodeError, OSError) as err:
-            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid tiff image.'.format(export_type),

@@ -3,7 +3,7 @@ import abc
 import uuid
 import asyncio
 import logging
-import pkg_resources
+from importlib.metadata import entry_points
 
 import tornado.web
 import tornado.iostream
@@ -287,10 +287,15 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     def initialize(self):
         namespace = 'mfr.renderers'
         module_path = 'mfr.extensions'
-        self.modules = {
-            ep.module_name.replace(module_path + '.', ''): os.path.join(ep.dist.location, 'mfr', 'extensions', ep.module_name.replace(module_path + '.', ''), 'static')
-            for ep in list(pkg_resources.iter_entry_points(namespace))
-        }
+
+        self.modules = {}
+
+        for ep in entry_points().select(group=namespace):
+            module_name = ep.value.split(":")[0]  # replacement for ep.module_name
+            module = module_name.replace(module_path + ".", "").split(".")[0]
+            dist_location = ep.dist.locate_file("")  # replacement for ep.dist.location
+            static_path = os.path.join(dist_location, 'mfr', 'extensions', module, 'static')
+            self.modules[module] = static_path
 
     async def get(self, module_name, path):
         try:

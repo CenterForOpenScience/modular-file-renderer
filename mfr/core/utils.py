@@ -1,4 +1,4 @@
-import pkg_resources
+from importlib.metadata import entry_points
 from stevedore import driver
 
 from mfr.core import exceptions
@@ -110,16 +110,15 @@ def get_renderer_name(name: str) -> str:
 
     # `ep_iterator` is an iterable object. Must convert it to a `list` for access.
     # `list()` can only be called once because the iterator moves to the end after conversion.
-    ep_iterator = pkg_resources.iter_entry_points(group='mfr.renderers', name=name.lower())
-    ep_list = list(ep_iterator)
+    ep = entry_points().select(group='mfr.renderers', name=name.lower())
 
     # Empty list indicates unsupported file type.  Return '' and let `make_renderer()` handle it.
-    if len(ep_list) == 0:
+    if len(ep) == 0:
         return ''
 
     # If the file type is supported, there must be only one element in the list.
-    assert len(ep_list) == 1
-    return ep_list[0].attrs[0]
+    assert len(ep) == 1
+    return ep[0].value.split(":")[1].split('.')[0]
 
 
 def get_exporter_name(name: str) -> str:
@@ -132,16 +131,15 @@ def get_exporter_name(name: str) -> str:
 
     # `ep_iterator` is an iterable object. Must convert it to a `list` for access.
     # `list()` can only be called once because the iterator moves to the end after conversion.
-    ep_iterator = pkg_resources.iter_entry_points(group='mfr.exporters', name=name.lower())
-    ep_list = list(ep_iterator)
+    ep = entry_points().select(group='mfr.exporters', name=name.lower())
 
     # Empty list indicates unsupported export type.  Return '' and let `make_exporter()` handle it.
-    if len(ep_list) == 0:
+    if len(ep) == 0:
         return ''
 
     # If the export type is supported, there must be only one element in the list.
-    assert len(ep_list) == 1
-    return ep_list[0].attrs[0]
+    assert len(ep) == 1
+    return ep[0].value.split(":")[1].split('.')[0]
 
 
 def sizeof_fmt(num, suffix='B'):

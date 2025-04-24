@@ -23,7 +23,7 @@ class PdfRenderer(extension.BaseRenderer):
 
         download_url = munge_url_for_localdev(self.metadata.download_url)
         escaped_name = escape_url_for_template(
-            '{}{}'.format(self.metadata.name, self.metadata.ext)
+            f'{self.metadata.name}{self.metadata.ext}'
         )
         logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext,
                                                                 settings.EXPORT_SUPPORTED))

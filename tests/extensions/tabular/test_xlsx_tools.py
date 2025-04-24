@@ -17,4 +17,4 @@ class TestTabularPandaTools:
         assert sheet[0][2] == {'field': 'three', 'id': 'three', 'name': 'three', 'sortable': True}
         assert sheet[1][0] == {'one': 'a', 'two': 'b', 'three': 'c'}
         assert sheet[1][1] == {'one': 1.0, 'two': 2.0, 'three': 3.0}
-        assert sheet[1][2] == {'one': u'wierd\\x97', 'two': u'char\\x98','three': u'set\\x99'}
+        assert sheet[1][2] == {'one': 'wierd\\x97', 'two': 'char\\x98','three': 'set\\x99'}

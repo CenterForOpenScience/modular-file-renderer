@@ -49,7 +49,7 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         self.metadata = metadata
         self.file_path = file_path
         self.url = url
-        self.assets_url = '{}/{}'.format(assets_url, self._get_module_name())
+        self.assets_url = f'{assets_url}/{self._get_module_name()}'
         self.export_url = export_url
         self.renderer_metrics = MetricsRecord('renderer')
         if self._get_module_name():

@@ -64,7 +64,7 @@ class TestPdfRenderer:
         body = renderer.render()
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
-        assert 'DEFAULT_URL = \'{}\''.format(metadata.download_url) in body
+        assert f'DEFAULT_URL = \'{metadata.download_url}\'' in body
 
     def test_render_pdf_with_single_quote_in_name(self, assets_url):
 
@@ -80,8 +80,8 @@ class TestPdfRenderer:
 
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
-        assert 'DEFAULT_URL = \'{}\''.format(download_url) not in body
-        assert 'DEFAULT_URL = \'{}\''.format(safe_download_url) in body
+        assert f'DEFAULT_URL = \'{download_url}\'' not in body
+        assert f'DEFAULT_URL = \'{safe_download_url}\'' in body
 
     def test_render_tif(self, tif_renderer, assets_url):
         exported_url = furl.furl(tif_renderer.export_url)
@@ -91,7 +91,7 @@ class TestPdfRenderer:
         body = tif_renderer.render()
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
-        assert 'DEFAULT_URL = \'{}\''.format(exported_url.url) in body
+        assert f'DEFAULT_URL = \'{exported_url.url}\'' in body
 
     def test_render_docx(self, assets_url):
 
@@ -106,5 +106,5 @@ class TestPdfRenderer:
 
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
-        assert 'DEFAULT_URL = \'{}\''.format(export_url) not in body
-        assert 'DEFAULT_URL = \'{}\''.format(safe_url) in body
+        assert f'DEFAULT_URL = \'{export_url}\'' not in body
+        assert f'DEFAULT_URL = \'{safe_url}\'' in body

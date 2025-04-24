@@ -9,7 +9,7 @@ CONSTRAINTS_FILE = 'constraints.txt'
 @task
 def wheelhouse(ctx, develop=False):
     req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = 'pip wheel --find-links={} -r {} --wheel-dir={} -c {}'.format(WHEELHOUSE_PATH, req_file, WHEELHOUSE_PATH, CONSTRAINTS_FILE)
+    cmd = f'pip wheel --find-links={WHEELHOUSE_PATH} -r {req_file} --wheel-dir={WHEELHOUSE_PATH} -c {CONSTRAINTS_FILE}'
     ctx.run(cmd, pty=True)
 
 
@@ -17,10 +17,10 @@ def wheelhouse(ctx, develop=False):
 def install(ctx, develop=False):
     ctx.run('python setup.py develop')
     req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = 'pip install --upgrade -r {} -c {}'.format(req_file, CONSTRAINTS_FILE)
+    cmd = f'pip install --upgrade -r {req_file} -c {CONSTRAINTS_FILE}'
 
     if WHEELHOUSE_PATH:
-        cmd += ' --no-index --find-links={}'.format(WHEELHOUSE_PATH)
+        cmd += f' --no-index --find-links={WHEELHOUSE_PATH}'
     ctx.run(cmd, pty=True)
 
 
@@ -43,14 +43,14 @@ def test(ctx, verbose=False, nocov=False, extension=None, path=None):
     # `--extension=` and `--path=` are mutually exclusive options
     assert not (extension and path)
     if path:
-        path = '/{}'.format(path) if path else ''
+        path = f'/{path}' if path else ''
     elif extension:
-        path = '/extensions/{}/'.format(extension) if extension else ''
+        path = f'/extensions/{extension}/' if extension else ''
     else:
         path = ''
     coverage = ' --cov-report term-missing --cov mfr' if not nocov else ''
     verbose = '-v' if verbose else ''
-    cmd = 'py.test{} tests{} {}'.format(coverage, path, verbose)
+    cmd = f'py.test{coverage} tests{path} {verbose}'
     ctx.run(cmd, pty=True)
 
 

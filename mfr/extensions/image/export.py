@@ -21,7 +21,7 @@ class ImageExporter(extension.BaseExporter):
         image_type = parts[-1].lower()
         max_size = {'w': None, 'h': None}
         if len(parts) == 2:
-            max_size['w'], max_size['h'] = [int(size) for size in parts[0].split('x')]
+            max_size['w'], max_size['h'] = (int(size) for size in parts[0].split('x'))
         self.metrics.merge({
             'type': image_type,
             'max_size_w': max_size['w'],
@@ -66,7 +66,7 @@ class ImageExporter(extension.BaseExporter):
             image.save(self.output_file_path, image_type)
             image.close()
 
-        except (UnicodeDecodeError, IOError, FileNotFoundError, OSError) as err:
+        except (UnicodeDecodeError, OSError, FileNotFoundError) as err:
             os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '

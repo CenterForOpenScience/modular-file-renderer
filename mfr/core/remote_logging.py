@@ -104,18 +104,18 @@ async def _send_to_keen(payload, collection, project_id, write_key, action, doma
     Will raise an excpetion if the event cannot be sent."""
 
     serialized = json.dumps(payload).encode('UTF-8')
-    logger.debug("Serialized payload: {}".format(serialized))
+    logger.debug(f"Serialized payload: {serialized}")
     headers = {
         'Content-Type': 'application/json',
         'Authorization': write_key,
     }
-    url = '{0}/{1}/projects/{2}/events/{3}'.format(settings.KEEN_API_BASE_URL,
+    url = '{}/{}/projects/{}/events/{}'.format(settings.KEEN_API_BASE_URL,
                                                    settings.KEEN_API_VERSION,
                                                    project_id, collection)
 
     async with await aiohttp.request('POST', url, headers=headers, data=serialized) as resp:
         if resp.status == 201:
-            logger.info('Successfully logged {} to {} collection in {} Keen'.format(action, collection, domain))
+            logger.info(f'Successfully logged {action} to {collection} collection in {domain} Keen')
         else:
             raise Exception('Failed to log {} to {} collection in {} Keen. Status: {} Error: {}'.format(
                 action, collection, domain, str(int(resp.status)), await resp.read()
@@ -133,7 +133,7 @@ def _scrub_headers_for_keen(payload, MAX_ITERATIONS=10):
         # if our new scrubbed key is already in the payload, we need to increment it
         if scrubbed_key in scrubbed_payload:
             for i in range(1, MAX_ITERATIONS + 1):  # try MAX_ITERATION times, then give up & drop it
-                incremented_key = '{}-{}'.format(scrubbed_key, i)
+                incremented_key = f'{scrubbed_key}-{i}'
                 if incremented_key not in scrubbed_payload:  # we found an unused key!
                     scrubbed_payload[incremented_key] = payload[key]
                     break

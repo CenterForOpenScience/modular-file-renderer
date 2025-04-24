@@ -23,7 +23,7 @@ def make_provider(name, request, url, action=None):
         ).driver
     except RuntimeError:
         raise exceptions.MakeProviderError(
-            '"{}" is not a supported provider'.format(name.lower()),
+            f'"{name.lower()}" is not a supported provider',
             namespace='mfr.providers',
             name=name.lower(),
             invoke_on_load=True,
@@ -144,10 +144,10 @@ def get_exporter_name(name: str) -> str:
 
 def sizeof_fmt(num, suffix='B'):
     if abs(num) < 1000:
-        return '%3.0f%s' % (num, suffix)
+        return '{:3.0f}{}'.format(num, suffix)
 
     for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
         if abs(num) < 1000.0:
-            return '%3.1f%s%s' % (num, unit, suffix)
+            return '{:3.1f}{}{}'.format(num, unit, suffix)
         num /= 1000.0
-    return '%.1f%s%s' % (num, 'Y', suffix)
+    return '{:.1f}{}{}'.format(num, 'Y', suffix)

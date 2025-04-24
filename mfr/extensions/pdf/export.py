@@ -66,7 +66,7 @@ class PdfExporter(extension.BaseExporter):
         c.save()
 
     def export(self):
-        logger.debug('pdf-export: format::{}'.format(self.format))
+        logger.debug(f'pdf-export: format::{self.format}')
         parts = self.format.split('.')
         export_type = parts[-1].lower()
         max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None
@@ -89,7 +89,7 @@ class PdfExporter(extension.BaseExporter):
             self.tiff_to_pdf(image, max_size)
             image.close()
 
-        except (UnicodeDecodeError, IOError) as err:
+        except (UnicodeDecodeError, OSError) as err:
             name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '

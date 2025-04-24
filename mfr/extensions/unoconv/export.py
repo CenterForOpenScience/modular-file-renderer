@@ -17,7 +17,7 @@ class UnoconvExporter(BaseExporter):
             run([
                 UNOCONV_BIN,
                 '-n',
-                '-c', 'socket,host={},port={};urp;StarOffice.ComponentContext'.format(ADDRESS, PORT),
+                '-c', f'socket,host={ADDRESS},port={PORT};urp;StarOffice.ComponentContext',
                 '-f', self.format,
                 '-o', self.output_file_path,
                 '-vvv',

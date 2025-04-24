@@ -27,7 +27,7 @@ class MdRenderer(extension.BaseRenderer):
 
     def render(self):
         """Render a markdown file to html."""
-        with open(self.file_path, 'r') as fp:
+        with open(self.file_path) as fp:
             body = markdown.markdown(fp.read(), extensions=[EscapeHtml()])
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 

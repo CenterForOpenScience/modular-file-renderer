@@ -29,13 +29,13 @@ class RenderHandler(core.BaseHandler):
         self.cache_file_id = self.metadata.unique_key
 
         if self.renderer_name:
-            cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.renderer_name)
+            cache_file_path_str = f'/export/{self.cache_file_id}.{self.renderer_name}'
         else:
-            cache_file_path_str = '/export/{}'.format(self.cache_file_id)
+            cache_file_path_str = f'/export/{self.cache_file_id}'
         self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
 
         self.source_file_path = await self.local_cache_provider.validate_path(
-            '/render/{}'.format(self.source_file_id)
+            f'/render/{self.source_file_id}'
         )
 
     async def get(self):
@@ -45,7 +45,7 @@ class RenderHandler(core.BaseHandler):
             self.metadata,
             self.source_file_path.full_path,
             self.url,
-            '{}://{}/assets'.format(self.request.protocol, self.request.host),
+            f'{self.request.protocol}://{self.request.host}/assets',
             self.request.uri.replace('/render?', '/export?', 1)
         )
 
@@ -55,11 +55,11 @@ class RenderHandler(core.BaseHandler):
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
             except waterbutler.core.exceptions.DownloadError as e:
-                assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
-                logger.info('No cached file found; Starting render [{}]'.format(self.cache_file_path))
+                assert e.code == 404, f'Non-404 DownloadError {e!r}'
+                logger.info(f'No cached file found; Starting render [{self.cache_file_path}]')
                 self.metrics.add('cache_file.result', 'miss')
             else:
-                logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
+                logger.info(f'Cached file found; Sending downstream [{self.cache_file_path}]')
                 self.metrics.add('cache_file.result', 'hit')
                 return await self.write_stream(cached_stream)
 

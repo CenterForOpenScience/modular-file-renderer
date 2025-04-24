@@ -40,7 +40,7 @@ class TestVideoRenderer:
     def test_render_video(self, renderer, url):
         body = renderer.render()
         assert '<video controls' in body
-        assert 'src="{}"'.format(metadata().download_url) in body
+        assert f'src="{metadata().download_url}"' in body
         assert '<style>body{margin:0;padding:0;}</style>' in ''.join(body.split())
 
     def test_render_video_file_required(self, renderer):

@@ -113,7 +113,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 provider=settings.PROVIDER_NAME,
                 code=400,
             )
-        logging.debug('target_url::{}'.format(self.url))
+        logging.debug(f'target_url::{self.url}')
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -124,7 +124,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
 
         self.metadata = await self.provider.metadata()
         self.extension_metrics.add('ext', self.metadata.ext)
-        logging.debug('extension::{}'.format(self.metadata.ext))
+        logging.debug(f'extension::{self.metadata.ext}')
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -170,7 +170,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 current, child_type = {}, None
                 for level in reversed(exc.attr_stack):
                     if current:
-                        current = {'{}_{}'.format(level[0], child_type): current}
+                        current = {f'{level[0]}_{child_type}': current}
                         current['child_type'] = child_type
                     current.update(level[1])
                     current['self_type'] = level[0]

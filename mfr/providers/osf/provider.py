@@ -59,7 +59,7 @@ class OsfProvider(provider.BaseProvider):
         differently.
         """
         download_url = await self._fetch_download_url()
-        logger.debug('download_url::{}'.format(download_url))
+        logger.debug(f'download_url::{download_url}')
         metadata = {}
         if '/file?' in download_url:
             # URL is for WaterButler v0 API
@@ -83,7 +83,7 @@ class OsfProvider(provider.BaseProvider):
             if response_code != 200:
                 raise exceptions.MetadataError(
                     'Failed to fetch file metadata from WaterButler. Received response: ',
-                    'code {} {}'.format(str(response_code), str(response_reason)),
+                    f'code {str(response_code)} {str(response_reason)}',
                     metadata_url=download_url,
                     response=response_reason,
                     provider=self.NAME,
@@ -128,7 +128,7 @@ class OsfProvider(provider.BaseProvider):
         unique_key = hashlib.sha256((meta['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
         stable_str = '/{}/{}{}'.format(meta['resource'], meta['provider'], meta['path'])
         stable_id = hashlib.sha256(stable_str.encode('utf-8')).hexdigest()
-        logger.debug('stable_identifier: str({}) hash({})'.format(stable_str, stable_id))
+        logger.debug(f'stable_identifier: str({stable_str}) hash({stable_id})')
 
         return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url, stable_id)
 
@@ -140,7 +140,7 @@ class OsfProvider(provider.BaseProvider):
 
         if response.status >= 400:
             resp_text = await response.text()
-            logger.error('Unable to download file: ({}) {}'.format(response.status, resp_text))
+            logger.error(f'Unable to download file: ({response.status}) {resp_text}')
             raise exceptions.DownloadError(
                 'Unable to download the requested file, please try again later.',
                 download_url=download_url,
@@ -181,7 +181,7 @@ class OsfProvider(provider.BaseProvider):
                 )
                 await request.release()
 
-                logger.debug('osf-download-resolver: request.status::{}'.format(request.status))
+                logger.debug(f'osf-download-resolver: request.status::{request.status}')
                 if request.status != 302:
                     raise exceptions.MetadataError(
                         request.reason,

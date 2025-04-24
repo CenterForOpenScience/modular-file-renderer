@@ -20,7 +20,7 @@ class RstRenderer(extension.BaseRenderer):
         self.metrics.add('docutils_version', docutils.__version__)
 
     def render(self):
-        with open(self.file_path, 'r') as fp:
+        with open(self.file_path) as fp:
             body = publish_parts(fp.read(), writer_name='html')['html_body']
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 

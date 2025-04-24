@@ -32,8 +32,8 @@ class TestImageExporter:
     ])
     def test_jpg(self, directory, file_name, tolerance):
         source_file_path = os.path.join(BASE, 'files', file_name)
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        output_file_path = os.path.join(directory, f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = ImageExporter(source_file_path=source_file_path, ext='.jpg',
                                  output_file_path=output_file_path, format=format,
                                  metadata={})
@@ -62,8 +62,8 @@ class TestImageExporter:
 
     def test_png_with_transparency(self, directory):
         source_file_path = os.path.join(BASE, 'files', 'test_transparency.png')
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        output_file_path = os.path.join(directory, f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = ImageExporter(source_file_path=source_file_path, ext='.png',
                                  output_file_path=output_file_path, format=format,
                                  metadata={})
@@ -97,8 +97,8 @@ class TestImageExporter:
 
     def test_bmp(self, directory):
         source_file_path = os.path.join(BASE, 'files', 'test.bmp')
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        output_file_path = os.path.join(directory, f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = ImageExporter(source_file_path=source_file_path, ext='.bmp',
                                  output_file_path=output_file_path, format=format,
                                  metadata={})
@@ -123,8 +123,8 @@ class TestImageExporter:
 
     def test_ratio(self, directory):
         source_file_path = os.path.join(BASE, 'files', 'test_ratio.jpg')
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        output_file_path = os.path.join(directory, f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = ImageExporter(source_file_path=source_file_path, ext='.png',
                                  output_file_path=output_file_path, format=format,
                                  metadata={})
@@ -147,8 +147,8 @@ class TestImageExporter:
         # triggers a `FileNotFoundError`
         source_file_path = os.path.join(BASE, 'files', 'test.jpg')
         output_file_path = os.path.join(directory, 'fake', 'place',
-                                        'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+                                        f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = ImageExporter(source_file_path=source_file_path, ext='.jpg',
                                  output_file_path=output_file_path, format=format,
                                  metadata={})
@@ -161,8 +161,8 @@ class TestImageExporter:
     def test_exception_courrupt_file(self, directory):
         # triggers an OSError with a corrupt file
         source_file_path = os.path.join(BASE, 'files', 'invalid.jpg')
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        output_file_path = os.path.join(directory, f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = ImageExporter(source_file_path=source_file_path, ext='.jpg',
                                  output_file_path=output_file_path, format=format,
                                  metadata={})

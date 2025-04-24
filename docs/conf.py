@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # MFR documentation build configuration file.
 #
@@ -46,8 +45,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'mfr'
-copyright = u'2023, Center For Open Science'
+project = 'mfr'
+copyright = '2023, Center For Open Science'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

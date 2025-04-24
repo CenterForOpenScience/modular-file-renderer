@@ -188,6 +188,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 current['materialized_type'] = '.'.join([x[0] for x in exc.attr_stack])
                 self.error_metrics = current
             except Exception:
+                # Todo: maybe it is needed to use logger and specific message for exception logging
                 pass
             self.set_status(exc.code)
             self.finish(exc.as_html())
@@ -311,10 +312,12 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
             super().initialize(self.modules[module_name])
             return await super().get(path)
         except Exception:
+            # Todo: maybe it is needed to use logger and specific message for exception logging
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
             return await super().get(path)
         except Exception:
+            # Todo: maybe it is needed to use logger and specific message for exception logging
             self.set_status(404)

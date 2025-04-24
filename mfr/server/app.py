@@ -49,7 +49,7 @@ def sig_handler(sig, frame):
 
 
 def almost_apache_style_log(handler):
-    '''without status code and body length'''
+    """without status code and body length"""
     req = handler.request
     access_logger.info('%s - - [%s +0800] "%s %s %s" - - "%s" "%s"' %
                        (req.remote_ip, time.strftime("%d/%b/%Y:%X"), req.method,

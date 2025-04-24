@@ -77,7 +77,8 @@ class MetricsBase:
         """
         return {self.key: self.serialize()}
 
-    def _set_dotted_key(self, store, key, value):
+    @staticmethod
+    def _set_dotted_key(store, key, value):
         """Naive method to set nested dict values via dot-separated keys. e.g
         ``_set_dotted_keys(self._metrics, 'foo.bar', 'moo')`` is equivalent to
         ``self._metrics['foo']['bar'] = 'moo'``.  This method is neither resilient nor intelligent

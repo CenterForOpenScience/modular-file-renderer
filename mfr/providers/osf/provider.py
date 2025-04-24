@@ -60,6 +60,7 @@ class OsfProvider(provider.BaseProvider):
         """
         download_url = await self._fetch_download_url()
         logger.debug('download_url::{}'.format(download_url))
+        metadata = {}
         if '/file?' in download_url:
             # URL is for WaterButler v0 API
             # TODO Remove this when API v0 is officially deprecated

@@ -27,13 +27,23 @@ access_logger = logging.getLogger('tornado.access')
 
 
 def sig_handler(sig, frame):
-    io_loop = tornado.ioloop.IOLoop.instance()
+    """
+        https://stackoverflow.com/questions/34554247/python-tornado-i-o-loop-current-vs-instance-method
+        https://www.tornadoweb.org/en/branch6.3/_modules/tornado/testing.html
+    """
+    io_loop = tornado.ioloop.IOLoop.current()
+    loop = io_loop.asyncio_loop  # Access the asyncio loop from Tornado
 
     def stop_loop():
-        if len(asyncio.Task.all_tasks(io_loop)) == 0:
-            io_loop.stop()
-        else:
+        """
+            Retrieve all tasks associated with tornado in asyncio loop
+            Todo: (maybe there is more explicit way to check than 'tornado' in repr(task))
+        """
+        exists_tornado_task = any(task for task in asyncio.all_tasks(loop) if 'tornado' in repr(task))
+        if exists_tornado_task:
             io_loop.call_later(1, stop_loop)
+        else:
+            io_loop.stop()
 
     io_loop.add_callback_from_signal(stop_loop)
 

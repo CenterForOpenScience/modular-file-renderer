@@ -170,6 +170,12 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 current, child_type = {}, None
                 for level in reversed(exc.attr_stack):
                     if current:
+                        """
+                             TODO: dictionary 'current' is reassigned in condition, Qodana code inspector may be 
+                             complaining because some data previously saved in the dictionary may be lost
+                             (but maybe it is ok in terms of business logic), 
+                             As I understand the current accumulate previous current versions so it may be ok
+                        """
                         current = {f'{level[0]}_{child_type}': current}
                         current['child_type'] = child_type
                     current.update(level[1])

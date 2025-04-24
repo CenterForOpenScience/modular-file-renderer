@@ -78,7 +78,7 @@ async def log_analytics(request, metrics, is_error=False):
 
     # send the private payload
     private_collection = 'mfr_errors' if is_error else 'mfr_action'
-    if ((is_error and settings.KEEN_PRIVATE_LOG_ERRORS) or settings.KEEN_PRIVATE_LOG_VIEWS):
+    if (is_error and settings.KEEN_PRIVATE_LOG_ERRORS) or settings.KEEN_PRIVATE_LOG_VIEWS:
         await _send_to_keen(keen_payload, private_collection, settings.KEEN_PRIVATE_PROJECT_ID,
                             settings.KEEN_PRIVATE_WRITE_KEY, keen_payload['handler']['type'],
                             domain='private')

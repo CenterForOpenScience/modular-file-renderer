@@ -27,7 +27,7 @@ Pillow==11.0.0
 psd-tools==1.4
 
 # IPython
-ipython==5.2.2
+ipython==7.31.1
 nbconvert==4.2.0
 nbformat==4.1.0
 traitlets==4.2.2

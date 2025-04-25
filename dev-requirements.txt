@@ -3,14 +3,14 @@
 # aiohttpretty disabled due to no usage in MFR, re-enable when needed
 # git+https://github.com/centerforopenscience/aiohttpretty.git@0.1.0#egg=aiohttpretty
 
-beautifulsoup4
-colorlog==2.5.0
-coveralls
-flake8==3.0.4
-ipdb
-mccabe
+beautifulsoup4==4.13.3
+colorlog==6.9.0
+coveralls==3.3.1
+flake8==7.1.2
+ipdb==0.13.13
+mccabe==0.7.0
 pydevd==3.3.0
-pyflakes
-pytest==2.8.2
-pytest-cov==2.2.0
-pyzmq==26.1.0
+pyflakes==3.2.0
+pytest==8.1.1
+pytest-cov==4.1.0
+pyzmq==26.2.1

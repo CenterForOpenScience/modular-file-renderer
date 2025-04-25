@@ -1,4 +1,4 @@
-name: wb_ci_testing
+name: mfr_ci_testing
 
 on: [push, pull_request, workflow_dispatch]
 

@@ -1,16 +1,16 @@
-aiohttp==0.18.4
+aiohttp==3.10.6
 chardet==2.3.0
 furl==0.4.2
 humanfriendly==2.1
-invoke==0.13.0
+invoke==2.2.0
 mako==1.0.1
-raven==5.27.0
-setuptools==37.0.0
+sentry-sdk==2.22.0
+setuptools==78.1.0
 stevedore==1.2.0
-tornado==4.3
+tornado==6.4.2
 
 # WaterButler
-git+https://github.com/CenterForOpenScience/waterbutler.git@0.38.6#egg=waterbutler
+git+https://github.com/CenterForOpenScience/waterbutler.git@feature/buff-worms
 agent==0.1.2
 google-auth==1.4.1
 
@@ -23,7 +23,7 @@ pydocx==0.7.0
 
 # Image
 olefile==0.44
-Pillow==4.3.0
+Pillow==11.0.0
 psd-tools==1.4
 
 # IPython
@@ -36,7 +36,7 @@ jinja2==2.10.1
 mistune==0.8.1
 
 # Pdf
-reportlab==3.6.5
+reportlab==4.2.4
 
 # Pptx
 # python-pptx==0.5.7
@@ -45,10 +45,10 @@ reportlab==3.6.5
 docutils==0.12
 
 # Tabular
-pandas==0.25.1
+pandas==2.2.3
 xlrd==1.0.0
-h5py==2.7.0
-scipy==0.19.1
+h5py==3.13
+scipy==1.14.1
 
 # Md
 markdown==2.6.2

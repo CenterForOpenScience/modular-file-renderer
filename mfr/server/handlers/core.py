@@ -7,7 +7,7 @@ import pkg_resources
 
 import tornado.web
 import tornado.iostream
-from raven.contrib.tornado import SentryMixin
+import sentry_sdk
 
 import waterbutler.core.utils
 import waterbutler.server.utils
@@ -76,7 +76,7 @@ class CorsMixin:
             self.set_header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE'),
 
 
-class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
+class BaseHandler(CorsMixin, tornado.web.RequestHandler):
     """Base class for the Render and Export handlers.  Fetches the file metadata for the file
     indicated by the ``url`` query parameter and builds the provider caches.  Also handles
     writing output and errors.
@@ -159,8 +159,11 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             return
 
     def write_error(self, status_code, exc_info):
-        self.captureException(exc_info)  # Log all non 2XX codes to sentry
         etype, exc, _ = exc_info
+        scope = sentry_sdk.get_current_scope()
+        scope.set_tag('class', etype.__name_)
+        scope.set_tag('status_code', status_code)
+        sentry_sdk.capture_exception(exc)  # Log all non 2XX codes to sentry
 
         if issubclass(etype, exceptions.PluginError):
             try:  # clever errors shouldn't break other things

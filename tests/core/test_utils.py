@@ -1,5 +1,5 @@
 import pytest
-import pkg_resources
+from importlib.metadata import entry_points
 
 from mfr.core import utils as mfr_utils
 
@@ -14,9 +14,8 @@ class TestGetRendererName:
         assert mfr_utils.get_renderer_name('.pdf') == 'PdfRenderer'
 
     def test_get_renderer_name(self):
-        entry_points = pkg_resources.iter_entry_points(group='mfr.renderers')
-        for ep in entry_points:
-            expected = ep.attrs[0]
+        for ep in entry_points().select(group='mfr.renderers'):
+            expected = ep.value.split(":")[1].split('.')[0]
             assert mfr_utils.get_renderer_name(ep.name) == expected
 
     def test_get_renderer_name_no_entry_point(self):
@@ -30,9 +29,8 @@ class TestGetExporterName:
         assert mfr_utils.get_exporter_name('.odt') == 'UnoconvExporter'
 
     def test_get_exporter_name(self):
-        entry_points = pkg_resources.iter_entry_points(group='mfr.exporters')
-        for ep in entry_points:
-            expected = ep.attrs[0]
+        for ep in entry_points().select(group='mfr.exporters'):
+            expected = ep.value.split(":")[1].split('.')[0]
             assert mfr_utils.get_exporter_name(ep.name) == expected
 
     def test_get_exporter_name_no_entry_point(self):

@@ -42,8 +42,8 @@ class TestPdfExporter:
     ])
     def test_single_page_tiff(self, directory, file_name):
         source_file_path = os.path.join(BASE, 'files', file_name)
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        output_file_path = os.path.join(directory, f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = PdfExporter(source_file_path=source_file_path, ext='.tif',
                                output_file_path=output_file_path, format=format,
                                metadata={'unique_key': 'moo moo moo'})
@@ -60,8 +60,8 @@ class TestPdfExporter:
 
     def test_bad_tiff(self, directory):
         source_file_path = os.path.join(BASE, 'files', 'invalid.tif')
-        output_file_path = os.path.join(directory, 'test.{}'.format(settings.EXPORT_TYPE))
-        format = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        output_file_path = os.path.join(directory, f'test.{settings.EXPORT_TYPE}')
+        format = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         exporter = PdfExporter(source_file_path=source_file_path, ext='.tif',
                                output_file_path=output_file_path, format=format,
                                metadata={'unique_key': 'moo moo moo'})

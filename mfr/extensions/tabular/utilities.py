@@ -22,15 +22,15 @@ def header_population(headers):
 def data_population(in_data, headers=None):
     """Convert a list of lists into a list of dicts associating each
     cell with its column header and row
-    :param data: two dimensional list of data
-    :param fields: column headers
+    :param in_data: two dimensional list of data
+    :param headers: column headers
     :return: JSON representation of rows
     """
     headers = headers or in_data[0]
 
     return [
-        dict([(header, row[cindex])
-            for cindex, header in enumerate(headers)])
+        {header: row[cindex]
+            for cindex, header in enumerate(headers)}
         for row in in_data
     ]
 

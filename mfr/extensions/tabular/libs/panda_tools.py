@@ -51,7 +51,7 @@ def sav_pandas(fp):
 
 def data_from_dataframe(dataframe):
     """Convert a dataframe object to a list of dictionaries
-    :param fp: File pointer object
+    :param dataframe: pandas dataframe
     :return: tuple of table headers and data
     """
 

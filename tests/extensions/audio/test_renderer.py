@@ -40,7 +40,7 @@ class TestAudioRenderer:
     def test_render_audio(self, renderer, url):
         body = renderer.render()
         assert '<audio controls>' in body
-        assert 'src="{}"'.format(url) in body
+        assert f'src="{url}"' in body
 
     def test_render_audio_file_required(self, renderer):
         assert renderer.file_required is False

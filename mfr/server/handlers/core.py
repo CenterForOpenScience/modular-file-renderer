@@ -3,7 +3,7 @@ import abc
 import uuid
 import asyncio
 import logging
-import pkg_resources
+from importlib.metadata import entry_points
 
 import tornado.web
 import tornado.iostream
@@ -93,9 +93,12 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         self.metrics = self.handler_metrics.new_subrecord(self.NAME)
 
         self.extension_metrics = MetricsRecord('extension')
+        self.url = ''
 
-    @abc.abstractproperty
+
+    @abc.abstractmethod
     def NAME(self):
+        # Todo: not see Name implementation in child classes
         raise NotImplementedError
 
     async def prepare(self):
@@ -113,7 +116,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 provider=settings.PROVIDER_NAME,
                 code=400,
             )
-        logging.debug('target_url::{}'.format(self.url))
+        logging.debug(f'target_url::{self.url}')
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -124,7 +127,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
 
         self.metadata = await self.provider.metadata()
         self.extension_metrics.add('ext', self.metadata.ext)
-        logging.debug('extension::{}'.format(self.metadata.ext))
+        logging.debug(f'extension::{self.metadata.ext}')
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -159,6 +162,8 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
             return
 
     def write_error(self, status_code, exc_info):
+
+        # TODO: verify that `exc_info` arg is compatible with tornado 6.4.2 sig
         etype, exc, _ = exc_info
         scope = sentry_sdk.get_current_scope()
         scope.set_tag('class', etype.__name_)
@@ -170,7 +175,13 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 current, child_type = {}, None
                 for level in reversed(exc.attr_stack):
                     if current:
-                        current = {'{}_{}'.format(level[0], child_type): current}
+                        """
+                             TODO: dictionary 'current' is reassigned in condition, Qodana code inspector may be 
+                             complaining because some data previously saved in the dictionary may be lost
+                             (but maybe it is ok in terms of business logic), 
+                             As I understand the current accumulate previous current versions so it may be ok
+                        """
+                        current = {f'{level[0]}_{child_type}': current}
                         current['child_type'] = child_type
                     current.update(level[1])
                     current['self_type'] = level[0]
@@ -179,6 +190,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 current['materialized_type'] = '.'.join([x[0] for x in exc.attr_stack])
                 self.error_metrics = current
             except Exception:
+                # Todo: maybe it is needed to use logger and specific message for exception logging
                 pass
             self.set_status(exc.code)
             self.finish(exc.as_html())
@@ -207,10 +219,10 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
     def log_exception(self, typ, value, tb):
         if isinstance(value, tornado.web.HTTPError):
             if value.log_message:
-                format = "%d %s: " + value.log_message
+                log_message_format = "%d %s: " + value.log_message
                 args = ([value.status_code, self._request_summary()] +
                         list(value.args))
-                tornado.web.gen_log.warning(format, *args)
+                tornado.web.gen_log.warning(log_message_format, *args)
         else:
             tornado.web.app_log.error("[User-Agent: %s] Uncaught exception %s\n",
                                       self.request.headers.get('User-Agent', '*none found*'),
@@ -285,22 +297,31 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     """
 
     def initialize(self):
+        # Todo: the method args differ in comparison with StaticFileHandler
         namespace = 'mfr.renderers'
         module_path = 'mfr.extensions'
-        self.modules = {
-            ep.module_name.replace(module_path + '.', ''): os.path.join(ep.dist.location, 'mfr', 'extensions', ep.module_name.replace(module_path + '.', ''), 'static')
-            for ep in list(pkg_resources.iter_entry_points(namespace))
-        }
+
+        self.modules = {}
+
+        for ep in entry_points().select(group=namespace):
+            module_name = ep.value.split(":")[0]  # replacement for ep.module_name
+            module = module_name.replace(module_path + ".", "").split(".")[0]
+            dist_location = ep.dist.locate_file("")  # replacement for ep.dist.location
+            static_path = os.path.join(dist_location, 'mfr', 'extensions', module, 'static')
+            self.modules[module] = static_path
 
     async def get(self, module_name, path):
+        # Todo: the method args differ in comparison with StaticFileHandler, maybe it is ok
         try:
             super().initialize(self.modules[module_name])
             return await super().get(path)
         except Exception:
+            # Todo: maybe it is needed to use logger and specific message for exception logging
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
             return await super().get(path)
         except Exception:
+            # Todo: maybe it is needed to use logger and specific message for exception logging
             self.set_status(404)

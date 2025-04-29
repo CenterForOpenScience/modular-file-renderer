@@ -26,7 +26,8 @@ class PluginError(waterbutler.core.exceptions.PluginError):
               free, open source software? Check out our openings!</div>
         '''.format(self.message)
 
-    def _format_original_exception(self, exc):
+    @staticmethod
+    def _format_original_exception(exc):
         """Sometimes we catch an error from an external library, but would like to throw our own
         error instead.  This method will take in an external error class and format it for
         consistent representation in the error metrics.

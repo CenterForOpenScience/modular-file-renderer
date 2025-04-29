@@ -22,7 +22,7 @@ def _merge_dicts(a, b, path=None):
     return a
 
 
-class MetricsBase():
+class MetricsBase:
     """Lightweight wrapper around a dict to make keeping track of metrics a little easier.
 
     Current functionality is limited, but may be extended later.  To do:
@@ -77,7 +77,8 @@ class MetricsBase():
         """
         return {self.key: self.serialize()}
 
-    def _set_dotted_key(self, store, key, value):
+    @staticmethod
+    def _set_dotted_key(store, key, value):
         """Naive method to set nested dict values via dot-separated keys. e.g
         ``_set_dotted_keys(self._metrics, 'foo.bar', 'moo')`` is equivalent to
         ``self._metrics['foo']['bar'] = 'moo'``.  This method is neither resilient nor intelligent
@@ -138,7 +139,7 @@ class MetricsSubRecord(MetricsRecord):
     @property
     def key(self):
         """ID string for this subrecord: '{category}_{name}'"""
-        return '{}_{}'.format(self.category, self.name)
+        return f'{self.category}_{self.name}'
 
     def new_subrecord(self, name):
         """Creates and saves a new subrecord.  The new subrecord will have its category set to the

@@ -27,7 +27,7 @@ def csv_stdlib(fp):
     for idx, fieldname in enumerate(reader.fieldnames or []):
         column_count = sum(1 for column in columns if fieldname == column['name'])
         if column_count:
-            unique_fieldname = '{}-{}'.format(fieldname, column_count + 1)
+            unique_fieldname = f'{fieldname}-{column_count + 1}'
             reader.fieldnames[idx] = unique_fieldname
         else:
             unique_fieldname = fieldname
@@ -49,7 +49,7 @@ def csv_stdlib(fp):
                 extension='csv',
             ) from e
         else:
-            raise TabularRendererError('csv.Error: {}'.format(e), extension='csv') from e
+            raise TabularRendererError(f'csv.Error: {e}', extension='csv') from e
 
     if not columns and not rows:
         raise EmptyTableError('Table empty or corrupt.', extension='csv')
@@ -66,7 +66,7 @@ def sav_stdlib(fp):
     :return: tuple of table headers and data
     """
     csv_file = utilities.sav_to_csv(fp)
-    with open(csv_file.name, 'r') as file:
+    with open(csv_file.name) as file:
         csv_file.close()
         return csv_stdlib(file)
 

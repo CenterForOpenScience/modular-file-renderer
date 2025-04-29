@@ -24,11 +24,11 @@ class IpynbRenderer(extension.BaseRenderer):
 
     def render(self):
         try:
-            with open(self.file_path, 'r') as file_pointer:
+            with open(self.file_path) as file_pointer:
                 notebook = nbformat.reads(file_pointer.read(), as_version=4)
         except ValueError as err:
             raise exceptions.InvalidFormatError(
-                'Could not read ipython notebook file. {}'.format(str(err)),
+                f'Could not read ipython notebook file. {str(err)}',
                 extension=self.metadata.ext,
                 download_url=str(self.metadata.download_url),
                 original_exception=err,

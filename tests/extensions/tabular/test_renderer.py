@@ -10,7 +10,7 @@ from mfr.extensions.tabular import TabularRenderer
 from mfr.extensions.tabular import exceptions
 
 PATH = os.path.dirname(os.path.abspath(__file__))
-BODY = '<div id="mfrGrid" style="min-height: {}px;">\n    </div>'.format(settings.TABLE_HEIGHT)
+BODY = f'<div id="mfrGrid" style="min-height: {settings.TABLE_HEIGHT}px;">\n    </div>'
 
 
 @pytest.fixture

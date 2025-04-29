@@ -34,8 +34,9 @@ class BaseProvider(metaclass=abc.ABCMeta):
             'url': str(self.url),
         })
 
-    @abc.abstractproperty
+    @abc.abstractmethod
     def NAME(self):
+        # Todo: not see Name implementation in child classes
         raise NotImplementedError
 
     @abc.abstractmethod

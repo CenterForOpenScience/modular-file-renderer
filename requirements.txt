@@ -23,8 +23,8 @@ Pygments==2.19.1
 pydocx==0.9.10
 
 # Image
-olefile==0.44
-Pillow==11.0.0
+olefile==0.47
+Pillow==11.2.1
 psd-tools==1.10.7
 
 # IPython

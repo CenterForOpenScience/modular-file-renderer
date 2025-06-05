@@ -150,8 +150,9 @@ class OsfProvider(provider.BaseProvider):
         self.metrics.add('download.saw_redirect', False)
         if response.status in (302, 301):
             await response.release()
-            response = await aiohttp.request('GET', response.headers['location'])
-            self.metrics.add('download.saw_redirect', True)
+            async with aiohttp.request('GET', self.url) as response:
+                self.metrics.add('download.saw_redirect', True)
+                return streams.ResponseStreamReader(response)
 
         return streams.ResponseStreamReader(response)
 
@@ -205,4 +206,6 @@ class OsfProvider(provider.BaseProvider):
         if self.authorization:
             kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
 
-        return await aiohttp.request(method, url, *args, **kwargs)
+        async with aiohttp.request(method, url, *args, **kwargs) as response:
+            return response
+

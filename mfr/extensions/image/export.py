@@ -1,5 +1,4 @@
 import os
-import imghdr
 import warnings
 
 from PIL import Image
@@ -72,7 +71,14 @@ class ImageExporter(extension.BaseExporter):
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid image.'.format(image_type),
                 export_format=image_type,
-                detected_format=imghdr.what(self.source_file_path),
+                detected_format= self.detect_image_format(),
                 original_exception=err,
                 code=400,
             )
+
+    def detect_image_format(self):
+        try:
+            with Image.open(self.source_file_path) as img:
+                return img.format.lower()
+        except Exception:
+            return None

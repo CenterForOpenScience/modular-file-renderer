@@ -26,8 +26,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -37,10 +37,10 @@ def renderer(metadata, file_path, url, assets_url, export_url):
 
 class TestVideoRenderer:
 
-    def test_render_video(self, renderer, url):
+    def test_render_video(self, renderer, url, metadata):
         body = renderer.render()
         assert '<video controls' in body
-        assert f'src="{metadata().download_url}"' in body
+        assert f'src="{metadata.download_url}"' in body
         assert '<style>body{margin:0;padding:0;}</style>' in ''.join(body.split())
 
     def test_render_video_file_required(self, renderer):

@@ -39,8 +39,8 @@ def renderer(metadata, test_file_path, url, assets_url, export_url):
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 

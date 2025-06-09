@@ -62,7 +62,7 @@ def data_from_dataframe(dataframe):
     data = []
     for _, frame_row in dataframe.iterrows():
         data_row = {}
-        for name, value in frame_row.iteritems():
+        for name, value in frame_row.items():
             try:
                 data_row[name] = numpy.asscalar(value)
             except AttributeError:

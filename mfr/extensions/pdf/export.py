@@ -17,7 +17,7 @@ class PdfExporter(extension.BaseExporter):
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
-        self.metrics.add('pil_version', Image.VERSION)
+        self.metrics.add('pil_version', Image.__version__)
 
     def tiff_to_pdf(self, tiff_img, max_size):
         """ Turn a tiff into a pdf to support multipage tiffs"""

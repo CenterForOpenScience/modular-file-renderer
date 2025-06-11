@@ -3,30 +3,24 @@ import os
 from invoke import task
 
 WHEELHOUSE_PATH = os.environ.get('WHEELHOUSE')
-CONSTRAINTS_FILE = 'constraints.txt'
 
 
 @task
-def wheelhouse(ctx, develop=False):
-    req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = f'pip wheel --find-links={WHEELHOUSE_PATH} -r {req_file} --wheel-dir={WHEELHOUSE_PATH} -c {CONSTRAINTS_FILE}'
-    ctx.run(cmd, pty=True)
+def wheelhouse(ctx, develop=False, pty=True):
+    extras = '--with dev' if develop else ''
+    cmd = f'poetry export --format=requirements.txt {extras} | pip wheel --find-links={WHEELHOUSE_PATH} -r /dev/stdin --wheel-dir={WHEELHOUSE_PATH}'
+    ctx.run(cmd, pty=pty)
 
 
 @task
-def install(ctx, develop=False):
-    ctx.run('python setup.py develop')
-    req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = f'pip install --upgrade -r {req_file} -c {CONSTRAINTS_FILE}'
-
-    if WHEELHOUSE_PATH:
-        cmd += f' --no-index --find-links={WHEELHOUSE_PATH}'
-    ctx.run(cmd, pty=True)
+def install(ctx, develop=False, pty=True):
+    extras = '--with dev' if develop else ''
+    ctx.run(f'poetry install {extras}', pty=pty)
 
 
 @task
 def flake(ctx):
-    ctx.run('flake8 .', pty=True)
+    ctx.run('poetry run flake8 .', pty=True)
 
 
 @task
@@ -50,7 +44,7 @@ def test(ctx, verbose=False, nocov=False, extension=None, path=None):
         path = ''
     coverage = ' --cov-report term-missing --cov mfr' if not nocov else ''
     verbose = '-v' if verbose else ''
-    cmd = f'py.test{coverage} tests{path} {verbose}'
+    cmd = f'poetry run pytest{coverage} tests{path} {verbose}'
     ctx.run(cmd, pty=True)
 
 

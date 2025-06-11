@@ -43,13 +43,14 @@ RUN usermod -d /home www-data \
 RUN mkdir -p /code
 WORKDIR /code
 
-RUN pip install -U pip==24.0
-RUN pip install setuptools==69.5.1
-RUN pip install unoconv==0.9.0
+COPY pyproject.toml poetry.lock* /code/
 
-COPY ./requirements.txt /code/
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_CREATE=0 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1
 
-RUN pip install --no-cache-dir -r ./requirements.txt
+RUN pip install poetry==2.1.2 setuptools==80.1.0 \
+    && poetry install --no-root --without=docs
 
 # Copy the rest of the code over
 COPY ./ /code/
@@ -57,7 +58,7 @@ COPY ./ /code/
 ARG GIT_COMMIT=
 ENV GIT_COMMIT=${GIT_COMMIT}
 
-RUN python setup.py develop
+RUN poetry run python setup.py develop
 
 EXPOSE 7778
 

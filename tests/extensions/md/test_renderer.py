@@ -59,7 +59,7 @@ class TestMdRenderer:
 by a blank line.</p>
 <p>Leave 2 spaces at the end of a line to do a<br />
 line break</p>
-<p>Text attributes <em>italic</em>, <strong>bold</strong>,
+<p>Text attributes <em>italic</em>, <strong>bold</strong>, 
 <code>monospace</code>.</p>
 <p>A <a href="http://example.com">link</a>.
 [28]</p>

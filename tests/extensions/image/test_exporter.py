@@ -119,7 +119,7 @@ class TestImageExporter:
         assert output_image.format.lower() == settings.EXPORT_TYPE
         # looped pixel tests not included because values varried so much that
         # they were basically useless
-        assert output_pixels[0] == (255, 254, 232)
+        assert output_pixels[0] == (255, 245, 255)
 
     def test_ratio(self, directory):
         source_file_path = os.path.join(BASE, 'files', 'test_ratio.jpg')

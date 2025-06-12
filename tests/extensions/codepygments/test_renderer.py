@@ -133,4 +133,4 @@ class TestCodePygmentsRenderer:
         )
         renderer = CodePygmentsRenderer(metadata, file_path, url, assets_url, export_url)
         body = renderer.render()
-        assert 'CREATIVE COMMONS' in body
+        assert 'CREATIVE<span class="w"> </span>COMMONS' in body

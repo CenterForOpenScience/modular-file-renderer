@@ -28,7 +28,7 @@ class DocxRenderer(extension.BaseRenderer):
         self.metrics.add('pydocx_version', pydocx.__version__)
 
     def render(self):
-        body = self._PyDocXHTMLExporter(self.file_path).parsed
+        body = self._PyDocXHTMLExporter(self.file_path).export()
         return self.TEMPLATE.render(base=self.assets_url, body=body)
 
     @property

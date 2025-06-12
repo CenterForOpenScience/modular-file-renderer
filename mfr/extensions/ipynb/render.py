@@ -35,9 +35,6 @@ class IpynbRenderer(extension.BaseRenderer):
             )
 
         exporter = HTMLExporter(config=Config({
-            'HTMLExporter': {
-                'template_file': 'basic',
-            },
             'CSSHtmlHeaderTransformer': {
                 'enabled': False,
             },

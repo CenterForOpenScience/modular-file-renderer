@@ -2767,17 +2767,6 @@ files = [
 ]
 
 [[package]]
-name = "pydocx"
-version = "0.9.10"
-description = "docx (OOXML) to html converter"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "PyDocX-0.9.10.tar.gz", hash = "sha256:07bd9bce7834f8a5e0b00130f29b54bbdda22d625711a591421913bdfa8470e3"},
-]
-
-[[package]]
 name = "pyflakes"
 version = "3.2.0"
 description = "passive checker of Python programs"
@@ -4463,4 +4452,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "d3ad2dab1024b93cadfd77f375021327db324b89509c6a30edf4b76e4732b97c"
+content-hash = "a1bb6d0d549dccb62b77695b28a912d67e8a45ed48f0ff83d46cc5289d67b54a"

@@ -20,7 +20,6 @@ Pygments==2.19.1
 
 # Docx
 #git+https://github.com/jsocol/bleach.git
-pydocx==0.9.10
 
 # Image
 olefile==0.47

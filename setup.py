@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 
 def parse_requirements(requirements_txt):
@@ -16,15 +16,13 @@ with open('mfr/version.py') as fp:
 setup(
     name='mfr',
     version=version['__version__'],
-    namespace_packages=['mfr', 'mfr.extensions', 'mfr.providers'],
     description='Modular File Renderer',
     author='Center for Open Science',
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/modular-file-renderer',
-    packages=find_packages(exclude=("tests*", )),
+    packages=find_namespace_packages(include=['mfr.*']),
     package_dir={'mfr': 'mfr'},
     include_package_data=True,
-    # install_requires=requirements,
     zip_safe=False,
     classifiers=[
         'Natural Language :: English',

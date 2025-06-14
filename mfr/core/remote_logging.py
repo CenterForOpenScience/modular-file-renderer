@@ -113,7 +113,7 @@ async def _send_to_keen(payload, collection, project_id, write_key, action, doma
                                                    settings.KEEN_API_VERSION,
                                                    project_id, collection)
 
-    async with await aiohttp.request('POST', url, headers=headers, data=serialized) as resp:
+    async with aiohttp.request('POST', url, headers=headers, data=serialized) as resp:
         if resp.status == 201:
             logger.info(f'Successfully logged {action} to {collection} collection in {domain} Keen')
         else:

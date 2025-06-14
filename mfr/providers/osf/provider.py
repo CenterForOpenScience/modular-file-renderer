@@ -7,7 +7,6 @@ import mimetypes
 
 import furl
 import aiohttp
-from aiohttp.errors import ContentEncodingError
 
 from waterbutler.core import streams
 
@@ -92,7 +91,7 @@ class OsfProvider(provider.BaseProvider):
 
             try:
                 metadata = {'data': json.loads(response_headers['x-waterbutler-metadata'])['attributes']}
-            except ContentEncodingError:
+            except Exception:
                 pass  # hack: aiohttp tries to unzip empty body when Content-Encoding is set
 
         self.metrics.add('metadata.raw', metadata)

@@ -29,15 +29,15 @@ class HttpProvider(provider.BaseProvider):
         return provider.ProviderMetadata(name, ext, content_type, unique_key, self.url)
 
     async def download(self):
-        response = await aiohttp.request('GET', self.url)
-        if response.status >= 400:
-            err_resp = await response.read()
-            logger.error('Unable to download file: ({}) {}'.format(response.status, err_resp.decode('utf-8')))
-            raise exceptions.DownloadError(
-                'Unable to download the requested file, please try again later.',
-                download_url=self.url,
-                response=await response.text(),
-                code=response.status,
-                provider='http',
-            )
-        return streams.ResponseStreamReader(response)
+        async with aiohttp.request('GET', self.url) as response:
+            if response.status >= 400:
+                err_resp = await response.read()
+                logger.error('Unable to download file: ({}) {}'.format(response.status, err_resp.decode('utf-8')))
+                raise exceptions.DownloadError(
+                    'Unable to download the requested file, please try again later.',
+                    download_url=self.url,
+                    response=await response.text(),
+                    code=response.status,
+                    provider='http',
+                )
+            return streams.ResponseStreamReader(response)

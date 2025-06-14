@@ -1,13 +1,6 @@
 from setuptools import setup, find_namespace_packages
 
 
-def parse_requirements(requirements_txt):
-    with open(requirements_txt) as f:
-        return [l.strip('\n') for l in f if l.strip('\n') and not l.startswith('#')]
-
-
-requirements = parse_requirements('requirements.txt')
-
 # Taken from option 3 of https://packaging.python.org/guides/single-sourcing-package-version/
 version = {}
 with open('mfr/version.py') as fp:
@@ -28,7 +21,7 @@ setup(
         'Natural Language :: English',
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.13',
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: Apache Software License',
     ],

@@ -58,8 +58,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -133,4 +133,4 @@ class TestCodePygmentsRenderer:
         )
         renderer = CodePygmentsRenderer(metadata, file_path, url, assets_url, export_url)
         body = renderer.render()
-        assert 'CREATIVE COMMONS' in body
+        assert 'CREATIVE<span class="w"> </span>COMMONS' in body

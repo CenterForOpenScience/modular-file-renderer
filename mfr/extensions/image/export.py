@@ -1,5 +1,4 @@
 import os
-import imghdr
 import warnings
 
 from PIL import Image
@@ -14,7 +13,7 @@ class ImageExporter(extension.BaseExporter):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('pil_version', Image.VERSION)
+        self.metrics.add('pil_version', Image.__version__)
 
     def export(self):
         parts = self.format.split('.')
@@ -45,7 +44,7 @@ class ImageExporter(extension.BaseExporter):
                 self.metrics.add('ratio', ratio)
                 if ratio < 1:
                     size_tuple = (round(image.size[0] * ratio), round(image.size[1] * ratio))
-                    image = image.resize(size_tuple, Image.ANTIALIAS)
+                    image = image.resize(size_tuple, Image.Resampling.LANCZOS)
 
             # Mode 'P' is for paletted images. They must be converted to RGB before exporting to
             # jpeg, otherwise Pillow will throw an error.  This is a temporary workaround, as the
@@ -72,7 +71,14 @@ class ImageExporter(extension.BaseExporter):
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid image.'.format(image_type),
                 export_format=image_type,
-                detected_format=imghdr.what(self.source_file_path),
+                detected_format= self.detect_image_format(),
                 original_exception=err,
                 code=400,
             )
+
+    def detect_image_format(self):
+        try:
+            with Image.open(self.source_file_path) as img:
+                return img.format.lower()
+        except Exception:
+            return None

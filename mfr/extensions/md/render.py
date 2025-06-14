@@ -24,7 +24,7 @@ class MdRenderer(extension.BaseRenderer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('markdown_version', markdown.version)
+        self.metrics.add('markdown_version', markdown.__version__)
 
     def render(self):
         """Render a markdown file to html."""

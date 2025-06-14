@@ -53,8 +53,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -128,7 +128,7 @@ class TestCodeJASPRenderer:
         body = renderer.render()
 
         assert '<script src="link-to-something-malicious.js">' not in body
-  
+
 
     def test_render_JASP_file_required(self, renderer):
         assert renderer.file_required is True

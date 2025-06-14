@@ -59,8 +59,8 @@ def assets_url():
     return 'http://mfr.osf.io/assets'
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 @pytest.fixture
 def extension():

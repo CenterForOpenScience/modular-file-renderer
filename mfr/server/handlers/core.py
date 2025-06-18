@@ -166,7 +166,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         # TODO: verify that `exc_info` arg is compatible with tornado 6.4.2 sig
         etype, exc, _ = exc_info
         scope = sentry_sdk.get_current_scope()
-        scope.set_tag('class', etype.__name_)
+        scope.set_tag('class', etype.__name__)
         scope.set_tag('status_code', status_code)
         sentry_sdk.capture_exception(exc)  # Log all non 2XX codes to sentry
 

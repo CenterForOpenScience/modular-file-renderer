@@ -81,7 +81,7 @@ def xlsx_xlrd(fp):
 
             header_row = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
             fields = [
-                str(val) if val is not None else f'Unnamed: {i+1}'
+                str(val) if val is not None else f'Unnamed: {i + 1}'
                 for i, val in enumerate(header_row)
             ]
 

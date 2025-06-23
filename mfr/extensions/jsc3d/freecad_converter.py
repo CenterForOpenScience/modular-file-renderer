@@ -11,7 +11,7 @@ in_fn, out_fn = sys.argv[2], sys.argv[3]
 
 try:
     Part.open(in_fn)
-except:
+except Exception:
     # Todo: maybe it is needed to use logger and specific message for exception logging
     sys.exit(1)
 

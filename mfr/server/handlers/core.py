@@ -95,7 +95,6 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         self.extension_metrics = MetricsRecord('extension')
         self.url = ''
 
-
     @abc.abstractmethod
     def NAME(self):
         # Todo: not see Name implementation in child classes
@@ -176,10 +175,10 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 for level in reversed(exc.attr_stack):
                     if current:
                         """
-                             TODO: dictionary 'current' is reassigned in condition, Qodana code inspector may be 
-                             complaining because some data previously saved in the dictionary may be lost
-                             (but maybe it is ok in terms of business logic), 
-                             As I understand the current accumulate previous current versions so it may be ok
+                            TODO: dictionary 'current' is reassigned in condition, Qodana code inspector may be
+                            complaining because some data previously saved in the dictionary may be lost
+                            (but maybe it is ok in terms of business logic),
+                            As I understand the current accumulate previous current versions so it may be ok
                         """
                         current = {f'{level[0]}_{child_type}': current}
                         current['child_type'] = child_type
@@ -220,8 +219,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         if isinstance(value, tornado.web.HTTPError):
             if value.log_message:
                 log_message_format = "%d %s: " + value.log_message
-                args = ([value.status_code, self._request_summary()] +
-                        list(value.args))
+                args = ([value.status_code, self._request_summary()] + list(value.args))
                 tornado.web.gen_log.warning(log_message_format, *args)
         else:
             tornado.web.app_log.error("[User-Agent: %s] Uncaught exception %s\n",

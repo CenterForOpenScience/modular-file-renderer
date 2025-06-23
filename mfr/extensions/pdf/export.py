@@ -1,4 +1,3 @@
-import os
 import logging
 from http import HTTPStatus
 
@@ -93,7 +92,7 @@ class PdfExporter(extension.BaseExporter):
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid tiff image.'.format(export_type),
                 export_format=export_type,
-                detected_format= self.detect_image_format(),
+                detected_format=self.detect_image_format(),
                 original_exception=err,
                 code=HTTPStatus.BAD_REQUEST,
             )
@@ -102,5 +101,5 @@ class PdfExporter(extension.BaseExporter):
         try:
             with Image.open(self.source_file_path) as img:
                 return img.format.lower()
-        except Exception as e:
+        except Exception:
             return None

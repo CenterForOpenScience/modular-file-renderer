@@ -46,7 +46,7 @@ class ExtensionError(PluginError):
 
     __TYPE = 'extension'
 
-    def __init__(self, message, *args, extension: str='', **kwargs):
+    def __init__(self, message, *args, extension: str = '', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.extension = extension
         self.attr_stack.append([self.__TYPE, {'extension': self.extension}])
@@ -59,7 +59,7 @@ class RendererError(ExtensionError):
 
     __TYPE = 'renderer'
 
-    def __init__(self, message, *args, renderer_class: str='', **kwargs):
+    def __init__(self, message, *args, renderer_class: str = '', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.renderer_class = renderer_class
         self.attr_stack.append([self.__TYPE, {'class': self.renderer_class}])
@@ -72,7 +72,7 @@ class ExporterError(ExtensionError):
 
     __TYPE = 'exporter'
 
-    def __init__(self, message, *args, exporter_class: str='', **kwargs):
+    def __init__(self, message, *args, exporter_class: str = '', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.exporter_class = exporter_class
         self.attr_stack.append([self.__TYPE, {'exporter_class': self.exporter_class}])
@@ -85,8 +85,8 @@ class SubprocessError(ExporterError):
 
     __TYPE = 'subprocess'
 
-    def __init__(self, message, *args, code: int=500, process: str='', cmd: str='',
-                 returncode: int=None, path: str='', **kwargs):
+    def __init__(self, message, *args, code: int = 500, process: str = '', cmd: str = '',
+                 returncode: int = None, path: str = '', **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
         self.process = process
         self.cmd = cmd
@@ -107,7 +107,7 @@ class ProviderError(PluginError):
 
     __TYPE = 'provider'
 
-    def __init__(self, message, *args, provider: str='', **kwargs):
+    def __init__(self, message, *args, provider: str = '', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.provider = provider
         self.attr_stack.append([self.__TYPE, {'provider': self.provider}])
@@ -120,7 +120,7 @@ class DownloadError(ProviderError):
 
     __TYPE = 'download'
 
-    def __init__(self, message, *args, download_url: str='', response: str='', **kwargs):
+    def __init__(self, message, *args, download_url: str = '', response: str = '', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.download_url = download_url
         self.response = response
@@ -137,7 +137,7 @@ class MetadataError(ProviderError):
 
     __TYPE = 'metadata'
 
-    def __init__(self, message, *args, metadata_url: str='', response: str='', **kwargs):
+    def __init__(self, message, *args, metadata_url: str = '', response: str = '', **kwargs):
         super().__init__(message, *args, **kwargs)
         self.metadata_url = metadata_url
         self.response = response
@@ -153,8 +153,8 @@ class TooBigToRenderError(ProviderError):
 
     __TYPE = 'too_big_to_render'
 
-    def __init__(self, message, *args, requested_size: int=None, maximum_size: int=None,
-                 code: int=400, **kwargs):
+    def __init__(self, message, *args, requested_size: int = None, maximum_size: int = None,
+                 code: int = 400, **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
         self.requested_size = requested_size
         self.maximum_size = maximum_size
@@ -168,8 +168,8 @@ class DriverManagerError(PluginError):
 
     __TYPE = 'drivermanager'
 
-    def __init__(self, message, *args, namespace: str='', name: str='', invoke_on_load: bool=None,
-                 invoke_args: dict=None, **kwargs):
+    def __init__(self, message, *args, namespace: str = '', name: str = '', invoke_on_load: bool = None,
+                 invoke_args: dict = None, **kwargs):
         super().__init__(message, *args, **kwargs)
 
         self.namespace = namespace
@@ -189,7 +189,7 @@ class MakeProviderError(DriverManagerError):
     """Thrown when MFR can't find an applicable provider class.  This indicates programmer error,
     so ``code`` defaults to ``500``."""
 
-    def __init__(self, message, *args, code: int=500, **kwargs):
+    def __init__(self, message, *args, code: int = 500, **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
 
 
@@ -201,7 +201,7 @@ class UnsupportedExtensionError(DriverManagerError):
 
     __TYPE = 'unsupported_extension'
 
-    def __init__(self, *args, code: int=400, handler_type: str='', **kwargs):
+    def __init__(self, *args, code: int = 400, handler_type: str = '', **kwargs):
         super().__init__(*args, code=code, **kwargs)
 
         self.handler_type = handler_type

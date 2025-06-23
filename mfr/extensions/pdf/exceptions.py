@@ -8,8 +8,8 @@ class PillowImageError(ExporterError):
 
     __TYPE = 'pdf_pillow'
 
-    def __init__(self, message, *args, export_format: str='', detected_format: str='',
-                 original_exception: Exception=None, **kwargs):
+    def __init__(self, message, *args, export_format: str = '', detected_format: str = '',
+                 original_exception: Exception = None, **kwargs):
         super().__init__(message, *args, exporter_class='image', **kwargs)
 
         self.export_format = export_format

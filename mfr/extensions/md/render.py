@@ -9,10 +9,9 @@ from mfr.core import extension
 
 
 class EscapeHtml(Extension):
-    def extendMarkdown(self, md, md_globals):
-        # Todo: do not see extendMarkdown explicit call and what is passed as the method args, maybe it is ok
-        del md.preprocessors['html_block']
-        del md.inlinePatterns['html']
+    def extendMarkdown(self, md):
+        md.preprocessors.deregister('html_block')
+        md.inlinePatterns.deregister('html')
 
 
 class MdRenderer(extension.BaseRenderer):

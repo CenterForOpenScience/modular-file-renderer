@@ -64,7 +64,7 @@ def data_from_dataframe(dataframe):
         data_row = {}
         for name, value in frame_row.items():
             try:
-                data_row[name] = numpy.asscalar(value)
+                data_row[name] = value.item()
             except AttributeError:
                 data_row[name] = value
         data.append(data_row)

@@ -208,4 +208,3 @@ class OsfProvider(provider.BaseProvider):
 
         async with aiohttp.request(method, url, *args, **kwargs) as response:
             return response
-

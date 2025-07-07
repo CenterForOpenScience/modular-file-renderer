@@ -172,7 +172,7 @@ class TestTabularMatRenderer:
         body = renderer.render()
         assert BODY in body
 
-    def test_render_tabular_mat73_invalid(self, invalid_mat73_file_path, assets_url, export_url):
+    def test_render_tabular_mat73_invalid(self, invalid_mat73_file_path, url, assets_url, export_url):
         metadata = ProviderMetadata('test', '.mat', 'text/plain', '1234',
                                     'http://wb.osf.io/file/test.mat?token=1234')
         renderer = TabularRenderer(metadata, invalid_mat73_file_path, url, assets_url, export_url)

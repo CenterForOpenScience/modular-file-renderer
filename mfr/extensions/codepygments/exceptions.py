@@ -13,7 +13,7 @@ class FileTooLargeError(CodePygmentsRendererError):
 
     __TYPE = 'codepygments_file_too_large'
 
-    def __init__(self, message, *args, code: int=400, file_size: int=None, max_size: int=None,
+    def __init__(self, message, *args, code: int = 400, file_size: int = None, max_size: int = None,
                  **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
 
@@ -33,8 +33,8 @@ class FileDecodingError(CodePygmentsRendererError):
 
     __TYPE = 'codepygments_file_decoding'
 
-    def __init__(self, message, *args, code: int=400, original_exception: Exception=None,
-                 category: str='', **kwargs):
+    def __init__(self, message, *args, code: int = 400, original_exception: Exception = None,
+                 category: str = '', **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
 
         self.category = category

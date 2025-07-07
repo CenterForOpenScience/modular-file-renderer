@@ -1,4 +1,4 @@
-from setuptools import setup, find_namespace_packages
+from setuptools import setup, find_packages
 
 
 # Taken from option 3 of https://packaging.python.org/guides/single-sourcing-package-version/
@@ -13,17 +13,17 @@ setup(
     author='Center for Open Science',
     author_email='contact@cos.io',
     url='https://github.com/CenterForOpenScience/modular-file-renderer',
-    packages=find_namespace_packages(include=['mfr.*']),
+    packages=find_packages(exclude=("tests*", )),
     package_dir={'mfr': 'mfr'},
     include_package_data=True,
     zip_safe=False,
+    license='Apache-2.0',
     classifiers=[
         'Natural Language :: English',
         'Intended Audience :: Developers',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.13',
         'Development Status :: 5 - Production/Stable',
-        'License :: OSI Approved :: Apache Software License',
     ],
     provides=[
         'mfr.extensions',

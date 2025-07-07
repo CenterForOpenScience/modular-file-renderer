@@ -58,7 +58,8 @@ COPY ./ /code/
 ARG GIT_COMMIT=
 ENV GIT_COMMIT=${GIT_COMMIT}
 
-RUN poetry run python setup.py develop
+RUN python3 setup.py egg_info
+RUN python3 -m pip install .
 
 EXPOSE 7778
 

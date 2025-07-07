@@ -1,5 +1,4 @@
 import logging
-from typing import Tuple
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from mfr.extensions import settings
@@ -29,7 +28,7 @@ def munge_url_for_localdev(url: str) -> tuple:
     return url_obj
 
 
-def escape_url_for_template(url: str, logs: bool=True) -> str:
+def escape_url_for_template(url: str, logs: bool = True) -> str:
     """Escape (URL Encode) single and double quote(s) for the given URL.
 
     Download and export URLs may end up not properly encoded right before they are about to be sent

@@ -84,10 +84,7 @@ async def log_analytics(request, metrics, is_error=False):
                             domain='private')
 
     if (
-        keen_payload['handler']['type'] != 'render' or
-        file_metadata is None or
-        is_error or
-        not settings.KEEN_PUBLIC_LOG_VIEWS
+        keen_payload['handler']['type'] != 'render' or file_metadata is None or is_error or not settings.KEEN_PUBLIC_LOG_VIEWS
     ):
         return
 

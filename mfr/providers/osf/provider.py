@@ -206,5 +206,9 @@ class OsfProvider(provider.BaseProvider):
         if self.authorization:
             kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
 
+        if settings.OSF_DOMAIN:
+            host = furl.furl(url).host
+            url = url.replace(host, settings.OSF_DOMAIN)
+
         async with aiohttp.request(method, url, *args, **kwargs) as response:
             return response

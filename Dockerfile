@@ -7,6 +7,7 @@ RUN usermod -d /home www-data \
     && chown www-data:www-data /home \
     # -slim images strip man dirs, but java won't install unless this dir exists.
     && mkdir -p /usr/share/man/man1 \
+    && echo "deb http://deb.debian.org/debian bookworm-backports main" > /etc/apt/sources.list.d/backports.list \
     && apt-get update \
     # HACK: work around bug in install java (dep of libreoffice)
     && apt-get install -y ca-certificates-java \
@@ -32,10 +33,15 @@ RUN usermod -d /home www-data \
         freecad \
         # pspp dependencies
         pspp \
-        # unoconv dependencies
-        libreoffice \
         # grab gosu for easy step-down from root
         gosu \
+        # unoconv dependencies
+    && apt-get -t bookworm-backports install -y \
+        libreoffice-core \
+        libreoffice-writer \
+        libreoffice-calc \
+        libreoffice-impress \
+        libreoffice-java-common \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*

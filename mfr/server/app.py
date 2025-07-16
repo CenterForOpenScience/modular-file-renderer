@@ -71,7 +71,7 @@ def make_app(debug):
     app = tornado.web.Application(
         [
             (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': server_settings.STATIC_PATH}),
-            (r'/assets/(.*?)/(.*\..*)', ExtensionsStaticFileHandler),
+            (r'/assets/(?P<module>[^/]+)/(?P<path>.*)', ExtensionsStaticFileHandler),
             (r'/export', ExportHandler),
             (r'/exporters', ExportersHandler),
             (r'/render', RenderHandler),

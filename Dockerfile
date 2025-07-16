@@ -1,6 +1,6 @@
 FROM python:3.13-slim
 
-# ensure unoconv can locate the uno library
+# ensure uno libs are on PYTHONPATH
 ENV PYTHONPATH=/usr/lib/python3/dist-packages
 
 RUN usermod -d /home www-data \
@@ -32,10 +32,12 @@ RUN usermod -d /home www-data \
         freecad \
         # pspp dependencies
         pspp \
-        # unoconv dependencies
+        # libreoffice from Debian
         libreoffice \
         # grab gosu for easy step-down from root
         gosu \
+    # install unoserver for headless UNO
+    && pip install --no-cache-dir unoserver \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
@@ -61,6 +63,6 @@ ENV GIT_COMMIT=${GIT_COMMIT}
 RUN python3 setup.py egg_info
 RUN python3 -m pip install .
 
-EXPOSE 7778
+EXPOSE 7778 2002
 
-CMD ["gosu", "www-data", "invoke", "server"]
+CMD ["bash", "-lc", "unoserver --listener --server=0.0.0.0 --port=2002 & exec gosu www-data invoke server"]

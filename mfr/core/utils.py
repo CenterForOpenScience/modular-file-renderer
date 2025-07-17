@@ -42,7 +42,7 @@ def fix_name(name: str):
         return 'php'
     elif name == 'css.in':
         return 'css'
-    elif name =='js.in':
+    elif name == 'js.in':
         return 'js'
     elif name == 'xul.in':
         return 'xul'

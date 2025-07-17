@@ -36,9 +36,9 @@ def make_provider(name, request, url, action=None):
 
 def fix_name(name: str):
     name = name.removeprefix('.').replace('+', 'p')
-    if name.startswith('lasso'):
+    if name == 'lasso[89]':
         return 'lasso'
-    elif name.startswith('php'):
+    elif name == 'php[345]':
         return 'php'
     elif name == 'css.in':
         return 'css'

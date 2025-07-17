@@ -34,6 +34,19 @@ def make_provider(name, request, url, action=None):
             }
         )
 
+def fix_name(name: str):
+    name = name.removeprefix('.').replace('+', 'p')
+    if name.startswith('lasso'):
+        return 'lasso'
+    elif name.startswith('php'):
+        return 'php'
+    elif name == 'css.in':
+        return 'css'
+    elif name =='js.in':
+        return 'js'
+    elif name == 'xul.in':
+        return 'xul'
+    return name
 
 def make_exporter(name, source_file_path, output_file_path, file_format, metadata):
     """Returns an instance of :class:`mfr.core.extension.BaseExporter`
@@ -46,7 +59,8 @@ def make_exporter(name, source_file_path, output_file_path, file_format, metadat
 
     :rtype: :class:`mfr.core.extension.BaseExporter`
     """
-    normalized_name = (name and name.lower()) or 'none'
+    normalized_name = fix_name(name and name.lower()) or 'none'
+
     try:
         return driver.DriverManager(
             namespace='mfr.exporters',
@@ -80,7 +94,7 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
 
     :rtype: :class:`mfr.core.extension.BaseRenderer`
     """
-    normalized_name = (name and name.lower()) or 'none'
+    normalized_name = fix_name(name and name.lower()) or 'none'
     try:
         return driver.DriverManager(
             namespace='mfr.renderers',

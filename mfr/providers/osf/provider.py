@@ -7,6 +7,7 @@ import mimetypes
 
 import furl
 import aiohttp
+from aiohttp import ClientSession
 
 from waterbutler.core import streams
 
@@ -206,5 +207,4 @@ class OsfProvider(provider.BaseProvider):
         if self.authorization:
             kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
 
-        async with aiohttp.request(method, url, *args, **kwargs) as response:
-            return response
+        return await ClientSession()._request(method, url, *args, **kwargs)

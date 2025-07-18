@@ -68,4 +68,3 @@ def celery(ctx, loglevel='INFO', hostname='%h'):
     if hostname:
         command.extend(['--hostname', hostname])
     app.worker_main(command)
-

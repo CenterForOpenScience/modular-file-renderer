@@ -58,3 +58,14 @@ def server(ctx):
 
     from mfr.server.app import serve
     serve()
+
+@task
+def celery(ctx, loglevel='INFO', hostname='%h'):
+    from mfr.tasks.app import app
+    command = ['worker']
+    if loglevel:
+        command.extend(['--loglevel', loglevel])
+    if hostname:
+        command.extend(['--hostname', hostname])
+    app.worker_main(command)
+

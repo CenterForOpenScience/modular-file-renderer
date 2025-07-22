@@ -4129,7 +4129,7 @@ yarl = "1.17.0"
 type = "git"
 url = "https://github.com/CenterForOpenScience/waterbutler.git"
 reference = "feature/buff-worms"
-resolved_reference = "85e5aebe9c72768820a0367101db5cf9fc361dfd"
+resolved_reference = "75d049732ff161a3e3979b7aac67ce922e56d47f"
 
 [[package]]
 name = "wcwidth"
@@ -4452,4 +4452,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "a1bb6d0d549dccb62b77695b28a912d67e8a45ed48f0ff83d46cc5289d67b54a"
+content-hash = "c72ab4a656dbde2aad8f98b0aa39d0ebb04b8b4f097c3060bbac98ae670c71dc"

@@ -38,7 +38,7 @@ def renderer(metadata, file_path, url, assets_url, export_url):
 class TestVideoRenderer:
 
     def test_render_video(self, renderer, url, metadata):
-        body = renderer.render()
+        body = renderer._render()
         assert '<video controls' in body
         assert f'src="{metadata.download_url}"' in body
         assert '<style>body{margin:0;padding:0;}</style>' in ''.join(body.split())

@@ -13,7 +13,7 @@ class AudioRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    def render(self):
+    def _render(self):
         safe_url = escape_url_for_template(self.url)
         return self.TEMPLATE.render(base=self.assets_url, url=safe_url)
 

@@ -22,7 +22,7 @@ class JamoviRenderer(extension.BaseRenderer):
     MESSAGE_FILE_CORRUPT = 'This jamovi file is corrupt and cannot be viewed.'
     MESSAGE_NO_PREVIEW = 'This jamovi file does not support previews.'
 
-    def render(self):
+    def _render(self):
         try:
             with ZipFile(self.file_path) as zip_file:
                 self._check_file(zip_file)

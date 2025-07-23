@@ -22,7 +22,7 @@ class IpynbRenderer(extension.BaseRenderer):
         self.metrics.add('nbformat_version', nbformat.__version__)
         self.metrics.add('nbconvert_version', nbconvert.__version__)
 
-    def render(self):
+    def _render(self):
         try:
             with open(self.file_path) as file_pointer:
                 notebook = nbformat.reads(file_pointer.read(), as_version=4)

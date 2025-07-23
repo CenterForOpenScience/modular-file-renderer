@@ -30,7 +30,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         super().__init__(*args, **kwargs)
         self.metrics.add('pygments_version', pygments.__version__)
 
-    def render(self):
+    def _render(self):
         file_size = os.path.getsize(self.file_path)
         if file_size > settings.MAX_SIZE:
             raise exceptions.FileTooLargeError(

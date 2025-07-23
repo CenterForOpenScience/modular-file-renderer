@@ -15,7 +15,7 @@ class ZipRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    def render(self):
+    def _render(self):
         zip_file = zipfile.ZipFile(self.file_path, 'r')
 
         filelist = [{'name': markupsafe.escape(file.filename),

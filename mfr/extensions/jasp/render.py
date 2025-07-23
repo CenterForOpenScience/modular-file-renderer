@@ -21,7 +21,7 @@ class JASPRenderer(extension.BaseRenderer):
 
     MESSAGE_FILE_CORRUPT = 'This JASP file is corrupt and cannot be viewed.'
 
-    def render(self):
+    def _render(self):
         try:
             with ZipFile(self.file_path) as zip_file:
                 self._check_file(zip_file)

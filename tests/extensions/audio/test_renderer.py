@@ -38,7 +38,7 @@ def renderer(metadata, file_path, url, assets_url, export_url):
 class TestAudioRenderer:
 
     def test_render_audio(self, renderer, url):
-        body = renderer.render()
+        body = renderer._render()
         assert '<audio controls>' in body
         assert f'src="{url}"' in body
 

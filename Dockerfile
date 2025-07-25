@@ -1,7 +1,5 @@
 FROM python:3.13-slim
 
-# ensure unoconv can locate the uno library
-ENV PYTHONPATH=/usr/lib/python3/dist-packages
 
 RUN usermod -d /home www-data \
     && chown www-data:www-data /home \

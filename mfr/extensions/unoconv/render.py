@@ -1,12 +1,13 @@
 import os
-
 import furl
+import logging
 
 from mfr.core import utils
 from mfr.core import extension
 
 from mfr.extensions.unoconv import settings
 
+logger = logging.getLogger(__name__)
 
 class UnoconvRenderer(extension.BaseRenderer):
 
@@ -34,7 +35,6 @@ class UnoconvRenderer(extension.BaseRenderer):
             export_url
         )
 
-        # can't call file_required until renderer is built
         self.renderer_metrics.add('file_required', self.file_required)
         self.renderer_metrics.add('cache_result', self.cache_result)
 
@@ -63,7 +63,7 @@ class UnoconvRenderer(extension.BaseRenderer):
             try:
                 os.remove(self.export_file_path)
             except FileNotFoundError:
-                pass
+                logger.warning(f"[render] Export file not found for cleanup: {self.export_file_path}")
 
         return rendition
 

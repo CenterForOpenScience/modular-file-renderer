@@ -1,8 +1,9 @@
-import os
 import abc
 import uuid
 import asyncio
 import logging
+import pathlib
+
 from importlib.metadata import entry_points
 
 import tornado.web
@@ -296,30 +297,44 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
 
     def initialize(self):
         # Todo: the method args differ in comparison with StaticFileHandler
-        namespace = 'mfr.renderers'
-        module_path = 'mfr.extensions'
-
+        namespace = "mfr.renderers"
+        module_path_prefix = "mfr.extensions"
         self.modules = {}
 
         for ep in entry_points().select(group=namespace):
-            module_name = ep.value.split(":")[0]  # replacement for ep.module_name
-            module = module_name.replace(module_path + ".", "").split(".")[0]
-            dist_location = ep.dist.locate_file("")  # replacement for ep.dist.location
-            static_path = os.path.join(dist_location, 'mfr', 'extensions', module, 'static')
-            self.modules[module] = static_path
+            fq_mod = ep.value.split(":")[0]
+            module = fq_mod.replace(f"{module_path_prefix}.", "").split(".")[0]
+            root = pathlib.Path(ep.dist.locate_file(""))
+            static_dir = root / "mfr" / "extensions" / module / "static"
+            if static_dir.is_dir():
+                self.modules[module] = static_dir.as_posix()
+                logger.debug(f"{module}: {static_dir}")
 
-    async def get(self, module_name, path):
-        # Todo: the method args differ in comparison with StaticFileHandler, maybe it is ok
+        repo_root = pathlib.Path(__file__).resolve().parents[2]
+        ext_root = repo_root / "extensions"
+        if not ext_root.is_dir():
+            ext_root = repo_root.parent / "mfr" / "extensions"
+
+        for module_path in ext_root.iterdir():
+            static_dir = module_path / "static"
+            if static_dir.is_dir():
+                self.modules.setdefault(module_path.name, static_dir.as_posix())
+                logger.debug(f"{module_path.name}: {static_dir}")
+
+    async def get(self, module: str, path: str):
+        root = self.modules.get(module)
+        if not root:
+            self.set_status(404)
+            return
+
         try:
-            super().initialize(self.modules[module_name])
+            super().initialize(root)
             return await super().get(path)
         except Exception:
-            # Todo: maybe it is needed to use logger and specific message for exception logging
             self.set_status(404)
 
         try:
             super().initialize(settings.STATIC_PATH)
             return await super().get(path)
         except Exception:
-            # Todo: maybe it is needed to use logger and specific message for exception logging
             self.set_status(404)

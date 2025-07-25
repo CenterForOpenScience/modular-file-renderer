@@ -2,15 +2,12 @@ import os
 
 from mfr import settings
 
+config = settings.child('UNOSERVER_EXTENSION_CONFIG')
 
-config = settings.child('UNOCONV_EXTENSION_CONFIG')
+UNOSERVER_TIMEOUT = int(config.get('TIMEOUT', 60))
 
-UNOCONV_BIN = config.get('UNOCONV_BIN', '/usr/local/bin/unoconv')
-UNOCONV_TIMEOUT = int(config.get('UNOCONV_TIMEOUT', 60))
-
-ADDRESS = config.get('SERVER', os.environ.get('UNOCONV_PORT_2002_TCP_ADDR', '127.0.0.1'))
-PORT = config.get('PORT', os.environ.get('UNOCONV_PORT_2002_TCP_PORT', '2002'))
-
+UNOSERVER_HOST = config.get('HOST', os.environ.get('UNOSERVER_INTERFACE', '127.0.0.1'))
+UNOSERVER_PORT = config.get('PORT', os.environ.get('UNOSERVER_PORT', '2003'))
 DEFAULT_RENDER = {'renderer': '.pdf', 'format': 'pdf'}
 
 RENDER_MAP = config.get_object('RENDER_MAP', {

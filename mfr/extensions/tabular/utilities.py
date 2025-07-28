@@ -8,7 +8,7 @@ from subprocess import (check_call,
 from tempfile import NamedTemporaryFile
 
 from mfr.extensions.tabular import compat
-from mfr.core.exceptions import SubprocessError
+from mfr.core.exceptions import SubprocessError, TooBigToRenderError
 from mfr.extensions.tabular.settings import (PSPP_CONVERT_BIN,
                                              PSPP_CONVERT_TIMEOUT)
 
@@ -159,13 +159,12 @@ def parse_xlsx(wb, sheets):
 
 def verify_size(rows, cols, ext):
     if rows > MAX_SIZE or cols > MAX_SIZE:
-        raise TableTooBigError('Table is too large to render.', ext,
+        raise TooBigToRenderError('Table is too large to render.', ext,
                                nbr_cols=cols, nbr_rows=rows)
 
 
 def fix_headers(raw):
-    return [str(v) if v not in (None, '') else f'Unnamed: {i+1}'
-            for i, v in enumerate(raw)]
+    return [str(v) if v not in (None, '') else f'Unnamed: {i + 1}' for i, v in enumerate(raw)]
 
 
 def row_vals(row, datemode):

@@ -1,15 +1,14 @@
+import xlrd
+import zipfile
+
 from io import BytesIO
 from openpyxl import load_workbook
-import xlrd, zipfile
 from collections import OrderedDict
-from ..exceptions import TableTooBigError, MissingRequirementsError
 from ..utilities import (
-    header_population,
     to_bytes,
     parse_xls,
     parse_xlsx
 )
-from mfr.extensions.tabular.compat import range, basestring
 
 
 def xlsx_xlrd(fp):

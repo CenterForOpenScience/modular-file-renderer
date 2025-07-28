@@ -119,6 +119,6 @@ class ExportHandler(core.BaseHandler):
                 pass
 
     def _set_headers(self):
-        self.set_header('Content-Disposition', f'attachment;filename*=\'UTF-8\'{quote(self.metadata.name.replace('"', '\\"'))}.{self.format}')
+        self.set_header('Content-Disposition', f'attachment;filename*=UTF-8\'\'{quote(self.metadata.name.replace('"', '\\"'))}.{self.format}')
         if self.metadata.content_type:
             self.set_header('Content-Type', self.metadata.content_type)

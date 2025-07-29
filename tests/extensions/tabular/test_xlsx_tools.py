@@ -8,7 +8,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 class TestTabularPandaTools:
 
     def test_xlsx_xlrd(self):
-        with open(os.path.join(BASE, 'files', 'test.xlsx')) as fp:
+        with open(os.path.join(BASE, 'files', 'test.xlsx'), 'rb') as fp:
             sheets = xlrd_tools.xlsx_xlrd(fp)
 
         sheet = sheets.popitem()[1]

@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from urllib.parse import quote
 
 from waterbutler.core.exceptions import InvalidParameters, DownloadError
 import waterbutler.core.streams
@@ -118,6 +119,6 @@ class ExportHandler(core.BaseHandler):
                 pass
 
     def _set_headers(self):
-        self.set_header('Content-Disposition', 'attachment;filename="{}"'.format('{}.{}'.format(self.metadata.name.replace('"', '\\"'), self.format)))
+        self.set_header('Content-Disposition', f'attachment;filename*=UTF-8\'\'{quote(self.metadata.name.replace('"', '\\"'))}.{self.format}')
         if self.metadata.content_type:
             self.set_header('Content-Type', self.metadata.content_type)

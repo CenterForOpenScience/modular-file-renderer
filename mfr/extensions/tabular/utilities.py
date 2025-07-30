@@ -143,14 +143,21 @@ def parse_xls(wb, sheets):
 def parse_xlsx(wb, sheets):
     for name in wb.sheetnames:
         ws = wb[name]
-        verify_size(ws.max_row, ws.max_column, '.xlsx')
-        header_row = next(ws.iter_rows(max_row=1, values_only=True))
+        max_row = ws.max_row or 0
+        max_col = ws.max_column or 0
+        verify_size(max_row, max_col, '.xlsx')
+
+        if max_row == 0 or max_col == 0:
+            sheets[name] = ([], [])
+            continue
+
+        header_row = next(ws.iter_rows(max_row=1, values_only=True), [])
         fields = fix_headers(header_row)
         rows = [
             dict(zip(fields, row))
             for row in ws.iter_rows(min_row=2,
-                                    max_row=ws.max_row,
-                                    max_col=ws.max_column,
+                                    max_row=max_row,
+                                    max_col=max_col,
                                     values_only=True)
         ]
         sheets[name] = (header_population(fields), rows)

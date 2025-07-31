@@ -1,25 +1,24 @@
-import time
-import signal
 import asyncio
 import logging
+import signal
+import time
 from functools import partial
 
-import tornado.web
+import sentry_sdk
 import tornado.httpserver
 import tornado.platform.asyncio
-
-import sentry_sdk
-from sentry_sdk.integrations.tornado import TornadoIntegration
+import tornado.web
 from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.tornado import TornadoIntegration
 
 from mfr import settings
 from mfr.server import settings as server_settings
-from mfr.server.handlers.export import ExportHandler
-from mfr.server.handlers.render import RenderHandler
-from mfr.server.handlers.status import StatusHandler
-from mfr.server.handlers.exporters import ExportersHandler
-from mfr.server.handlers.renderers import RenderersHandler
 from mfr.server.handlers.core import ExtensionsStaticFileHandler
+from mfr.server.handlers.export import ExportHandler
+from mfr.server.handlers.exporters import ExportersHandler
+from mfr.server.handlers.render import RenderHandler
+from mfr.server.handlers.renderers import RenderersHandler
+from mfr.server.handlers.status import StatusHandler
 from mfr.version import __version__
 
 logger = logging.getLogger(__name__)

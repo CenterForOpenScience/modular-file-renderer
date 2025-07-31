@@ -63,6 +63,7 @@ ARG GIT_COMMIT=
 ENV GIT_COMMIT=${GIT_COMMIT}
 
 RUN poetry install --without=docs
+RUN pip install pre-commit
 
 EXPOSE 7778
 

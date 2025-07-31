@@ -4,11 +4,7 @@ import zipfile
 from io import BytesIO
 from openpyxl import load_workbook
 from collections import OrderedDict
-from ..utilities import (
-    to_bytes,
-    parse_xls,
-    parse_xlsx
-)
+from ..utilities import to_bytes, parse_xls, parse_xlsx
 
 
 def xlsx_xlrd(fp):

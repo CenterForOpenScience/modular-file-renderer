@@ -9,17 +9,16 @@ from distutils.version import LooseVersion
 
 from .html_processor import HTMLProcessor
 
-class JASPRenderer(extension.BaseRenderer):
 
+class JASPRenderer(extension.BaseRenderer):
     # Minimum data archive version supported
-    MINIMUM_VERSION = LooseVersion('1.0.2')
+    MINIMUM_VERSION = LooseVersion("1.0.2")
 
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
-    MESSAGE_FILE_CORRUPT = 'This JASP file is corrupt and cannot be viewed.'
+    MESSAGE_FILE_CORRUPT = "This JASP file is corrupt and cannot be viewed."
 
     def render(self):
         try:
@@ -29,9 +28,9 @@ class JASPRenderer(extension.BaseRenderer):
                 return self.TEMPLATE.render(base=self.assets_url, body=body)
         except BadZipFile as err:
             raise exceptions.JaspFileCorruptError(
-                f'{self.MESSAGE_FILE_CORRUPT} Failure to unzip. {str(err)}.',
+                f"{self.MESSAGE_FILE_CORRUPT} Failure to unzip. {str(err)}.",
                 extension=self.metadata.ext,
-                corruption_type='bad_zip',
+                corruption_type="bad_zip",
                 reason=str(err),
             )
 
@@ -46,14 +45,14 @@ class JASPRenderer(extension.BaseRenderer):
     def _render_html(self, zip_file, ext, *args, **kwargs):
         index = None
         try:
-            with zip_file.open('index.html') as index_data:
-                index = index_data.read().decode('utf-8')
+            with zip_file.open("index.html") as index_data:
+                index = index_data.read().decode("utf-8")
         except KeyError:
             raise exceptions.JaspFileCorruptError(
-                f'{self.MESSAGE_FILE_CORRUPT} Missing index.html.',
+                f"{self.MESSAGE_FILE_CORRUPT} Missing index.html.",
                 extension=self.metadata.ext,
-                corruption_type='key_error',
-                reason='zip missing ./index.html',
+                corruption_type="key_error",
+                reason="zip missing ./index.html",
             )
 
         processor = HTMLProcessor(zip_file)
@@ -70,21 +69,21 @@ class JASPRenderer(extension.BaseRenderer):
         try:
             try:
                 # new manifest location
-                with zip_file.open('manifest.json') as manifest_data:
-                    manifest, flavor = manifest_data.read().decode('utf-8'), 'json'
+                with zip_file.open("manifest.json") as manifest_data:
+                    manifest, flavor = manifest_data.read().decode("utf-8"), "json"
             except KeyError:
                 # old manifest location
-                with zip_file.open('META-INF/MANIFEST.MF') as manifest_data:
-                    manifest, flavor = manifest_data.read().decode('utf-8'), 'java'
+                with zip_file.open("META-INF/MANIFEST.MF") as manifest_data:
+                    manifest, flavor = manifest_data.read().decode("utf-8"), "java"
         except KeyError:
             raise exceptions.JaspFileCorruptError(
-                f'{self.MESSAGE_FILE_CORRUPT} Missing manifest',
+                f"{self.MESSAGE_FILE_CORRUPT} Missing manifest",
                 extension=self.metadata.ext,
-                corruption_type='key_error',
-                reason='zip missing manifest',
+                corruption_type="key_error",
+                reason="zip missing manifest",
             )
 
-        if flavor == 'java':
+        if flavor == "java":
             self._verify_java_manifest(manifest)
         else:
             self._verify_json_manifest(manifest)
@@ -92,25 +91,25 @@ class JASPRenderer(extension.BaseRenderer):
         return True
 
     def _verify_java_manifest(self, manifest):
-        lines = manifest.split('\n')
+        lines = manifest.split("\n")
 
         # Search for Data-Archive-Version
-        dataArchiveVersionStr, createdBy = None, ''
+        dataArchiveVersionStr, createdBy = None, ""
         for line in lines:
-            keyValue = line.split(':')
+            keyValue = line.split(":")
             if len(keyValue) == 2:
                 key = keyValue[0].strip()
                 value = keyValue[1].strip()
-                if key == 'Data-Archive-Version':
+                if key == "Data-Archive-Version":
                     dataArchiveVersionStr = value
-                elif key == 'Created-By':
+                elif key == "Created-By":
                     createdBy = str(value)
         if not dataArchiveVersionStr:
             raise exceptions.JaspFileCorruptError(
-                f'{self.MESSAGE_FILE_CORRUPT} Data-Archive-Version not found.',
+                f"{self.MESSAGE_FILE_CORRUPT} Data-Archive-Version not found.",
                 extension=self.metadata.ext,
-                corruption_type='manifest_parse_error',
-                reason='Data-Archive-Version not found.',
+                corruption_type="manifest_parse_error",
+                reason="Data-Archive-Version not found.",
             )
 
         # Check that the file is new enough (contains preview content)
@@ -120,9 +119,9 @@ class JASPRenderer(extension.BaseRenderer):
                 minimum_version = self.MINIMUM_VERSION.vstring
                 data_archive_version = dataArchiveVersion.vstring
                 raise exceptions.JaspVersionError(
-                    'This JASP file was created with an older data archive '
-                    'version ({}) and cannot be previewed. Minimum data archive '
-                    'version is {}.'.format(data_archive_version, minimum_version),
+                    "This JASP file was created with an older data archive "
+                    "version ({}) and cannot be previewed. Minimum data archive "
+                    "version is {}.".format(data_archive_version, minimum_version),
                     extension=self.metadata.ext,
                     created_by=createdBy,
                     actual_version=data_archive_version,
@@ -130,25 +129,24 @@ class JASPRenderer(extension.BaseRenderer):
                 )
         except TypeError:
             raise exceptions.JaspFileCorruptError(
-                f'{self.MESSAGE_FILE_CORRUPT} Data-Archive-Version not parsable.',
+                f"{self.MESSAGE_FILE_CORRUPT} Data-Archive-Version not parsable.",
                 extension=self.metadata.ext,
-                corruption_type='manifest_parse_error',
-                reason=f'Data-Archive-Version ({dataArchiveVersionStr}) not parsable.',
+                corruption_type="manifest_parse_error",
+                reason=f"Data-Archive-Version ({dataArchiveVersionStr}) not parsable.",
             )
 
         return
 
     def _verify_json_manifest(self, manifest):
-
         manifest_data = json.loads(manifest)
 
-        jasp_archive_version_str = manifest_data.get('jaspArchiveVersion', None)
+        jasp_archive_version_str = manifest_data.get("jaspArchiveVersion", None)
         if not jasp_archive_version_str:
             raise exceptions.JaspFileCorruptError(
-                f'{self.MESSAGE_FILE_CORRUPT} jaspArchiveVersion not found.',
+                f"{self.MESSAGE_FILE_CORRUPT} jaspArchiveVersion not found.",
                 extension=self.metadata.ext,
-                corruption_type='manifest_parse_error',
-                reason='jaspArchiveVersion not found.',
+                corruption_type="manifest_parse_error",
+                reason="jaspArchiveVersion not found.",
             )
 
         # Check that the file is new enough (contains preview content)
@@ -158,19 +156,19 @@ class JASPRenderer(extension.BaseRenderer):
                 minimum_version = self.MINIMUM_VERSION.vstring
                 data_archive_version = jasp_archive_version.vstring
                 raise exceptions.JaspVersionError(
-                    'This JASP file was created with an older data archive '
-                    'version ({}) and cannot be previewed. Minimum data archive '
-                    'version is {}.'.format(data_archive_version, minimum_version),
+                    "This JASP file was created with an older data archive "
+                    "version ({}) and cannot be previewed. Minimum data archive "
+                    "version is {}.".format(data_archive_version, minimum_version),
                     extension=self.metadata.ext,
                     actual_version=data_archive_version,
                     required_version=minimum_version,
                 )
         except TypeError:
             raise exceptions.JaspFileCorruptError(
-                f'{self.MESSAGE_FILE_CORRUPT} jaspArchiveVersion not parsable.',
+                f"{self.MESSAGE_FILE_CORRUPT} jaspArchiveVersion not parsable.",
                 extension=self.metadata.ext,
-                corruption_type='manifest_parse_error',
-                reason=f'jaspArchiveVersion ({jasp_archive_version_str}) not parsable.',
+                corruption_type="manifest_parse_error",
+                reason=f"jaspArchiveVersion ({jasp_archive_version_str}) not parsable.",
             )
 
         return

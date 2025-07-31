@@ -18,11 +18,11 @@ def munge_url_for_localdev(url: str) -> tuple:
         query_dict = parse_qs(url_obj.query, keep_blank_values=True)
 
         # the 'mode' param will break image downloads from the osf
-        query_dict.pop('mode', None)
+        query_dict.pop("mode", None)
 
         url_obj = url_obj._replace(
             query=urlencode(query_dict, doseq=True),
-            netloc=f'{settings.LOCAL_HOST}:{url_obj.port}'
+            netloc=f"{settings.LOCAL_HOST}:{url_obj.port}",
         )
 
     return url_obj
@@ -42,7 +42,9 @@ def escape_url_for_template(url: str, logs: bool = True) -> str:
     :return: the properly encoded URL
     """
 
-    safe_url = url.replace('"', '%22').replace("'", '%27')
+    safe_url = url.replace('"', "%22").replace("'", "%27")
     if url != safe_url and logs:
-        logger.warning('Unsafe URL containing unescaped single (double) quote(s) has been replaced')
+        logger.warning(
+            "Unsafe URL containing unescaped single (double) quote(s) has been replaced"
+        )
     return safe_url

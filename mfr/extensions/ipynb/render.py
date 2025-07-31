@@ -11,16 +11,14 @@ from mfr.extensions.ipynb import exceptions
 
 
 class IpynbRenderer(extension.BaseRenderer):
-
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('nbformat_version', nbformat.__version__)
-        self.metrics.add('nbconvert_version', nbconvert.__version__)
+        self.metrics.add("nbformat_version", nbformat.__version__)
+        self.metrics.add("nbconvert_version", nbconvert.__version__)
 
     def render(self):
         try:
@@ -28,20 +26,24 @@ class IpynbRenderer(extension.BaseRenderer):
                 notebook = nbformat.reads(file_pointer.read(), as_version=4)
         except ValueError as err:
             raise exceptions.InvalidFormatError(
-                f'Could not read ipython notebook file. {str(err)}',
+                f"Could not read ipython notebook file. {str(err)}",
                 extension=self.metadata.ext,
                 download_url=str(self.metadata.download_url),
                 original_exception=err,
             )
 
-        exporter = HTMLExporter(config=Config({
-            'HTMLExporter': {
-                'template_name': 'basic',
-            },
-            'CSSHtmlHeaderTransformer': {
-                'enabled': False,
-            },
-        }))
+        exporter = HTMLExporter(
+            config=Config(
+                {
+                    "HTMLExporter": {
+                        "template_name": "basic",
+                    },
+                    "CSSHtmlHeaderTransformer": {
+                        "enabled": False,
+                    },
+                }
+            )
+        )
         (body, _) = exporter.from_notebook_node(notebook)
         return self.TEMPLATE.render(base=self.assets_url, body=body)
 

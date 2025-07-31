@@ -22,7 +22,7 @@ def mat_v73(fp):
     """
 
     # workbook cannot be empty or none. Will at least have some sort of data in it
-    workbook = h5py.File(fp.name, 'r')
+    workbook = h5py.File(fp.name, "r")
     sheets = OrderedDict()
 
     for var in workbook.items():
@@ -48,19 +48,22 @@ def mat_v7(fp):
     except NotImplementedError as e:
         raise e
     except Exception:
-        raise tabular_exceptions.UnexpectedFormattingError('Cannot render this file at this time. '
-                                                           'The file may not be a .mat file or '
-                                                           'may be corrupted')
+        raise tabular_exceptions.UnexpectedFormattingError(
+            "Cannot render this file at this time. "
+            "The file may not be a .mat file or "
+            "may be corrupted"
+        )
 
     sheets = OrderedDict()
 
     for key in workbook:
-        if key in ('__header__', '__version__', '__globals__'):
+        if key in ("__header__", "__version__", "__globals__"):
             continue
         list_data = workbook[key].tolist()
         build_sheets(key, list_data, sheets)
 
     return sheets
+
 
 def mat_h5py_scipy(fp):
     # Try to load the mat file with the v7 library first. If it gives a not implemented error

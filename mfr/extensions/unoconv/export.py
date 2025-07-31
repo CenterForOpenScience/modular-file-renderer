@@ -29,12 +29,12 @@ class UnoconvExporter(BaseExporter):
         except Exception as err:
             name, extension = splitext(basename(self.source_file_path))
             raise SubprocessError(
-                'Unable to export the file in the requested format, please try again later.',
-                process='unoserver',
+                "Unable to export the file in the requested format, please try again later.",
+                process="unoserver",
                 cmd=str(err),
                 returncode=None,
                 path=str(self.source_file_path),
                 code=HTTPStatus.BAD_REQUEST,
-                extension=extension or '',
-                exporter_class='unoserver',
+                extension=extension or "",
+                exporter_class="unoserver",
             )

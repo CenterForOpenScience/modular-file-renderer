@@ -18,7 +18,6 @@ class FakeProvider(BaseProvider):
 
 
 class HandlerTestCase(testing.AsyncHTTPTestCase):
-
     def setUp(self):
         super().setUp()
         # identity_future = asyncio.Future()

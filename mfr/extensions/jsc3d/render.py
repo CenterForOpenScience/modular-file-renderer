@@ -1,4 +1,5 @@
-"""3D renderer module """
+"""3D renderer module"""
+
 # Uses jsc3d: https://github.com/humu2009/jsc3d/tree/master/jsc3d
 import os
 
@@ -11,14 +12,12 @@ from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
 
 
 class JSC3DRenderer(extension.BaseRenderer):
-
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
     def render(self):
-        self.metrics.add('needs_export', False)
+        self.metrics.add("needs_export", False)
         if self.metadata.ext in settings.EXPORT_EXCLUSIONS:
             download_url = munge_url_for_localdev(self.metadata.download_url)
             safe_url = escape_url_for_template(download_url.geturl())
@@ -29,8 +28,8 @@ class JSC3DRenderer(extension.BaseRenderer):
             )
 
         exported_url = furl.furl(self.export_url)
-        exported_url.args['format'] = settings.EXPORT_TYPE
-        self.metrics.add('needs_export', True)
+        exported_url.args["format"] = settings.EXPORT_TYPE
+        self.metrics.add("needs_export", True)
         safe_url = escape_url_for_template(exported_url.url)
         return self.TEMPLATE.render(
             base=self.assets_url,

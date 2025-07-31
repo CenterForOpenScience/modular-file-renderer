@@ -2,25 +2,25 @@ import os
 
 from invoke import task
 
-WHEELHOUSE_PATH = os.environ.get('WHEELHOUSE')
+WHEELHOUSE_PATH = os.environ.get("WHEELHOUSE")
 
 
 @task
 def wheelhouse(ctx, develop=False, pty=True):
-    extras = '--with dev' if develop else ''
-    cmd = f'poetry export --format=requirements.txt {extras} | pip wheel --find-links={WHEELHOUSE_PATH} -r /dev/stdin --wheel-dir={WHEELHOUSE_PATH}'
+    extras = "--with dev" if develop else ""
+    cmd = f"poetry export --format=requirements.txt {extras} | pip wheel --find-links={WHEELHOUSE_PATH} -r /dev/stdin --wheel-dir={WHEELHOUSE_PATH}"
     ctx.run(cmd, pty=pty)
 
 
 @task
 def install(ctx, develop=False, pty=True):
-    extras = '--with dev' if develop else ''
-    ctx.run(f'poetry install {extras}', pty=pty)
+    extras = "--with dev" if develop else ""
+    ctx.run(f"poetry install {extras}", pty=pty)
 
 
 @task
 def flake(ctx):
-    ctx.run('poetry run flake8 .', pty=True)
+    ctx.run("poetry run flake8 .", pty=True)
 
 
 @task
@@ -37,36 +37,46 @@ def test(ctx, verbose=False, nocov=False, extension=None, path=None):
     # `--extension=` and `--path=` are mutually exclusive options
     assert not (extension and path)
     if path:
-        path = f'/{path}' if path else ''
+        path = f"/{path}" if path else ""
     elif extension:
-        path = f'/extensions/{extension}/' if extension else ''
+        path = f"/extensions/{extension}/" if extension else ""
     else:
-        path = ''
-    coverage = ' --cov-report term-missing --cov mfr' if not nocov else ''
-    verbose = '-v' if verbose else ''
-    cmd = f'poetry run pytest{coverage} tests{path} {verbose}'
+        path = ""
+    coverage = " --cov-report term-missing --cov mfr" if not nocov else ""
+    verbose = "-v" if verbose else ""
+    cmd = f"poetry run pytest{coverage} tests{path} {verbose}"
     ctx.run(cmd, pty=True)
 
 
 @task
 def server(ctx):
-    if os.environ.get('REMOTE_DEBUG', None):
+    if os.environ.get("REMOTE_DEBUG", None):
         import pydevd
+
         # e.g. '127.0.0.1:5678'
-        remote_parts = os.environ.get('REMOTE_DEBUG').split(':')
-        pydevd.settrace(remote_parts[0], port=int(remote_parts[1]), suspend=False, stdoutToServer=True, stderrToServer=True)
+        remote_parts = os.environ.get("REMOTE_DEBUG").split(":")
+        pydevd.settrace(
+            remote_parts[0],
+            port=int(remote_parts[1]),
+            suspend=False,
+            stdoutToServer=True,
+            stderrToServer=True,
+        )
 
     from mfr.server.app import serve
+
     serve()
 
+
 @task
-def celery(ctx, loglevel='INFO', hostname='%h', concurrency=None):
+def celery(ctx, loglevel="INFO", hostname="%h", concurrency=None):
     from mfr.tasks.app import app
-    command = ['worker']
+
+    command = ["worker"]
     if loglevel:
-        command.extend(['--loglevel', loglevel])
+        command.extend(["--loglevel", loglevel])
     if hostname:
-        command.extend(['--hostname', hostname])
+        command.extend(["--hostname", hostname])
     if concurrency:
-        command.extend(['--concurrency', concurrency])
+        command.extend(["--concurrency", concurrency])
     app.worker_main(command)

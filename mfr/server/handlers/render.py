@@ -14,9 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class RenderHandler(core.BaseHandler):
-
-    NAME = 'render'
-    ALLOWED_METHODS = ['GET']
+    NAME = "render"
+    ALLOWED_METHODS = ["GET"]
 
     async def prepare(self):
         if self.request.method not in self.ALLOWED_METHODS:
@@ -29,13 +28,15 @@ class RenderHandler(core.BaseHandler):
         self.cache_file_id = self.metadata.unique_key
 
         if self.renderer_name:
-            cache_file_path_str = f'/export/{self.cache_file_id}.{self.renderer_name}'
+            cache_file_path_str = f"/export/{self.cache_file_id}.{self.renderer_name}"
         else:
-            cache_file_path_str = f'/export/{self.cache_file_id}'
-        self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
+            cache_file_path_str = f"/export/{self.cache_file_id}"
+        self.cache_file_path = await self.cache_provider.validate_path(
+            cache_file_path_str
+        )
 
         self.source_file_path = await self.local_cache_provider.validate_path(
-            f'/render/{self.source_file_id}'
+            f"/render/{self.source_file_id}"
         )
 
     async def get(self):
@@ -45,31 +46,34 @@ class RenderHandler(core.BaseHandler):
             self.metadata,
             self.source_file_path.full_path,
             self.url,
-            f'{self.request.protocol}://{self.request.host}/assets',
-            self.request.uri.replace('/render?', '/export?', 1)
+            f"{self.request.protocol}://{self.request.host}/assets",
+            self.request.uri.replace("/render?", "/export?", 1),
         )
 
-        self.extension_metrics.add('class', renderer._get_module_name())
+        self.extension_metrics.add("class", renderer._get_module_name())
 
         if renderer.cache_result and settings.CACHE_ENABLED:
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
             except waterbutler.core.exceptions.DownloadError as e:
-                assert e.code == 404, f'Non-404 DownloadError {e!r}'
-                logger.info(f'No cached file found; Starting render [{self.cache_file_path}]')
-                self.metrics.add('cache_file.result', 'miss')
+                assert e.code == 404, f"Non-404 DownloadError {e!r}"
+                logger.info(
+                    f"No cached file found; Starting render [{self.cache_file_path}]"
+                )
+                self.metrics.add("cache_file.result", "miss")
             else:
-                logger.info(f'Cached file found; Sending downstream [{self.cache_file_path}]')
-                self.metrics.add('cache_file.result', 'hit')
+                logger.info(
+                    f"Cached file found; Sending downstream [{self.cache_file_path}]"
+                )
+                self.metrics.add("cache_file.result", "hit")
                 return await self.write_stream(cached_stream)
 
         if renderer.file_required:
             await self.local_cache_provider.upload(
-                await self.provider.download(),
-                self.source_file_path
+                await self.provider.download(), self.source_file_path
             )
         else:
-            self.metrics.add('source_file.upload.required', False)
+            self.metrics.add("source_file.upload.required", False)
 
         loop = asyncio.get_event_loop()
         rendition = await loop.run_in_executor(None, renderer.render)
@@ -80,14 +84,14 @@ class RenderHandler(core.BaseHandler):
             asyncio.ensure_future(
                 self.cache_provider.upload(
                     waterbutler.core.streams.StringStream(rendition),
-                    self.cache_file_path
+                    self.cache_file_path,
                 )
             )
 
         await self.write_stream(waterbutler.core.streams.StringStream(rendition))
 
     async def _cache_and_clean(self):
-        if hasattr(self, 'source_file_path'):
+        if hasattr(self, "source_file_path"):
             try:
                 os.remove(self.source_file_path.full_path)
             except FileNotFoundError:

@@ -2,7 +2,7 @@ import copy
 
 
 def _merge_dicts(a, b, path=None):
-    """"merges b into a
+    """ "merges b into a
 
     Taken from: http://stackoverflow.com/a/7205107
     """
@@ -15,7 +15,7 @@ def _merge_dicts(a, b, path=None):
             elif a[key] == b[key]:
                 pass  # same leaf value
             else:
-                raise Exception('Conflict at %s' % '.'.join(path + [str(key)]))
+                raise Exception("Conflict at %s" % ".".join(path + [str(key)]))
         else:
             a[key] = b[key]
 
@@ -84,7 +84,7 @@ class MetricsBase:
         ``self._metrics['foo']['bar'] = 'moo'``.  This method is neither resilient nor intelligent
         and will react with bad grace if one of the keys already exists and is not a dict key.
         """
-        parts = key.split('.')
+        parts = key.split(".")
         current = store
         for part in parts[:-1]:
             if part not in current:
@@ -110,8 +110,7 @@ class MetricsRecord(MetricsBase):
         return self.category
 
     def serialize(self):
-        """Returns its metrics with the metrics for each of the subrecords included under their key.
-        """
+        """Returns its metrics with the metrics for each of the subrecords included under their key."""
         metrics = super().serialize()
         for subrecord in self.subrecords:
             metrics[subrecord.key] = subrecord.serialize()
@@ -139,7 +138,7 @@ class MetricsSubRecord(MetricsRecord):
     @property
     def key(self):
         """ID string for this subrecord: '{category}_{name}'"""
-        return f'{self.category}_{self.name}'
+        return f"{self.category}_{self.name}"
 
     def new_subrecord(self, name):
         """Creates and saves a new subrecord.  The new subrecord will have its category set to the

@@ -7,11 +7,9 @@ from mfr.extensions.utils import escape_url_for_template
 
 
 class AudioRenderer(extension.BaseRenderer):
-
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
     def render(self):
         safe_url = escape_url_for_template(self.url)

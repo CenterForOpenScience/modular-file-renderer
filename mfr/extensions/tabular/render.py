@@ -13,24 +13,24 @@ logger = logging.getLogger(__name__)
 
 
 class TabularRenderer(extension.BaseRenderer):
-
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
     def render(self):
         file_size = os.path.getsize(self.file_path)
         if file_size > settings.MAX_FILE_SIZE:
             raise exceptions.FileTooLargeError(
-                'Tabular files larger than {} are not rendered. Please download '
-                'the file to view.'.format(format_size(settings.MAX_FILE_SIZE, binary=True)),
+                "Tabular files larger than {} are not rendered. Please download "
+                "the file to view.".format(
+                    format_size(settings.MAX_FILE_SIZE, binary=True)
+                ),
                 file_size=file_size,
                 max_size=settings.MAX_FILE_SIZE,
                 extension=self.metadata.ext,
             )
 
-        with open(self.file_path, errors='replace') as fp:
+        with open(self.file_path, errors="replace") as fp:
             sheets, size, nbr_rows, nbr_cols = self._render_grid(fp, self.metadata.ext)
 
         # Force GC
@@ -47,10 +47,10 @@ class TabularRenderer(extension.BaseRenderer):
 
         assert nbr_rows and nbr_cols
         raise exceptions.TableTooBigError(
-            'Table is too large to render.',
+            "Table is too large to render.",
             extension=self.metadata.ext,
             nbr_cols=nbr_cols,
-            nbr_rows=nbr_rows
+            nbr_rows=nbr_rows,
         )
 
     @property
@@ -71,8 +71,8 @@ class TabularRenderer(extension.BaseRenderer):
         sheets = self._populate_data(fp, ext)
 
         size = settings.SMALL_TABLE
-        self._renderer_tabular_metrics['size'] = 'small'
-        self._renderer_tabular_metrics['nbr_sheets'] = len(sheets)
+        self._renderer_tabular_metrics["size"] = "small"
+        self._renderer_tabular_metrics["nbr_sheets"] = len(sheets)
 
         table_too_big = False
         nbr_cols = 0
@@ -89,7 +89,7 @@ class TabularRenderer(extension.BaseRenderer):
             nbr_cols = len(sheet[0])
             if nbr_cols > 9:
                 size = settings.BIG_TABLE
-                self._renderer_tabular_metrics['size'] = 'big'
+                self._renderer_tabular_metrics["size"] = "big"
 
             nbr_rows = len(sheet[1])
             if nbr_cols > settings.MAX_SIZE or nbr_rows > settings.MAX_SIZE:
@@ -116,14 +116,16 @@ class TabularRenderer(extension.BaseRenderer):
             except ImportError:
                 pass
             else:
-                self._renderer_tabular_metrics['importer'] = populate_func.__name__
+                self._renderer_tabular_metrics["importer"] = populate_func.__name__
                 try:
                     return imported(fp)
                 except (KeyError, ValueError) as err:
-                    logger.error('WB has encountered an unexpected error '
-                                 'when trying to render a tabular file: {}'.format(err))
+                    logger.error(
+                        "WB has encountered an unexpected error "
+                        "when trying to render a tabular file: {}".format(err)
+                    )
                     raise exceptions.UnexpectedFormattingError(
-                        'Unexpected formatting error.',
+                        "Unexpected formatting error.",
                         extension=self.metadata.ext,
                         formatting_function=str(populate_func),
                     )
@@ -131,7 +133,7 @@ class TabularRenderer(extension.BaseRenderer):
         # this will only occur if function_preference is an empty set
         # or all functions in the set raise an import error
         raise exceptions.MissingRequirementsError(
-            'Renderer requirements are not met',
+            "Renderer requirements are not met",
             extension=self.metadata.ext,
             function_preference=function_preference,
         )

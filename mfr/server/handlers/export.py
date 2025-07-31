@@ -14,9 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class ExportHandler(core.BaseHandler):
-
-    NAME = 'export'
-    ALLOWED_METHODS = ['GET']
+    NAME = "export"
+    ALLOWED_METHODS = ["GET"]
 
     async def prepare(self):
         if self.request.method not in self.ALLOWED_METHODS:
@@ -24,37 +23,43 @@ class ExportHandler(core.BaseHandler):
 
         await super().prepare()
 
-        query_arguments_format = self.request.query_arguments.get('format', None)
+        query_arguments_format = self.request.query_arguments.get("format", None)
         if not query_arguments_format:
-            raise InvalidParameters("Invalid Request: Url requires query parameter 'format' with"
-                                    " appropriate extension")
+            raise InvalidParameters(
+                "Invalid Request: Url requires query parameter 'format' with"
+                " appropriate extension"
+            )
         # TODO: do we need to catch exceptions for decoding?
-        self.format = query_arguments_format[0].decode('utf-8')
+        self.format = query_arguments_format[0].decode("utf-8")
         self.exporter_name = utils.get_exporter_name(self.metadata.ext)
 
-        self.cache_file_id = f'{self.metadata.unique_key}.{self.format}'
+        self.cache_file_id = f"{self.metadata.unique_key}.{self.format}"
 
         if self.exporter_name:
-            cache_file_path_str = f'/export/{self.cache_file_id}.{self.exporter_name}'
+            cache_file_path_str = f"/export/{self.cache_file_id}.{self.exporter_name}"
         else:
-            cache_file_path_str = f'/export/{self.cache_file_id}'
-        self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
+            cache_file_path_str = f"/export/{self.cache_file_id}"
+        self.cache_file_path = await self.cache_provider.validate_path(
+            cache_file_path_str
+        )
 
         self.source_file_path = await self.local_cache_provider.validate_path(
-            f'/export/{self.source_file_id}'
+            f"/export/{self.source_file_id}"
         )
 
-        self.output_file_id = f'{self.source_file_path.name}.{self.format}'
+        self.output_file_id = f"{self.source_file_path.name}.{self.format}"
         self.output_file_path = await self.local_cache_provider.validate_path(
-            f'/export/{self.output_file_id}'
+            f"/export/{self.output_file_id}"
         )
-        self.metrics.merge({
-            'output_file': {
-                'id': self.output_file_id,
-                'path': str(self.output_file_path),
-                'provider': self.local_cache_provider.NAME,
+        self.metrics.merge(
+            {
+                "output_file": {
+                    "id": self.output_file_id,
+                    "path": str(self.output_file_path),
+                    "provider": self.local_cache_provider.NAME,
+                }
             }
-        })
+        )
 
     async def get(self):
         """Export a file to the format specified via the associated extension library"""
@@ -62,26 +67,29 @@ class ExportHandler(core.BaseHandler):
         # File is already in the requested format
         if self.metadata.ext.lower() == f".{self.format.lower()}":
             await self.write_stream(await self.provider.download())
-            logger.info(f'Exported {self.format} with no conversion.')
-            self.metrics.add('export.conversion', 'noop')
+            logger.info(f"Exported {self.format} with no conversion.")
+            self.metrics.add("export.conversion", "noop")
             return
 
         if settings.CACHE_ENABLED:
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
             except DownloadError as e:
-                assert e.code == 404, f'Non-404 DownloadError {e!r}'
-                logger.info(f'No cached file found; Starting export [{self.cache_file_path}]')
-                self.metrics.add('cache_file.result', 'miss')
+                assert e.code == 404, f"Non-404 DownloadError {e!r}"
+                logger.info(
+                    f"No cached file found; Starting export [{self.cache_file_path}]"
+                )
+                self.metrics.add("cache_file.result", "miss")
             else:
-                logger.info(f'Cached file found; Sending downstream [{self.cache_file_path}]')
-                self.metrics.add('cache_file.result', 'hit')
+                logger.info(
+                    f"Cached file found; Sending downstream [{self.cache_file_path}]"
+                )
+                self.metrics.add("cache_file.result", "hit")
                 self._set_headers()
                 return await self.write_stream(cached_stream)
 
         await self.local_cache_provider.upload(
-            await self.provider.download(),
-            self.source_file_path
+            await self.provider.download(), self.source_file_path
         )
 
         exporter = utils.make_exporter(
@@ -92,22 +100,24 @@ class ExportHandler(core.BaseHandler):
             self.metadata,
         )
 
-        self.extension_metrics.add('class', exporter._get_module_name())
+        self.extension_metrics.add("class", exporter._get_module_name())
 
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, exporter.export)
         self.exporter_metrics = exporter.exporter_metrics
 
-        with open(self.output_file_path.full_path, 'rb') as fp:
+        with open(self.output_file_path.full_path, "rb") as fp:
             self._set_headers()
             await self.write_stream(waterbutler.core.streams.FileStreamReader(fp))
 
     async def _cache_and_clean(self):
         if settings.CACHE_ENABLED and os.path.exists(self.output_file_path.full_path):
-            with open(self.output_file_path.full_path, 'rb') as fp:
-                await self.cache_provider.upload(waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path)
+            with open(self.output_file_path.full_path, "rb") as fp:
+                await self.cache_provider.upload(
+                    waterbutler.core.streams.FileStreamReader(fp), self.cache_file_path
+                )
 
-        if hasattr(self, 'source_file_path'):
+        if hasattr(self, "source_file_path"):
             try:
                 os.remove(self.source_file_path.full_path)
             except FileNotFoundError:
@@ -119,6 +129,9 @@ class ExportHandler(core.BaseHandler):
                 pass
 
     def _set_headers(self):
-        self.set_header('Content-Disposition', f'attachment;filename*=UTF-8\'\'{quote(self.metadata.name.replace('"', '\\"'))}.{self.format}')
+        self.set_header(
+            "Content-Disposition",
+            f"attachment;filename*=UTF-8''{quote(self.metadata.name.replace('"', '\\"'))}.{self.format}",
+        )
         if self.metadata.content_type:
-            self.set_header('Content-Type', self.metadata.content_type)
+            self.set_header("Content-Type", self.metadata.content_type)

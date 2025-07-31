@@ -1,4 +1,5 @@
-"""Molecule renderer module """
+"""Molecule renderer module"""
+
 import os
 import json
 
@@ -10,11 +11,9 @@ from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
 
 
 class PdbRenderer(extension.BaseRenderer):
-
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
     def render(self):
         download_url = munge_url_for_localdev(self.metadata.download_url)

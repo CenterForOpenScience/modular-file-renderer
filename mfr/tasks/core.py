@@ -34,6 +34,7 @@ def __coroutine_unwrapper(func):
     @functools.wraps(func)
     def wrapped(*args, **kwargs):
         return ensure_event_loop().run_until_complete(func(*args, **kwargs))
+
     wrapped.as_async = func
     return wrapped
 
@@ -46,16 +47,17 @@ async def backgrounded(func, *args, **kwargs):
     if asyncio.iscoroutinefunction(func):
         func = __coroutine_unwrapper(func)
 
-    return (await loop.run_in_executor(
+    return await loop.run_in_executor(
         None,  # None uses the default executer, ThreadPoolExecuter
-        functools.partial(func, *args, **kwargs)
-    ))
+        functools.partial(func, *args, **kwargs),
+    )
 
 
 def backgroundify(func):
     @functools.wraps(func)
     async def wrapped(*args, **kwargs):
         return await backgrounded(func, *args, **kwargs)
+
     return wrapped
 
 
@@ -72,12 +74,13 @@ def adhoc_file_backend(func, was_bound=False, basepath=None):
         except Exception as e:
             result = e
 
-        with open(os.path.join(basepath, task.request.id), 'wb') as result_file:
+        with open(os.path.join(basepath, task.request.id), "wb") as result_file:
             pickle.dump(result, result_file)
 
         if isinstance(result, Exception):
             raise result
         return result
+
     return wrapped
 
 
@@ -91,13 +94,10 @@ def celery_task(func, *args, **kwargs):
     task_func = __coroutine_unwrapper(func)
 
     if isinstance(app.backend, DisabledBackend):
-        task_func = adhoc_file_backend(
-            task_func,
-            was_bound=kwargs.pop('bind', False)
-        )
-        kwargs['bind'] = True
+        task_func = adhoc_file_backend(task_func, was_bound=kwargs.pop("bind", False))
+        kwargs["bind"] = True
 
-    logger.debug(f'celery_task: task_func:({task_func})')
+    logger.debug(f"celery_task: task_func:({task_func})")
 
     task = app.task(task_func, **kwargs)
     task.adelay = backgroundify(task.delay)
@@ -116,7 +116,7 @@ async def wait_on_celery(result, interval=None, timeout=None, basepath=None):
     while True:
         if isinstance(app.backend, DisabledBackend):
             try:
-                with open(os.path.join(basepath, result.id), 'rb') as result_file:
+                with open(os.path.join(basepath, result.id), "rb") as result_file:
                     data = pickle.load(result_file)
                 if isinstance(data, Exception):
                     raise data

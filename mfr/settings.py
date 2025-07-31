@@ -51,13 +51,13 @@ class SettingsDict(dict):
         interpret '0' and the empty string as False and '1' as True.  Anything else is probably
         an acceident, so die screaming."""
         value = self.get(key, default)
-        if value in [False, 0, '0', '']:
+        if value in [False, 0, "0", ""]:
             retval = False
-        elif value in [True, 1, '1']:
+        elif value in [True, 1, "1"]:
             retval = True
         else:
             raise Exception(
-                '{} should be a truthy value, but instead we got {}'.format(
+                "{} should be a truthy value, but instead we got {}".format(
                     self.full_key(key), value
                 )
             )
@@ -67,7 +67,7 @@ class SettingsDict(dict):
         """Fetch a config value and interpret the empty string as None. Useful for external code
         that expects an explicit None."""
         value = self.get(key, default)
-        return None if value == '' else value
+        return None if value == "" else value
 
     def get_object(self, key, default=None):
         """Fetch a config value and interpret as a Python object or list. Since envvars are
@@ -80,82 +80,73 @@ class SettingsDict(dict):
 
     def full_key(self, key):
         """The name of the envvar which corresponds to this key."""
-        return f'{self.parent}_{key}' if self.parent else key
+        return f"{self.parent}_{key}" if self.parent else key
 
     def child(self, key):
         """Fetch a sub-dict of the current dict."""
         return SettingsDict(self.get(key, {}), parent=self.full_key(key))
 
 
-PROJECT_NAME = 'mfr'
-PROJECT_CONFIG_PATH = '~/.cos'
+PROJECT_NAME = "mfr"
+PROJECT_CONFIG_PATH = "~/.cos"
 
-UNSUPPORTED_EXPORTER_MSG = 'Exporting of this file type is not currently supported.'
-UNSUPPORTED_RENDER_MSG = 'Viewing of this file type is not currently supported. Please download the file to view.'
+UNSUPPORTED_EXPORTER_MSG = "Exporting of this file type is not currently supported."
+UNSUPPORTED_RENDER_MSG = "Viewing of this file type is not currently supported. Please download the file to view."
 
 
-MAX_FILE_SIZE_TO_RENDER = {'.csv': 100000000,
-                           '.xlsx': 1000000000,
-                           '.tsv': 1000000000,
-                           '.sav': 1000000000,
-                           '.xls': 1000000000,
-                           '.zip': 1000000000}
+MAX_FILE_SIZE_TO_RENDER = {
+    ".csv": 100000000,
+    ".xlsx": 1000000000,
+    ".tsv": 1000000000,
+    ".sav": 1000000000,
+    ".xls": 1000000000,
+    ".zip": 1000000000,
+}
 
 try:
     import colorlog  # noqa
+
     DEFAULT_FORMATTER = {
-        '()': 'colorlog.ColoredFormatter',
-        'format': '%(cyan)s[%(asctime)s]%(log_color)s[%(levelname)s][%(name)s]: %(reset)s%(message)s'
+        "()": "colorlog.ColoredFormatter",
+        "format": "%(cyan)s[%(asctime)s]%(log_color)s[%(levelname)s][%(name)s]: %(reset)s%(message)s",
     }
 except ImportError:
     DEFAULT_FORMATTER = {
-        '()': 'waterbutler.core.logging.MaskFormatter',
-        'format': '[%(asctime)s][%(levelname)s][%(name)s]: %(message)s',
-        'pattern': '(?<=cookie=)(.*?)(?=&|$)',
-        'mask': '***'
+        "()": "waterbutler.core.logging.MaskFormatter",
+        "format": "[%(asctime)s][%(levelname)s][%(name)s]: %(message)s",
+        "pattern": "(?<=cookie=)(.*?)(?=&|$)",
+        "mask": "***",
     }
 DEFAULT_LOGGING_CONFIG = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'console': DEFAULT_FORMATTER,
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": DEFAULT_FORMATTER,
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'level': 'INFO',
-            'formatter': 'console'
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "console",
         },
-        'syslog': {
-            'class': 'logging.handlers.SysLogHandler',
-            'level': 'INFO'
-        }
+        "syslog": {"class": "logging.handlers.SysLogHandler", "level": "INFO"},
     },
-    'loggers': {
-        '': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False
-        }
-    },
-    'root': {
-        'level': 'INFO',
-        'handlers': ['console']
-    }
+    "loggers": {"": {"handlers": ["console"], "level": "INFO", "propagate": False}},
+    "root": {"level": "INFO", "handlers": ["console"]},
 }
 
 
 try:
-    config_path = os.environ[f'{PROJECT_NAME.upper()}_CONFIG']
+    config_path = os.environ[f"{PROJECT_NAME.upper()}_CONFIG"]
 except KeyError:
-    env = os.environ.get('ENV', 'test')
-    config_path = f'{PROJECT_CONFIG_PATH}/{PROJECT_NAME}-{env}.json'
+    env = os.environ.get("ENV", "test")
+    config_path = f"{PROJECT_CONFIG_PATH}/{PROJECT_NAME}-{env}.json"
 
 
 config = SettingsDict()
 config_path = os.path.expanduser(config_path)
 if not os.path.exists(config_path):
-    logging.warning(f'No \'{config_path}\' configuration file found')
+    logging.warning(f"No '{config_path}' configuration file found")
 else:
     with open(os.path.expanduser(config_path)) as fp:
         config = SettingsDict(json.load(fp))
@@ -165,9 +156,9 @@ def child(key):
     return config.child(key)
 
 
-logging_config = config.get('LOGGING', DEFAULT_LOGGING_CONFIG)
+logging_config = config.get("LOGGING", DEFAULT_LOGGING_CONFIG)
 logging.config.dictConfig(logging_config)
 
 
-SENTRY_DSN = config.get_nullable('SENTRY_DSN', None)
-GOOGLE_ANALYTICS_TRACKING_ID = config.get_nullable('GOOGLE_ANALYTICS_TRACKING_ID', None)
+SENTRY_DSN = config.get_nullable("SENTRY_DSN", None)
+GOOGLE_ANALYTICS_TRACKING_ID = config.get_nullable("GOOGLE_ANALYTICS_TRACKING_ID", None)

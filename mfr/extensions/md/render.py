@@ -10,20 +10,18 @@ from mfr.core import extension
 
 class EscapeHtml(Extension):
     def extendMarkdown(self, md):
-        md.preprocessors.deregister('html_block')
-        md.inlinePatterns.deregister('html')
+        md.preprocessors.deregister("html_block")
+        md.inlinePatterns.deregister("html")
 
 
 class MdRenderer(extension.BaseRenderer):
-
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('markdown_version', markdown.__version__)
+        self.metrics.add("markdown_version", markdown.__version__)
 
     def render(self):
         """Render a markdown file to html."""

@@ -22,17 +22,19 @@ class BaseProvider(metaclass=abc.ABCMeta):
                 message="{} is not a permitted provider domain.".format(
                     markupsafe.escape(url_netloc)
                 ),
-                code=400
+                code=400,
             )
         self.url = url
         self.action = action
-        self.provider_metrics = MetricsRecord('provider')
+        self.provider_metrics = MetricsRecord("provider")
         self.metrics = self.provider_metrics.new_subrecord(self.NAME)
 
-        self.provider_metrics.merge({
-            'type': self.NAME,
-            'url': str(self.url),
-        })
+        self.provider_metrics.merge(
+            {
+                "type": self.NAME,
+                "url": str(self.url),
+            }
+        )
 
     @abc.abstractmethod
     def NAME(self):
@@ -49,8 +51,9 @@ class BaseProvider(metaclass=abc.ABCMeta):
 
 
 class ProviderMetadata:
-
-    def __init__(self, name, ext, content_type, unique_key, download_url, stable_id=None):
+    def __init__(
+        self, name, ext, content_type, unique_key, download_url, stable_id=None
+    ):
         self.name = name
         self.ext = ext
         self.content_type = content_type
@@ -60,10 +63,10 @@ class ProviderMetadata:
 
     def serialize(self):
         return {
-            'name': self.name,
-            'ext': self.ext,
-            'content_type': self.content_type,
-            'unique_key': str(self.unique_key),
-            'download_url': str(self.download_url),
-            'stable_id': None if self.stable_id is None else str(self.stable_id),
+            "name": self.name,
+            "ext": self.ext,
+            "content_type": self.content_type,
+            "unique_key": str(self.unique_key),
+            "download_url": str(self.download_url),
+            "stable_id": None if self.stable_id is None else str(self.stable_id),
         }

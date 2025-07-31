@@ -13,22 +13,22 @@ logger = logging.getLogger(__name__)
 
 
 class PdfRenderer(extension.BaseRenderer):
-
     TEMPLATE = TemplateLookup(
-        directories=[
-            os.path.join(os.path.dirname(__file__), 'templates')
-        ]).get_template('viewer.mako')
+        directories=[os.path.join(os.path.dirname(__file__), "templates")]
+    ).get_template("viewer.mako")
 
     def render(self):
-
         download_url = munge_url_for_localdev(self.metadata.download_url)
         escaped_name = escape_url_for_template(
-            f'{self.metadata.name}{self.metadata.ext}'
+            f"{self.metadata.name}{self.metadata.ext}"
         )
-        logger.debug('extension::{}  supported-list::{}'.format(self.metadata.ext,
-                                                                settings.EXPORT_SUPPORTED))
+        logger.debug(
+            "extension::{}  supported-list::{}".format(
+                self.metadata.ext, settings.EXPORT_SUPPORTED
+            )
+        )
         if self.metadata.ext.lower() not in settings.EXPORT_SUPPORTED:
-            logger.debug('Extension not found in supported list!')
+            logger.debug("Extension not found in supported list!")
             return self.TEMPLATE.render(
                 ga_tracking_id=GOOGLE_ANALYTICS_TRACKING_ID,
                 base=self.assets_url,
@@ -38,15 +38,16 @@ class PdfRenderer(extension.BaseRenderer):
                 enable_hypothesis=settings.ENABLE_HYPOTHESIS,
             )
 
-        logger.debug('Extension found in supported list!')
+        logger.debug("Extension found in supported list!")
         exported_url = furl.furl(self.export_url)
         if settings.EXPORT_MAXIMUM_SIZE:
-            exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
-                                                         settings.EXPORT_TYPE)
+            exported_url.args["format"] = "{}.{}".format(
+                settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE
+            )
         else:
-            exported_url.args['format'] = settings.EXPORT_TYPE
+            exported_url.args["format"] = settings.EXPORT_TYPE
 
-        self.metrics.add('needs_export', True)
+        self.metrics.add("needs_export", True)
         return self.TEMPLATE.render(
             ga_tracking_id=GOOGLE_ANALYTICS_TRACKING_ID,
             base=self.assets_url,

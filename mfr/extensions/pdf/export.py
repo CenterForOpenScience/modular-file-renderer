@@ -12,14 +12,12 @@ logger = logging.getLogger(__name__)
 
 
 class PdfExporter(extension.BaseExporter):
-
     def __init__(self, *args, **kwargs):
-
         super().__init__(*args, **kwargs)
-        self.metrics.add('pil_version', Image.__version__)
+        self.metrics.add("pil_version", Image.__version__)
 
     def tiff_to_pdf(self, tiff_img, max_size):
-        """ Turn a tiff into a pdf to support multipage tiffs"""
+        """Turn a tiff into a pdf to support multipage tiffs"""
 
         c = canvas.Canvas(self.output_file_path)
         c.setPageSize((max_size[0], max_size[1]))
@@ -40,40 +38,51 @@ class PdfExporter(extension.BaseExporter):
             temp_image = tiff_img
             # Center the image and draw it in the canvas
             if max_size:
-
                 # Resize the image to the w/h maximum specified
                 # This is left in the loop incase images are different sizes.
-                ratio = min(max_size[0] / temp_image.size[0], max_size[1] / temp_image.size[1])
+                ratio = min(
+                    max_size[0] / temp_image.size[0], max_size[1] / temp_image.size[1]
+                )
 
                 if ratio < 1:
                     temp_image = tiff_img.copy()
 
                     # Resampling can cause corruption in the image, causing pdf.js errors
                     # Image.ANITALIAS and IMAGE.LANCZOS both caused the error
-                    temp_image = temp_image.resize((round(temp_image.size[0] * ratio),
-                                                    round(temp_image.size[1] * ratio)),
-                                                    Image.BICUBIC)
+                    temp_image = temp_image.resize(
+                        (
+                            round(temp_image.size[0] * ratio),
+                            round(temp_image.size[1] * ratio),
+                        ),
+                        Image.BICUBIC,
+                    )
 
                     width, height = temp_image.size
 
-            c.drawInlineImage(temp_image, (max_size[0] - width) // 2,
-                             (max_size[1] - height) // 2, anchor='c')
+            c.drawInlineImage(
+                temp_image,
+                (max_size[0] - width) // 2,
+                (max_size[1] - height) // 2,
+                anchor="c",
+            )
             c.showPage()
             page += 1
 
         c.save()
 
     def export(self):
-        logger.debug(f'pdf-export: format::{self.format}')
-        parts = self.format.split('.')
+        logger.debug(f"pdf-export: format::{self.format}")
+        parts = self.format.split(".")
         export_type = parts[-1].lower()
-        max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None
+        max_size = [int(x) for x in parts[0].split("x")] if len(parts) == 2 else None
 
-        self.metrics.merge({
-            'type': export_type,
-            'max_size_w': max_size[0],
-            'max_size_h': max_size[1],
-        })
+        self.metrics.merge(
+            {
+                "type": export_type,
+                "max_size_w": max_size[0],
+                "max_size_h": max_size[1],
+            }
+        )
 
         try:
             TiffImagePlugin.READ_LIBTIFF = True
@@ -82,15 +91,15 @@ class PdfExporter(extension.BaseExporter):
             if max_size:
                 # Done here just for metrics
                 ratio = min(max_size[0] / image.size[0], max_size[1] / image.size[1])
-                self.metrics.add('ratio', ratio)
+                self.metrics.add("ratio", ratio)
 
             self.tiff_to_pdf(image, max_size)
             image.close()
 
         except (UnicodeDecodeError, OSError) as err:
             raise exceptions.PillowImageError(
-                'Unable to export the file as a {}, please check that the '
-                'file is a valid tiff image.'.format(export_type),
+                "Unable to export the file as a {}, please check that the "
+                "file is a valid tiff image.".format(export_type),
                 export_format=export_type,
                 detected_format=self.detect_image_format(),
                 original_exception=err,

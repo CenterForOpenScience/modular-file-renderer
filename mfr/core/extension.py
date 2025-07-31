@@ -4,9 +4,7 @@ from mfr.core.metrics import MetricsRecord
 
 
 class BaseExporter(metaclass=abc.ABCMeta):
-
     def __init__(self, ext, source_file_path, output_file_path, format, metadata):
-
         """Initialize the base exporter.
 
         :param ext: the name of the extension to be exported
@@ -20,56 +18,59 @@ class BaseExporter(metaclass=abc.ABCMeta):
         self.output_file_path = output_file_path
         self.format = format
         self.metadata = metadata
-        self.exporter_metrics = MetricsRecord('exporter')
+        self.exporter_metrics = MetricsRecord("exporter")
         if self._get_module_name():
             self.metrics = self.exporter_metrics.new_subrecord(self._get_module_name())
 
-        self.exporter_metrics.merge({
-            'class': self._get_module_name(),
-            'format': self.format,
-            'source_path': str(self.source_file_path),
-            'output_path': str(self.output_file_path),
-            # 'error': 'error_t',
-            # 'elapsed': 'elpased_t',
-        })
+        self.exporter_metrics.merge(
+            {
+                "class": self._get_module_name(),
+                "format": self.format,
+                "source_path": str(self.source_file_path),
+                "output_path": str(self.output_file_path),
+                # 'error': 'error_t',
+                # 'elapsed': 'elpased_t',
+            }
+        )
 
     @abc.abstractmethod
     def export(self):
         pass
 
     def _get_module_name(self):
-        return self.__module__ \
-            .replace('mfr.extensions.', '', 1) \
-            .replace('.export', '', 1)
+        return self.__module__.replace("mfr.extensions.", "", 1).replace(
+            ".export", "", 1
+        )
 
 
 class BaseRenderer(metaclass=abc.ABCMeta):
-
     def __init__(self, metadata, file_path, url, assets_url, export_url):
         self.metadata = metadata
         self.file_path = file_path
         self.url = url
-        self.assets_url = f'{assets_url}/{self._get_module_name()}'
+        self.assets_url = f"{assets_url}/{self._get_module_name()}"
         self.export_url = export_url
-        self.renderer_metrics = MetricsRecord('renderer')
+        self.renderer_metrics = MetricsRecord("renderer")
         if self._get_module_name():
             self.metrics = self.renderer_metrics.new_subrecord(self._get_module_name())
 
-        self.renderer_metrics.merge({
-            'class': self._get_module_name(),
-            'ext': self.metadata.ext,
-            'url': self.url,
-            'export_url': self.export_url,
-            'file_path': self.file_path,
-            # 'error': 'error_t',
-            # 'elapsed': 'elpased_t',
-        })
+        self.renderer_metrics.merge(
+            {
+                "class": self._get_module_name(),
+                "ext": self.metadata.ext,
+                "url": self.url,
+                "export_url": self.export_url,
+                "file_path": self.file_path,
+                # 'error': 'error_t',
+                # 'elapsed': 'elpased_t',
+            }
+        )
 
         # unoconv gets file_required and cache_result from its subrenderer, which is constructed
         # at the end of __init__
         try:
-            self.renderer_metrics.add('file_required', self.file_required)
-            self.renderer_metrics.add('cache_result', self.cache_result)
+            self.renderer_metrics.add("file_required", self.file_required)
+            self.renderer_metrics.add("cache_result", self.cache_result)
         except AttributeError:
             pass
 
@@ -90,6 +91,6 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         pass
 
     def _get_module_name(self):
-        return self.__module__ \
-            .replace('mfr.extensions.', '', 1) \
-            .replace('.render', '', 1)
+        return self.__module__.replace("mfr.extensions.", "", 1).replace(
+            ".render", "", 1
+        )

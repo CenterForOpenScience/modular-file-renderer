@@ -25,37 +25,39 @@ def csv_stdlib(fp):
     columns = []
     # update the reader field names to avoid duplicate column names when performing row extraction
     for idx, fieldname in enumerate(reader.fieldnames or []):
-        column_count = sum(1 for column in columns if fieldname == column['name'])
+        column_count = sum(1 for column in columns if fieldname == column["name"])
         if column_count:
-            unique_fieldname = f'{fieldname}-{column_count + 1}'
+            unique_fieldname = f"{fieldname}-{column_count + 1}"
             reader.fieldnames[idx] = unique_fieldname
         else:
             unique_fieldname = fieldname
-        columns.append({
-            'id': unique_fieldname,
-            'field': unique_fieldname,
-            'name': fieldname,
-            'sortable': True,
-        })
+        columns.append(
+            {
+                "id": unique_fieldname,
+                "field": unique_fieldname,
+                "name": fieldname,
+                "sortable": True,
+            }
+        )
 
     try:
         rows = [row for row in reader]
     except csv.Error as e:
         if any("field larger than field limit" in errorMsg for errorMsg in e.args):
             raise TabularRendererError(
-                'This file contains a field too large to render. '
-                'Please download and view it locally.',
+                "This file contains a field too large to render. "
+                "Please download and view it locally.",
                 code=400,
-                extension='csv',
+                extension="csv",
             ) from e
         else:
-            raise TabularRendererError(f'csv.Error: {e}', extension='csv') from e
+            raise TabularRendererError(f"csv.Error: {e}", extension="csv") from e
 
     if not columns and not rows:
-        raise EmptyTableError('Table empty or corrupt.', extension='csv')
+        raise EmptyTableError("Table empty or corrupt.", extension="csv")
 
     del reader
-    return {'Sheet 1': (columns, rows)}
+    return {"Sheet 1": (columns, rows)}
 
 
 def sav_stdlib(fp):

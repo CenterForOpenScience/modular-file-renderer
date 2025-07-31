@@ -19,62 +19,63 @@ from mfr.core.metrics import MetricsRecord
 from mfr.core import utils, exceptions, remote_logging
 
 CORS_ACCEPT_HEADERS = [
-    'Range',
-    'Content-Type',
-    'Authorization',
-    'Cache-Control',
-    'X-Requested-With',
+    "Range",
+    "Content-Type",
+    "Authorization",
+    "Cache-Control",
+    "X-Requested-With",
 ]
 
 CORS_EXPOSE_HEADERS = [
-    'Accept-Ranges',
-    'Content-Range',
-    'Content-Length',
-    'Content-Encoding',
+    "Accept-Ranges",
+    "Content-Range",
+    "Content-Length",
+    "Content-Encoding",
 ]
 
 logger = logging.getLogger(__name__)
 
 
 class CorsMixin:
-
     def _cross_origin_is_allowed(self):
-        if self.request.method == 'OPTIONS':
+        if self.request.method == "OPTIONS":
             return True
-        elif not self.request.cookies and self.request.headers.get('Authorization'):
+        elif not self.request.cookies and self.request.headers.get("Authorization"):
             return True
         return False
 
     def set_default_headers(self):
-        if not self.request.headers.get('Origin'):
+        if not self.request.headers.get("Origin"):
             return
 
         allowed_origin = None
         if self._cross_origin_is_allowed():
-            allowed_origin = self.request.headers['Origin']
+            allowed_origin = self.request.headers["Origin"]
         elif isinstance(settings.CORS_ALLOW_ORIGIN, str):
-            if settings.CORS_ALLOW_ORIGIN == '*':
+            if settings.CORS_ALLOW_ORIGIN == "*":
                 # Wild cards cannot be used with allowCredentials.
                 # Match Origin if its specified, makes pdfs and pdbs render properly
-                allowed_origin = self.request.headers['Origin']
+                allowed_origin = self.request.headers["Origin"]
             else:
                 allowed_origin = settings.CORS_ALLOW_ORIGIN
         else:
-            if self.request.headers['Origin'] in settings.CORS_ALLOW_ORIGIN:
-                allowed_origin = self.request.headers['Origin']
+            if self.request.headers["Origin"] in settings.CORS_ALLOW_ORIGIN:
+                allowed_origin = self.request.headers["Origin"]
 
         if allowed_origin is not None:
-            self.set_header('Access-Control-Allow-Origin', allowed_origin)
+            self.set_header("Access-Control-Allow-Origin", allowed_origin)
 
-        self.set_header('Access-Control-Allow-Credentials', 'true')
-        self.set_header('Access-Control-Allow-Headers', ', '.join(CORS_ACCEPT_HEADERS))
-        self.set_header('Access-Control-Expose-Headers', ', '.join(CORS_EXPOSE_HEADERS))
-        self.set_header('Cache-control', 'no-store, no-cache, must-revalidate, max-age=0')
+        self.set_header("Access-Control-Allow-Credentials", "true")
+        self.set_header("Access-Control-Allow-Headers", ", ".join(CORS_ACCEPT_HEADERS))
+        self.set_header("Access-Control-Expose-Headers", ", ".join(CORS_EXPOSE_HEADERS))
+        self.set_header(
+            "Cache-control", "no-store, no-cache, must-revalidate, max-age=0"
+        )
 
     def options(self):
         self.set_status(204)
-        if self.request.headers.get('Origin'):
-            self.set_header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE'),
+        if self.request.headers.get("Origin"):
+            (self.set_header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE"),)
 
 
 class BaseHandler(CorsMixin, tornado.web.RequestHandler):
@@ -87,14 +88,14 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.handler_metrics = MetricsRecord('handler')
-        self.handler_metrics.add('cache_file.result', None)
-        self.handler_metrics.add('source_file.upload.required', True)
+        self.handler_metrics = MetricsRecord("handler")
+        self.handler_metrics.add("cache_file.result", None)
+        self.handler_metrics.add("source_file.upload.required", True)
 
         self.metrics = self.handler_metrics.new_subrecord(self.NAME)
 
-        self.extension_metrics = MetricsRecord('extension')
-        self.url = ''
+        self.extension_metrics = MetricsRecord("extension")
+        self.url = ""
 
     @abc.abstractmethod
     def NAME(self):
@@ -105,18 +106,18 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         """Builds an MFR provider instance, to which it passes the the ``url`` query parameter.
         From that, the file metadata is extracted.  Also builds cached waterbutler providers.
         """
-        if self.request.method == 'OPTIONS':
+        if self.request.method == "OPTIONS":
             return
 
         try:
-            self.url = self.request.query_arguments['url'][0].decode('utf-8')
+            self.url = self.request.query_arguments["url"][0].decode("utf-8")
         except KeyError:
             raise exceptions.ProviderError(
                 '"url" is a required argument.',
                 provider=settings.PROVIDER_NAME,
                 code=400,
             )
-        logging.debug(f'target_url::{self.url}')
+        logging.debug(f"target_url::{self.url}")
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -126,22 +127,22 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         )
 
         self.metadata = await self.provider.metadata()
-        self.extension_metrics.add('ext', self.metadata.ext)
-        logging.debug(f'extension::{self.metadata.ext}')
+        self.extension_metrics.add("ext", self.metadata.ext)
+        logging.debug(f"extension::{self.metadata.ext}")
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
             {},  # User information which can be left blank
             settings.CACHE_PROVIDER_CREDENTIALS,
-            settings.CACHE_PROVIDER_SETTINGS
+            settings.CACHE_PROVIDER_SETTINGS,
         )
 
         self.local_cache_provider = waterbutler.core.utils.make_provider(
-            'filesystem', {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
+            "filesystem", {}, {}, settings.LOCAL_CACHE_PROVIDER_SETTINGS
         )
 
         self.source_file_id = uuid.uuid4()
-        self.add_header('X-MFR-REQUEST-ID', str(uuid.uuid4()))
+        self.add_header("X-MFR-REQUEST-ID", str(uuid.uuid4()))
 
     async def write_stream(self, stream):
         try:
@@ -162,12 +163,11 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
             return
 
     def write_error(self, status_code, exc_info):
-
         # TODO: verify that `exc_info` arg is compatible with tornado 6.4.2 sig
         etype, exc, _ = exc_info
         scope = sentry_sdk.get_current_scope()
-        scope.set_tag('class', etype.__name__)
-        scope.set_tag('status_code', status_code)
+        scope.set_tag("class", etype.__name__)
+        scope.set_tag("status_code", status_code)
         sentry_sdk.capture_exception(exc)  # Log all non 2XX codes to sentry
 
         if issubclass(etype, exceptions.PluginError):
@@ -181,13 +181,13 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                             (but maybe it is ok in terms of business logic),
                             As I understand the current accumulate previous current versions so it may be ok
                         """
-                        current = {f'{level[0]}_{child_type}': current}
-                        current['child_type'] = child_type
+                        current = {f"{level[0]}_{child_type}": current}
+                        current["child_type"] = child_type
                     current.update(level[1])
-                    current['self_type'] = level[0]
+                    current["self_type"] = level[0]
                     child_type = level[0]
 
-                current['materialized_type'] = '.'.join([x[0] for x in exc.attr_stack])
+                current["materialized_type"] = ".".join([x[0] for x in exc.attr_stack])
                 self.error_metrics = current
             except Exception:
                 # Todo: maybe it is needed to use logger and specific message for exception logging
@@ -196,104 +196,110 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
             self.finish(exc.as_html())
         else:
             self.error_metrics = {
-                'code': self.get_status(),
-                'message': str(exc),
-                'self_type': 'error',
-                'child_type': 'nonspecific',
-                'materialized_type': 'error.nonspecific',
-                'error_nonspecific': {
-                    'self_type': 'nonspecific',
-                    'class': etype.__name__,
-                    'data': repr(exc),
+                "code": self.get_status(),
+                "message": str(exc),
+                "self_type": "error",
+                "child_type": "nonspecific",
+                "materialized_type": "error.nonspecific",
+                "error_nonspecific": {
+                    "self_type": "nonspecific",
+                    "class": etype.__name__,
+                    "data": repr(exc),
                 },
             }
             self.set_status(400)
-            self.finish('''
+            self.finish("""
                 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
                 <div class="alert alert-warning" role="alert">
                     Unable to render the requested file, please try again later.
                 </div>
-            ''')
+            """)
 
     # avoid dumping duplicate information to application log
     def log_exception(self, typ, value, tb):
         if isinstance(value, tornado.web.HTTPError):
             if value.log_message:
                 log_message_format = "%d %s: " + value.log_message
-                args = ([value.status_code, self._request_summary()] + list(value.args))
+                args = [value.status_code, self._request_summary()] + list(value.args)
                 tornado.web.gen_log.warning(log_message_format, *args)
         else:
-            tornado.web.app_log.error("[User-Agent: %s] Uncaught exception %s\n",
-                                      self.request.headers.get('User-Agent', '*none found*'),
-                                      self._request_summary(),
-                                      exc_info=(typ, value, tb))
+            tornado.web.app_log.error(
+                "[User-Agent: %s] Uncaught exception %s\n",
+                self.request.headers.get("User-Agent", "*none found*"),
+                self._request_summary(),
+                exc_info=(typ, value, tb),
+            )
 
     def on_finish(self):
         if self.request.method not in self.ALLOWED_METHODS:
             return
 
-        self.handler_metrics.merge({
-            'type': self.NAME,
-            'bytes_written': self.bytes_written,
-            # 'elpased': elapsed.serialize(),
-            'cache_file': {
-                'id': str(getattr(self, 'cache_file_id', '')),
-                'path': str(getattr(self, 'cache_file_path', '')),
-            },
-            'source_file': {
-                'id': str(getattr(self, 'source_file_id', '')),
-                'path': str(getattr(self, 'source_file_path', '')),
+        self.handler_metrics.merge(
+            {
+                "type": self.NAME,
+                "bytes_written": self.bytes_written,
+                # 'elpased': elapsed.serialize(),
+                "cache_file": {
+                    "id": str(getattr(self, "cache_file_id", "")),
+                    "path": str(getattr(self, "cache_file_path", "")),
+                },
+                "source_file": {
+                    "id": str(getattr(self, "source_file_id", "")),
+                    "path": str(getattr(self, "source_file_path", "")),
+                },
             }
-        })
+        )
 
-        if hasattr(self, 'cache_provider'):
-            self.handler_metrics.merge({
-                'cache_file': {
-                    'provider': self.cache_provider.NAME
-                }
-            })
+        if hasattr(self, "cache_provider"):
+            self.handler_metrics.merge(
+                {"cache_file": {"provider": self.cache_provider.NAME}}
+            )
 
-        if hasattr(self, 'local_cache_provider'):
-            self.handler_metrics.merge({
-                'source_file': {
-                    'provider': self.local_cache_provider.NAME
-                }
-            })
+        if hasattr(self, "local_cache_provider"):
+            self.handler_metrics.merge(
+                {"source_file": {"provider": self.local_cache_provider.NAME}}
+            )
 
         asyncio.ensure_future(self._cache_and_clean())
         asyncio.ensure_future(
             remote_logging.log_analytics(
                 remote_logging._serialize_request(self.request),
-                self._all_metrics(), is_error=hasattr(self, 'error_metrics')))
+                self._all_metrics(),
+                is_error=hasattr(self, "error_metrics"),
+            )
+        )
 
     async def _cache_and_clean(self):
         return
 
     def _all_metrics(self):
         metrics = {
-            'handler': self.handler_metrics.serialize(),
+            "handler": self.handler_metrics.serialize(),
         }
 
         metrics_attrs = [
-            ('extension', 'extension_metrics'),
-            ('file', 'metadata'),
-            ('renderer', 'renderer_metrics'),
-            ('exporter', 'exporter_metrics'),
+            ("extension", "extension_metrics"),
+            ("file", "metadata"),
+            ("renderer", "renderer_metrics"),
+            ("exporter", "exporter_metrics"),
         ]
-        for (key, name) in metrics_attrs:
-            metrics[key] = getattr(self, name).serialize() if hasattr(self, name) else None
+        for key, name in metrics_attrs:
+            metrics[key] = (
+                getattr(self, name).serialize() if hasattr(self, name) else None
+            )
 
-        if hasattr(self, 'provider') and hasattr(self.provider, 'provider_metrics'):
-            metrics['provider'] = self.provider.provider_metrics.serialize()
+        if hasattr(self, "provider") and hasattr(self.provider, "provider_metrics"):
+            metrics["provider"] = self.provider.provider_metrics.serialize()
 
         # error_metrics is already serialized
-        metrics['error'] = getattr(self, 'error_metrics') if hasattr(self, 'error_metrics') else None
+        metrics["error"] = (
+            getattr(self, "error_metrics") if hasattr(self, "error_metrics") else None
+        )
         return metrics
 
 
 class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
-    """Extensions static path definitions
-    """
+    """Extensions static path definitions"""
 
     def initialize(self):
         # Todo: the method args differ in comparison with StaticFileHandler

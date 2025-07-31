@@ -6,10 +6,10 @@ from mfr.tasks.core import wait_on_celery
 from mfr.tasks.exceptions import WaitTimeOutError
 
 __all__ = [
-    'app',
-    'render',
-    'celery_task',
-    'backgrounded',
-    'wait_on_celery',
-    'WaitTimeOutError',
+    "app",
+    "render",
+    "celery_task",
+    "backgrounded",
+    "wait_on_celery",
+    "WaitTimeOutError",
 ]

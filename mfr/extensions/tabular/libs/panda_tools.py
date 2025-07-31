@@ -3,7 +3,11 @@ from tempfile import NamedTemporaryFile
 import numpy
 import pandas
 
-from mfr.extensions.tabular.utilities import header_population, strip_comments, sav_to_csv
+from mfr.extensions.tabular.utilities import (
+    header_population,
+    strip_comments,
+    sav_to_csv,
+)
 
 
 def csv_pandas(fp):
@@ -11,7 +15,7 @@ def csv_pandas(fp):
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    with NamedTemporaryFile(mode='w+b') as temp:
+    with NamedTemporaryFile(mode="w+b") as temp:
         strip_comments(fp, temp)
         dataframe = pandas.read_csv(temp.name)
     return data_from_dataframe(dataframe)
@@ -22,9 +26,9 @@ def tsv_pandas(fp):
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    with NamedTemporaryFile(mode='w+b') as temp:
+    with NamedTemporaryFile(mode="w+b") as temp:
         strip_comments(fp, temp)
-        dataframe = pandas.read_csv(temp.name, sep='\t')
+        dataframe = pandas.read_csv(temp.name, sep="\t")
     return data_from_dataframe(dataframe)
 
 
@@ -33,7 +37,7 @@ def dta_pandas(fp):
     :param fp: File pointer object
     :return: tuple of table headers and data
     """
-    dataframe = pandas.read_stata(fp.name).replace(numpy.nan, '')
+    dataframe = pandas.read_stata(fp.name).replace(numpy.nan, "")
     return data_from_dataframe(dataframe)
 
 
@@ -68,4 +72,4 @@ def data_from_dataframe(dataframe):
             except AttributeError:
                 data_row[name] = value
         data.append(data_row)
-    return {'Sheet 1': (header, data)}
+    return {"Sheet 1": (header, data)}

@@ -1,7 +1,6 @@
-from io import StringIO
-from html.parser import HTMLParser
-
 import base64
+from html.parser import HTMLParser
+from io import StringIO
 
 
 class HTMLProcessor(HTMLParser):
@@ -18,9 +17,7 @@ class HTMLProcessor(HTMLParser):
         self._zip_file = zip_file
 
     def handle_starttag(self, tag, attrs):
-        if (
-            tag == "script" or tag == "object"
-        ):  # filter scripts and objects (attack vectors)
+        if tag == "script" or tag == "object":  # filter scripts and objects (attack vectors)
             return
 
         self._html.write("<")

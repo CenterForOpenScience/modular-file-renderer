@@ -1,5 +1,3 @@
-import pytest
-
 from mfr.core import remote_logging
 
 

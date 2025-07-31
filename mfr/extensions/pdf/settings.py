@@ -1,6 +1,5 @@
 from mfr import settings
 
-
 config = settings.child("PDF_EXTENSION_CONFIG")
 
 EXPORT_TYPE = config.get("EXPORT_TYPE", "pdf")

@@ -1,11 +1,9 @@
-import pytest
 from unittest import mock
 
 from tornado import testing
-from tornado.platform.asyncio import AsyncIOMainLoop
 
-from mfr.server.app import make_app
 from mfr.core.provider import BaseProvider
+from mfr.server.app import make_app
 
 
 class MockCoroutine(mock.Mock):

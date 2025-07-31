@@ -13,8 +13,8 @@ class TestTabularPandaTools:
             sheets = panda_tools.csv_pandas(fp)
 
         sheet = sheets.popitem()[1]
-        assert type(sheet[0]) == list
-        assert type(sheet[0][1]) == dict
+        assert isinstance(sheet[0], list)
+        assert isinstance(sheet[0][1], dict)
 
     def test_csv_pandas(self):
         with open(os.path.join(BASE, "files", "test.csv")) as fp:

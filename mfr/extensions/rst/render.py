@@ -2,7 +2,6 @@ import os
 
 import docutils
 from docutils.core import publish_parts
-
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension

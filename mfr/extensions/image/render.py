@@ -5,7 +5,7 @@ from mako.lookup import TemplateLookup
 
 from mfr.core import extension
 from mfr.extensions.image import settings
-from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
+from mfr.extensions.utils import escape_url_for_template, munge_url_for_localdev
 
 
 class ImageRenderer(extension.BaseRenderer):
@@ -22,9 +22,7 @@ class ImageRenderer(extension.BaseRenderer):
 
         exported_url = furl.furl(self.export_url)
         if settings.EXPORT_MAXIMUM_SIZE and settings.EXPORT_TYPE:
-            exported_url.args["format"] = (
-                f"{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}"
-            )
+            exported_url.args["format"] = f"{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}"
         elif settings.EXPORT_TYPE:
             exported_url.args["format"] = settings.EXPORT_TYPE
         else:

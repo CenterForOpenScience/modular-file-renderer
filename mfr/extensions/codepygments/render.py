@@ -1,18 +1,17 @@
-import os
 import logging
+import os
 
 import chardet
-from humanfriendly import format_size
 import pygments
+import pygments.formatters
 import pygments.lexers
 import pygments.lexers.special
-import pygments.formatters
-from pygments.util import ClassNotFound
+from humanfriendly import format_size
 from mako.lookup import TemplateLookup
+from pygments.util import ClassNotFound
 
 from mfr.core import extension
-from mfr.extensions.codepygments import settings
-from mfr.extensions.codepygments import exceptions
+from mfr.extensions.codepygments import exceptions, settings
 
 logger = logging.getLogger(__name__)
 

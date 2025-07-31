@@ -1,7 +1,7 @@
-import os
 import json
 import logging
 import logging.config
+import os
 
 
 class SettingsDict(dict):
@@ -91,7 +91,9 @@ PROJECT_NAME = "mfr"
 PROJECT_CONFIG_PATH = "~/.cos"
 
 UNSUPPORTED_EXPORTER_MSG = "Exporting of this file type is not currently supported."
-UNSUPPORTED_RENDER_MSG = "Viewing of this file type is not currently supported. Please download the file to view."
+UNSUPPORTED_RENDER_MSG = (
+    "Viewing of this file type is not currently supported. Please download the file to view."
+)
 
 
 MAX_FILE_SIZE_TO_RENDER = {

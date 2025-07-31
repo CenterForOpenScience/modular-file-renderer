@@ -1,11 +1,12 @@
 import json
 import os
+from distutils.version import LooseVersion
+from zipfile import BadZipFile, ZipFile
 
 from mako.lookup import TemplateLookup
+
 from mfr.core import extension
 from mfr.extensions.jasp import exceptions
-from zipfile import ZipFile, BadZipFile
-from distutils.version import LooseVersion
 
 from .html_processor import HTMLProcessor
 

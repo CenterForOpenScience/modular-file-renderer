@@ -1,8 +1,8 @@
 import sys
 
+import FreeCAD
 import Mesh
 import Part
-import FreeCAD
 
 # This file is run by Freecads own version of python to do step file conversion
 # The exporter will shell out to Freecad and provide the path to this file

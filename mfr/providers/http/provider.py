@@ -1,15 +1,13 @@
-import os
 import hashlib
 import logging
 import mimetypes
+import os
 from urllib.parse import urlparse
 
 import aiohttp
-
 from waterbutler.core import streams
 
-from mfr.core import provider
-from mfr.core import exceptions
+from mfr.core import exceptions, provider
 
 logger = logging.getLogger(__name__)
 

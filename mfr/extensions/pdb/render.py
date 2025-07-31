@@ -1,13 +1,13 @@
 """Molecule renderer module"""
 
-import os
 import json
+import os
 
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
 from mfr.extensions.pdb import settings
-from mfr.extensions.utils import munge_url_for_localdev, escape_url_for_template
+from mfr.extensions.utils import escape_url_for_template, munge_url_for_localdev
 
 
 class PdbRenderer(extension.BaseRenderer):

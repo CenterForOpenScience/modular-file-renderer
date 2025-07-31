@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 from mfr.core.provider import ProviderMetadata
 from mfr.extensions.zip import ZipRenderer
 
-
 BASE = os.path.dirname(os.path.abspath(__file__))
 
 

@@ -1,5 +1,5 @@
-import json
 import gc
+import json
 import logging
 import os
 
@@ -7,7 +7,7 @@ from humanfriendly import format_size
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension
-from mfr.extensions.tabular import settings, exceptions
+from mfr.extensions.tabular import exceptions, settings
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +22,7 @@ class TabularRenderer(extension.BaseRenderer):
         if file_size > settings.MAX_FILE_SIZE:
             raise exceptions.FileTooLargeError(
                 "Tabular files larger than {} are not rendered. Please download "
-                "the file to view.".format(
-                    format_size(settings.MAX_FILE_SIZE, binary=True)
-                ),
+                "the file to view.".format(format_size(settings.MAX_FILE_SIZE, binary=True)),
                 file_size=file_size,
                 max_size=settings.MAX_FILE_SIZE,
                 extension=self.metadata.ext,

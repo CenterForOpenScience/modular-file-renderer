@@ -2,8 +2,9 @@ from http import HTTPStatus
 from os.path import basename, splitext
 
 from unoserver.client import UnoClient
-from mfr.core.extension import BaseExporter
+
 from mfr.core.exceptions import SubprocessError
+from mfr.core.extension import BaseExporter
 from mfr.extensions.unoconv.settings import (
     UNOSERVER_HOST,
     UNOSERVER_PORT,

@@ -3,8 +3,8 @@ import logging
 import os
 from urllib.parse import quote
 
-from waterbutler.core.exceptions import InvalidParameters, DownloadError
 import waterbutler.core.streams
+from waterbutler.core.exceptions import DownloadError, InvalidParameters
 
 from mfr.core import utils
 from mfr.server import settings
@@ -39,9 +39,7 @@ class ExportHandler(core.BaseHandler):
             cache_file_path_str = f"/export/{self.cache_file_id}.{self.exporter_name}"
         else:
             cache_file_path_str = f"/export/{self.cache_file_id}"
-        self.cache_file_path = await self.cache_provider.validate_path(
-            cache_file_path_str
-        )
+        self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
 
         self.source_file_path = await self.local_cache_provider.validate_path(
             f"/export/{self.source_file_id}"
@@ -76,14 +74,10 @@ class ExportHandler(core.BaseHandler):
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
             except DownloadError as e:
                 assert e.code == 404, f"Non-404 DownloadError {e!r}"
-                logger.info(
-                    f"No cached file found; Starting export [{self.cache_file_path}]"
-                )
+                logger.info(f"No cached file found; Starting export [{self.cache_file_path}]")
                 self.metrics.add("cache_file.result", "miss")
             else:
-                logger.info(
-                    f"Cached file found; Sending downstream [{self.cache_file_path}]"
-                )
+                logger.info(f"Cached file found; Sending downstream [{self.cache_file_path}]")
                 self.metrics.add("cache_file.result", "hit")
                 self._set_headers()
                 return await self.write_stream(cached_stream)

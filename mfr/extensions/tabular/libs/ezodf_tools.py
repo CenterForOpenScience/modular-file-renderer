@@ -1,8 +1,10 @@
 """This library works for some ods files but not others. Because it doesn't
 work consistently, we have disabled this for the moment."""
 
-import ezodf
 from collections import OrderedDict
+
+import ezodf
+
 from ..utilities import data_population, header_population
 
 

@@ -1,11 +1,10 @@
+import binascii
 import os
 import shutil
-import binascii
 
 import pytest
 
-from mfr.extensions.pdf import settings, exceptions, PdfExporter
-
+from mfr.extensions.pdf import PdfExporter, exceptions, settings
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 

@@ -1,7 +1,6 @@
 from mfr import settings
 from mfr.extensions.tabular import libs
 
-
 config = settings.child("TABULAR_EXTENSION_CONFIG")
 
 MAX_FILE_SIZE = int(config.get("MAX_FILE_SIZE", 10 * 1024 * 1024))  # 10Mb

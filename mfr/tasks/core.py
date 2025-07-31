@@ -1,14 +1,13 @@
+import asyncio
+import functools
+import logging
 import os
 import pickle
-import asyncio
-import logging
-import functools
 
 from celery.backends.base import DisabledBackend
 
+from mfr.tasks import exceptions, settings
 from mfr.tasks.app import app
-from mfr.tasks import settings
-from mfr.tasks import exceptions
 
 logger = logging.getLogger(__name__)
 

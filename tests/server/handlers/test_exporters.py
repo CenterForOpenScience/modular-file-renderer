@@ -1,6 +1,6 @@
 import json
-
 from importlib.metadata import entry_points
+
 from tornado import testing
 
 from tests import utils

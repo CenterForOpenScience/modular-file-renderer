@@ -1,14 +1,13 @@
-import os
 import asyncio
 import logging
+import os
 
-import waterbutler.core.streams
 import waterbutler.core.exceptions
+import waterbutler.core.streams
 
-from mfr.server import settings
 from mfr.core import utils as utils
+from mfr.server import settings
 from mfr.server.handlers import core
-
 
 logger = logging.getLogger(__name__)
 
@@ -31,9 +30,7 @@ class RenderHandler(core.BaseHandler):
             cache_file_path_str = f"/export/{self.cache_file_id}.{self.renderer_name}"
         else:
             cache_file_path_str = f"/export/{self.cache_file_id}"
-        self.cache_file_path = await self.cache_provider.validate_path(
-            cache_file_path_str
-        )
+        self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
 
         self.source_file_path = await self.local_cache_provider.validate_path(
             f"/render/{self.source_file_id}"
@@ -57,14 +54,10 @@ class RenderHandler(core.BaseHandler):
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
             except waterbutler.core.exceptions.DownloadError as e:
                 assert e.code == 404, f"Non-404 DownloadError {e!r}"
-                logger.info(
-                    f"No cached file found; Starting render [{self.cache_file_path}]"
-                )
+                logger.info(f"No cached file found; Starting render [{self.cache_file_path}]")
                 self.metrics.add("cache_file.result", "miss")
             else:
-                logger.info(
-                    f"Cached file found; Sending downstream [{self.cache_file_path}]"
-                )
+                logger.info(f"Cached file found; Sending downstream [{self.cache_file_path}]")
                 self.metrics.add("cache_file.result", "hit")
                 return await self.write_stream(cached_stream)
 

@@ -1,15 +1,14 @@
 import logging
 
+import sentry_sdk
 from celery import Celery
 from celery.signals import task_failure
-
-import sentry_sdk
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
 from mfr.settings import config
-from mfr.version import __version__
 from mfr.tasks import settings as tasks_settings
+from mfr.version import __version__
 
 logger = logging.getLogger(__name__)
 

@@ -1,9 +1,7 @@
 from mfr.tasks.app import app
-from mfr.tasks.render import render
-from mfr.tasks.core import celery_task
-from mfr.tasks.core import backgrounded
-from mfr.tasks.core import wait_on_celery
+from mfr.tasks.core import backgrounded, celery_task, wait_on_celery
 from mfr.tasks.exceptions import WaitTimeOutError
+from mfr.tasks.render import render
 
 __all__ = [
     "app",

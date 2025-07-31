@@ -1,6 +1,6 @@
-from distutils.version import LooseVersion
 import os
-from zipfile import ZipFile, BadZipFile
+from distutils.version import LooseVersion
+from zipfile import BadZipFile, ZipFile
 
 from mako.lookup import TemplateLookup
 

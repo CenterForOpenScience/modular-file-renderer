@@ -1,8 +1,8 @@
-import re
 import csv
+import re
 
-from mfr.extensions.tabular.exceptions import EmptyTableError, TabularRendererError
 from mfr.extensions.tabular import utilities
+from mfr.extensions.tabular.exceptions import EmptyTableError, TabularRendererError
 
 
 def csv_stdlib(fp):

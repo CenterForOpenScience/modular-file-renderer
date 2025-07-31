@@ -2,8 +2,7 @@ import furl
 import pytest
 
 from mfr.core.provider import ProviderMetadata
-from mfr.extensions.pdf import settings, PdfRenderer
-from mfr.extensions.utils import escape_url_for_template
+from mfr.extensions.pdf import PdfRenderer, settings
 
 
 @pytest.fixture
@@ -71,9 +70,7 @@ def tif_renderer(tif_metadata, tif_file_path, tif_url, assets_url, export_url):
 class TestPdfRenderer:
     def test_render_pdf(self, renderer, metadata, assets_url):
         body = renderer.render()
-        assert (
-            '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
-        )
+        assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
         assert f"DEFAULT_URL = '{metadata.download_url}'" in body
 
@@ -92,9 +89,7 @@ class TestPdfRenderer:
 
         body = renderer.render()
 
-        assert (
-            '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
-        )
+        assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
         assert f"DEFAULT_URL = '{download_url}'" not in body
         assert f"DEFAULT_URL = '{safe_download_url}'" in body
@@ -106,19 +101,13 @@ class TestPdfRenderer:
         )
 
         body = tif_renderer.render()
-        assert (
-            '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
-        )
+        assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
         assert f"DEFAULT_URL = '{exported_url.url}'" in body
 
     def test_render_docx(self, assets_url):
-        export_url = (
-            "http://mfr.osf.io/export?url=http://osf.io/file/te'st.docx&format=pdf"
-        )
-        safe_url = (
-            "http://mfr.osf.io/export?url=http://osf.io/file/te%27st.docx&format=pdf"
-        )
+        export_url = "http://mfr.osf.io/export?url=http://osf.io/file/te'st.docx&format=pdf"
+        safe_url = "http://mfr.osf.io/export?url=http://osf.io/file/te%27st.docx&format=pdf"
 
         metadata = ProviderMetadata("te'st", ".docx", "text/plain", "1234", export_url)
         renderer = PdfRenderer(
@@ -131,9 +120,7 @@ class TestPdfRenderer:
 
         body = renderer.render()
 
-        assert (
-            '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
-        )
+        assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, "pdf") in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
         assert f"DEFAULT_URL = '{export_url}'" not in body
         assert f"DEFAULT_URL = '{safe_url}'" in body

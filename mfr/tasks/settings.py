@@ -1,9 +1,8 @@
 import os
 
-from kombu import Queue, Exchange
+from kombu import Exchange, Queue
 
 from mfr import settings
-
 
 config = settings.child("TASKS_CONFIG")
 

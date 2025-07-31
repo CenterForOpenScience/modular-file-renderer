@@ -1,14 +1,13 @@
 import re
-import xlrd
-
 from http import HTTPStatus
-from subprocess import check_call, TimeoutExpired, CalledProcessError
+from subprocess import CalledProcessError, TimeoutExpired, check_call
 from tempfile import NamedTemporaryFile
 
-from mfr.extensions.tabular import compat
-from mfr.core.exceptions import SubprocessError, TooBigToRenderError
-from mfr.extensions.tabular.settings import PSPP_CONVERT_BIN, PSPP_CONVERT_TIMEOUT
+import xlrd
 
+from mfr.core.exceptions import SubprocessError, TooBigToRenderError
+from mfr.extensions.tabular import compat
+from mfr.extensions.tabular.settings import PSPP_CONVERT_BIN, PSPP_CONVERT_TIMEOUT
 
 MAX_SIZE = 10_000
 
@@ -18,10 +17,7 @@ def header_population(headers):
     :param headers: list of column headers
     :return: a list of dictionaries
     """
-    return [
-        {"id": field, "name": field, "field": field, "sortable": True}
-        for field in headers
-    ]
+    return [{"id": field, "name": field, "field": field, "sortable": True} for field in headers]
 
 
 def data_population(in_data, headers=None):
@@ -33,10 +29,7 @@ def data_population(in_data, headers=None):
     """
     headers = headers or in_data[0]
 
-    return [
-        {header: row[cindex] for cindex, header in enumerate(headers)}
-        for row in in_data
-    ]
+    return [{header: row[cindex] for cindex, header in enumerate(headers)} for row in in_data]
 
 
 def strip_comments(src, dest):
@@ -133,8 +126,7 @@ def parse_xls(wb, sheets):
         verify_size(sheet.nrows, sheet.ncols, ".xls")
         fields = fix_headers(sheet.row_values(0))
         rows = [
-            dict(zip(fields, row_vals(sheet.row(r), wb.datemode)))
-            for r in range(1, sheet.nrows)
+            dict(zip(fields, row_vals(sheet.row(r), wb.datemode))) for r in range(1, sheet.nrows)
         ]
         sheets[sheet.name] = (header_population(fields), rows)
     return sheets
@@ -155,9 +147,7 @@ def parse_xlsx(wb, sheets):
         fields = fix_headers(header_row)
         rows = [
             dict(zip(fields, row))
-            for row in ws.iter_rows(
-                min_row=2, max_row=max_row, max_col=max_col, values_only=True
-            )
+            for row in ws.iter_rows(min_row=2, max_row=max_row, max_col=max_col, values_only=True)
         ]
         sheets[name] = (header_population(fields), rows)
     return sheets
@@ -171,10 +161,7 @@ def verify_size(rows, cols, ext):
 
 
 def fix_headers(raw):
-    return [
-        str(v) if v not in (None, "") else f"Unnamed: {i + 1}"
-        for i, v in enumerate(raw)
-    ]
+    return [str(v) if v not in (None, "") else f"Unnamed: {i + 1}" for i, v in enumerate(raw)]
 
 
 def row_vals(row, datemode):

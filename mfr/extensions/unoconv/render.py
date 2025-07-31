@@ -1,10 +1,9 @@
-import os
-import furl
 import logging
+import os
 
-from mfr.core import utils
-from mfr.core import extension
+import furl
 
+from mfr.core import extension, utils
 from mfr.extensions.unoconv import settings
 
 logger = logging.getLogger(__name__)

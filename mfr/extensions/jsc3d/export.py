@@ -1,12 +1,12 @@
 import shutil
 from http import HTTPStatus
-from subprocess import DEVNULL, check_call, TimeoutExpired, CalledProcessError
 from os.path import basename, splitext
+from subprocess import DEVNULL, CalledProcessError, TimeoutExpired, check_call
 from tempfile import NamedTemporaryFile
 
 from mfr.core import exceptions
 from mfr.core.extension import BaseExporter
-from mfr.extensions.jsc3d.settings import TIMEOUT, FREECAD_BIN, CONVERSION_SCRIPT
+from mfr.extensions.jsc3d.settings import CONVERSION_SCRIPT, FREECAD_BIN, TIMEOUT
 
 
 class JSC3DExporter(BaseExporter):

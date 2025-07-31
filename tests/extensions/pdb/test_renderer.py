@@ -1,7 +1,6 @@
 import pytest
 
 from mfr.core.provider import ProviderMetadata
-
 from mfr.extensions.pdb import PdbRenderer
 
 

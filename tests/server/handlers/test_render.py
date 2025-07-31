@@ -1,5 +1,6 @@
-from tests import utils
 from tornado import testing
+
+from tests import utils
 
 
 class TestRenderHandler(utils.HandlerTestCase):

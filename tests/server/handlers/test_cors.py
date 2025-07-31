@@ -1,11 +1,9 @@
-import pytest
 from unittest import mock
 
 from tornado import testing
 
-from tests.utils import HandlerTestCase
-
 from mfr.server.handlers.core import CorsMixin
+from tests.utils import HandlerTestCase
 
 
 class MockHandler(CorsMixin):
@@ -17,7 +15,9 @@ class MockHandler(CorsMixin):
 
 
 class MockRequest:
-    def __init__(self, method="GET", cookies=False, headers={}):
+    def __init__(self, method="GET", cookies=False, headers=None):
+        if headers is None:
+            headers = {}
         self.method = method
         self.cookies = cookies
         self.headers = headers

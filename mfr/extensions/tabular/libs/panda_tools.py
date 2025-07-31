@@ -5,8 +5,8 @@ import pandas
 
 from mfr.extensions.tabular.utilities import (
     header_population,
-    strip_comments,
     sav_to_csv,
+    strip_comments,
 )
 
 

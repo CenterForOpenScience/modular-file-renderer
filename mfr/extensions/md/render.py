@@ -1,9 +1,8 @@
 import os
 
 import markdown
-from markdown.extensions import Extension
-
 from mako.lookup import TemplateLookup
+from markdown.extensions import Extension
 
 from mfr.core import extension
 

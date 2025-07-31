@@ -1,10 +1,11 @@
-import xlrd
 import zipfile
-
-from io import BytesIO
-from openpyxl import load_workbook
 from collections import OrderedDict
-from ..utilities import to_bytes, parse_xls, parse_xlsx
+from io import BytesIO
+
+import xlrd
+from openpyxl import load_workbook
+
+from ..utilities import parse_xls, parse_xlsx, to_bytes
 
 
 def xlsx_xlrd(fp):
@@ -27,8 +28,6 @@ def xlsx_xlrd(fp):
     try:
         wb = load_workbook(BytesIO(to_bytes(fp)), data_only=True, read_only=True)
     except zipfile.BadZipFile as exc:
-        raise xlrd.biffh.XLRDError(
-            "Invalid xlsx file or corrupted ZIP structure"
-        ) from exc
+        raise xlrd.biffh.XLRDError("Invalid xlsx file or corrupted ZIP structure") from exc
 
     return parse_xlsx(wb, sheets)

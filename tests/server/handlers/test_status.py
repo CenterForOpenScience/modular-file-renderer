@@ -4,7 +4,6 @@ from http import HTTPStatus
 from tornado import testing
 
 from mfr.version import __version__
-
 from tests import utils
 
 

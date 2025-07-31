@@ -19,8 +19,8 @@ def install(ctx, develop=False, pty=True):
 
 
 @task
-def flake(ctx):
-    ctx.run("poetry run flake8 .", pty=True)
+def lint(ctx):
+    ctx.run("poetry run ruff check .", pty=True)
 
 
 @task
@@ -33,7 +33,7 @@ def test(ctx, verbose=False, nocov=False, extension=None, path=None):
     :param path: limit the tests to the given path only
     :return: None
     """
-    flake(ctx)
+    lint(ctx)
     # `--extension=` and `--path=` are mutually exclusive options
     assert not (extension and path)
     if path:

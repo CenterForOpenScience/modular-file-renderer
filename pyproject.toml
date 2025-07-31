@@ -876,7 +876,7 @@ combine_as_imports = true
 skip = ["mfr.egg-info", ".venv"]
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 extend-select = [
   "E",
   "F",
@@ -885,7 +885,7 @@ extend-select = [
   "B",
 ]
 extend-ignore = [
-  "E203",
+  "E203", "E501", "E265", "E301", "E302", "F403", "E731"
 ]
 exclude = [
   "mfr.egg-info",

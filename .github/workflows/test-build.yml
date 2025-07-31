@@ -62,8 +62,8 @@ jobs:
           python -m pip install setuptools==80.1.0
           poetry install --without=docs --with=dev
 
-      - name: Run flake8
-        run: poetry run flake8 .
+      - name: Run ruff
+        run: poetry run ruff check .
 
       - name: Run unit tests
         run: |

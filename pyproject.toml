@@ -858,7 +858,7 @@ extend-select = [
   "B",
 ]
 extend-ignore = [
-  "E203", "E501", "E265", "E301", "E302", "F403", "E731", "B904"
+  "E203", "E501", "E265", "E301", "E302", "F403", "E731", "B904", "B905"
 ]
 exclude = [
   "mfr.egg-info",

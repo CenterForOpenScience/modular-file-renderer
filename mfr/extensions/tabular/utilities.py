@@ -126,8 +126,7 @@ def parse_xls(wb, sheets):
         verify_size(sheet.nrows, sheet.ncols, ".xls")
         fields = fix_headers(sheet.row_values(0))
         rows = [
-            dict(zip(fields, row_vals(sheet.row(r), wb.datemode), strict=False))
-            for r in range(1, sheet.nrows)
+            dict(zip(fields, row_vals(sheet.row(r), wb.datemode))) for r in range(1, sheet.nrows)
         ]
         sheets[sheet.name] = (header_population(fields), rows)
     return sheets
@@ -147,7 +146,7 @@ def parse_xlsx(wb, sheets):
         header_row = next(ws.iter_rows(max_row=1, values_only=True), [])
         fields = fix_headers(header_row)
         rows = [
-            dict(zip(fields, row, strict=False))
+            dict(zip(fields, row))
             for row in ws.iter_rows(min_row=2, max_row=max_row, max_col=max_col, values_only=True)
         ]
         sheets[name] = (header_population(fields), rows)

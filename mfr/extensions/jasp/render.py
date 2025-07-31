@@ -1,8 +1,8 @@
 import json
 import os
-from distutils.version import LooseVersion
 from zipfile import BadZipFile, ZipFile
 
+from distutils.version import LooseVersion
 from mako.lookup import TemplateLookup
 
 from mfr.core import extension

@@ -151,7 +151,7 @@ def parse_xlsx(wb, sheets):
                                     max_row=MAX_SIZE,
                                     max_col=MAX_SIZE,
                                     values_only=True)
-            ]
+        ]
         sheets[name] = (header_population(fields), rows)
     return sheets
 

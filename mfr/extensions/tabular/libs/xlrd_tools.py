@@ -11,7 +11,7 @@ from ..utilities import (
 )
 
 
-def xlsx_xlrd(fp):
+def xls(fp):
     """
     • .xls → xlrd
     • .xlsx → openpyxl (xlrd ≥2.0 dropped xlsx support)
@@ -21,13 +21,11 @@ def xlsx_xlrd(fp):
     ZipFile) can seek inside safely.
     """
     sheets = OrderedDict()
+    wb = xlrd.open_workbook(file_contents=to_bytes(fp))
+    return parse_xls(wb, sheets)
 
-    try:
-        wb = xlrd.open_workbook(file_contents=to_bytes(fp))
-        return parse_xls(wb, sheets)
-    except xlrd.biffh.XLRDError:
-        pass
-
+def xlsx(fp):
+    sheets = OrderedDict()
     try:
         wb = load_workbook(BytesIO(to_bytes(fp)), data_only=True, read_only=True)
     except zipfile.BadZipFile as exc:

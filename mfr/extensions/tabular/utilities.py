@@ -8,7 +8,7 @@ from subprocess import (check_call,
 from tempfile import NamedTemporaryFile
 
 from mfr.extensions.tabular import compat
-from mfr.core.exceptions import SubprocessError, TooBigToRenderError
+from mfr.core.exceptions import SubprocessError, TooBigToRenderError, CorruptedError
 from mfr.extensions.tabular.settings import (PSPP_CONVERT_BIN,
                                              PSPP_CONVERT_TIMEOUT)
 
@@ -143,21 +143,13 @@ def parse_xls(wb, sheets):
 def parse_xlsx(wb, sheets):
     for name in wb.sheetnames:
         ws = wb[name]
-        max_row = ws.max_row or 0
-        max_col = ws.max_column or 0
-        verify_size(max_row, max_col, '.xlsx')
-
-        if max_row == 0 or max_col == 0:
-            sheets[name] = ([], [])
-            continue
-
         header_row = next(ws.iter_rows(max_row=1, values_only=True), [])
         fields = fix_headers(header_row)
         rows = [
             dict(zip(fields, row))
             for row in ws.iter_rows(min_row=2,
-                                    max_row=max_row,
-                                    max_col=max_col,
+                                    max_row=MAX_SIZE,
+                                    max_col=MAX_SIZE,
                                     values_only=True)
         ]
         sheets[name] = (header_population(fields), rows)
@@ -165,6 +157,8 @@ def parse_xlsx(wb, sheets):
 
 
 def verify_size(rows, cols, ext):
+    if rows is None or cols is None:
+        raise CorruptedError
     if rows > MAX_SIZE or cols > MAX_SIZE:
         raise TooBigToRenderError('Table is too large to render.', ext,
                                nbr_cols=cols, nbr_rows=rows)

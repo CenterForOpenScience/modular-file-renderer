@@ -20,7 +20,9 @@ class TestGetRendererName:
             assert mfr_utils.get_renderer_name(ep.name) == expected
 
     def test_get_renderer_name_no_entry_point(self):
-        assert mfr_utils.get_renderer_name(".jpg") == ""  # extensions must begin with a period
+        assert (
+            mfr_utils.get_renderer_name(".jpg") == ""
+        )  # extensions must begin with a period
 
 
 class TestGetExporterName:
@@ -34,7 +36,9 @@ class TestGetExporterName:
             assert mfr_utils.get_exporter_name(ep.name) == expected
 
     def test_get_exporter_name_no_entry_point(self):
-        assert mfr_utils.get_exporter_name(".jpg") == ""  # extensions must begin with a period
+        assert (
+            mfr_utils.get_exporter_name(".jpg") == ""
+        )  # extensions must begin with a period
 
 
 @parametrize(

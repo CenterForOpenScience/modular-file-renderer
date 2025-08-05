@@ -849,7 +849,7 @@ zip = "mfr.extensions.zip:ZipRenderer"
 
 [tool.ruff]
 target-version = "py313"
-line-length = 100
+line-length = 88
 extend-select = [
   "E",
   "F",

@@ -20,7 +20,9 @@ def test_md_file_path():
 
 @pytest.fixture
 def invalid_md_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "invalid.md")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "invalid.md"
+    )
 
 
 @pytest.fixture

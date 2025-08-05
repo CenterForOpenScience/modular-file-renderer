@@ -20,22 +20,30 @@ def metadata():
 
 @pytest.fixture
 def ok_old_manifest_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "ok-old-manifest.jasp")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "ok-old-manifest.jasp"
+    )
 
 
 @pytest.fixture
 def ok_new_manifest_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "ok-new-manifest.jasp")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "ok-new-manifest.jasp"
+    )
 
 
 @pytest.fixture
 def not_a_zip_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "not-a-zip-file.jasp")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "not-a-zip-file.jasp"
+    )
 
 
 @pytest.fixture
 def no_manifest_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "no-manifest.jasp")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "no-manifest.jasp"
+    )
 
 
 @pytest.fixture
@@ -58,7 +66,9 @@ def data_archive_version_is_too_old_path():
 
 @pytest.fixture
 def no_index_html_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "no-index_html.jasp")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "no-index_html.jasp"
+    )
 
 
 @pytest.fixture
@@ -98,29 +108,43 @@ def renderer(metadata, ok_new_manifest_path, url, assets_url, export_url):
 class TestCodeJASPRenderer:
     def test_render_JASP(self, renderer):
         body = renderer.render()
-        assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
+        assert (
+            '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">'
+            in body
+        )
 
     def test_render_JASP_old_manifest(
         self, metadata, ok_old_manifest_path, url, assets_url, export_url
     ):
-        renderer = JASPRenderer(metadata, ok_old_manifest_path, url, assets_url, export_url)
+        renderer = JASPRenderer(
+            metadata, ok_old_manifest_path, url, assets_url, export_url
+        )
         body = renderer.render()
-        assert '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">' in body
+        assert (
+            '<div style="word-wrap: break-word; overflow: auto;" class="mfrViewer">'
+            in body
+        )
 
     def test_render_JASP_not_a_zip_file(
         self, metadata, not_a_zip_file_path, url, assets_url, export_url
     ):
         try:
-            renderer = JASPRenderer(metadata, not_a_zip_file_path, url, assets_url, export_url)
+            renderer = JASPRenderer(
+                metadata, not_a_zip_file_path, url, assets_url, export_url
+            )
             renderer.render()
         except RendererError:
             return
 
         raise AssertionError()  # should not get here
 
-    def test_render_JASP_no_manifest(self, metadata, no_manifest_path, url, assets_url, export_url):
+    def test_render_JASP_no_manifest(
+        self, metadata, no_manifest_path, url, assets_url, export_url
+    ):
         try:
-            renderer = JASPRenderer(metadata, no_manifest_path, url, assets_url, export_url)
+            renderer = JASPRenderer(
+                metadata, no_manifest_path, url, assets_url, export_url
+            )
             renderer.render()
         except RendererError:
             return
@@ -175,7 +199,9 @@ class TestCodeJASPRenderer:
         self, metadata, no_index_html_path, url, assets_url, export_url
     ):
         try:
-            renderer = JASPRenderer(metadata, no_index_html_path, url, assets_url, export_url)
+            renderer = JASPRenderer(
+                metadata, no_index_html_path, url, assets_url, export_url
+            )
             renderer.render()
         except RendererError:
             return

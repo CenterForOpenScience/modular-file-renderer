@@ -74,7 +74,9 @@ class OsfProvider(provider.BaseProvider):
             metadata_response = await self._make_request(
                 "HEAD",
                 download_url,
-                headers=({settings.MFR_ACTION_HEADER: self.action} if self.action else None),
+                headers=(
+                    {settings.MFR_ACTION_HEADER: self.action} if self.action else None
+                ),
             )
             response_code = metadata_response.status
             response_reason = metadata_response.reason
@@ -92,7 +94,9 @@ class OsfProvider(provider.BaseProvider):
 
             try:
                 metadata = {
-                    "data": json.loads(response_headers["x-waterbutler-metadata"])["attributes"]
+                    "data": json.loads(response_headers["x-waterbutler-metadata"])[
+                        "attributes"
+                    ]
                 }
             except Exception:
                 pass  # hack: aiohttp tries to unzip empty body when Content-Encoding is set
@@ -123,14 +127,17 @@ class OsfProvider(provider.BaseProvider):
             )
 
         content_type = (
-            metadata["data"]["contentType"] or mimetypes.guess_type(metadata["data"]["name"])[0]
+            metadata["data"]["contentType"]
+            or mimetypes.guess_type(metadata["data"]["name"])[0]
         )
         cleaned_url = furl.furl(download_url)
         for unneeded in OsfProvider.UNNEEDED_URL_PARAMS:
             cleaned_url.args.pop(unneeded, None)
         self.metrics.add("metadata.clean_url_args", str(cleaned_url))
         meta = metadata["data"]
-        unique_key = hashlib.sha256((meta["etag"] + cleaned_url.url).encode("utf-8")).hexdigest()
+        unique_key = hashlib.sha256(
+            (meta["etag"] + cleaned_url.url).encode("utf-8")
+        ).hexdigest()
         stable_str = "/{}/{}{}".format(meta["resource"], meta["provider"], meta["path"])
         stable_id = hashlib.sha256(stable_str.encode("utf-8")).hexdigest()
         logger.debug(f"stable_identifier: str({stable_str}) hash({stable_id})")

@@ -66,7 +66,9 @@ class CorsMixin:
         self.set_header("Access-Control-Allow-Credentials", "true")
         self.set_header("Access-Control-Allow-Headers", ", ".join(CORS_ACCEPT_HEADERS))
         self.set_header("Access-Control-Expose-Headers", ", ".join(CORS_EXPOSE_HEADERS))
-        self.set_header("Cache-control", "no-store, no-cache, must-revalidate, max-age=0")
+        self.set_header(
+            "Cache-control", "no-store, no-cache, must-revalidate, max-age=0"
+        )
 
     def options(self):
         self.set_status(204)
@@ -247,7 +249,9 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         )
 
         if hasattr(self, "cache_provider"):
-            self.handler_metrics.merge({"cache_file": {"provider": self.cache_provider.NAME}})
+            self.handler_metrics.merge(
+                {"cache_file": {"provider": self.cache_provider.NAME}}
+            )
 
         if hasattr(self, "local_cache_provider"):
             self.handler_metrics.merge(
@@ -278,13 +282,17 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
             ("exporter", "exporter_metrics"),
         ]
         for key, name in metrics_attrs:
-            metrics[key] = getattr(self, name).serialize() if hasattr(self, name) else None
+            metrics[key] = (
+                getattr(self, name).serialize() if hasattr(self, name) else None
+            )
 
         if hasattr(self, "provider") and hasattr(self.provider, "provider_metrics"):
             metrics["provider"] = self.provider.provider_metrics.serialize()
 
         # error_metrics is already serialized
-        metrics["error"] = self.error_metrics if hasattr(self, "error_metrics") else None
+        metrics["error"] = (
+            self.error_metrics if hasattr(self, "error_metrics") else None
+        )
         return metrics
 
 

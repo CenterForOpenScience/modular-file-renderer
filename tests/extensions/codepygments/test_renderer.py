@@ -28,7 +28,9 @@ def test_file_path():
 @pytest.fixture
 def max_size_file_path():
     dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
-    with NamedTemporaryFile(mode="w+b", suffix=".txt", dir=dir_path, delete=False) as temp_file:
+    with NamedTemporaryFile(
+        mode="w+b", suffix=".txt", dir=dir_path, delete=False
+    ) as temp_file:
         temp_file_path = temp_file.name
         file_size = settings.MAX_SIZE
         temp_file.seek(file_size - 1)
@@ -39,7 +41,9 @@ def max_size_file_path():
 @pytest.fixture
 def over_size_file_path():
     dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
-    with NamedTemporaryFile(mode="w+b", suffix=".txt", dir=dir_path, delete=False) as temp_file:
+    with NamedTemporaryFile(
+        mode="w+b", suffix=".txt", dir=dir_path, delete=False
+    ) as temp_file:
         temp_file_path = temp_file.name
         file_size = settings.MAX_SIZE
         temp_file.seek(file_size)
@@ -49,7 +53,9 @@ def over_size_file_path():
 
 @pytest.fixture
 def invalid_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "invalid.xml")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "invalid.xml"
+    )
 
 
 @pytest.fixture
@@ -85,7 +91,9 @@ class TestCodePygmentsRenderer:
     def test_render_codepygments_invalid(
         self, metadata, invalid_file_path, url, assets_url, export_url
     ):
-        renderer = CodePygmentsRenderer(metadata, invalid_file_path, url, assets_url, export_url)
+        renderer = CodePygmentsRenderer(
+            metadata, invalid_file_path, url, assets_url, export_url
+        )
         with pytest.raises(RendererError):
             renderer.render()
 
@@ -139,7 +147,9 @@ class TestCodePygmentsRenderer:
         file_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "files", "encodings", filename
         )
-        renderer = CodePygmentsRenderer(metadata, file_path, url, assets_url, export_url)
+        renderer = CodePygmentsRenderer(
+            metadata, file_path, url, assets_url, export_url
+        )
         body = renderer.render()
         assert "Héllö" in body
 
@@ -153,6 +163,8 @@ class TestCodePygmentsRenderer:
             "encodings",
             "iso-8859-looks-like-utf16.txt",
         )
-        renderer = CodePygmentsRenderer(metadata, file_path, url, assets_url, export_url)
+        renderer = CodePygmentsRenderer(
+            metadata, file_path, url, assets_url, export_url
+        )
         body = renderer.render()
         assert 'CREATIVE<span class="w"> </span>COMMONS' in body

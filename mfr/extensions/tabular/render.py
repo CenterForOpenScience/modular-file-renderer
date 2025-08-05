@@ -22,7 +22,9 @@ class TabularRenderer(extension.BaseRenderer):
         if file_size > settings.MAX_FILE_SIZE:
             raise exceptions.FileTooLargeError(
                 "Tabular files larger than {} are not rendered. Please download "
-                "the file to view.".format(format_size(settings.MAX_FILE_SIZE, binary=True)),
+                "the file to view.".format(
+                    format_size(settings.MAX_FILE_SIZE, binary=True)
+                ),
                 file_size=file_size,
                 max_size=settings.MAX_FILE_SIZE,
                 extension=self.metadata.ext,

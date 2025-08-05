@@ -164,7 +164,9 @@ class TestImageExporter:
     def test_exception_file_not_found(self, directory):
         # triggers a `FileNotFoundError`
         source_file_path = os.path.join(BASE, "files", "test.jpg")
-        output_file_path = os.path.join(directory, "fake", "place", f"test.{settings.EXPORT_TYPE}")
+        output_file_path = os.path.join(
+            directory, "fake", "place", f"test.{settings.EXPORT_TYPE}"
+        )
         format = f"{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}"
         exporter = ImageExporter(
             source_file_path=source_file_path,

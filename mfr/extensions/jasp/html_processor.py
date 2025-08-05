@@ -17,7 +17,9 @@ class HTMLProcessor(HTMLParser):
         self._zip_file = zip_file
 
     def handle_starttag(self, tag, attrs):
-        if tag == "script" or tag == "object":  # filter scripts and objects (attack vectors)
+        if (
+            tag == "script" or tag == "object"
+        ):  # filter scripts and objects (attack vectors)
             return
 
         self._html.write("<")

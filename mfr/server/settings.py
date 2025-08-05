@@ -6,7 +6,9 @@ from mfr import settings
 
 config = settings.child("SERVER_CONFIG")
 
-STATIC_PATH = config.get("STATIC_PATH", os.path.join(os.path.dirname(__file__), "static"))
+STATIC_PATH = config.get(
+    "STATIC_PATH", os.path.join(os.path.dirname(__file__), "static")
+)
 
 ADDRESS = config.get("ADDRESS", "localhost")
 PORT = config.get("PORT", 7778)
@@ -26,7 +28,9 @@ PROVIDER_NAME = config.get("PROVIDER_NAME", "osf")
 
 CACHE_ENABLED = config.get_bool("CACHE_ENABLED", False)
 CACHE_PROVIDER_NAME = config.get("CACHE_PROVIDER_NAME", "filesystem")
-CACHE_PROVIDER_SETTINGS = config.get_object("CACHE_PROVIDER_SETTINGS", {"folder": "/tmp/mfr/"})
+CACHE_PROVIDER_SETTINGS = config.get_object(
+    "CACHE_PROVIDER_SETTINGS", {"folder": "/tmp/mfr/"}
+)
 CACHE_PROVIDER_CREDENTIALS = config.get_object("CACHE_PROVIDER_CREDENTIALS", {})
 
 LOCAL_CACHE_PROVIDER_SETTINGS = config.get_object(

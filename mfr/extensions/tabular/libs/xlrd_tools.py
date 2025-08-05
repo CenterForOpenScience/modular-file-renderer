@@ -28,6 +28,8 @@ def xlsx_xlrd(fp):
     try:
         wb = load_workbook(BytesIO(to_bytes(fp)), data_only=True, read_only=True)
     except zipfile.BadZipFile as exc:
-        raise xlrd.biffh.XLRDError("Invalid xlsx file or corrupted ZIP structure") from exc
+        raise xlrd.biffh.XLRDError(
+            "Invalid xlsx file or corrupted ZIP structure"
+        ) from exc
 
     return parse_xlsx(wb, sheets)

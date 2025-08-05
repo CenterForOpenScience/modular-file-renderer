@@ -74,7 +74,9 @@ async def log_analytics(request, metrics, is_error=False):
 
     # send the private payload
     private_collection = "mfr_errors" if is_error else "mfr_action"
-    if (is_error and settings.KEEN_PRIVATE_LOG_ERRORS) or settings.KEEN_PRIVATE_LOG_VIEWS:
+    if (
+        is_error and settings.KEEN_PRIVATE_LOG_ERRORS
+    ) or settings.KEEN_PRIVATE_LOG_VIEWS:
         await _send_to_keen(
             keen_payload,
             private_collection,
@@ -105,7 +107,9 @@ async def log_analytics(request, metrics, is_error=False):
 
 
 @async_retry(retries=5, backoff=5)
-async def _send_to_keen(payload, collection, project_id, write_key, action, domain="private"):
+async def _send_to_keen(
+    payload, collection, project_id, write_key, action, domain="private"
+):
     """Serialize and send an event to Keen.  If an error occurs, try up to five more times.
     Will raise an excpetion if the event cannot be sent."""
 
@@ -121,7 +125,9 @@ async def _send_to_keen(payload, collection, project_id, write_key, action, doma
 
     async with aiohttp.request("POST", url, headers=headers, data=serialized) as resp:
         if resp.status == 201:
-            logger.info(f"Successfully logged {action} to {collection} collection in {domain} Keen")
+            logger.info(
+                f"Successfully logged {action} to {collection} collection in {domain} Keen"
+            )
         else:
             raise Exception(
                 "Failed to log {} to {} collection in {} Keen. Status: {} Error: {}".format(

@@ -108,11 +108,15 @@ class TestTabularCsvRenderer:
             "1234",
             "http://wb.osf.io/file/test.csv?token=1234",
         )
-        renderer = TabularRenderer(metadata, test_csv_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, test_csv_file_path, url, assets_url, export_url
+        )
         body = renderer.render()
         assert BODY in body
 
-    def test_render_tabular_csv_invalid(self, invalid_csv_file_path, assets_url, export_url):
+    def test_render_tabular_csv_invalid(
+        self, invalid_csv_file_path, assets_url, export_url
+    ):
         metadata = ProviderMetadata(
             "test",
             ".csv",
@@ -120,7 +124,9 @@ class TestTabularCsvRenderer:
             "1234",
             "http://wb.osf.io/file/test.csv?token=1234",
         )
-        renderer = TabularRenderer(metadata, invalid_csv_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, invalid_csv_file_path, url, assets_url, export_url
+        )
         with pytest.raises(exceptions.EmptyTableError):
             renderer.render()
 
@@ -134,11 +140,15 @@ class TestTabularTsvRenderer:
             "1234",
             "http://wb.osf.io/file/test.tsv?token=1234",
         )
-        renderer = TabularRenderer(metadata, test_tsv_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, test_tsv_file_path, url, assets_url, export_url
+        )
         body = renderer.render()
         assert BODY in body
 
-    def test_render_tabular_tsv_invalid(self, invalid_tsv_file_path, assets_url, export_url):
+    def test_render_tabular_tsv_invalid(
+        self, invalid_tsv_file_path, assets_url, export_url
+    ):
         metadata = ProviderMetadata(
             "test",
             ".tsv",
@@ -146,7 +156,9 @@ class TestTabularTsvRenderer:
             "1234",
             "http://wb.osf.io/file/test.tsv?token=1234",
         )
-        renderer = TabularRenderer(metadata, invalid_tsv_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, invalid_tsv_file_path, url, assets_url, export_url
+        )
         with pytest.raises(exceptions.EmptyTableError):
             renderer.render()
 
@@ -160,11 +172,15 @@ class TestTabularXlsxRenderer:
             "1234",
             "http://wb.osf.io/file/test.xlsx?token=1234",
         )
-        renderer = TabularRenderer(metadata, test_xlsx_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, test_xlsx_file_path, url, assets_url, export_url
+        )
         body = renderer.render()
         assert BODY in body
 
-    def test_render_tabular_xlsx_invalid(self, invalid_xlsx_file_path, assets_url, export_url):
+    def test_render_tabular_xlsx_invalid(
+        self, invalid_xlsx_file_path, assets_url, export_url
+    ):
         metadata = ProviderMetadata(
             "test",
             ".xlsx",
@@ -172,7 +188,9 @@ class TestTabularXlsxRenderer:
             "1234",
             "http://wb.osf.io/file/test.xlsx?token=1234",
         )
-        renderer = TabularRenderer(metadata, invalid_xlsx_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, invalid_xlsx_file_path, url, assets_url, export_url
+        )
         with pytest.raises(XLRDError):
             renderer.render()
 
@@ -186,11 +204,15 @@ class TestTabularMatRenderer:
             "1234",
             "http://wb.osf.io/file/testVer70.mat?token=1234",
         )
-        renderer = TabularRenderer(metadata, test_mat70_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, test_mat70_file_path, url, assets_url, export_url
+        )
         body = renderer.render()
         assert BODY in body
 
-    def test_render_tabular_mat70_invalid(self, invalid_mat70_file_path, assets_url, export_url):
+    def test_render_tabular_mat70_invalid(
+        self, invalid_mat70_file_path, assets_url, export_url
+    ):
         metadata = ProviderMetadata(
             "test",
             ".mat",
@@ -198,7 +220,9 @@ class TestTabularMatRenderer:
             "1234",
             "http://wb.osf.io/file/test.mat?token=1234",
         )
-        renderer = TabularRenderer(metadata, invalid_mat70_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, invalid_mat70_file_path, url, assets_url, export_url
+        )
         with pytest.raises(exceptions.UnexpectedFormattingError):
             renderer.render()
 
@@ -210,7 +234,9 @@ class TestTabularMatRenderer:
             "1234",
             "http://wb.osf.io/file/testVer74.mat?token=1234",
         )
-        renderer = TabularRenderer(metadata, test_mat73_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, test_mat73_file_path, url, assets_url, export_url
+        )
         body = renderer.render()
         assert BODY in body
 
@@ -224,6 +250,8 @@ class TestTabularMatRenderer:
             "1234",
             "http://wb.osf.io/file/test.mat?token=1234",
         )
-        renderer = TabularRenderer(metadata, invalid_mat73_file_path, url, assets_url, export_url)
+        renderer = TabularRenderer(
+            metadata, invalid_mat73_file_path, url, assets_url, export_url
+        )
         with pytest.raises(exceptions.UnexpectedFormattingError):
             renderer.render()

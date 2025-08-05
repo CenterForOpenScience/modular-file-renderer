@@ -30,7 +30,8 @@ class TestImageRenderer:
         body = renderer.render()
 
         assert (
-            f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body
+            f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">'
+            in body
         )
 
     def test_render_image_export_type(self):
@@ -84,7 +85,9 @@ class TestImageRenderer:
         )
 
         exported_url = furl.furl(export_url.url)
-        exported_url.args["format"] = f"{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}"
+        exported_url.args["format"] = (
+            f"{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}"
+        )
 
         body = renderer.render()
 
@@ -118,7 +121,8 @@ class TestImageRenderer:
         body = renderer.render()
 
         assert (
-            f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body
+            f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">'
+            in body
         )
 
     def test_render_image_export_maximum(self):
@@ -146,5 +150,6 @@ class TestImageRenderer:
         body = renderer.render()
 
         assert (
-            f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body
+            f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">'
+            in body
         )

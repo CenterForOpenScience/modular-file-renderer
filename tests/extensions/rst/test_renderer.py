@@ -24,7 +24,9 @@ def test_file_path():
 
 @pytest.fixture
 def invalid_file_path():
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "files", "invalid.rst")
+    return os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "files", "invalid.rst"
+    )
 
 
 @pytest.fixture
@@ -60,7 +62,9 @@ alert(&quot;Hello world&quot;);
             in body
         )
 
-    def test_render_rst_invalid(self, metadata, invalid_file_path, url, assets_url, export_url):
+    def test_render_rst_invalid(
+        self, metadata, invalid_file_path, url, assets_url, export_url
+    ):
         renderer = RstRenderer(metadata, invalid_file_path, url, assets_url, export_url)
         with pytest.raises(UnicodeDecodeError):
             renderer.render()

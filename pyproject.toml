@@ -869,3 +869,4 @@ exclude = [
 ]
 [tool.ruff.lint.isort]
 known-first-party = ["mfr", "tests"]
+combine-as-imports = true

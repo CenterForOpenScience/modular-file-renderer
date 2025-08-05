@@ -84,6 +84,14 @@ invoke install --develop
 invoke test
 ```
 
+### Contributing
+
+Before commiting on first commit use the command below to apply ruff autoformatting and follow same code style:
+
+```bash
+pre-commit install
+```
+
 ### Known issues
 
 - **Updated, 2018-03-01:** *MFR has been updated to work with setuptools==37.0.0 as of MFR release v0.25. The following issue should not happen for new installs, but may occur if you downgrade to an older version.* Running `invoke install -d` with setuptools v31 or greater can break MFR.  The symptom error message is: `"AttributeError: module 'mfr' has no attribute '__version__'".`  If you encounter this, you will need to remove the file `mfr-nspkg.pth` from your virtualenv directory, run `pip install setuptools==30.4.0`, then re-run `invoke install -d`.

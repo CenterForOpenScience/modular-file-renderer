@@ -160,7 +160,7 @@ def parse_xlsx(wb, sheets):
         if getattr(ws, 'max_row', None) is None or getattr(ws, 'max_column', None) is None:
             raise CorruptedError
 
-        ncols = getattr(ws, "max_column", 0) or 0
+        ncols = getattr(ws, "max_column", 0)
         max_cols = min(ncols, MAX_SIZE)
         header_row = next(ws.iter_rows(max_row=1, values_only=True), [])
         fields = fix_headers(list(header_row)[:max_cols])

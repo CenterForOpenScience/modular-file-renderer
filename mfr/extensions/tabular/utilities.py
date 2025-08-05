@@ -5,11 +5,13 @@ from tempfile import NamedTemporaryFile
 
 import xlrd
 
-from mfr.core.exceptions import SubprocessError, TooBigToRenderError
+from mfr.core.exceptions import CorruptedError, SubprocessError
 from mfr.extensions.tabular import compat
-from mfr.extensions.tabular.settings import PSPP_CONVERT_BIN, PSPP_CONVERT_TIMEOUT
-
-MAX_SIZE = 10_000
+from mfr.extensions.tabular.settings import (
+    MAX_SIZE,
+    PSPP_CONVERT_BIN,
+    PSPP_CONVERT_TIMEOUT,
+)
 
 
 def header_population(headers):
@@ -127,14 +129,31 @@ def to_bytes(fp):
     return data
 
 
+def _extract_rows(fields, raw_rows):
+    rows = []
+    for row in raw_rows:
+        if len(rows) >= MAX_SIZE:
+            break
+        rows.append(dict(zip(fields, row)))
+    return rows
+
+
 def parse_xls(wb, sheets):
     for sheet in wb.sheets():
-        verify_size(sheet.nrows, sheet.ncols, ".xls")
-        fields = fix_headers(sheet.row_values(0))
-        rows = [
-            dict(zip(fields, row_vals(sheet.row(r), wb.datemode)))
+        if (
+            getattr(sheet, "nrows", None) is None
+            or getattr(sheet, "ncols", None) is None
+        ):
+            raise CorruptedError
+
+        ncols = sheet.ncols
+        max_cols = min(ncols, MAX_SIZE)
+        fields = fix_headers(sheet.row_values(0)[:max_cols])
+        raw_rows = (
+            row_vals(sheet.row(r)[:max_cols], wb.datemode)
             for r in range(1, sheet.nrows)
-        ]
+        )
+        rows = _extract_rows(fields, raw_rows)
         sheets[sheet.name] = (header_population(fields), rows)
     return sheets
 
@@ -142,31 +161,24 @@ def parse_xls(wb, sheets):
 def parse_xlsx(wb, sheets):
     for name in wb.sheetnames:
         ws = wb[name]
-        max_row = ws.max_row or 0
-        max_col = ws.max_column or 0
-        verify_size(max_row, max_col, ".xlsx")
 
-        if max_row == 0 or max_col == 0:
-            sheets[name] = ([], [])
-            continue
+        if (
+            getattr(ws, "max_row", None) is None
+            or getattr(ws, "max_column", None) is None
+        ):
+            raise CorruptedError
 
+        ncols = getattr(ws, "max_column", 0)
+        max_cols = min(ncols, MAX_SIZE)
         header_row = next(ws.iter_rows(max_row=1, values_only=True), [])
-        fields = fix_headers(header_row)
-        rows = [
-            dict(zip(fields, row))
-            for row in ws.iter_rows(
-                min_row=2, max_row=max_row, max_col=max_col, values_only=True
-            )
-        ]
+        fields = fix_headers(list(header_row)[:max_cols])
+        raw_rows = (
+            row[:max_cols] if row else []
+            for row in ws.iter_rows(min_row=2, values_only=True)
+        )
+        rows = _extract_rows(fields, raw_rows)
         sheets[name] = (header_population(fields), rows)
     return sheets
-
-
-def verify_size(rows, cols, ext):
-    if rows > MAX_SIZE or cols > MAX_SIZE:
-        raise TooBigToRenderError(
-            "Table is too large to render.", ext, nbr_cols=cols, nbr_rows=rows
-        )
 
 
 def fix_headers(raw):

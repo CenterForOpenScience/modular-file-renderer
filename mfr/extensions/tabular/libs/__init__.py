@@ -39,10 +39,16 @@ def sav_pandas():
     return sav_pandas
 
 
-def xlsx_xlrd():
-    from ..libs.xlrd_tools import xlsx_xlrd
+def xls():
+    from ..libs.xlrd_tools import xls
 
-    return xlsx_xlrd
+    return xls
+
+
+def xlsx():
+    from ..libs.xlrd_tools import xlsx
+
+    return xlsx
 
 
 def mat_h5py_scipy():

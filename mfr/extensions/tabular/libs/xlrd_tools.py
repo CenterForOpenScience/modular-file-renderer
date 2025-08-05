@@ -13,18 +13,16 @@ from ..utilities import (
 
 def xls(fp):
     """
-    • .xls → xlrd
-    • .xlsx → openpyxl (xlrd ≥2.0 dropped xlsx support)
-
-    `fp` is the stream returned by WaterButler/MFR.  It may already have been
-    read, so we always rewind and copy to an in‑memory buffer that openpyxl (and
-    ZipFile) can seek inside safely.
+    .xls → xlrd; supports truncation and optional meta collection.
     """
     sheets = OrderedDict()
     wb = xlrd.open_workbook(file_contents=to_bytes(fp))
     return parse_xls(wb, sheets)
 
 def xlsx(fp):
+    """
+    .xlsx → openpyxl; supports truncation and optional meta collection.
+    """
     sheets = OrderedDict()
     try:
         wb = load_workbook(BytesIO(to_bytes(fp)), data_only=True, read_only=True)

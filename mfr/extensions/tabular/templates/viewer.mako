@@ -4,10 +4,11 @@
 <link rel="stylesheet" href="${base}/css/bootstrap.min.css">
 
 <div id="mfrViewer" style="min-height: ${height}px;">
+    <div id="mfr-tabular-notice" class="alert alert-warning" style="display:none; font-size: 1.05em;"></div>
     <div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>
     <div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>
     <nav class="wrapper">
-        <ul id="tabular-tabs" class="nav nav-tabs list" style="height: 45px; overflow: auto; white-space: nowrap;"> 
+        <ul id="tabular-tabs" class="nav nav-tabs list" style="height: 45px; overflow: auto; white-space: nowrap;">
         </ul>
     </nav>
     <div id="inlineFilterPanel" style="background:#dddddd;padding:3px;color:black;">
@@ -30,6 +31,19 @@
         var grid;
         var data;
         var searchString = "";
+        var MAX_ROWS_LIMIT = ${max_size};
+
+        function refreshNotice() {
+            var $n = $("#mfr-tabular-notice");
+            if (!grid) { $n.hide().text(""); return; }
+            var rendered = grid.getDataLength ? grid.getDataLength() : (data ? data.length : 0);
+            if (rendered >= MAX_ROWS_LIMIT) {
+                $n.text("Table exceeds the max size limit — rendered first " + rendered + " rows.");
+                $n.show();
+            } else {
+                $n.hide().text("");
+            }
+        }
 
         for (var sheetName in sheets){
             var sheet = sheets[sheetName];
@@ -48,11 +62,13 @@
                 $("#txtSearch").value = "";
                 data = grid.getData();
                 grid.onSort.subscribe(sortData);
+                refreshNotice();
             });
         }
 
         $("#tabular-tabs").tab();
         $("#tabular-tabs a:first").click();
+        setTimeout(refreshNotice, 0);
 
         $("#txtSearch").keyup(function (e) {
             // clear on Esc
@@ -133,7 +149,7 @@
             grid.invalidate();
             grid.render();
         }
-        
+
         function reAdjust(){
             liFirstPosLeft = $('.list li:first').position().left;
             liLastPosRight = $('.list li:last').position().left + $('.list li:last').width();

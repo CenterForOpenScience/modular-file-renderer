@@ -2,10 +2,7 @@ import copy
 
 
 def _merge_dicts(a, b, path=None):
-    """ "merges b into a
-
-    Taken from: http://stackoverflow.com/a/7205107
-    """
+    """merges b into a Taken from: http://stackoverflow.com/a/7205107"""
     if path is None:
         path = []
     for key in b:

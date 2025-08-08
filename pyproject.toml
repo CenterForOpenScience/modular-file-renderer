@@ -46,6 +46,9 @@ openpyxl = "^3.1"
 waterbutler = { git = "https://github.com/CenterForOpenScience/waterbutler.git", branch = "feature/buff-worms" }
 markupsafe = "2.0.1"
 celery = "5.5.0"
+black = "^25.1.0"
+isort = "^6.0.1"
+ruff = "^0.12.7"
 
 
 [tool.poetry.group.dev]
@@ -845,3 +848,50 @@ jasp = "mfr.extensions.jasp:JASPRenderer"
 
 # Zip
 zip = "mfr.extensions.zip:ZipRenderer"
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+include = '\.pyi?$'
+exclude = '''
+/(
+  \.venv
+ |\.eggs
+ |_build
+ |build
+ |dist
+ |mfr\.egg-info
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["mfr", "tests"]
+default_section = "THIRDPARTY"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+skip = ["mfr.egg-info", ".venv"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 88
+extend-select = [
+  "E",
+  "F",
+  "C90",
+  "I",
+  "B",
+]
+extend-ignore = [
+  "E203", "E501", "E265", "E301", "E302", "F403", "E731", "B904", "B905"
+]
+exclude = [
+  "mfr.egg-info",
+  ".venv",
+  "build",
+  "dist",
+  "ipynb"
+]

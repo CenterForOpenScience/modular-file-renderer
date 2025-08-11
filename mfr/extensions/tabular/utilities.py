@@ -90,41 +90,28 @@ def sav_to_csv(fp):
 
 def to_bytes(fp):
     """
-    Return *exactly* the original bytes of the Excel file and rewind *fp*.
-    Handles both binary and text wrappers that WaterButler may give us.
+    Return exactly the original bytes and rewind fp.
+    Requires a binary file-like object or a bytes object.
     """
-    try:
-        fp.seek(0)
-    except Exception:
-        pass
+    if isinstance(fp, (bytes, bytearray, memoryview)):
+        return bytes(fp)
 
-    raw = fp.read()
-    if isinstance(raw, bytes):
+    if hasattr(fp, "read"):
         try:
-            fp.seek(0)
+            if hasattr(fp, "seek"):
+                fp.seek(0)
         except Exception:
             pass
-        return raw
-
-    if hasattr(fp, "buffer"):
-        buf = fp.buffer
+        raw = fp.read()
         try:
-            buf.seek(0)
+            if hasattr(fp, "seek"):
+                fp.seek(0)
         except Exception:
             pass
-        data = buf.read()
-        try:
-            buf.seek(0)
-        except Exception:
-            pass
-    else:
-        data = raw.encode("utf-8", "surrogateescape")
+        if isinstance(raw, (bytes, bytearray, memoryview)):
+            return bytes(raw)
 
-    try:
-        fp.seek(0)
-    except Exception:
-        pass
-    return data
+    raise TypeError("Expected binary file-like object; got text/str")
 
 
 def _extract_rows(fields, raw_rows):

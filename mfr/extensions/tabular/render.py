@@ -11,6 +11,7 @@ from mfr.extensions.tabular import settings, exceptions
 
 logger = logging.getLogger(__name__)
 
+BINARY_EXCEL_EXTS = {'.xls', '.xlsx'}
 
 class TabularRenderer(extension.BaseRenderer):
 
@@ -30,8 +31,14 @@ class TabularRenderer(extension.BaseRenderer):
                 extension=self.metadata.ext,
             )
 
-        with open(self.file_path, errors='replace') as fp:
-            sheets, size, nbr_rows, nbr_cols = self._render_grid(fp, self.metadata.ext)
+        ext = (self.metadata.ext or '').lower()
+        if ext in BINARY_EXCEL_EXTS:
+            open_kwargs = {'mode': 'rb'}
+        else:
+            open_kwargs = {'errors': 'replace'}
+
+        with open(self.file_path, **open_kwargs) as fp:
+            sheets, size, nbr_rows, nbr_cols = self._render_grid(fp, ext)
 
         # Force GC
         gc.collect()

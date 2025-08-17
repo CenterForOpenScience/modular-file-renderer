@@ -14,26 +14,25 @@ Or download one of the following:
 * tarball_
 * zipball_
 
-Make sure that you have installed `pspp <https://www.gnu.org/software/pspp/>`_ and are using python 3.5 or greater.
+Make sure that you have installed `pspp <https://www.gnu.org/software/pspp/>`_ and are using python v3.13 or greater.
 
-Install the versions of ``setuptools`` and ``invoke`` found in the requirements.txt file:
+Install ``poetry`` to manage dependencies:
 
 .. code-block:: bash
 
-    pip install setuptools==37.0.0
-    pip install invoke==0.13.0
+    pip install poetry==2.1.2
 
 Install requirements:
 
 .. code-block:: bash
 
-    invoke install
+    poetry install
 
 Or for some nicities (like tests):
 
 .. code-block:: bash
 
-    invoke install --develop
+    poetry install --with dev
 
 Start the server:
 
@@ -45,7 +44,7 @@ Start the server:
 
 .. code-block:: bash
 
-    invoke server
+    poetry run invoke server
 
 .. _Github: https://github.com/CenterForOpenScience/modular-file-renderer
 .. _tarball: https://github.com/CenterForOpenScience/modular-file-renderer/tarball/master

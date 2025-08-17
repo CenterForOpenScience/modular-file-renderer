@@ -46,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'mfr'
-copyright = '2023, Center For Open Science'
+copyright = '2025, Center For Open Science'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -184,4 +184,3 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:
     import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]

@@ -59,7 +59,7 @@
 
                 grid = new Slick.Grid('#mfrGrid', rows, columns, options);
                 searchString = "";
-                $("#txtSearch").value = "";
+                $("#txtSearch").val("");
                 data = grid.getData();
                 grid.onSort.subscribe(sortData);
                 refreshNotice();
@@ -91,17 +91,21 @@
 
         function filterData(data, search) {
             var filteredData = [];
-            var re = new RegExp(search, 'i');
-            for (var i = 0; i<data.length; i++){
+            var safeSearch = String(search).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            var re = new RegExp(safeSearch, 'i');
+            for (var i = 0; i < data.length; i++) {
                 var filtered = false;
                 var item = data[i];
                 for (var title in item) {
-                    if (search !== '' && item[title].toString().match(re)) {
-                        filtered = filtered || true;
-                        continue;
+                    // Be null-safe: openpyxl may yield null/undefined for empty cells
+                    var cell = item[title];
+                    var str = (cell === null || cell === undefined) ? '' : String(cell);
+                    if (safeSearch !== '' && re.test(str)) {
+                        filtered = true;
+                        break;
                     }
                 }
-                if (filtered){
+                if (filtered) {
                     filteredData.push(item);
                 }
             }

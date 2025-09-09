@@ -61,7 +61,7 @@ def tif_renderer(tif_metadata, tif_file_path, tif_url, assets_url, export_url):
 class TestPdfRenderer:
 
     def test_render_pdf(self, renderer, metadata, assets_url):
-        body = renderer.render()
+        body = renderer._render()
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
         assert f'DEFAULT_URL = \'{metadata.download_url}\'' in body
@@ -76,7 +76,7 @@ class TestPdfRenderer:
                                assets_url,
                                'http://mfr.osf.io/export?url=http://osf.io/file/te\'st.pdf')
 
-        body = renderer.render()
+        body = renderer._render()
 
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
@@ -88,7 +88,7 @@ class TestPdfRenderer:
         exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE,
                                                      settings.EXPORT_TYPE)
 
-        body = tif_renderer.render()
+        body = tif_renderer._render()
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body
         assert f'DEFAULT_URL = \'{exported_url.url}\'' in body
@@ -102,7 +102,7 @@ class TestPdfRenderer:
         renderer = PdfRenderer(metadata, '/tmp/te\'st.docx', export_url, assets_url,
                                'http://mfr.osf.io/export?url=http://osf.io/file/te\'st.docx')
 
-        body = renderer.render()
+        body = renderer._render()
 
         assert '<base href="{}/{}/web/" target="_blank">'.format(assets_url, 'pdf') in body
         assert '<div id="viewer" class="pdfViewer"></div>' in body

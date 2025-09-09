@@ -35,5 +35,6 @@ worker_hijack_root_logger = False
 task_eager_propagates = True
 
 imports = [
-    'mfr.tasks.render',
+    "mfr.tasks.export",
+    "mfr.tasks.render",
 ]

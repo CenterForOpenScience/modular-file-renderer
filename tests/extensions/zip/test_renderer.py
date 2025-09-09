@@ -64,7 +64,7 @@ def remove_whitespace(str):
 class TestZipRenderer:
 
     def test_render(self, renderer):
-        body = renderer.render()
+        body = renderer._render()
         parsed_html = BeautifulSoup(body, 'html.parser')
         rows = parsed_html.find_all('table')[0].find_all(['tr'])
 

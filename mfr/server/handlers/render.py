@@ -1,5 +1,5 @@
+import http
 import os
-import asyncio
 import logging
 
 import waterbutler.core.streams
@@ -71,20 +71,14 @@ class RenderHandler(core.BaseHandler):
         else:
             self.metrics.add('source_file.upload.required', False)
 
-        loop = asyncio.get_event_loop()
-        rendition = await loop.run_in_executor(None, renderer.render)
+        rendition = await renderer.render()
         self.renderer_metrics = renderer.renderer_metrics
-
-        # Spin off upload into non-blocking operation
-        if renderer.cache_result and settings.CACHE_ENABLED:
-            asyncio.ensure_future(
-                self.cache_provider.upload(
-                    waterbutler.core.streams.StringStream(rendition),
-                    self.cache_file_path
-                )
-            )
-
-        await self.write_stream(waterbutler.core.streams.StringStream(rendition))
+        if rendition:
+            await self.write_stream(rendition)
+        else:
+            self.set_status(http.HTTPStatus.ACCEPTED)
+            await self.write("Accepted")
+            await self.flush()
 
     async def _cache_and_clean(self):
         if hasattr(self, 'source_file_path'):

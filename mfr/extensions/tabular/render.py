@@ -20,7 +20,7 @@ class TabularRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    def render(self):
+    def _render(self):
         file_size = os.path.getsize(self.file_path)
         if file_size > settings.MAX_FILE_SIZE:
             raise exceptions.FileTooLargeError(

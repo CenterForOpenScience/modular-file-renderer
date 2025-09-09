@@ -1,8 +1,9 @@
 import abc
+import pathlib
 import uuid
 import asyncio
 import logging
-import pathlib
+import os
 
 from importlib.metadata import entry_points
 
@@ -300,11 +301,11 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
         namespace = "mfr.renderers"
         module_path_prefix = "mfr.extensions"
         self.modules = {}
+        root = pathlib.Path(os.path.abspath(__file__).split('mfr')[0])
 
         for ep in entry_points().select(group=namespace):
             fq_mod = ep.value.split(":")[0]
             module = fq_mod.replace(f"{module_path_prefix}.", "").split(".")[0]
-            root = pathlib.Path(ep.dist.locate_file(""))
             static_dir = root / "mfr" / "extensions" / module / "static"
             if static_dir.is_dir():
                 self.modules[module] = static_dir.as_posix()
@@ -321,11 +322,17 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
                 self.modules.setdefault(module_path.name, static_dir.as_posix())
                 logger.debug(f"{module_path.name}: {static_dir}")
 
-    async def get(self, module: str, path: str):
+    async def get(self, module: str, path: str, **kwargs):
         root = self.modules.get(module)
         if not root:
-            self.set_status(404)
-            return
+            while path:
+                module, path = path.split('/', maxsplit=1)
+                root = self.modules.get(module)
+                if root:
+                    break
+            else:
+                self.set_status(404)
+                return
 
         try:
             super().initialize(root)

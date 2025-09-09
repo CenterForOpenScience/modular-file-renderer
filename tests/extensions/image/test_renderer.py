@@ -20,7 +20,7 @@ class TestImageRenderer:
         metadata = ProviderMetadata('test', '.png', 'text/plain', '1234', 'http://wb.osf.io/file/test.png?token=1234')
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', 'http://this_should_be_ignored')
 
-        body = renderer.render()
+        body = renderer._render()
 
         assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body
 
@@ -39,7 +39,7 @@ class TestImageRenderer:
         exported_url = furl.furl(export_url.url)
         exported_url.args['format'] = settings.EXPORT_TYPE
 
-        body = renderer.render()
+        body = renderer._render()
 
         assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{exported_url}">' in body
 
@@ -58,7 +58,7 @@ class TestImageRenderer:
         exported_url = furl.furl(export_url.url)
         exported_url.args['format'] = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
 
-        body = renderer.render()
+        body = renderer._render()
 
         assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{exported_url}">' in body
 
@@ -72,7 +72,7 @@ class TestImageRenderer:
         metadata = ProviderMetadata('test', '.png', 'text/plain', '1234', 'http://wb.osf.io/file/test.png?token=1234')
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', 'http://this_should_be_ignored')
 
-        body = renderer.render()
+        body = renderer._render()
 
         assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body
 
@@ -86,6 +86,6 @@ class TestImageRenderer:
         metadata = ProviderMetadata('test', '.png', 'text/plain', '1234', 'http://wb.osf.io/file/test.png?token=1234')
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', 'http://this_should_be_ignored')
 
-        body = renderer.render()
+        body = renderer._render()
 
         assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body

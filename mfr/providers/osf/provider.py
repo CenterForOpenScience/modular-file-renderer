@@ -68,6 +68,7 @@ class OsfProvider(provider.BaseProvider):
             metadata_url = download_url.replace('/file?', '/data?', 1)
             metadata_response = await self._make_request('GET', metadata_url)
             metadata = await metadata_response.json()
+            await metadata_response.release()
         else:
             # URL is for WaterButler v1 API
             self.metrics.add('metadata.wb_api', 'v1')
@@ -140,6 +141,7 @@ class OsfProvider(provider.BaseProvider):
 
         if response.status >= 400:
             resp_text = await response.text()
+            await response.release()
             logger.error(f'Unable to download file: ({response.status}) {resp_text}')
             raise exceptions.DownloadError(
                 'Unable to download the requested file, please try again later.',

@@ -16,7 +16,7 @@ class PdbRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    def render(self):
+    def _render(self):
         download_url = munge_url_for_localdev(self.metadata.download_url)
         safe_url = escape_url_for_template(download_url.geturl())
         return self.TEMPLATE.render(

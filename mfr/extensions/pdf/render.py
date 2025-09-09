@@ -19,7 +19,7 @@ class PdfRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    def render(self):
+    def _render(self):
 
         download_url = munge_url_for_localdev(self.metadata.download_url)
         escaped_name = escape_url_for_template(

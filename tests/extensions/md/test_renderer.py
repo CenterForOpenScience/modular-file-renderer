@@ -50,7 +50,7 @@ class TestMdRenderer:
     def test_render_md(self, test_md_file_path, assets_url, export_url):
         metadata = ProviderMetadata('test', '.md', 'text/plain', '1234', 'http://wb.osf.io/file/test.md?token=1234')
         renderer = MdRenderer(metadata, test_md_file_path, url, assets_url, export_url)
-        body = renderer.render()
+        body = renderer._render()
         inbody = """
 <h1>Heading</h1>
 <h2>Sub-heading</h2>

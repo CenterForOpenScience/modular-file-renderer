@@ -100,7 +100,13 @@ def make_renderer(name, metadata, file_path, url, assets_url, export_url):
             namespace='mfr.renderers',
             name=normalized_name,
             invoke_on_load=True,
-            invoke_args=(metadata, file_path, url, assets_url, export_url),
+            invoke_kwds={
+                'metadata': metadata,
+                'file_path': file_path,
+                'url': url,
+                'assets_url': assets_url,
+                'export_url': export_url
+            },
         ).driver
     except RuntimeError:
         raise exceptions.MakeRendererError(

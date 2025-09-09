@@ -38,5 +38,5 @@ def renderer(metadata, file_path, url, assets_url, export_url):
 class TestPdbRenderer:
 
     def test_render_pdb(self, renderer):
-        body = renderer.render()
+        body = renderer._render()
         assert '<div id="mfrViewer"></div>' in body

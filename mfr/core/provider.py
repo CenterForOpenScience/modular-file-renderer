@@ -1,4 +1,6 @@
 import abc
+from dataclasses import dataclass
+
 import markupsafe
 
 import furl
@@ -6,6 +8,7 @@ import furl
 from mfr.core import exceptions
 from mfr.server import settings
 from mfr.core.metrics import MetricsRecord
+from mfr.tasks.serializer import serializable
 
 
 class BaseProvider(metaclass=abc.ABCMeta):
@@ -47,16 +50,15 @@ class BaseProvider(metaclass=abc.ABCMeta):
     def download(self):
         pass
 
-
+@serializable
+@dataclass
 class ProviderMetadata:
-
-    def __init__(self, name, ext, content_type, unique_key, download_url, stable_id=None):
-        self.name = name
-        self.ext = ext
-        self.content_type = content_type
-        self.unique_key = unique_key
-        self.download_url = download_url
-        self.stable_id = stable_id
+    name: str
+    ext: str
+    content_type: str
+    unique_key: str
+    download_url: str
+    stable_id: str = None
 
     def serialize(self):
         return {

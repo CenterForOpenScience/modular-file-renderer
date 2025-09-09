@@ -15,7 +15,7 @@ class ImageRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    def render(self):
+    def _render(self):
         self.metrics.add('needs_export', False)
         if self.metadata.ext in settings.EXPORT_EXCLUSIONS:
             download_url = munge_url_for_localdev(self.url)

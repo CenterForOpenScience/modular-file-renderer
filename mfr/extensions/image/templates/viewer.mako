@@ -53,7 +53,8 @@
     $(document).ready(function() {
 
         ## Reference on how mobile is detected: https://stackoverflow.com/a/10364620
-        var isMobile = window.matchMedia("only screen and (max-width: 760px)");
+        ## var isMobile = window.matchMedia("only screen and (max-width: 760px)");
+        var isMobile = window.innerWidth <= 768;
 
         ## Enable the zoom feature only for desktop browsers
         if (!isMobile.matches) {

@@ -20,9 +20,9 @@ class TestImageRenderer:
         metadata = ProviderMetadata('test', '.png', 'text/plain', '1234', 'http://wb.osf.io/file/test.png?token=1234')
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', 'http://this_should_be_ignored')
 
-        body = renderer.render()
+        body = renderer._render()
 
-        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(url) in body
+        assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body
 
     def test_render_image_export_type(self):
         settings.EXPORT_TYPE_MAP = {}
@@ -39,9 +39,9 @@ class TestImageRenderer:
         exported_url = furl.furl(export_url.url)
         exported_url.args['format'] = settings.EXPORT_TYPE
 
-        body = renderer.render()
+        body = renderer._render()
 
-        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(exported_url) in body
+        assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{exported_url}">' in body
 
     def test_render_image_export_size_and_type(self):
         settings.EXPORT_TYPE_MAP = {}
@@ -56,11 +56,11 @@ class TestImageRenderer:
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', export_url.url)
 
         exported_url = furl.furl(export_url.url)
-        exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+        exported_url.args['format'] = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
 
-        body = renderer.render()
+        body = renderer._render()
 
-        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(exported_url) in body
+        assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{exported_url}">' in body
 
     def test_render_image_excluded_export_file_type(self):
         settings.EXPORT_EXCLUSIONS = ['.png']
@@ -72,9 +72,9 @@ class TestImageRenderer:
         metadata = ProviderMetadata('test', '.png', 'text/plain', '1234', 'http://wb.osf.io/file/test.png?token=1234')
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', 'http://this_should_be_ignored')
 
-        body = renderer.render()
+        body = renderer._render()
 
-        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(url) in body
+        assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body
 
     def test_render_image_export_maximum(self):
         settings.EXPORT_EXCLUSIONS = ['.png']
@@ -86,6 +86,6 @@ class TestImageRenderer:
         metadata = ProviderMetadata('test', '.png', 'text/plain', '1234', 'http://wb.osf.io/file/test.png?token=1234')
         renderer = ImageRenderer(metadata, '/tmp/test.png', url, 'http://mfr.osf.io/assets', 'http://this_should_be_ignored')
 
-        body = renderer.render()
+        body = renderer._render()
 
-        assert '<img id="base-image" style="max-width: 100%" class="baseImage" src="{}">'.format(url) in body
+        assert f'<img id="base-image" style="max-width: 100%" class="baseImage" src="{url}">' in body

@@ -1,13 +1,15 @@
-import os
 import abc
+import pathlib
 import uuid
 import asyncio
 import logging
-import pkg_resources
+import os
+
+from importlib.metadata import entry_points
 
 import tornado.web
 import tornado.iostream
-from raven.contrib.tornado import SentryMixin
+import sentry_sdk
 
 import waterbutler.core.utils
 import waterbutler.server.utils
@@ -76,7 +78,7 @@ class CorsMixin:
             self.set_header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE'),
 
 
-class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
+class BaseHandler(CorsMixin, tornado.web.RequestHandler):
     """Base class for the Render and Export handlers.  Fetches the file metadata for the file
     indicated by the ``url`` query parameter and builds the provider caches.  Also handles
     writing output and errors.
@@ -93,9 +95,11 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
         self.metrics = self.handler_metrics.new_subrecord(self.NAME)
 
         self.extension_metrics = MetricsRecord('extension')
+        self.url = ''
 
-    @abc.abstractproperty
+    @abc.abstractmethod
     def NAME(self):
+        # Todo: not see Name implementation in child classes
         raise NotImplementedError
 
     async def prepare(self):
@@ -113,7 +117,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 provider=settings.PROVIDER_NAME,
                 code=400,
             )
-        logging.debug('target_url::{}'.format(self.url))
+        logging.debug(f'target_url::{self.url}')
 
         self.provider = utils.make_provider(
             settings.PROVIDER_NAME,
@@ -124,7 +128,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
 
         self.metadata = await self.provider.metadata()
         self.extension_metrics.add('ext', self.metadata.ext)
-        logging.debug('extension::{}'.format(self.metadata.ext))
+        logging.debug(f'extension::{self.metadata.ext}')
 
         self.cache_provider = waterbutler.core.utils.make_provider(
             settings.CACHE_PROVIDER_NAME,
@@ -159,15 +163,26 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
             return
 
     def write_error(self, status_code, exc_info):
-        self.captureException(exc_info)  # Log all non 2XX codes to sentry
+
+        # TODO: verify that `exc_info` arg is compatible with tornado 6.4.2 sig
         etype, exc, _ = exc_info
+        scope = sentry_sdk.get_current_scope()
+        scope.set_tag('class', etype.__name__)
+        scope.set_tag('status_code', status_code)
+        sentry_sdk.capture_exception(exc)  # Log all non 2XX codes to sentry
 
         if issubclass(etype, exceptions.PluginError):
             try:  # clever errors shouldn't break other things
                 current, child_type = {}, None
                 for level in reversed(exc.attr_stack):
                     if current:
-                        current = {'{}_{}'.format(level[0], child_type): current}
+                        """
+                            TODO: dictionary 'current' is reassigned in condition, Qodana code inspector may be
+                            complaining because some data previously saved in the dictionary may be lost
+                            (but maybe it is ok in terms of business logic),
+                            As I understand the current accumulate previous current versions so it may be ok
+                        """
+                        current = {f'{level[0]}_{child_type}': current}
                         current['child_type'] = child_type
                     current.update(level[1])
                     current['self_type'] = level[0]
@@ -176,6 +191,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
                 current['materialized_type'] = '.'.join([x[0] for x in exc.attr_stack])
                 self.error_metrics = current
             except Exception:
+                # Todo: maybe it is needed to use logger and specific message for exception logging
                 pass
             self.set_status(exc.code)
             self.finish(exc.as_html())
@@ -204,10 +220,9 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler, SentryMixin):
     def log_exception(self, typ, value, tb):
         if isinstance(value, tornado.web.HTTPError):
             if value.log_message:
-                format = "%d %s: " + value.log_message
-                args = ([value.status_code, self._request_summary()] +
-                        list(value.args))
-                tornado.web.gen_log.warning(format, *args)
+                log_message_format = "%d %s: " + value.log_message
+                args = ([value.status_code, self._request_summary()] + list(value.args))
+                tornado.web.gen_log.warning(log_message_format, *args)
         else:
             tornado.web.app_log.error("[User-Agent: %s] Uncaught exception %s\n",
                                       self.request.headers.get('User-Agent', '*none found*'),
@@ -282,16 +297,45 @@ class ExtensionsStaticFileHandler(tornado.web.StaticFileHandler, CorsMixin):
     """
 
     def initialize(self):
-        namespace = 'mfr.renderers'
-        module_path = 'mfr.extensions'
-        self.modules = {
-            ep.module_name.replace(module_path + '.', ''): os.path.join(ep.dist.location, 'mfr', 'extensions', ep.module_name.replace(module_path + '.', ''), 'static')
-            for ep in list(pkg_resources.iter_entry_points(namespace))
-        }
+        # Todo: the method args differ in comparison with StaticFileHandler
+        namespace = "mfr.renderers"
+        module_path_prefix = "mfr.extensions"
+        self.modules = {}
+        root = pathlib.Path(os.path.abspath(__file__).split('mfr')[0])
 
-    async def get(self, module_name, path):
+        for ep in entry_points().select(group=namespace):
+            fq_mod = ep.value.split(":")[0]
+            module = fq_mod.replace(f"{module_path_prefix}.", "").split(".")[0]
+            static_dir = root / "mfr" / "extensions" / module / "static"
+            if static_dir.is_dir():
+                self.modules[module] = static_dir.as_posix()
+                logger.debug(f"{module}: {static_dir}")
+
+        repo_root = pathlib.Path(__file__).resolve().parents[2]
+        ext_root = repo_root / "extensions"
+        if not ext_root.is_dir():
+            ext_root = repo_root.parent / "mfr" / "extensions"
+
+        for module_path in ext_root.iterdir():
+            static_dir = module_path / "static"
+            if static_dir.is_dir():
+                self.modules.setdefault(module_path.name, static_dir.as_posix())
+                logger.debug(f"{module_path.name}: {static_dir}")
+
+    async def get(self, module: str, path: str, **kwargs):
+        root = self.modules.get(module)
+        if not root:
+            while path:
+                module, path = path.split('/', maxsplit=1)
+                root = self.modules.get(module)
+                if root:
+                    break
+            else:
+                self.set_status(404)
+                return
+
         try:
-            super().initialize(self.modules[module_name])
+            super().initialize(root)
             return await super().get(path)
         except Exception:
             self.set_status(404)

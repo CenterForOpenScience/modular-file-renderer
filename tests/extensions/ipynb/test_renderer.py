@@ -38,8 +38,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -50,18 +50,18 @@ def renderer(metadata, test_file_path, url, assets_url, export_url):
 class TestIpynbRenderer:
 
     def test_render_ipynb(self, renderer, url):
-        body = renderer.render()
+        body = renderer._render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer mfr-ipynb-body">' in body
 
     def test_render_ipynb_no_metadata(self, metadata, no_metadata_file_path, url, assets_url, export_url):
         renderer = IpynbRenderer(metadata, no_metadata_file_path, url, assets_url, export_url)
-        body = renderer.render()
+        body = renderer._render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer mfr-ipynb-body">' in body
 
     def test_render_ipynb_invalid_json(self, metadata, invalid_json_file_path, url, assets_url, export_url):
         renderer = IpynbRenderer(metadata, invalid_json_file_path, url, assets_url, export_url)
         with pytest.raises(InvalidFormatError):
-            renderer.render()
+            renderer._render()
 
     def test_render_docx_file_required(self, renderer):
         assert renderer.file_required is True

@@ -15,7 +15,7 @@ class ImageRenderer(extension.BaseRenderer):
             os.path.join(os.path.dirname(__file__), 'templates')
         ]).get_template('viewer.mako')
 
-    def render(self):
+    def _render(self):
         self.metrics.add('needs_export', False)
         if self.metadata.ext in settings.EXPORT_EXCLUSIONS:
             download_url = munge_url_for_localdev(self.url)
@@ -24,7 +24,7 @@ class ImageRenderer(extension.BaseRenderer):
 
         exported_url = furl.furl(self.export_url)
         if settings.EXPORT_MAXIMUM_SIZE and settings.EXPORT_TYPE:
-            exported_url.args['format'] = '{}.{}'.format(settings.EXPORT_MAXIMUM_SIZE, settings.EXPORT_TYPE)
+            exported_url.args['format'] = f'{settings.EXPORT_MAXIMUM_SIZE}.{settings.EXPORT_TYPE}'
         elif settings.EXPORT_TYPE:
             exported_url.args['format'] = settings.EXPORT_TYPE
         else:

@@ -26,8 +26,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -38,5 +38,5 @@ def renderer(metadata, file_path, url, assets_url, export_url):
 class TestPdbRenderer:
 
     def test_render_pdb(self, renderer):
-        body = renderer.render()
+        body = renderer._render()
         assert '<div id="mfrViewer"></div>' in body

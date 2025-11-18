@@ -1,5 +1,4 @@
 import logging
-from typing import Tuple
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from mfr.extensions import settings
@@ -7,7 +6,7 @@ from mfr.extensions import settings
 logger = logging.getLogger(__name__)
 
 
-def munge_url_for_localdev(url: str) -> Tuple:
+def munge_url_for_localdev(url: str) -> tuple:
     """If MFR is being run in a local development environment (i.e. LOCAL_DEVELOPMENT is True), we
     need to replace the internal host (the one the backend services communicate on, default:
     192.168.168.167) with the external host (the one the user provides, default: "localhost")
@@ -23,13 +22,13 @@ def munge_url_for_localdev(url: str) -> Tuple:
 
         url_obj = url_obj._replace(
             query=urlencode(query_dict, doseq=True),
-            netloc='{}:{}'.format(settings.LOCAL_HOST, url_obj.port)
+            netloc=f'{settings.LOCAL_HOST}:{url_obj.port}'
         )
 
     return url_obj
 
 
-def escape_url_for_template(url: str, logs: bool=True) -> str:
+def escape_url_for_template(url: str, logs: bool = True) -> str:
     """Escape (URL Encode) single and double quote(s) for the given URL.
 
     Download and export URLs may end up not properly encoded right before they are about to be sent

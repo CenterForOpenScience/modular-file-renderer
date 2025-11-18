@@ -12,9 +12,9 @@ TABLE_HEIGHT = int(config.get('TABLE_HEIGHT', 600))
 LIBS = config.get_object('LIBS', {
     '.csv': [libs.csv_stdlib],
     '.tsv': [libs.csv_stdlib],
-    '.gsheet': [libs.xlsx_xlrd],
-    '.xlsx': [libs.xlsx_xlrd],
-    '.xls': [libs.xlsx_xlrd],
+    '.gsheet': [libs.xlsx],
+    '.xlsx': [libs.xlsx],
+    '.xls': [libs.xls],
     '.dta': [libs.dta_pandas],
     '.sav': [libs.sav_stdlib],
     '.mat': [libs.mat_h5py_scipy],

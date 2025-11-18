@@ -1,5 +1,4 @@
 import os
-import imghdr
 import warnings
 
 from PIL import Image
@@ -14,14 +13,14 @@ class ImageExporter(extension.BaseExporter):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('pil_version', Image.VERSION)
+        self.metrics.add('pil_version', Image.__version__)
 
     def export(self):
         parts = self.format.split('.')
         image_type = parts[-1].lower()
         max_size = {'w': None, 'h': None}
         if len(parts) == 2:
-            max_size['w'], max_size['h'] = [int(size) for size in parts[0].split('x')]
+            max_size['w'], max_size['h'] = (int(size) for size in parts[0].split('x'))
         self.metrics.merge({
             'type': image_type,
             'max_size_w': max_size['w'],
@@ -45,7 +44,7 @@ class ImageExporter(extension.BaseExporter):
                 self.metrics.add('ratio', ratio)
                 if ratio < 1:
                     size_tuple = (round(image.size[0] * ratio), round(image.size[1] * ratio))
-                    image = image.resize(size_tuple, Image.ANTIALIAS)
+                    image = image.resize(size_tuple, Image.Resampling.LANCZOS)
 
             # Mode 'P' is for paletted images. They must be converted to RGB before exporting to
             # jpeg, otherwise Pillow will throw an error.  This is a temporary workaround, as the
@@ -66,13 +65,20 @@ class ImageExporter(extension.BaseExporter):
             image.save(self.output_file_path, image_type)
             image.close()
 
-        except (UnicodeDecodeError, IOError, FileNotFoundError, OSError) as err:
+        except (UnicodeDecodeError, OSError, FileNotFoundError) as err:
             os.path.splitext(os.path.split(self.source_file_path)[-1])
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid image.'.format(image_type),
                 export_format=image_type,
-                detected_format=imghdr.what(self.source_file_path),
+                detected_format=self.detect_image_format(),
                 original_exception=err,
                 code=400,
             )
+
+    def detect_image_format(self):
+        try:
+            with Image.open(self.source_file_path) as img:
+                return img.format.lower()
+        except Exception:
+            return None

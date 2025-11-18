@@ -1,5 +1,3 @@
-import os
-import imghdr
 import logging
 from http import HTTPStatus
 
@@ -18,7 +16,7 @@ class PdfExporter(extension.BaseExporter):
     def __init__(self, *args, **kwargs):
 
         super().__init__(*args, **kwargs)
-        self.metrics.add('pil_version', Image.VERSION)
+        self.metrics.add('pil_version', Image.__version__)
 
     def tiff_to_pdf(self, tiff_img, max_size):
         """ Turn a tiff into a pdf to support multipage tiffs"""
@@ -66,7 +64,7 @@ class PdfExporter(extension.BaseExporter):
         c.save()
 
     def export(self):
-        logger.debug('pdf-export: format::{}'.format(self.format))
+        logger.debug(f'pdf-export: format::{self.format}')
         parts = self.format.split('.')
         export_type = parts[-1].lower()
         max_size = [int(x) for x in parts[0].split('x')] if len(parts) == 2 else None
@@ -89,13 +87,19 @@ class PdfExporter(extension.BaseExporter):
             self.tiff_to_pdf(image, max_size)
             image.close()
 
-        except (UnicodeDecodeError, IOError) as err:
-            name, extension = os.path.splitext(os.path.split(self.source_file_path)[-1])
+        except (UnicodeDecodeError, OSError) as err:
             raise exceptions.PillowImageError(
                 'Unable to export the file as a {}, please check that the '
                 'file is a valid tiff image.'.format(export_type),
                 export_format=export_type,
-                detected_format=imghdr.what(self.source_file_path),
+                detected_format=self.detect_image_format(),
                 original_exception=err,
                 code=HTTPStatus.BAD_REQUEST,
             )
+
+    def detect_image_format(self):
+        try:
+            with Image.open(self.source_file_path) as img:
+                return img.format.lower()
+        except Exception:
+            return None

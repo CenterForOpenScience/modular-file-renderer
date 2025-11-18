@@ -1,4 +1,4 @@
-import pkg_resources
+from importlib.metadata import entry_points
 import tornado.web
 
 
@@ -8,7 +8,7 @@ class RenderersHandler(tornado.web.RequestHandler):
         """List available renderers"""
 
         renderers = {}
-        for ep in pkg_resources.iter_entry_points(group='mfr.renderers'):
+        for ep in entry_points().select(group='mfr.renderers'):
             renderers.update({ep.name: ep.load().__name__})
 
         self.write({

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # MFR documentation build configuration file.
 #
@@ -31,7 +30,7 @@ autodoc_default_flags = ['members', 'undoc-members', 'show-inheritance']
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'stevedore.sphinxext']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -46,8 +45,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'mfr'
-copyright = u'2023, Center For Open Science'
+project = 'mfr'
+copyright = '2025, Center For Open Science'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -177,12 +176,7 @@ html_sidebars = {
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'mfrdoc'
 
+# This block will use the same theme when building locally as on RTD.
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-# On RTD we can't import sphinx_rtd_theme, but it will be applied by
-# default anyway.  This block will use the same theme when building locally
-# as on RTD.
 if not on_rtd:
-    import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]

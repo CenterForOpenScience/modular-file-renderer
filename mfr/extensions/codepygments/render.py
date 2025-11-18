@@ -30,7 +30,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
         super().__init__(*args, **kwargs)
         self.metrics.add('pygments_version', pygments.__version__)
 
-    def render(self):
+    def _render(self):
         file_size = os.path.getsize(self.file_path)
         if file_size > settings.MAX_SIZE:
             raise exceptions.FileTooLargeError(
@@ -80,7 +80,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
                 content = data.decode(encoding)
             except UnicodeDecodeError as err:
                 raise exceptions.FileDecodingError(
-                    message='Unable to decode file as {}.'.format(encoding),
+                    message=f'Unable to decode file as {encoding}.',
                     extension=ext,
                     category='undecodable',
                     original_exception=err,
@@ -89,7 +89,7 @@ class CodePygmentsRenderer(extension.BaseRenderer):
 
         if content is None:
             raise exceptions.FileDecodingError(
-                message='File decoded to undefined using encoding "{}"'.format(encoding),
+                message=f'File decoded to undefined using encoding "{encoding}"',
                 extension=ext,
                 category='decoded_to_undefined',
                 code=500,

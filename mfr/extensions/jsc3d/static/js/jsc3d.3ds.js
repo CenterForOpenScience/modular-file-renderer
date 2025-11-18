@@ -77,11 +77,13 @@ JSC3D.Autodesk3DSLoader.prototype.loadFromUrl = function(urlName) {
 	xhr.onreadystatechange = function() {
 		if(this.readyState == 4) {
 			if(this.status == 200 || this.status == 0) {
-				if(JSC3D.console)
+				if(JSC3D.console) {
 					JSC3D.console.logInfo('Finished loading 3DS file "' + urlName + '".');
+				}
 				if(self.onload) {
-					if(self.onprogress)
+					if(self.onprogress) {
 						self.onprogress('Loading 3DS file ...', 1);
+					}
 //					if(JSC3D.PlatformInfo.browser == 'ie' && JSC3D.PlatformInfo.version >= '10') {
 //						// asynchronously decode blob to binary string
 //						var blobReader = new FileReader;
@@ -107,10 +109,12 @@ JSC3D.Autodesk3DSLoader.prototype.loadFromUrl = function(urlName) {
 				}
 			}
 			else {
-				if(JSC3D.console)
+				if(JSC3D.console) {
 					JSC3D.console.logError('Failed to load 3DS file "' + urlName + '".');
-				if(self.onerror)
+				}
+				if(self.onerror) {
 					self.onerror('Failed to load 3DS file "' + urlName + '".');
+				}
 			}
 			self.request = null;
 		}
@@ -199,8 +203,11 @@ JSC3D.Autodesk3DSLoader.prototype.readAmount = function(reader,end) {
 	len = reader.readUInt32();
 
 	switch (cid) {
-		case 0x0030: // Floats
+		case 0x0030:
 			amount = reader.readUInt16();
+			break;
+		case 0x0031:
+			amount = reader.readFloat32() * 100.0;
 			break;
 		default:
 			break;
@@ -461,14 +468,16 @@ JSC3D.Autodesk3DSLoader.prototype.parseObjectAnimation = function (reader,end) {
 	if (name != '$$$DUMMY' && this._unfinalized_objects.hasOwnProperty(name)) {
 		vo = this._unfinalized_objects[name];
 //		todo vasea
-		if(JSC3D.console)
+		if(JSC3D.console) {
 			JSC3D.console.logInfo('Construct object '+vo.name);
+		}
 //		this._cur_obj = null;
 		obj = null;//this.constructObject(vo, pivot);
 
 		if (obj) {
-			if(JSC3D.console)
+			if(JSC3D.console) {
 				JSC3D.console.logInfo('finished loading the object '+vo.name);
+			}
 		}
 
 		delete this._unfinalized_objects[name];
@@ -489,8 +498,8 @@ JSC3D.Autodesk3DSLoader.prototype.parseSmoothingGroups = function (reader) {
 JSC3D.Autodesk3DSLoader.prototype.finalizeCurrentMaterial = function () {
 	var mat = new JSC3D.Material;
 
-	if (this._cur_mat.colorMap) {
-		mat.textureFileName = this._cur_mat.colorMap.texture;
+	if (this._cur_mat.colorMap && this._cur_mat.colorMap.url) {
+		mat.textureFileName = this._cur_mat.colorMap.url;
 	}
 	else {
 		mat.diffuseColor = this._cur_mat.diffuseColor;
@@ -517,8 +526,9 @@ JSC3D.Autodesk3DSLoader.prototype.setupTexture = function(meshList, textureUrlNa
 	texture.onready = function() {
 		for(var i=0; i<meshList.length; i++)
 			meshList[i].setTexture(this);
-		if(self.onresource)
+		if(self.onresource) {
 			self.onresource(this);
+		}
 	};
 
 	texture.createFromUrl(textureUrlName);
@@ -555,8 +565,9 @@ JSC3D.Autodesk3DSLoader.prototype.parse3DS = function(scene, data) {
 			// Can't finalize at this point, because we have to wait until the full
 			// animation section has been parsed for any potential pivot definitions
 
-			if(JSC3D.console)
+			if(JSC3D.console) {
 				JSC3D.console.logInfo('Optimize the mesh and add it to the scene. ');
+			}
 
 			//have to parse all the materials and create a mesh fdor each material
 
@@ -572,25 +583,63 @@ JSC3D.Autodesk3DSLoader.prototype.parse3DS = function(scene, data) {
 //			mesh.texCoordIndexBuffer = mesh.indexBuffer;
 			mesh.material = new JSC3D.Material;
 
-			var materialFaces = this._cur_obj.materialFaces;
-			var currentMaterial = null;
-			for(var materialName in materialFaces){
-				 currentMaterial = this._materials[materialName];
-				if (currentMaterial.colorMap) {
-					if(JSC3D.console)
-						JSC3D.console.logInfo('set texture: '+currentMaterial.colorMap.url);
+			// Defaults: opaque & double-sided (helps open meshes)
+			mesh.material.transparency = 0;
+			mesh.isDoubleSided = true;
+			mesh.material.bothSides = true;
+
+			let materialFaces = this._cur_obj.materialFaces || {};
+			let sawMaterial = false;
+			for (let materialName in materialFaces) {
+				if (!Object.prototype.hasOwnProperty.call(materialFaces, materialName)) {
+					continue;
+				}
+				sawMaterial = true;
+
+				var currentMaterial = this._materials[materialName];
+				if (!currentMaterial) {
+					if (JSC3D.console) {
+						JSC3D.console.logWarning('3DS: missing material "' + materialName + '", using defaults.');
+					}
+					continue;
+				}
+
+				if (currentMaterial.colorMap && currentMaterial.colorMap.url) {
+					if(JSC3D.console) {
+						JSC3D.console.logInfo('set texture: ' + currentMaterial.colorMap.url);
+					}
 					this.setupTexture([mesh], currentMaterial.colorMap.url);
 				}
-				else {
+				else if (currentMaterial.diffuseColor != null) {
 					mesh.material.diffuseColor = currentMaterial.diffuseColor;
 				}
-//				mesh.material.ambientColor = currentMaterial.ambientColor;
-//				mesh.material.simulateSpecular = (currentMaterial.specularColor>0);
-				mesh.isDoubleSided = true;//currentMaterial.twoSided;
-				mesh.material.transparency = currentMaterial.transparency>0?(currentMaterial.transparency)/100:0;
+
+				// Transparency: normalize (0..1), snap tiny values to 0 to avoid z-sort artifacts
+				var t = currentMaterial.transparency;
+				if (typeof t === 'number') {
+					var alpha = (t > 1) ? (t / 100.0) : t;
+					alpha = Math.max(0, Math.min(1, alpha));
+					if (alpha < 0.01) alpha = 0;
+					mesh.material.transparency = alpha;
+				} else {
+					mesh.material.transparency = 0;
+				}
+
+				var two = (currentMaterial.twoSided !== undefined) ? !!currentMaterial.twoSided : true;
+				mesh.isDoubleSided = two;
+				mesh.material.bothSides = two;
 			}
 
+			if (!sawMaterial) {
+				mesh.isDoubleSided = true;
+				mesh.material.bothSides = true;
+				mesh.material.transparency = 0;
+			}
 
+			if (!mesh.texCoordBuffer || !mesh.texCoordIndexBuffer) {
+				mesh.texCoordBuffer = null;
+				mesh.texCoordIndexBuffer = null;
+			}
 
 			//mesh.faceNormalBuffer = [];
 //			mesh.init();
@@ -672,7 +721,7 @@ JSC3D.Autodesk3DSLoader.prototype.parse3DS = function(scene, data) {
 				this._cur_obj = {};
 				this._cur_obj.name = this.readNulTermString(reader);
 				this._cur_obj.materials = [];
-				this._cur_obj.materialFaces = [];
+				this._cur_obj.materialFaces = {};
 				break;
 
 			case 0x4100: // OBJ_TRIMESH

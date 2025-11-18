@@ -22,13 +22,13 @@ class IpynbRenderer(extension.BaseRenderer):
         self.metrics.add('nbformat_version', nbformat.__version__)
         self.metrics.add('nbconvert_version', nbconvert.__version__)
 
-    def render(self):
+    def _render(self):
         try:
-            with open(self.file_path, 'r') as file_pointer:
+            with open(self.file_path) as file_pointer:
                 notebook = nbformat.reads(file_pointer.read(), as_version=4)
         except ValueError as err:
             raise exceptions.InvalidFormatError(
-                'Could not read ipython notebook file. {}'.format(str(err)),
+                f'Could not read ipython notebook file. {str(err)}',
                 extension=self.metadata.ext,
                 download_url=str(self.metadata.download_url),
                 original_exception=err,
@@ -36,7 +36,7 @@ class IpynbRenderer(extension.BaseRenderer):
 
         exporter = HTMLExporter(config=Config({
             'HTMLExporter': {
-                'template_file': 'basic',
+                'template_name': 'basic',
             },
             'CSSHtmlHeaderTransformer': {
                 'enabled': False,

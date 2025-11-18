@@ -1,18 +1,22 @@
+from dataclasses import dataclass
+import logging
 import os
 
 import furl
 
 from mfr.core import utils
 from mfr.core import extension
-
 from mfr.extensions.unoconv import settings
+from mfr.tasks.serializer import serializable
 
+logger = logging.getLogger(__name__)
 
+@serializable
+@dataclass
 class UnoconvRenderer(extension.BaseRenderer):
 
-    def __init__(self, metadata, file_path, url, assets_url, export_url):
-        super().__init__(metadata, file_path, url, assets_url, export_url)
-
+    def __post_init__(self):
+        super().__post_init__()
         try:
             self.map = settings.RENDER_MAP[self.metadata.ext]
         except KeyError:
@@ -20,7 +24,7 @@ class UnoconvRenderer(extension.BaseRenderer):
 
         self.export_file_path = self.file_path + self.map['renderer']
 
-        exported_url = furl.furl(export_url)
+        exported_url = furl.furl(self.export_url)
         exported_url.args['format'] = self.map['format']
         exported_metadata = self.metadata
         exported_metadata.download_url = exported_url.url
@@ -30,11 +34,10 @@ class UnoconvRenderer(extension.BaseRenderer):
             exported_metadata,
             self.export_file_path,
             exported_url.url,
-            assets_url,
-            export_url
+            self.assets_url,
+            self.export_url
         )
 
-        # can't call file_required until renderer is built
         self.renderer_metrics.add('file_required', self.file_required)
         self.renderer_metrics.add('cache_result', self.cache_result)
 
@@ -45,24 +48,25 @@ class UnoconvRenderer(extension.BaseRenderer):
             },
         })
 
-    def render(self):
+    def _render(self):
         if self.renderer.file_required:
             exporter = utils.make_exporter(
                 self.metadata.ext,
                 self.file_path,
                 self.export_file_path,
-                self.map['format']
+                self.map['format'],
+                self.metadata,
             )
             exporter.export()
 
-        rendition = self.renderer.render()
+        rendition = self.renderer._render()
         self.metrics.add('subrenderer', self.renderer.renderer_metrics.serialize())
 
         if self.renderer.file_required:
             try:
                 os.remove(self.export_file_path)
             except FileNotFoundError:
-                pass
+                logger.warning(f"[render] Export file not found for cleanup: {self.export_file_path}")
 
         return rendition
 
@@ -73,3 +77,6 @@ class UnoconvRenderer(extension.BaseRenderer):
     @property
     def cache_result(self):
         return self.renderer.cache_result
+
+    def use_celery(self) -> bool:
+        return True

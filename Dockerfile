@@ -1,17 +1,12 @@
-FROM python:3.6-slim-buster
+FROM python:3.13-slim
 
-# ensure unoconv can locate the uno library
-ENV PYTHONPATH /usr/lib/python3/dist-packages
 
 RUN usermod -d /home www-data \
     && chown www-data:www-data /home \
-    # -slim images strip man dirs, but java won't install unless this dir exists.
-    && mkdir -p /usr/share/man/man1 \
-    && apt-get update \
-    # HACK: work around bug in install java (dep of libreoffice)
-    && apt-get install -y ca-certificates-java \
+    && apt-get update
+
     # mfr dependencies
-    && apt-get install -y \
+RUN apt-get install -y \
         git \
         make \
         gcc \
@@ -32,32 +27,31 @@ RUN usermod -d /home www-data \
         freecad \
         # pspp dependencies
         pspp \
-        # unoconv dependencies
-        libreoffice \
         # grab gosu for easy step-down from root
-        gosu \
-    && apt-get clean \
-    && apt-get autoremove -y \
-    && rm -rf /var/lib/apt/lists/*
+        gosu
+RUN apt-get clean
+RUN apt-get autoremove -y
+RUN rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /code
 WORKDIR /code
 
-RUN pip install -U pip==18.1
-RUN pip install setuptools==37.0.0
-RUN pip install unoconv==0.8.2
+COPY pyproject.toml poetry.lock* /code/
 
-COPY ./requirements.txt /code/
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_CREATE=0 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1
 
-RUN pip install --no-cache-dir -r ./requirements.txt
+RUN pip install poetry==2.1.2 setuptools==80.1.0 \
+    && poetry install --no-root --without=docs
 
 # Copy the rest of the code over
 COPY ./ /code/
 
 ARG GIT_COMMIT=
-ENV GIT_COMMIT ${GIT_COMMIT}
+ENV GIT_COMMIT=${GIT_COMMIT}
 
-RUN python setup.py develop
+RUN poetry install --without=docs
 
 EXPOSE 7778
 

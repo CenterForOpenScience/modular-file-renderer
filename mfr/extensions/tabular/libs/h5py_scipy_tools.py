@@ -31,7 +31,7 @@ def mat_v73(fp):
         if isinstance(data, h5py.Dataset):
             # h5py Uses row-major ordering. this fixes it so it displays like it does in matlab
             # basically just flip it on its axis
-            list_data = list(zip(*data.value.tolist()))
+            list_data = list(zip(*data[()].tolist()))
             build_sheets(name, list_data, sheets)
 
     return sheets

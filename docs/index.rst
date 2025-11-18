@@ -26,6 +26,7 @@ Guide
    overview
    integrations
    code
+   plugins
 
 Project info
 ------------

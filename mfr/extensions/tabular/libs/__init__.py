@@ -31,10 +31,14 @@ def sav_pandas():
     from ..libs.panda_tools import sav_pandas
     return sav_pandas
 
+def xls():
+    from ..libs.xlrd_tools import xls
+    return xls
 
-def xlsx_xlrd():
-    from ..libs.xlrd_tools import xlsx_xlrd
-    return xlsx_xlrd
+
+def xlsx():
+    from ..libs.xlrd_tools import xlsx
+    return xlsx
 
 def mat_h5py_scipy():
     from ..libs.h5py_scipy_tools import mat_h5py_scipy

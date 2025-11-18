@@ -9,9 +9,9 @@ from mfr.core import extension
 
 
 class EscapeHtml(Extension):
-    def extendMarkdown(self, md, md_globals):
-        del md.preprocessors['html_block']
-        del md.inlinePatterns['html']
+    def extendMarkdown(self, md):
+        md.preprocessors.deregister('html_block')
+        md.inlinePatterns.deregister('html')
 
 
 class MdRenderer(extension.BaseRenderer):
@@ -23,11 +23,11 @@ class MdRenderer(extension.BaseRenderer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.metrics.add('markdown_version', markdown.version)
+        self.metrics.add('markdown_version', markdown.__version__)
 
-    def render(self):
+    def _render(self):
         """Render a markdown file to html."""
-        with open(self.file_path, 'r') as fp:
+        with open(self.file_path) as fp:
             body = markdown.markdown(fp.read(), extensions=[EscapeHtml()])
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 

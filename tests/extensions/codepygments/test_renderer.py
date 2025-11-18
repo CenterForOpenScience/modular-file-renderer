@@ -58,8 +58,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -75,18 +75,18 @@ def renderer(metadata, test_file_path, url, assets_url, export_url):
 class TestCodePygmentsRenderer:
 
     def test_render_codepygments(self, renderer):
-        body = renderer.render()
+        body = renderer._render()
         assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
 
     def test_render_codepygments_invalid(self, metadata, invalid_file_path, url, assets_url, export_url):
         renderer = CodePygmentsRenderer(metadata, invalid_file_path, url, assets_url, export_url)
         with pytest.raises(RendererError):
-            renderer.render()
+            renderer._render()
 
     def test_render_codepygments_max_size(self, metadata, max_size_file_path, url, assets_url, export_url):
         try:
             renderer = CodePygmentsRenderer(metadata, max_size_file_path, url, assets_url, export_url)
-            body = renderer.render()
+            body = renderer._render()
             assert '<div style="word-wrap: break-word;" class="mfrViewer">' in body
         finally:
             os.remove(max_size_file_path)
@@ -96,7 +96,7 @@ class TestCodePygmentsRenderer:
             try:
                 renderer = CodePygmentsRenderer(metadata, over_size_file_path,
                                                 url, assets_url, export_url)
-                renderer.render()
+                renderer._render()
             finally:
                 os.remove(over_size_file_path)
 
@@ -120,7 +120,7 @@ class TestCodePygmentsRenderer:
     def test_render_encodings(self, metadata, invalid_file_path, url, assets_url, export_url, filename):
         file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'encodings', filename)
         renderer = CodePygmentsRenderer(metadata, file_path, url, assets_url, export_url)
-        body = renderer.render()
+        body = renderer._render()
         assert 'Héllö' in body
 
     # this file (iso-8859-looks-like-utf16.txt) is both valid iso-8859-1 AND UTF-16. Heuristic
@@ -132,5 +132,5 @@ class TestCodePygmentsRenderer:
             'iso-8859-looks-like-utf16.txt',
         )
         renderer = CodePygmentsRenderer(metadata, file_path, url, assets_url, export_url)
-        body = renderer.render()
-        assert 'CREATIVE COMMONS' in body
+        body = renderer._render()
+        assert 'CREATIVE<span class="w"> </span>COMMONS' in body

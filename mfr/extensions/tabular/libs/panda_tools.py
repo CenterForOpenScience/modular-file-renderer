@@ -51,7 +51,7 @@ def sav_pandas(fp):
 
 def data_from_dataframe(dataframe):
     """Convert a dataframe object to a list of dictionaries
-    :param fp: File pointer object
+    :param dataframe: pandas dataframe
     :return: tuple of table headers and data
     """
 
@@ -62,9 +62,9 @@ def data_from_dataframe(dataframe):
     data = []
     for _, frame_row in dataframe.iterrows():
         data_row = {}
-        for name, value in frame_row.iteritems():
+        for name, value in frame_row.items():
             try:
-                data_row[name] = numpy.asscalar(value)
+                data_row[name] = value.item()
             except AttributeError:
                 data_row[name] = value
         data.append(data_row)

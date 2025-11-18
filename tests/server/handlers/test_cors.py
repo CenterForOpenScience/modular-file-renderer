@@ -15,7 +15,7 @@ class MockHandler(CorsMixin):
     def set_header(self, key, value):
         self.headers[key] = value
 
-class MockRequest(object):
+class MockRequest:
 
     def __init__(
             self,
@@ -32,7 +32,7 @@ class MockRequest(object):
 class TestCorsMixin(HandlerTestCase):
 
     def setUp(self, *args, **kwargs):
-        super(TestCorsMixin, self).setUp(*args, **kwargs)
+        super().setUp(*args, **kwargs)
         self.handler = MockHandler()
 
     @testing.gen_test

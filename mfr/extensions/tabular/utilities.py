@@ -1,4 +1,6 @@
 import re
+import xlrd
+
 from http import HTTPStatus
 from subprocess import (check_call,
                         TimeoutExpired,
@@ -6,9 +8,10 @@ from subprocess import (check_call,
 from tempfile import NamedTemporaryFile
 
 from mfr.extensions.tabular import compat
-from mfr.core.exceptions import SubprocessError
+from mfr.core.exceptions import SubprocessError, CorruptedError
 from mfr.extensions.tabular.settings import (PSPP_CONVERT_BIN,
-                                             PSPP_CONVERT_TIMEOUT)
+                                             PSPP_CONVERT_TIMEOUT,
+                                             MAX_SIZE)
 
 
 def header_population(headers):
@@ -22,15 +25,15 @@ def header_population(headers):
 def data_population(in_data, headers=None):
     """Convert a list of lists into a list of dicts associating each
     cell with its column header and row
-    :param data: two dimensional list of data
-    :param fields: column headers
+    :param in_data: two dimensional list of data
+    :param headers: column headers
     :return: JSON representation of rows
     """
     headers = headers or in_data[0]
 
     return [
-        dict([(header, row[cindex])
-            for cindex, header in enumerate(headers)])
+        {header: row[cindex]
+            for cindex, header in enumerate(headers)}
         for row in in_data
     ]
 
@@ -83,3 +86,89 @@ def sav_to_csv(fp):
             exporter_class='tabular'
         )
     return csv_file
+
+
+def to_bytes(fp):
+    """
+    Return exactly the original bytes and rewind fp.
+    Requires a binary file-like object or a bytes object.
+    """
+    if isinstance(fp, (bytes, bytearray, memoryview)):
+        return bytes(fp)
+
+    if hasattr(fp, "read"):
+        try:
+            if hasattr(fp, "seek"):
+                fp.seek(0)
+        except Exception:
+            pass
+        raw = fp.read()
+        try:
+            if hasattr(fp, "seek"):
+                fp.seek(0)
+        except Exception:
+            pass
+        if isinstance(raw, (bytes, bytearray, memoryview)):
+            return bytes(raw)
+
+    raise TypeError("Expected binary file-like object; got text/str")
+
+
+def _extract_rows(fields, raw_rows):
+    rows = []
+    for row in raw_rows:
+        if len(rows) >= MAX_SIZE:
+            break
+        rows.append(dict(zip(fields, row)))
+    return rows
+
+
+def parse_xls(wb, sheets):
+    for sheet in wb.sheets():
+        if getattr(sheet, 'nrows', None) is None or getattr(sheet, 'ncols', None) is None:
+            raise CorruptedError
+
+        ncols = sheet.ncols
+        max_cols = min(ncols, MAX_SIZE)
+        fields = fix_headers(sheet.row_values(0)[:max_cols])
+        raw_rows = (
+            row_vals(sheet.row(r)[:max_cols], wb.datemode)
+            for r in range(1, sheet.nrows)
+        )
+        rows = _extract_rows(fields, raw_rows)
+        sheets[sheet.name] = (header_population(fields), rows)
+    return sheets
+
+
+def parse_xlsx(wb, sheets):
+    for name in wb.sheetnames:
+        ws = wb[name]
+
+        if getattr(ws, 'max_row', None) is None or getattr(ws, 'max_column', None) is None:
+            raise CorruptedError
+
+        ncols = getattr(ws, "max_column", 0)
+        max_cols = min(ncols, MAX_SIZE)
+        header_row = next(ws.iter_rows(max_row=1, values_only=True), [])
+        fields = fix_headers(list(header_row)[:max_cols])
+        raw_rows = (
+            row[:max_cols] if row else []
+            for row in ws.iter_rows(min_row=2, values_only=True)
+        )
+        rows = _extract_rows(fields, raw_rows)
+        sheets[name] = (header_population(fields), rows)
+    return sheets
+
+
+def fix_headers(raw):
+    return [str(v) if v not in (None, '') else f'Unnamed: {i + 1}' for i, v in enumerate(raw)]
+
+
+def row_vals(row, datemode):
+    out = []
+    for c in row:
+        if c.ctype == xlrd.XL_CELL_DATE:
+            out.append(xlrd.xldate.xldate_as_datetime(c.value, datemode).isoformat())
+        else:
+            out.append(c.value)
+    return out

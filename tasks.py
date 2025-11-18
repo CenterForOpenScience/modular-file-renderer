@@ -3,30 +3,24 @@ import os
 from invoke import task
 
 WHEELHOUSE_PATH = os.environ.get('WHEELHOUSE')
-CONSTRAINTS_FILE = 'constraints.txt'
 
 
 @task
-def wheelhouse(ctx, develop=False):
-    req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = 'pip wheel --find-links={} -r {} --wheel-dir={} -c {}'.format(WHEELHOUSE_PATH, req_file, WHEELHOUSE_PATH, CONSTRAINTS_FILE)
-    ctx.run(cmd, pty=True)
+def wheelhouse(ctx, develop=False, pty=True):
+    extras = '--with dev' if develop else ''
+    cmd = f'poetry export --format=requirements.txt {extras} | pip wheel --find-links={WHEELHOUSE_PATH} -r /dev/stdin --wheel-dir={WHEELHOUSE_PATH}'
+    ctx.run(cmd, pty=pty)
 
 
 @task
-def install(ctx, develop=False):
-    ctx.run('python setup.py develop')
-    req_file = 'dev-requirements.txt' if develop else 'requirements.txt'
-    cmd = 'pip install --upgrade -r {} -c {}'.format(req_file, CONSTRAINTS_FILE)
-
-    if WHEELHOUSE_PATH:
-        cmd += ' --no-index --find-links={}'.format(WHEELHOUSE_PATH)
-    ctx.run(cmd, pty=True)
+def install(ctx, develop=False, pty=True):
+    extras = '--with dev' if develop else ''
+    ctx.run(f'poetry install {extras}', pty=pty)
 
 
 @task
 def flake(ctx):
-    ctx.run('flake8 .', pty=True)
+    ctx.run('poetry run flake8 .', pty=True)
 
 
 @task
@@ -43,14 +37,14 @@ def test(ctx, verbose=False, nocov=False, extension=None, path=None):
     # `--extension=` and `--path=` are mutually exclusive options
     assert not (extension and path)
     if path:
-        path = '/{}'.format(path) if path else ''
+        path = f'/{path}' if path else ''
     elif extension:
-        path = '/extensions/{}/'.format(extension) if extension else ''
+        path = f'/extensions/{extension}/' if extension else ''
     else:
         path = ''
     coverage = ' --cov-report term-missing --cov mfr' if not nocov else ''
     verbose = '-v' if verbose else ''
-    cmd = 'py.test{} tests{} {}'.format(coverage, path, verbose)
+    cmd = f'poetry run pytest{coverage} tests{path} {verbose}'
     ctx.run(cmd, pty=True)
 
 
@@ -64,3 +58,15 @@ def server(ctx):
 
     from mfr.server.app import serve
     serve()
+
+@task
+def celery(ctx, loglevel='INFO', hostname='%h', concurrency=None):
+    from mfr.tasks.app import app
+    command = ['worker']
+    if loglevel:
+        command.extend(['--loglevel', loglevel])
+    if hostname:
+        command.extend(['--hostname', hostname])
+    if concurrency:
+        command.extend(['--concurrency', concurrency])
+    app.worker_main(command)

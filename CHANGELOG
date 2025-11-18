@@ -2,6 +2,13 @@
 ChangeLog
 *********
 
+25.0.0 (2025-11-18)
+===================
+- Upgrade MFR and dependencies to python v3.13.
+- Allow render jobs to be backgrounded and cached.
+- Switch from unoconv to unoserver; upgrade LibreOffice used to convert office files to pdf.
+- Switch to pyproject.toml and poetry.
+
 24.0.0 (2024-01-02)
 ===================
 - Fix: Install ca-certificates-java in Dockerfile to fix image build.

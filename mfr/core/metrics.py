@@ -1,4 +1,7 @@
 import copy
+from dataclasses import dataclass, field
+
+from mfr.tasks.serializer import serializable
 
 
 def _merge_dicts(a, b, path=None):
@@ -22,7 +25,7 @@ def _merge_dicts(a, b, path=None):
     return a
 
 
-class MetricsBase():
+class MetricsBase:
     """Lightweight wrapper around a dict to make keeping track of metrics a little easier.
 
     Current functionality is limited, but may be extended later.  To do:
@@ -77,7 +80,8 @@ class MetricsBase():
         """
         return {self.key: self.serialize()}
 
-    def _set_dotted_key(self, store, key, value):
+    @staticmethod
+    def _set_dotted_key(store, key, value):
         """Naive method to set nested dict values via dot-separated keys. e.g
         ``_set_dotted_keys(self._metrics, 'foo.bar', 'moo')`` is equivalent to
         ``self._metrics['foo']['bar'] = 'moo'``.  This method is neither resilient nor intelligent
@@ -92,16 +96,17 @@ class MetricsBase():
             current = current[part]
         current[parts[-1]] = value
 
-
+@serializable
+@dataclass
 class MetricsRecord(MetricsBase):
     """An extension to MetricsBase that carries a category and list of submetrics.  When
     serialized, will include the serialized child metrics
     """
+    category: str
+    subrecords: list = field(default_factory=list)
 
-    def __init__(self, category):
+    def __post_init__(self):
         super().__init__()
-        self.category = category
-        self.subrecords = []
 
     @property
     def key(self):
@@ -120,25 +125,28 @@ class MetricsRecord(MetricsBase):
     def new_subrecord(self, name):
         """Create a new MetricsSubRecord object with our category and save it to the subrecords
         list."""
-        subrecord = MetricsSubRecord(self.category, name)
+        subrecord = MetricsSubRecord(category=self.category, name=name)
         self.subrecords.append(subrecord)
         return subrecord
 
-
+@serializable
+@dataclass
 class MetricsSubRecord(MetricsRecord):
     """An extension to MetricsRecord that carries a name in addition to a category.  Will identify
     itself as {category}_{name}.  Can create its own subrecord whose category will be this
     subrecord's ``name``.
     """
+    name: str = field(default=None)
 
-    def __init__(self, category, name):
-        super().__init__(category)
-        self.name = name
+    def __post_init__(self):
+        super().__post_init__()
+        if self.name is None:
+            raise TypeError('name must be provided')
 
     @property
     def key(self):
         """ID string for this subrecord: '{category}_{name}'"""
-        return '{}_{}'.format(self.category, self.name)
+        return f'{self.category}_{self.name}'
 
     def new_subrecord(self, name):
         """Creates and saves a new subrecord.  The new subrecord will have its category set to the
@@ -152,6 +160,6 @@ class MetricsSubRecord(MetricsRecord):
             print(child.key)       # foo_bar
             print(grandchild.key)  # bar_baz
         """
-        subrecord = MetricsSubRecord(self.name, name)
+        subrecord = MetricsSubRecord(category=self.name, name=name)
         self.subrecords.append(subrecord)
         return subrecord

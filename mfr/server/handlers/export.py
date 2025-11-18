@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from urllib.parse import quote
 
 from waterbutler.core.exceptions import InvalidParameters, DownloadError
 import waterbutler.core.streams
@@ -23,29 +24,29 @@ class ExportHandler(core.BaseHandler):
 
         await super().prepare()
 
-        format = self.request.query_arguments.get('format', None)
-        if not format:
+        query_arguments_format = self.request.query_arguments.get('format', None)
+        if not query_arguments_format:
             raise InvalidParameters("Invalid Request: Url requires query parameter 'format' with"
                                     " appropriate extension")
         # TODO: do we need to catch exceptions for decoding?
-        self.format = format[0].decode('utf-8')
+        self.format = query_arguments_format[0].decode('utf-8')
         self.exporter_name = utils.get_exporter_name(self.metadata.ext)
 
-        self.cache_file_id = '{}.{}'.format(self.metadata.unique_key, self.format)
+        self.cache_file_id = f'{self.metadata.unique_key}.{self.format}'
 
         if self.exporter_name:
-            cache_file_path_str = '/export/{}.{}'.format(self.cache_file_id, self.exporter_name)
+            cache_file_path_str = f'/export/{self.cache_file_id}.{self.exporter_name}'
         else:
-            cache_file_path_str = '/export/{}'.format(self.cache_file_id)
+            cache_file_path_str = f'/export/{self.cache_file_id}'
         self.cache_file_path = await self.cache_provider.validate_path(cache_file_path_str)
 
         self.source_file_path = await self.local_cache_provider.validate_path(
-            '/export/{}'.format(self.source_file_id)
+            f'/export/{self.source_file_id}'
         )
 
-        self.output_file_id = '{}.{}'.format(self.source_file_path.name, self.format)
+        self.output_file_id = f'{self.source_file_path.name}.{self.format}'
         self.output_file_path = await self.local_cache_provider.validate_path(
-            '/export/{}'.format(self.output_file_id)
+            f'/export/{self.output_file_id}'
         )
         self.metrics.merge({
             'output_file': {
@@ -59,9 +60,9 @@ class ExportHandler(core.BaseHandler):
         """Export a file to the format specified via the associated extension library"""
 
         # File is already in the requested format
-        if self.metadata.ext.lower() == ".{}".format(self.format.lower()):
+        if self.metadata.ext.lower() == f".{self.format.lower()}":
             await self.write_stream(await self.provider.download())
-            logger.info('Exported {} with no conversion.'.format(self.format))
+            logger.info(f'Exported {self.format} with no conversion.')
             self.metrics.add('export.conversion', 'noop')
             return
 
@@ -69,11 +70,11 @@ class ExportHandler(core.BaseHandler):
             try:
                 cached_stream = await self.cache_provider.download(self.cache_file_path)
             except DownloadError as e:
-                assert e.code == 404, 'Non-404 DownloadError {!r}'.format(e)
-                logger.info('No cached file found; Starting export [{}]'.format(self.cache_file_path))
+                assert e.code == 404, f'Non-404 DownloadError {e!r}'
+                logger.info(f'No cached file found; Starting export [{self.cache_file_path}]')
                 self.metrics.add('cache_file.result', 'miss')
             else:
-                logger.info('Cached file found; Sending downstream [{}]'.format(self.cache_file_path))
+                logger.info(f'Cached file found; Sending downstream [{self.cache_file_path}]')
                 self.metrics.add('cache_file.result', 'hit')
                 self._set_headers()
                 return await self.write_stream(cached_stream)
@@ -118,6 +119,6 @@ class ExportHandler(core.BaseHandler):
                 pass
 
     def _set_headers(self):
-        self.set_header('Content-Disposition', 'attachment;filename="{}"'.format('{}.{}'.format(self.metadata.name.replace('"', '\\"'), self.format)))
+        self.set_header('Content-Disposition', f'attachment;filename*=UTF-8\'\'{quote(self.metadata.name.replace('"', '\\"'))}.{self.format}')
         if self.metadata.content_type:
             self.set_header('Content-Type', self.metadata.content_type)

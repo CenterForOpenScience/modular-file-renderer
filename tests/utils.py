@@ -45,6 +45,3 @@ class HandlerTestCase(testing.AsyncHTTPTestCase):
 
     def get_app(self):
         return make_app(debug=False)
-
-    def get_new_ioloop(self):
-        return AsyncIOMainLoop()

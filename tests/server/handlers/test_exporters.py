@@ -1,6 +1,6 @@
 import json
 
-import pkg_resources
+from importlib.metadata import entry_points
 from tornado import testing
 
 from tests import utils
@@ -13,7 +13,7 @@ class TestExportersHandler(utils.HandlerTestCase):
         resp = yield self.http_client.fetch(self.get_url('/exporters'))
 
         exporters = {}
-        for ep in pkg_resources.iter_entry_points(group='mfr.exporters'):
+        for ep in entry_points().select(group='mfr.exporters'):
             exporters.update({ep.name: ep.load().__name__})
 
         data = json.loads(resp.body.decode('utf-8'))

@@ -1,4 +1,4 @@
-import pkg_resources
+from importlib.metadata import entry_points
 import tornado.web
 
 
@@ -8,7 +8,7 @@ class ExportersHandler(tornado.web.RequestHandler):
         """List available exporters"""
 
         exporters = {}
-        for ep in pkg_resources.iter_entry_points(group='mfr.exporters'):
+        for ep in entry_points().select(group='mfr.exporters'):
             exporters.update({ep.name: ep.load().__name__})
 
         self.write({

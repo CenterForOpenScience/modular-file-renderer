@@ -21,7 +21,7 @@ class JASPRenderer(extension.BaseRenderer):
 
     MESSAGE_FILE_CORRUPT = 'This JASP file is corrupt and cannot be viewed.'
 
-    def render(self):
+    def _render(self):
         try:
             with ZipFile(self.file_path) as zip_file:
                 self._check_file(zip_file)
@@ -29,7 +29,7 @@ class JASPRenderer(extension.BaseRenderer):
                 return self.TEMPLATE.render(base=self.assets_url, body=body)
         except BadZipFile as err:
             raise exceptions.JaspFileCorruptError(
-                '{} Failure to unzip. {}.'.format(self.MESSAGE_FILE_CORRUPT, str(err)),
+                f'{self.MESSAGE_FILE_CORRUPT} Failure to unzip. {str(err)}.',
                 extension=self.metadata.ext,
                 corruption_type='bad_zip',
                 reason=str(err),
@@ -50,7 +50,7 @@ class JASPRenderer(extension.BaseRenderer):
                 index = index_data.read().decode('utf-8')
         except KeyError:
             raise exceptions.JaspFileCorruptError(
-                '{} Missing index.html.'.format(self.MESSAGE_FILE_CORRUPT),
+                f'{self.MESSAGE_FILE_CORRUPT} Missing index.html.',
                 extension=self.metadata.ext,
                 corruption_type='key_error',
                 reason='zip missing ./index.html',
@@ -78,7 +78,7 @@ class JASPRenderer(extension.BaseRenderer):
                     manifest, flavor = manifest_data.read().decode('utf-8'), 'java'
         except KeyError:
             raise exceptions.JaspFileCorruptError(
-                '{} Missing manifest'.format(self.MESSAGE_FILE_CORRUPT),
+                f'{self.MESSAGE_FILE_CORRUPT} Missing manifest',
                 extension=self.metadata.ext,
                 corruption_type='key_error',
                 reason='zip missing manifest',
@@ -107,7 +107,7 @@ class JASPRenderer(extension.BaseRenderer):
                     createdBy = str(value)
         if not dataArchiveVersionStr:
             raise exceptions.JaspFileCorruptError(
-                '{} Data-Archive-Version not found.'.format(self.MESSAGE_FILE_CORRUPT),
+                f'{self.MESSAGE_FILE_CORRUPT} Data-Archive-Version not found.',
                 extension=self.metadata.ext,
                 corruption_type='manifest_parse_error',
                 reason='Data-Archive-Version not found.',
@@ -130,10 +130,10 @@ class JASPRenderer(extension.BaseRenderer):
                 )
         except TypeError:
             raise exceptions.JaspFileCorruptError(
-                '{} Data-Archive-Version not parsable.'.format(self.MESSAGE_FILE_CORRUPT),
+                f'{self.MESSAGE_FILE_CORRUPT} Data-Archive-Version not parsable.',
                 extension=self.metadata.ext,
                 corruption_type='manifest_parse_error',
-                reason='Data-Archive-Version ({}) not parsable.'.format(dataArchiveVersionStr),
+                reason=f'Data-Archive-Version ({dataArchiveVersionStr}) not parsable.',
             )
 
         return
@@ -145,7 +145,7 @@ class JASPRenderer(extension.BaseRenderer):
         jasp_archive_version_str = manifest_data.get('jaspArchiveVersion', None)
         if not jasp_archive_version_str:
             raise exceptions.JaspFileCorruptError(
-                '{} jaspArchiveVersion not found.'.format(self.MESSAGE_FILE_CORRUPT),
+                f'{self.MESSAGE_FILE_CORRUPT} jaspArchiveVersion not found.',
                 extension=self.metadata.ext,
                 corruption_type='manifest_parse_error',
                 reason='jaspArchiveVersion not found.',
@@ -167,10 +167,10 @@ class JASPRenderer(extension.BaseRenderer):
                 )
         except TypeError:
             raise exceptions.JaspFileCorruptError(
-                '{} jaspArchiveVersion not parsable.'.format(self.MESSAGE_FILE_CORRUPT),
+                f'{self.MESSAGE_FILE_CORRUPT} jaspArchiveVersion not parsable.',
                 extension=self.metadata.ext,
                 corruption_type='manifest_parse_error',
-                reason='jaspArchiveVersion ({}) not parsable.'.format(jasp_archive_version_str),
+                reason=f'jaspArchiveVersion ({jasp_archive_version_str}) not parsable.',
             )
 
         return

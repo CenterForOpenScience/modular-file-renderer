@@ -32,8 +32,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ def renderer(metadata, test_file_path, url, assets_url, export_url):
 class TestRstRenderer:
 
     def test_render_rst(self, renderer):
-        body = renderer.render()
+        body = renderer._render()
         assert """
 <h1 class="title">Test</h1>
 <p>&lt;script&gt;
@@ -55,7 +55,7 @@ alert(&quot;Hello world&quot;);
     def test_render_rst_invalid(self, metadata, invalid_file_path, url, assets_url, export_url):
         renderer = RstRenderer(metadata, invalid_file_path, url, assets_url, export_url)
         with pytest.raises(UnicodeDecodeError):
-            renderer.render()
+            renderer._render()
 
     def test_render_rst_file_required(self, renderer):
         assert renderer.file_required is True

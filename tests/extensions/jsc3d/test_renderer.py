@@ -26,8 +26,8 @@ def assets_url():
 
 
 @pytest.fixture
-def export_url():
-    return 'http://mfr.osf.io/export?url=' + url()
+def export_url(url):
+    return 'http://mfr.osf.io/export?url=' + url
 
 
 @pytest.fixture
@@ -38,6 +38,6 @@ def renderer(metadata, file_path, url, assets_url, export_url):
 class TestJSC3DRenderer:
 
     def test_render_stl(self, renderer):
-        body = renderer.render()
+        body = renderer._render()
         assert '<canvas id="mfrViewer" tabindex="-1"></canvas>' in body
         assert 'viewer.init();' in body

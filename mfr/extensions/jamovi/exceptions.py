@@ -14,8 +14,8 @@ class JamoviVersionError(JamoviRendererError):
 
     __TYPE = 'jamovi_version'
 
-    def __init__(self, message, *args, code: int=400, created_by: str='',
-                 actual_version: str='', required_version: str='', **kwargs):
+    def __init__(self, message, *args, code: int = 400, created_by: str = '',
+                 actual_version: str = '', required_version: str = '', **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
         self.created_by = created_by
         self.actual_version = actual_version
@@ -34,8 +34,8 @@ class JamoviFileCorruptError(JamoviRendererError):
 
     __TYPE = 'jamovi_file_corrupt'
 
-    def __init__(self, message, *args, code: int=400, corruption_type: str='',
-                 reason: str='', **kwargs):
+    def __init__(self, message, *args, code: int = 400, corruption_type: str = '',
+                 reason: str = '', **kwargs):
         super().__init__(message, *args, code=code, **kwargs)
         self.corruption_type = corruption_type
         self.reason = reason

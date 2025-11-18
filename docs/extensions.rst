@@ -11,11 +11,6 @@ CodePygmentsRenderer
 
 .. autoclass:: mfr.extensions.codepygments.CodePygmentsRenderer
 
-DocxRenderer
-------------
-
-.. autoclass:: mfr.extensions.docx.DocxRenderer
-
 ImageExporter
 -------------
 

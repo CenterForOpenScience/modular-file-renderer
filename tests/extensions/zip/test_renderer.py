@@ -64,25 +64,25 @@ def remove_whitespace(str):
 class TestZipRenderer:
 
     def test_render(self, renderer):
-        body = renderer.render()
-        parsed_html = BeautifulSoup(body)
-        rows = parsed_html.findChildren('table')[0].findChildren(['tr'])
+        body = renderer._render()
+        parsed_html = BeautifulSoup(body, 'html.parser')
+        rows = parsed_html.find_all('table')[0].find_all(['tr'])
 
-        name = rows[2].findChildren('td')[0].get_text().strip()
+        name = rows[2].find_all('td')[0].get_text().strip()
         assert 'test/test 1' == name
 
-        date_modified = rows[2].findChildren('td')[1].get_text().strip()
+        date_modified = rows[2].find_all('td')[1].get_text().strip()
         assert '2017-03-02 16:22:14' == date_modified
 
-        size = rows[2].findChildren('td')[2].get_text().strip()
+        size = rows[2].find_all('td')[2].get_text().strip()
         assert '15B' == size
 
         # non-expanded zip file should have no children
-        name = rows[4].findChildren('td')[0].get_text().strip()
+        name = rows[4].find_all('td')[0].get_text().strip()
         assert 'test/zip file which is not expanded.zip' == name
         assert body.count('zip file which is not expanded.zip') == 1
 
-        size = rows[4].findChildren('td')[2].get_text().strip()
+        size = rows[4].find_all('td')[2].get_text().strip()
         assert '1.8KB' == size  # formatting of larger byte sizes
 
         # hidden files should be hidden

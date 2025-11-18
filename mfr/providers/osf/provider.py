@@ -7,7 +7,7 @@ import mimetypes
 
 import furl
 import aiohttp
-from aiohttp.errors import ContentEncodingError
+from aiohttp import ClientSession
 
 from waterbutler.core import streams
 
@@ -59,7 +59,8 @@ class OsfProvider(provider.BaseProvider):
         differently.
         """
         download_url = await self._fetch_download_url()
-        logger.debug('download_url::{}'.format(download_url))
+        logger.debug(f'download_url::{download_url}')
+        metadata = {}
         if '/file?' in download_url:
             # URL is for WaterButler v0 API
             # TODO Remove this when API v0 is officially deprecated
@@ -67,6 +68,7 @@ class OsfProvider(provider.BaseProvider):
             metadata_url = download_url.replace('/file?', '/data?', 1)
             metadata_response = await self._make_request('GET', metadata_url)
             metadata = await metadata_response.json()
+            await metadata_response.release()
         else:
             # URL is for WaterButler v1 API
             self.metrics.add('metadata.wb_api', 'v1')
@@ -82,7 +84,7 @@ class OsfProvider(provider.BaseProvider):
             if response_code != 200:
                 raise exceptions.MetadataError(
                     'Failed to fetch file metadata from WaterButler. Received response: ',
-                    'code {} {}'.format(str(response_code), str(response_reason)),
+                    f'code {str(response_code)} {str(response_reason)}',
                     metadata_url=download_url,
                     response=response_reason,
                     provider=self.NAME,
@@ -91,7 +93,7 @@ class OsfProvider(provider.BaseProvider):
 
             try:
                 metadata = {'data': json.loads(response_headers['x-waterbutler-metadata'])['attributes']}
-            except ContentEncodingError:
+            except Exception:
                 pass  # hack: aiohttp tries to unzip empty body when Content-Encoding is set
 
         self.metrics.add('metadata.raw', metadata)
@@ -127,7 +129,7 @@ class OsfProvider(provider.BaseProvider):
         unique_key = hashlib.sha256((meta['etag'] + cleaned_url.url).encode('utf-8')).hexdigest()
         stable_str = '/{}/{}{}'.format(meta['resource'], meta['provider'], meta['path'])
         stable_id = hashlib.sha256(stable_str.encode('utf-8')).hexdigest()
-        logger.debug('stable_identifier: str({}) hash({})'.format(stable_str, stable_id))
+        logger.debug(f'stable_identifier: str({stable_str}) hash({stable_id})')
 
         return provider.ProviderMetadata(name, ext, content_type, unique_key, download_url, stable_id)
 
@@ -139,7 +141,8 @@ class OsfProvider(provider.BaseProvider):
 
         if response.status >= 400:
             resp_text = await response.text()
-            logger.error('Unable to download file: ({}) {}'.format(response.status, resp_text))
+            await response.release()
+            logger.error(f'Unable to download file: ({response.status}) {resp_text}')
             raise exceptions.DownloadError(
                 'Unable to download the requested file, please try again later.',
                 download_url=download_url,
@@ -150,8 +153,9 @@ class OsfProvider(provider.BaseProvider):
         self.metrics.add('download.saw_redirect', False)
         if response.status in (302, 301):
             await response.release()
-            response = await aiohttp.request('GET', response.headers['location'])
-            self.metrics.add('download.saw_redirect', True)
+            async with aiohttp.request('GET', self.url) as response:
+                self.metrics.add('download.saw_redirect', True)
+                return streams.ResponseStreamReader(response)
 
         return streams.ResponseStreamReader(response)
 
@@ -180,7 +184,7 @@ class OsfProvider(provider.BaseProvider):
                 )
                 await request.release()
 
-                logger.debug('osf-download-resolver: request.status::{}'.format(request.status))
+                logger.debug(f'osf-download-resolver: request.status::{request.status}')
                 if request.status != 302:
                     raise exceptions.MetadataError(
                         request.reason,
@@ -205,4 +209,4 @@ class OsfProvider(provider.BaseProvider):
         if self.authorization:
             kwargs.setdefault('headers', {})['Authorization'] = 'Bearer ' + self.token
 
-        return await aiohttp.request(method, url, *args, **kwargs)
+        return await ClientSession()._request(method, url, *args, **kwargs)

@@ -1,4 +1,5 @@
 import os
+import sys
 
 from invoke import task
 
@@ -70,3 +71,28 @@ def celery(ctx, loglevel='INFO', hostname='%h', concurrency=None):
     if concurrency:
         command.extend(['--concurrency', concurrency])
     app.worker_main(command)
+
+
+@task
+def newrelic_init(ctx, key=None, verbose=False):
+    if key is None:
+        sys.exit('No newrelic api key given.  Please generate one and rerun this command '
+                 'with `invoke newrelic-init --key=$key`')
+
+    cmd_tmpl = 'newrelic-admin generate-config {} newrelic.ini'
+    cmd = cmd_tmpl.format(key)
+    if verbose:
+        print(cmd_tmpl.format('<redacted>'))
+    ctx.run(cmd, pty=True)
+
+
+@task
+def newrelic_server(ctx, config='newrelic.ini', verbose=False):
+    if not os.path.exists(config):
+        sys.exit("Couldn't find config file '{}'.  Check path or run `invoke newrelic_init` "
+                 "to generate it.".format(config))
+
+    cmd = f'poetry run env NEW_RELIC_CONFIG_FILE={config} newrelic-admin run-program invoke server'
+    if verbose:
+        print(cmd)
+    ctx.run(cmd, pty=True)

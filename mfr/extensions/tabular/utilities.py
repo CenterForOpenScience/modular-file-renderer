@@ -8,7 +8,7 @@ from subprocess import (check_call,
 from tempfile import NamedTemporaryFile
 
 from mfr.extensions.tabular import compat
-from mfr.core.exceptions import SubprocessError, CorruptedError
+from mfr.core.exceptions import SubprocessError, UnparseableTableError
 from mfr.extensions.tabular.settings import (PSPP_CONVERT_BIN,
                                              PSPP_CONVERT_TIMEOUT,
                                              MAX_SIZE)
@@ -126,7 +126,7 @@ def _extract_rows(fields, raw_rows):
 def parse_xls(wb, sheets):
     for sheet in wb.sheets():
         if getattr(sheet, 'nrows', None) is None or getattr(sheet, 'ncols', None) is None:
-            raise CorruptedError
+            raise UnparseableTableError
 
         ncols = sheet.ncols
         max_cols = min(ncols, MAX_SIZE)
@@ -145,7 +145,7 @@ def parse_xlsx(wb, sheets):
         ws = wb[name]
 
         if getattr(ws, 'max_row', None) is None or getattr(ws, 'max_column', None) is None:
-            raise CorruptedError
+            raise UnparseableTableError
 
         ncols = getattr(ws, "max_column", 0)
         max_cols = min(ncols, MAX_SIZE)

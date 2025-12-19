@@ -1,5 +1,6 @@
 import re
 import xlrd
+from datetime import datetime
 
 from http import HTTPStatus
 from subprocess import (check_call,
@@ -114,12 +115,18 @@ def to_bytes(fp):
     raise TypeError("Expected binary file-like object; got text/str")
 
 
+def _convert_value(value):
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
+
+
 def _extract_rows(fields, raw_rows):
     rows = []
     for row in raw_rows:
         if len(rows) >= MAX_SIZE:
             break
-        rows.append(dict(zip(fields, row)))
+        rows.append(dict(zip(fields, map(_convert_value, row))))
     return rows
 
 

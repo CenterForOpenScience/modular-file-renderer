@@ -1,5 +1,6 @@
 import re
 import xlrd
+from datetime import datetime
 
 from http import HTTPStatus
 from subprocess import (check_call,
@@ -8,7 +9,7 @@ from subprocess import (check_call,
 from tempfile import NamedTemporaryFile
 
 from mfr.extensions.tabular import compat
-from mfr.core.exceptions import SubprocessError, CorruptedError
+from mfr.core.exceptions import SubprocessError, UnparseableTableError
 from mfr.extensions.tabular.settings import (PSPP_CONVERT_BIN,
                                              PSPP_CONVERT_TIMEOUT,
                                              MAX_SIZE)
@@ -114,19 +115,25 @@ def to_bytes(fp):
     raise TypeError("Expected binary file-like object; got text/str")
 
 
+def _convert_value(value):
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
+
+
 def _extract_rows(fields, raw_rows):
     rows = []
     for row in raw_rows:
         if len(rows) >= MAX_SIZE:
             break
-        rows.append(dict(zip(fields, row)))
+        rows.append(dict(zip(fields, map(_convert_value, row))))
     return rows
 
 
 def parse_xls(wb, sheets):
     for sheet in wb.sheets():
         if getattr(sheet, 'nrows', None) is None or getattr(sheet, 'ncols', None) is None:
-            raise CorruptedError
+            raise UnparseableTableError
 
         ncols = sheet.ncols
         max_cols = min(ncols, MAX_SIZE)
@@ -145,7 +152,7 @@ def parse_xlsx(wb, sheets):
         ws = wb[name]
 
         if getattr(ws, 'max_row', None) is None or getattr(ws, 'max_column', None) is None:
-            raise CorruptedError
+            raise UnparseableTableError
 
         ncols = getattr(ws, "max_column", 0)
         max_cols = min(ncols, MAX_SIZE)

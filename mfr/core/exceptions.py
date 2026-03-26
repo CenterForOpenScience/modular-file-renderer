@@ -146,12 +146,15 @@ class MetadataError(ProviderError):
             'response': self.response
         }])
 
-class CorruptedError(RendererError):
 
-    __TYPE = 'corrupted'
+class UnparseableTableError(RendererError):
+
+    __TYPE = 'unparseable_table'
 
     def __init__(self, *args, renderer_class: str = '', **kwargs):
-        super().__init__("File is corrupted, impossible to render, please check it's integrity", *args, renderer_class, **kwargs)
+        super().__init__("File is not loading. Please check its integrity by downloading.",
+                         *args, renderer_class, **kwargs)
+
 
 class TooBigToRenderError(ProviderError):
     """If the user tries to render a file larger than a server specified maximum, throw a

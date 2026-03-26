@@ -2,6 +2,14 @@
 ChangeLog
 *********
 
+26.0.0 (2026-03-26)
+===================
+- Add newerlic support to MFR. (thanks, @antkryt!)
+- Fix datetime conversion issue in tabular renderer. (thanks, @antkryt!)
+- Fix searching/filterinf in tabular renderer. (thanks, @Vlad0n20!)
+- Fix ability to zoom/pan on images.
+- Improve error message for unrenderable spreadsheets.
+
 25.0.0 (2025-11-18)
 ===================
 - Upgrade MFR and dependencies to python v3.13.

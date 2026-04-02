@@ -43,13 +43,13 @@ certifi = "2025.1.31"
 unoserver = "3.3.2"
 openpyxl = "^3.1"
 
-waterbutler = { git = "https://github.com/CenterForOpenScience/waterbutler.git", branch = "feature/slurp-small-gcloud" }
+waterbutler = { git = "https://github.com/CenterForOpenScience/waterbutler.git", branch = "hotfix/newrelic-celery" }
 markupsafe = "2.0.1"
 celery = "5.5.0"
 black = "^25.1.0"
 isort = "^6.0.1"
 ruff = "^0.12.7"
-newrelic = "10.8.1"
+newrelic = "10.17.0"
 
 
 [tool.poetry.group.dev]

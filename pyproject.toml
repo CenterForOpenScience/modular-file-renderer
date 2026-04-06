@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mfr"
-version = "26.0.0"
+version = "26.0.1"
 description = "Modular File Renderer"
 authors = ["Center for Open Science <contact@cos.io>"]
 readme = "README.md"

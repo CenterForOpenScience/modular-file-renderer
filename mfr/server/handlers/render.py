@@ -77,7 +77,7 @@ class RenderHandler(core.BaseHandler):
             await self.write_stream(rendition)
         else:
             self.set_status(http.HTTPStatus.ACCEPTED)
-            await self.write("Accepted")
+            self.write("Accepted")
             await self.flush()
 
     async def _cache_and_clean(self):

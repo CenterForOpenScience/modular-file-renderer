@@ -186,8 +186,8 @@ class OsfProvider(provider.BaseProvider):
         redirect to WB.  Issue a GET request against it, then return the WB url stored in the
         Location header.
 
-        First ``GET`` may return **301** with ``Location`` for legacy download route. If ``Location`` 
-        points at OSF's ``/download/<id>/`` route, perform a second ``GET`` there and expect **302** 
+        First ``GET`` may return **301** with ``Location`` for legacy download route. If ``Location``
+        points at OSF's ``/download/<id>/`` route, perform a second ``GET`` there and expect **302**
         to WaterButler. If ``Location`` is not that route (e.g. already WaterButler), use it as ``download_url``.
         """
         if not self.download_url:

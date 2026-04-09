@@ -202,7 +202,6 @@ class OsfProvider(provider.BaseProvider):
                 headers = {'Content-Type': 'application/json'}
 
                 location, status, reason = await self._fetch_redirect(self.url, headers)
-                breakpoint()
                 logger.debug(f'osf-download-resolver: url={self.url} status={status} location={location}')
                 if status not in (301, 302) or not location:
                     raise exceptions.MetadataError(

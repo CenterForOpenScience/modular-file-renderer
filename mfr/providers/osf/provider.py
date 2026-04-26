@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import hashlib
 import logging
@@ -172,11 +173,23 @@ class OsfProvider(provider.BaseProvider):
                 self.download_url = self.url
                 self.metrics.add('download_url.orig_type', 'wb_v1')
             else:
-                self.metrics.add('download_url.orig_type', 'osf')
+                normalized_url = None
+                if re.compile(r'^/[a-z0-9]{5}/[^/]*', re.IGNORECASE).match(path):
+                    # In the past the OSF would redirect urls of the form https://osf.io/<file_guid>/ to
+                    # https://osf.io/download/<file_guid>/. It no longer does this, so MFR must detect
+                    # such urls and manually prepend /download/ to the path.
+                    self.metrics.add('download_url.orig_type', 'osf-preangular')
+                    temp_url = furl.furl(self.url)
+                    temp_url.path.segments = ['download'] + temp_url.path.segments
+                    normalized_url = temp_url.url
+                else:
+                    self.metrics.add('download_url.orig_type', 'osf')
+                    normalized_url = self.url
+
                 # make request to osf, don't follow, store waterbutler download url
                 request = await self._make_request(
                     'GET',
-                    self.url,
+                    normalized_url,
                     allow_redirects=False,
                     headers={
                         'Content-Type': 'application/json'
@@ -188,7 +201,7 @@ class OsfProvider(provider.BaseProvider):
                 if request.status != 302:
                     raise exceptions.MetadataError(
                         request.reason,
-                        metadata_url=self.url,
+                        metadata_url=normalized_url,
                         provider=self.NAME,
                         code=request.status,
                     )

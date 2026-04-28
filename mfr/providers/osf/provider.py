@@ -160,35 +160,11 @@ class OsfProvider(provider.BaseProvider):
 
         return streams.ResponseStreamReader(response)
 
-    @staticmethod
-    def _is_osf_download_route(url):
-        """True when ``url`` is OSF's persistent file download path ``/download/<id>/``."""
-        path = urlparse(url).path or ''
-        osf_download_path_re = re.compile(r'^/download/[^/]+', re.IGNORECASE)
-        return bool(osf_download_path_re.match(path))
-
-    async def _fetch_redirect(self, url, headers):
-        request = await self._make_request(
-            'GET',
-            url,
-            allow_redirects=False,
-            headers=headers,
-        )
-        status = request.status
-        location = request.headers.get('Location') or request.headers.get('location')
-        reason = request.reason
-        await request.release()
-        return location, status, reason
-
     async def _fetch_download_url(self):
         """Provider needs a WaterButler URL to download and get metadata.  If ``url`` is already
         a WaterButler url, return that.  If not, then the url points to an OSF endpoint that will
         redirect to WB.  Issue a GET request against it, then return the WB url stored in the
         Location header.
-
-        First ``GET`` may return **301** with ``Location`` for legacy download route. If ``Location``
-        points at OSF's ``/download/<id>/`` route, perform a second ``GET`` there and expect **302**
-        to WaterButler. If ``Location`` is not that route (e.g. already WaterButler), use it as ``download_url``.
         """
         if not self.download_url:
             # v1 Waterbutler url provided
@@ -197,33 +173,39 @@ class OsfProvider(provider.BaseProvider):
                 self.download_url = self.url
                 self.metrics.add('download_url.orig_type', 'wb_v1')
             else:
-                self.metrics.add('download_url.orig_type', 'osf')
-                # make request to osf, store waterbutler download url
-                headers = {'Content-Type': 'application/json'}
+                normalized_url = None
+                if re.compile(r'^/[a-z0-9]{5}/[^/]*', re.IGNORECASE).match(path):
+                    # In the past the OSF would redirect urls of the form https://osf.io/<file_guid>/ to
+                    # https://osf.io/download/<file_guid>/. It no longer does this, so MFR must detect
+                    # such urls and manually prepend /download/ to the path.
+                    self.metrics.add('download_url.orig_type', 'osf-preangular')
+                    temp_url = furl.furl(self.url)
+                    temp_url.path.segments = ['download'] + temp_url.path.segments
+                    normalized_url = temp_url.url
+                else:
+                    self.metrics.add('download_url.orig_type', 'osf')
+                    normalized_url = self.url
 
-                location, status, reason = await self._fetch_redirect(self.url, headers)
-                logger.debug(f'osf-download-resolver: url={self.url} status={status} location={location}')
-                if status not in (301, 302) or not location:
+                # make request to osf, don't follow, store waterbutler download url
+                request = await self._make_request(
+                    'GET',
+                    normalized_url,
+                    allow_redirects=False,
+                    headers={
+                        'Content-Type': 'application/json'
+                    }
+                )
+                await request.release()
+
+                logger.debug(f'osf-download-resolver: request.status::{request.status}')
+                if request.status != 302:
                     raise exceptions.MetadataError(
-                        reason,
-                        metadata_url=self.url,
+                        request.reason,
+                        metadata_url=normalized_url,
                         provider=self.NAME,
-                        code=status,
+                        code=request.status,
                     )
-
-                if self._is_osf_download_route(location):
-                    location, status, reason = await self._fetch_redirect(location, headers)
-
-                    logger.debug(f'osf-download-resolver follow /download/: url={location} status={status} location={location}')
-                    if status != 302 or not location:
-                        raise exceptions.MetadataError(
-                            reason,
-                            metadata_url=location,
-                            provider=self.NAME,
-                            code=status,
-                        )
-
-                self.download_url = location
+                self.download_url = request.headers['location']
 
             self.metrics.add('download_url.derived_url', str(self.download_url))
 

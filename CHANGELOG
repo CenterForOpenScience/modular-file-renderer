@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+26.1.0 (2026-04-28)
+===================
+- Rewrite legacy OSF file urls to point to downloadable url.
+
 26.0.1 (2026-04-06)
 ===================
 - Bump newerlic dep to work with celery.

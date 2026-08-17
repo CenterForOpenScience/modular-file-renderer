@@ -49,7 +49,9 @@ class UnoconvRenderer(extension.BaseRenderer):
         })
 
     def _render(self):
+        logger.error('??? in unoconv._render')
         if self.renderer.file_required:
+            logger.error('???     file required!')
             exporter = utils.make_exporter(
                 self.metadata.ext,
                 self.file_path,
@@ -59,7 +61,9 @@ class UnoconvRenderer(extension.BaseRenderer):
             )
             exporter.export()
 
+        logger.error('???     time to render')
         rendition = self.renderer._render()
+        logger.error('???     render done')
         self.metrics.add('subrenderer', self.renderer.renderer_metrics.serialize())
 
         if self.renderer.file_required:
@@ -68,6 +72,7 @@ class UnoconvRenderer(extension.BaseRenderer):
             except FileNotFoundError:
                 logger.warning(f"[render] Export file not found for cleanup: {self.export_file_path}")
 
+        logger.error('???     sending rendition')
         return rendition
 
     @property

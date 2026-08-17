@@ -11,6 +11,9 @@ from mfr.core.metrics import MetricsRecord
 from mfr.core.provider import ProviderMetadata
 from mfr.tasks.serializer import serializable
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class BaseExporter(metaclass=abc.ABCMeta):
 
@@ -108,20 +111,28 @@ class BaseRenderer(metaclass=abc.ABCMeta):
         pass
 
     async def render(self):
+        logger.error('@@@ begin render')
         if self.use_celery or self.cache_result:
+            logger.error('@@@   cache/celery prep')
             self.cache_file_path = await self.cache_provider.validate_path(self.cache_file_path_str)
         if not self.use_celery:
+            logger.error('@@@   NO CELERY')
             rendition = await self.do_render()
+            logger.error(f'@@@   rendition:{rendition}')
             return StringStream(rendition)
         else:
+            logger.error('@@@   CELERY TIME')
             from mfr.tasks.render import render
             result = render.delay(self)
             for i in range(100 * 60 * 10):
+                logger.error('@@@   wait iter')
                 if not result.ready():
                     time.sleep(0.01)
                 else:
+                    logger.error(f'@@@ downloading from cache, path:({self.cache_file_path})')
                     return await self.cache_provider.download(self.cache_file_path)
 
+            logger.error('@@@   BAIL OUT')
             return None
 
     async def do_render(self):

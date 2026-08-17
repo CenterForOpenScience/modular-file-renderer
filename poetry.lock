@@ -4381,8 +4381,8 @@ yarl = "1.17.0"
 [package.source]
 type = "git"
 url = "https://github.com/CenterForOpenScience/waterbutler.git"
-reference = "feature/bump-newrelic"
-resolved_reference = "43906e53c9eeded2e7712249f9fcf8ba5912c579"
+reference = "debug/oracleslurp"
+resolved_reference = "a1d78ceea01d40d451c873eb5f559f9a2b0cba31"
 
 [[package]]
 name = "wcwidth"
@@ -4707,4 +4707,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "fe2659f89a8a68d624f8f64a5795c03eb5c00b040ddd2d5e37871f443434d800"
+content-hash = "6b9617fc2430c00dcb6a05339be95bde6a820229e0e3a629edb47b2954a7d364"

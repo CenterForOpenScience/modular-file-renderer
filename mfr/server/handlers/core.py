@@ -145,9 +145,12 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         self.add_header('X-MFR-REQUEST-ID', str(uuid.uuid4()))
 
     async def write_stream(self, stream):
+        logger.error('$$$ in basehandler.write_stream')
         try:
             while True:
+                logger.error('$$$    let us write!')
                 chunk = await stream.read(settings.CHUNK_SIZE)
+                logger.error(f'$$$       chunk is:{chunk}!')
                 if not chunk:
                     break
                 # Temp fix, write does not accept bytearrays currently
@@ -157,6 +160,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
                 self.write(chunk)
                 del chunk
                 await self.flush()
+                logger.error('$$$   chunk written, moving on')
         except tornado.iostream.StreamClosedError:
             # Client has disconnected early.
             # No need for any exception to be raised

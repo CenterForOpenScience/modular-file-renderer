@@ -149,8 +149,7 @@ class BaseHandler(CorsMixin, tornado.web.RequestHandler):
         try:
             while True:
                 logger.error('$$$    let us write!')
-                chunk = await stream.read(100000)
-                # chunk = await stream.read(settings.CHUNK_SIZE)
+                chunk = await stream.read(settings.CHUNK_SIZE)
                 logger.error(f'$$$       chunk is:{chunk}!')
                 if not chunk:
                     break

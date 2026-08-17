@@ -130,7 +130,9 @@ class BaseRenderer(metaclass=abc.ABCMeta):
                     time.sleep(0.01)
                 else:
                     logger.error(f'@@@ downloading from cache, path:({self.cache_file_path})')
-                    return await self.cache_provider.download(self.cache_file_path)
+                    meow = await self.cache_provider.download(self.cache_file_path)
+                    logger.error(f'@@@ meow isa:{type(meow}} and is:{meow}')
+                    return meow
 
             logger.error('@@@   BAIL OUT')
             return None

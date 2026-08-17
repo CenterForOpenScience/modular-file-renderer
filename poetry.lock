@@ -4341,7 +4341,7 @@ anyio = ">=3.0.0"
 
 [[package]]
 name = "waterbutler"
-version = "26.2.1"
+version = "26.3.0"
 description = "WaterButler Storage Server"
 optional = false
 python-versions = "^3.13"
@@ -4381,8 +4381,8 @@ yarl = "1.17.0"
 [package.source]
 type = "git"
 url = "https://github.com/CenterForOpenScience/waterbutler.git"
-reference = "26.2.1"
-resolved_reference = "496ceb0a647516db3595f0ff50719d02c81fe1a2"
+reference = "debug/oracle-no-newrelic"
+resolved_reference = "0d2e77689e8163e3c9999765c05702362c69dfb6"
 
 [[package]]
 name = "wcwidth"
@@ -4707,4 +4707,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "5ade13033650318b71f3333f1373e4e7c06d146ceb88ca6272d9f04d63fefa1e"
+content-hash = "29492cd51c6851f147ed203f0bc81777dcaad8e5a92abb5d906908bfbc10b346"

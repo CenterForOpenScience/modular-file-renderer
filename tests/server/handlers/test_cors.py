@@ -166,3 +166,12 @@ class TestCorsMixin(HandlerTestCase):
             assert 'Access-Control-Allow-Credentials' not in self.handler.headers
             assert 'Access-Control-Allow-Headers' not in self.handler.headers
             assert 'Access-Control-Expose-Headers' not in self.handler.headers
+
+    @testing.gen_test
+    def test_no_origin_still_disables_caching(self):
+        for method in ('OPTIONS', 'HEAD' 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'):
+            self.handler.request = MockRequest(
+                method=method,
+            )
+            self.handler.set_default_headers()
+            assert self.handler.headers['Cache-control'] == 'no-store, no-cache, must-revalidate, max-age=0'

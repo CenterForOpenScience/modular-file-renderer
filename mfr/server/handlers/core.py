@@ -47,6 +47,12 @@ class CorsMixin:
         return False
 
     def set_default_headers(self):
+        # Always disable caching, even when no ``Origin`` header is present (e.g. a plain
+        # ``<iframe src="...">`` navigation). Without this, responses carry no caching
+        # directive at all in that case, leaving any intermediary (CDN, proxy, browser) free
+        # to apply its own heuristic caching to a render response.
+        self.set_header('Cache-control', 'no-store, no-cache, must-revalidate, max-age=0')
+
         if not self.request.headers.get('Origin'):
             return
 
@@ -70,7 +76,6 @@ class CorsMixin:
         self.set_header('Access-Control-Allow-Credentials', 'true')
         self.set_header('Access-Control-Allow-Headers', ', '.join(CORS_ACCEPT_HEADERS))
         self.set_header('Access-Control-Expose-Headers', ', '.join(CORS_EXPOSE_HEADERS))
-        self.set_header('Cache-control', 'no-store, no-cache, must-revalidate, max-age=0')
 
     def options(self):
         self.set_status(204)

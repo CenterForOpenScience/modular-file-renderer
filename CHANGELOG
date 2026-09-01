@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+26.1.1 (2026-09-01)
+===================
+- Hotfix to add build_spec.yaml for OCI CI/CD.
+
 26.1.0 (2026-04-28)
 ===================
 - Rewrite legacy OSF file urls to point to downloadable url.

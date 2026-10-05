@@ -4341,7 +4341,7 @@ anyio = ">=3.0.0"
 
 [[package]]
 name = "waterbutler"
-version = "26.0.1"
+version = "26.5.1"
 description = "WaterButler Storage Server"
 optional = false
 python-versions = "^3.13"
@@ -4381,8 +4381,8 @@ yarl = "1.17.0"
 [package.source]
 type = "git"
 url = "https://github.com/CenterForOpenScience/waterbutler.git"
-reference = "hotfix/newrelic-celery"
-resolved_reference = "a67c3d9f7aab37bb4d3ea2fc48ab0b3031c94bd7"
+reference = "feature/resolve-newrelic"
+resolved_reference = "e084e553b03a3233803877ef12711a1fd2be9900"
 
 [[package]]
 name = "wcwidth"
@@ -4707,4 +4707,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.13"
-content-hash = "47aca9b6317ca56e86afb8b3ac488f41427cf68039e25703ec87a413e26381a3"
+content-hash = "b15a694df1600cea840bfb0d29efb4104efc501430c95e81d69e86770c52c812"

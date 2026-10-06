@@ -2,6 +2,10 @@
 ChangeLog
 *********
 
+26.2.0 (2026-10-06)
+===================
+- Bump newrelic dep to sync with WaterButler.
+
 26.1.1 (2026-09-01)
 ===================
 - Hotfix to add build_spec.yaml for OCI CI/CD.

@@ -22,6 +22,11 @@ def invalid_file_path():
 
 
 @pytest.fixture
+def include_file_path():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files', 'include.rst')
+
+
+@pytest.fixture
 def url():
     return 'http://osf.io/file/test.rst'
 
@@ -39,6 +44,11 @@ def export_url(url):
 @pytest.fixture
 def renderer(metadata, test_file_path, url, assets_url, export_url):
     return RstRenderer(metadata, test_file_path, url, assets_url, export_url)
+
+
+@pytest.fixture
+def renderer_include(metadata, include_file_path, url, assets_url, export_url):
+    return RstRenderer(metadata, include_file_path, url, assets_url, export_url)
 
 
 class TestRstRenderer:
@@ -62,3 +72,9 @@ alert(&quot;Hello world&quot;);
 
     def test_render_rst_cache_result(self, renderer):
         assert renderer.cache_result is True
+
+    def test_render_rst_disable_include(self, renderer_include, include_file_path):
+        with open(include_file_path) as fp:
+            body = renderer_include._render()
+            assert '.. include:: setup.cfg' in body
+            assert '# E501: Line too long' not in body

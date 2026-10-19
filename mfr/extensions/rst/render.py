@@ -21,7 +21,7 @@ class RstRenderer(extension.BaseRenderer):
 
     def _render(self):
         with open(self.file_path) as fp:
-            body = publish_parts(fp.read(), writer_name='html')['html_body']
+            body = publish_parts(fp.read(), writer_name='html', settings_overrides={'file_insertion_enabled': False, 'raw_enabled': False})['html_body']
             return self.TEMPLATE.render(base=self.assets_url, body=body)
 
     @property
